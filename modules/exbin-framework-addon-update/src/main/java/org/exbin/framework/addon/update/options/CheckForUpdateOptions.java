@@ -17,31 +17,34 @@ package org.exbin.framework.addon.update.options;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsData;
-import org.exbin.framework.addon.update.preferences.CheckForUpdatePreferences;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Check for update options.
+ * Check for update on start options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CheckForUpdateOptions implements OptionsData {
 
-    private boolean checkForUpdate;
+    public static final String KEY_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
 
-    public boolean isCheckForUpdate() {
-        return checkForUpdate;
+    private final OptionsStorage storage;
+
+    public CheckForUpdateOptions(OptionsStorage storage) {
+        this.storage = storage;
     }
 
-    public void setCheckForUpdate(boolean checkForUpdate) {
-        this.checkForUpdate = checkForUpdate;
+    public boolean isShouldCheckForUpdate() {
+        return storage.getBoolean(KEY_CHECK_FOR_UPDATE_ON_START, true);
     }
 
-    public void loadFromPreferences(CheckForUpdatePreferences preferences) {
-        checkForUpdate = preferences.isShouldCheckForUpdate();
+    public void setShouldCheckForUpdate(boolean shouldCheck) {
+        storage.putBoolean(KEY_CHECK_FOR_UPDATE_ON_START, shouldCheck);
     }
 
-    public void saveToPreferences(CheckForUpdatePreferences preferences) {
-        preferences.setShouldCheckForUpdate(checkForUpdate);
+    @Override
+    public void copyTo(OptionsData options) {
+        ((CheckForUpdateOptions) options).setShouldCheckForUpdate(isShouldCheckForUpdate());
     }
 }

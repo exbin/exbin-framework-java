@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.api.OptionsPage;
-import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * Options page record.
@@ -49,26 +49,26 @@ public class PageRecord<T extends OptionsData> {
         return panel;
     }
 
-    public void loadFromPreferences(Preferences preferences) {
+    public void loadFromPreferences(OptionsStorage preferences) {
         T options = page.createOptions();
         page.loadFromPreferences(preferences, options);
         panel.loadFromOptions(options);
     }
 
-    public void saveToPreferences(Preferences preferences) {
+    public void saveToPreferences(OptionsStorage preferences) {
         T options = page.createOptions();
         panel.saveToOptions(options);
         page.saveToPreferences(preferences, options);
     }
 
-    public void saveAndApply(Preferences preferences) {
+    public void saveAndApply(OptionsStorage preferences) {
         T options = page.createOptions();
         panel.saveToOptions(options);
         page.saveToPreferences(preferences, options);
         page.applyPreferencesChanges(options);
     }
 
-    public void applyPreferencesChanges(Preferences preferences) {
+    public void applyPreferencesChanges(OptionsStorage preferences) {
         T options = page.createOptions();
         panel.saveToOptions(options);
         page.applyPreferencesChanges(options);

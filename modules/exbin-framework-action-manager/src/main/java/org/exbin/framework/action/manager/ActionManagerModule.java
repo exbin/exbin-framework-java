@@ -20,26 +20,15 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.manager.gui.KeyMapOptionsPanel;
-import org.exbin.framework.action.manager.model.KeyMapRecord;
-import org.exbin.framework.action.manager.options.impl.ActionOptionsImpl;
-import org.exbin.framework.action.manager.preferences.ActionPreferences;
+import org.exbin.framework.action.manager.options.ActionManagerOptionsPage;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.api.DefaultOptionsPage;
-import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.options.api.PathOptionsPageRule;
 import org.exbin.framework.utils.ComponentResourceProvider;
-import org.exbin.framework.preferences.api.Preferences;
 
 /**
  * Action manager module.
@@ -77,62 +66,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
 
-        OptionsPage<ActionOptionsImpl> actionOptionsPage = new DefaultOptionsPage<ActionOptionsImpl>() {
-            @Nonnull
-            @Override
-            public OptionsComponent<ActionOptionsImpl> createPanel() {
-                KeyMapOptionsPanel panel = new KeyMapOptionsPanel();
-                List<KeyMapRecord> records = new ArrayList<>();
-                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                List<Action> actions = actionModule.getMenuManagedActions();
-                for (Action action : actions) {
-                    String name = (String) action.getValue(Action.NAME);
-                    ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
-                    String type = getResourceBundle().getString("actionType.menu");
-                    KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-                    records.add(new KeyMapRecord(name, icon, type, keyStroke));
-                }
-
-                actions = actionModule.getToolBarManagedActions();
-                for (Action action : actions) {
-                    String name = (String) action.getValue(Action.NAME);
-                    ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
-                    String type = getResourceBundle().getString("actionType.toolBar");
-                    KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-                    records.add(new KeyMapRecord(name, icon, type, keyStroke));
-                }
-                panel.setRecords(records);
-                return panel;
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(KeyMapOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public ActionOptionsImpl createOptions() {
-                return new ActionOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, ActionOptionsImpl options) {
-                ActionPreferences prefs = new ActionPreferences(preferences);
-                options.loadFromPreferences(prefs);
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, ActionOptionsImpl options) {
-                ActionPreferences prefs = new ActionPreferences(preferences);
-                options.saveToParameters(prefs);
-            }
-
-            @Override
-            public void applyPreferencesChanges(ActionOptionsImpl options) {
-            }
-        };
+        ActionManagerOptionsPage actionOptionsPage = new ActionManagerOptionsPage();
         
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
         optionsPageManagement.registerOptionsPage(actionOptionsPage);

@@ -30,7 +30,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.App;
-import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsPathItem;
@@ -42,6 +41,7 @@ import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.api.OptionsPageReceiver;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * Panel for application options and preferences setting.
@@ -53,7 +53,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
 
     public static final String OPTIONS_PANEL_KEY = "options";
 
-    private Preferences preferences = null;
+    private OptionsStorage preferences = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsListPanel.class);
     private List<PageRecord<?>> optionPages;
     private PageRecord<?> currentOptionsPanel = null;
@@ -242,7 +242,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
         windowModule.notifyOptionsChanged();
     }
 
-    public void setPreferences(Preferences preferences) {
+    public void setPreferences(OptionsStorage preferences) {
         this.preferences = preferences;
     }
 

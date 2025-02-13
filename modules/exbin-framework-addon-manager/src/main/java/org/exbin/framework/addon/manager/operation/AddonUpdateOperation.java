@@ -40,7 +40,7 @@ import org.exbin.framework.addon.manager.model.DependencyRecord;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
-import org.exbin.framework.addon.manager.preferences.AddonManagerPreferences;
+import org.exbin.framework.addon.manager.options.AddonManagerOptions;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 import org.exbin.framework.basic.BasicModuleProvider;
@@ -366,7 +366,7 @@ public class AddonUpdateOperation {
             addonUpdateChanges.removeInstallAddon(moduleId);
             if ("org.exbin.framework.addon.manager.AddonManagerModule".equals(moduleId)) {
                 PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                AddonManagerPreferences addonPreferences = new AddonManagerPreferences(preferencesModule.getAppPreferences());
+                AddonManagerOptions addonPreferences = new AddonManagerOptions(preferencesModule.getAppPreferences());
                 addonPreferences.setActivatedVersion("0.3.0-SNAPSHOT");
             }
             addonUpdateChanges.addRemoveAddon(moduleId);

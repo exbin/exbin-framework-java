@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.ui.theme;
 
-import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,31 +23,21 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JDialog;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.IconSetProvider;
-import org.exbin.framework.preferences.api.Preferences;
-import org.exbin.framework.options.api.DefaultOptionsPage;
-import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
 import org.exbin.framework.ui.theme.gui.ThemeOptionsPanel;
-import org.exbin.framework.ui.theme.options.impl.ThemeOptionsImpl;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.ui.theme.api.LafOptionsHandler;
 import org.exbin.framework.ui.theme.api.LafProvider;
-import org.exbin.framework.ui.theme.api.preferences.UiPreferences;
-import org.exbin.framework.window.api.WindowHandler;
-import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.window.api.gui.DefaultControlPanel;
+import org.exbin.framework.ui.theme.options.ThemeOptions;
 import org.exbin.framework.ui.theme.api.UiThemeModuleApi;
+import org.exbin.framework.ui.theme.options.ThemeOptionsPage;
 
 /**
- * Interface for application options panels management.
+ * UI theme options manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -176,97 +165,11 @@ public class ThemeOptionsManager {
     }
 
     @Nonnull
-    public OptionsPage<ThemeOptionsImpl> getMainOptionsPage() {
-        return new DefaultOptionsPage<ThemeOptionsImpl>() {
-            private Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();
-
-            @Nonnull
-            @Override
-            public OptionsComponent<ThemeOptionsImpl> createPanel() {
-                if (!valuesInitialized) {
-                    valuesInitialized = true;
-                    initValues();
-                }
-
-                mainOptionsPanel = new ThemeOptionsPanel();
-                mainOptionsPanel.setThemes(themes, themeNames, themeOptions);
-                mainOptionsPanel.setIconSets(iconSets, iconSetNames);
-                mainOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
-                mainOptionsPanel.setFontAntialiasings(fontAntialiasingKeys, fontAntialiasingNames);
-                mainOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
-                if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
-                    mainOptionsPanel.setMacOsAppearances(guiMacOsAppearanceKeys, guiMacOsAppearanceNames);
-                }
-                mainOptionsPanel.setThemeConfigurationListener((ConfigurableLafProvider lafProvider) -> {
-                    LafOptionsHandler optionsHandler = themeOptionsHandlers.get(lafProvider.getLafId());
-                    if (optionsHandler == null) {
-                        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                        optionsHandler = lafProvider.getOptionsHandler();
-                        optionsHandler.loadFromPreferences(preferencesModule.getAppPreferences());
-                    }
-                    final LafOptionsHandler finalOptionsHandler = optionsHandler;
-
-                    DefaultControlPanel controlPanel = new DefaultControlPanel();
-                    WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                    FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                    final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, optionsHandler.createOptionsComponent(), controlPanel);
-                    ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString("theme.optionsWindow.title"));
-                    controlPanel.setHandler((actionType) -> {
-                        switch (actionType) {
-                            case OK: {
-                                themeOptionsHandlers.put(lafProvider.getLafId(), finalOptionsHandler);
-                                break;
-                            }
-                            case CANCEL: {
-                                // ignore
-                                break;
-                            }
-                        }
-                        dialog.close();
-                    });
-
-                    dialog.showCentered(frameModule.getFrame());
-
-                });
-                return mainOptionsPanel;
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(ThemeOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public ThemeOptionsImpl createOptions() {
-                return new ThemeOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, ThemeOptionsImpl options) {
-                UiPreferences prefs = new UiPreferences(preferences);
-                options.loadFromPreferences(prefs);
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, ThemeOptionsImpl options) {
-                UiPreferences prefs = new UiPreferences(preferences);
-                options.saveToParameters(prefs);
-                for (LafOptionsHandler lafOptions : themeOptionsHandlers.values()) {
-                    lafOptions.saveToPreferences(preferences);
-                }
-            }
-
-            @Override
-            public void applyPreferencesChanges(ThemeOptionsImpl options) {
-                String selectedTheme = options.getLookAndFeel();
-                // TODO application.applyLookAndFeel(selectedTheme);
-
-                // TODO This would require rebuild of the window to force icons reload
-                // App.getModule(LanguageModuleApi.class).switchToIconSet(options.getIconSet());
-            }
-        };
+    public ThemeOptionsPage getThemeOptionsPage() {
+        return new ThemeOptionsPage();
+//        return new DefaultOptionsPage<ThemeOptions>() {
+//            private Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();
+//        };
     }
 
     @Nonnull

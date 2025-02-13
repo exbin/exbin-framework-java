@@ -16,24 +16,56 @@
 package org.exbin.framework.ui.options;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Appearance options.
+ * Appearance options options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface AppearanceOptions {
+public class AppearanceOptions implements OptionsData {
 
-    boolean isShowStatusBar();
+    public static final String KEY_TOOLBAR_VISIBLE = "toolBar.visible";
+    public static final String KEY_TOOLBAR_CAPTIONS = "toolBar.captions";
+    public static final String KEY_STATUSBAR_VISIBLE = "statusBar.visible";
 
-    boolean isShowToolBar();
+    private final OptionsStorage storage;
 
-    boolean isShowToolBarCaptions();
+    public AppearanceOptions(OptionsStorage storage) {
+        this.storage = storage;
+    }
 
-    void setShowStatusBar(boolean showStatusBar);
+    public boolean isShowToolBar() {
+        return storage.getBoolean(KEY_TOOLBAR_VISIBLE, true);
+    }
 
-    void setShowToolBar(boolean showToolBar);
+    public boolean isShowToolBarCaptions() {
+        return storage.getBoolean(KEY_TOOLBAR_CAPTIONS, true);
+    }
 
-    void setShowToolBarCaptions(boolean showToolBarCaptions);
+    public boolean isShowStatusBar() {
+        return storage.getBoolean(KEY_STATUSBAR_VISIBLE, true);
+    }
+
+    public void setShowToolBar(boolean show) {
+        storage.putBoolean(KEY_TOOLBAR_VISIBLE, show);
+    }
+
+    public void setShowToolBarCaptions(boolean show) {
+        storage.putBoolean(KEY_TOOLBAR_CAPTIONS, show);
+    }
+
+    public void setShowStatusBar(boolean show) {
+        storage.putBoolean(KEY_STATUSBAR_VISIBLE, show);
+    }
+
+    @Override
+    public void copyTo(OptionsData options) {
+        AppearanceOptions with = (AppearanceOptions) options;
+        with.setShowStatusBar(isShowStatusBar());
+        with.setShowToolBar(isShowToolBar());
+        with.setShowToolBarCaptions(isShowToolBarCaptions());
+    }
 }

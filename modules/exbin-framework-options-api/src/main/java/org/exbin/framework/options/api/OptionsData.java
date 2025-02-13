@@ -21,4 +21,11 @@ package org.exbin.framework.options.api;
  * @author ExBin Project (https://exbin.org)
  */
 public interface OptionsData {
+
+    /**
+     * Copies all values to options data of the same type.
+     *
+     * @param options options
+     */
+    void copyTo(OptionsData options);
 }

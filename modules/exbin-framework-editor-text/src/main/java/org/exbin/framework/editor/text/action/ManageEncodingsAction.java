@@ -29,7 +29,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.EncodingsHandler;
 import org.exbin.framework.editor.text.gui.AddEncodingPanel;
 import org.exbin.framework.editor.text.options.gui.TextEncodingPanel;
-import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -89,7 +89,7 @@ public class ManageEncodingsAction extends AbstractAction {
                 encodingsHandler.rebuildEncodings();
                 if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
                     PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                    TextEncodingPreferences textEncodingPreferences = new TextEncodingPreferences(preferencesModule.getAppPreferences());
+                    TextEncodingOptions textEncodingPreferences = new TextEncodingOptions(preferencesModule.getAppPreferences());
                     textEncodingPreferences.setEncodings(textEncodingPanel.getEncodingList());
                 }
             }

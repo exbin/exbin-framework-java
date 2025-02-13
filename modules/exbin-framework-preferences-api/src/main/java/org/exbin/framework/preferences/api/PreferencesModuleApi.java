@@ -34,5 +34,5 @@ public interface PreferencesModuleApi extends Module {
     void setupAppPreferences(Class clazz);
     
     @Nonnull
-    Preferences getAppPreferences();
+    OptionsStorage getAppPreferences();
 }

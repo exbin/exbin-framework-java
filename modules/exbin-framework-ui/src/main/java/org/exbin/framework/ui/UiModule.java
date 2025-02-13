@@ -18,31 +18,19 @@ package org.exbin.framework.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.api.DefaultOptionsPage;
-import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.options.api.OptionsPathItem;
-import org.exbin.framework.preferences.api.Preferences;
-import org.exbin.framework.ui.api.LafProvider;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.api.preferences.UiPreferences;
 import org.exbin.framework.ui.gui.AppearanceOptionsPanel;
-import org.exbin.framework.ui.gui.MainOptionsPanel;
-import org.exbin.framework.ui.options.impl.AppearanceOptionsImpl;
-import org.exbin.framework.ui.options.impl.UiOptionsImpl;
-import org.exbin.framework.ui.preferences.AppearancePreferences;
+import org.exbin.framework.ui.options.AppearanceOptionsPage;
 import org.exbin.framework.utils.ComponentResourceProvider;
-import org.exbin.framework.utils.DesktopUtils;
 
 /**
  * Module user interface handling.
@@ -128,58 +116,16 @@ public class UiModule implements UiModuleApi {
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         getMainOptionsManager();
-        OptionsPage<UiOptionsImpl> mainOptionsPage = mainOptionsManager.getMainOptionsPage();
+        // OptionsPage<UiOptions> mainOptionsPage = mainOptionsManager.getMainOptionsPage();
         // TODO optionsModule.addOptionsPage(mainOptionsPage, "");
-        Optional<MainOptionsPanel> mainOptionsPanel = mainOptionsManager.getMainOptionsPanel();
+        // Optional<MainOptionsPanel> mainOptionsPanel = mainOptionsManager.getMainOptionsPanel();
         // TODO
         /*
         if (mainOptionsExtPage != null) {
             mainOptionsPanel.get().addExtendedPanel(mainOptionsExtPage.createPanel());
         } */
 
-        OptionsPage<AppearanceOptionsImpl> appearanceOptionsPage = new DefaultOptionsPage<AppearanceOptionsImpl>() {
-            @Nonnull
-            @Override
-            public OptionsComponent<AppearanceOptionsImpl> createPanel() {
-                appearanceOptionsPanel = new AppearanceOptionsPanel();
-                return appearanceOptionsPanel;
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(AppearanceOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public AppearanceOptionsImpl createOptions() {
-                return new AppearanceOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, AppearanceOptionsImpl options) {
-                AppearancePreferences prefs = new AppearancePreferences(preferences);
-                options.loadFromPreferences(prefs);
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, AppearanceOptionsImpl options) {
-                AppearancePreferences prefs = new AppearancePreferences(preferences);
-                options.saveToParameters(prefs);
-            }
-
-            @Override
-            public void applyPreferencesChanges(AppearanceOptionsImpl options) {
-                // TODO Drop frame module dependency / move frame options to frame module
-                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                ApplicationFrameHandler frame = frameModule.getFrameHandler();
-                frame.setToolBarVisible(options.isShowToolBar());
-                frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
-                frame.setStatusBarVisible(options.isShowStatusBar());
-                frameModule.notifyFrameUpdated();
-            }
-        };
+        AppearanceOptionsPage appearanceOptionsPage = new AppearanceOptionsPage();
         ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) appearanceOptionsPage).getResourceBundle();
         List<OptionsPathItem> optionsPath = new ArrayList<>();
         optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));

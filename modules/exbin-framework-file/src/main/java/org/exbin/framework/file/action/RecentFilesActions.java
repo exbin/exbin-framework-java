@@ -33,11 +33,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileSystemView;
 import org.exbin.framework.App;
-import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.file.api.FileType;
-import org.exbin.framework.file.preferences.RecentFilesPreferences;
+import org.exbin.framework.file.options.RecentFilesOptions;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.utils.UiUtils;
 
 /**
@@ -50,7 +50,7 @@ public class RecentFilesActions {
 
     private ResourceBundle resourceBundle;
     private FilesControl filesControl;
-    private Preferences preferences;
+    private OptionsStorage preferences;
 
     private List<RecentItem> recentFiles = null;
 
@@ -86,7 +86,7 @@ public class RecentFilesActions {
     }
 
     private void loadState(JMenu fileOpenRecentMenu) {
-        RecentFilesPreferences recentFilesParameters = new RecentFilesPreferences(preferences);
+        RecentFilesOptions recentFilesParameters = new RecentFilesOptions(preferences);
         recentFiles.clear();
         int recent = 1;
         while (recent < 14) {
@@ -103,7 +103,7 @@ public class RecentFilesActions {
     }
 
     private void saveState() {
-        RecentFilesPreferences recentFilesParameters = new RecentFilesPreferences(preferences);
+        RecentFilesOptions recentFilesParameters = new RecentFilesOptions(preferences);
         for (int i = 0; i < recentFiles.size(); i++) {
             recentFilesParameters.setFilePath(recentFiles.get(i).getFileName(), i + 1);
             recentFilesParameters.setModuleName(recentFiles.get(i).getModuleName(), i + 1);
@@ -174,11 +174,11 @@ public class RecentFilesActions {
     }
 
     @Nullable
-    public Preferences getPreferences() {
+    public OptionsStorage getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(Preferences preferences) {
+    public void setPreferences(OptionsStorage preferences) {
         this.preferences = preferences;
     }
 

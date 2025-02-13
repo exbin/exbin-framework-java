@@ -15,10 +15,11 @@
  */
 package org.exbin.framework.preferences;
 
+import java.util.prefs.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 
 /**
@@ -29,7 +30,7 @@ import org.exbin.framework.preferences.api.PreferencesModuleApi;
 @ParametersAreNonnullByDefault
 public class PreferencesModule implements PreferencesModuleApi {
 
-    private Preferences appPreferences;
+    private OptionsStorage appPreferences;
 
     public PreferencesModule() {
     }
@@ -48,14 +49,14 @@ public class PreferencesModule implements PreferencesModuleApi {
 
     @Nonnull
     @Override
-    public Preferences getAppPreferences() {
+    public OptionsStorage getAppPreferences() {
         if (appPreferences == null) {
             setupAppPreferences(App.getModuleProvider().getManifestClass());
         }
         return appPreferences;
     }
 
-    public void setAppPreferences(Preferences appPreferences) {
+    public void setAppPreferences(OptionsStorage appPreferences) {
         this.appPreferences = appPreferences;
     }
 }

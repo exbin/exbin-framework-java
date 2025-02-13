@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.editor.text.options.impl.TextFontOptionsImpl;
+import org.exbin.framework.editor.text.options.TextFontOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
@@ -37,7 +37,7 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextFontOptionsImpl> {
+public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextFontOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private FontChangeAction fontChangeAction;
@@ -60,13 +60,13 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     }
 
     @Override
-    public void saveToOptions(TextFontOptionsImpl options) {
+    public void saveToOptions(TextFontOptions options) {
         options.setUseDefaultFont(defaultFontCheckBox.isSelected());
         options.setFontAttributes(codeFont != null ? codeFont.getAttributes() : null);
     }
 
     @Override
-    public void loadFromOptions(TextFontOptionsImpl options) {
+    public void loadFromOptions(TextFontOptions options) {
         boolean useDefaultFont = options.isUseDefaultFont();
         defaultFontCheckBox.setSelected(useDefaultFont);
         setEnabled(!useDefaultFont);

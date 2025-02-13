@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.file.preferences;
+package org.exbin.framework.file.options;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * Recently opened files preferences.
@@ -26,46 +27,51 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class RecentFilesPreferences {
+public class RecentFilesOptions implements OptionsData {
 
-    public static final String PREFERENCES_RECENTFILE_PATH_PREFIX = "recentFile.path.";
-    public static final String PREFEFRENCES_RECENTFILE_MODULE_PREFIX = "recentFile.module.";
-    public static final String PREFERENCES_RECENFILE_MODE_PREFIX = "recentFile.mode.";
+    public static final String KEY_RECENTFILE_PATH_PREFIX = "recentFile.path.";
+    public static final String KEY_RECENTFILE_MODULE_PREFIX = "recentFile.module.";
+    public static final String KEY_RECENFILE_MODE_PREFIX = "recentFile.mode.";
 
-    private final Preferences preferences;
+    private final OptionsStorage storage;
 
-    public RecentFilesPreferences(Preferences preferences) {
-        this.preferences = preferences;
+    public RecentFilesOptions(OptionsStorage storage) {
+        this.storage = storage;
     }
 
     @Nonnull
     public Optional<String> getFilePath(int index) {
-        return preferences.get(PREFERENCES_RECENTFILE_PATH_PREFIX + String.valueOf(index));
+        return storage.get(KEY_RECENTFILE_PATH_PREFIX + String.valueOf(index));
     }
 
     @Nonnull
     public Optional<String> getModuleName(int index) {
-        return preferences.get(PREFEFRENCES_RECENTFILE_MODULE_PREFIX + String.valueOf(index));
+        return storage.get(KEY_RECENTFILE_MODULE_PREFIX + String.valueOf(index));
     }
 
     @Nonnull
     public Optional<String> getFileMode(int index) {
-        return preferences.get(PREFERENCES_RECENFILE_MODE_PREFIX + String.valueOf(index));
+        return storage.get(KEY_RECENFILE_MODE_PREFIX + String.valueOf(index));
     }
 
     public void setFilePath(String value, int index) {
-        preferences.put(PREFERENCES_RECENTFILE_PATH_PREFIX + String.valueOf(index), value);
+        storage.put(KEY_RECENTFILE_PATH_PREFIX + String.valueOf(index), value);
     }
 
     public void setModuleName(String value, int index) {
-        preferences.put(PREFEFRENCES_RECENTFILE_MODULE_PREFIX + String.valueOf(index), value);
+        storage.put(KEY_RECENTFILE_MODULE_PREFIX + String.valueOf(index), value);
     }
 
     public void setFileMode(String value, int index) {
-        preferences.put(PREFERENCES_RECENFILE_MODE_PREFIX + String.valueOf(index), value);
+        storage.put(KEY_RECENFILE_MODE_PREFIX + String.valueOf(index), value);
     }
 
     public void remove(int index) {
-        preferences.remove(PREFERENCES_RECENTFILE_PATH_PREFIX + String.valueOf(index));
+        storage.remove(KEY_RECENTFILE_PATH_PREFIX + String.valueOf(index));
+    }
+
+    @Override
+    public void copyTo(OptionsData options) {
+        
     }
 }

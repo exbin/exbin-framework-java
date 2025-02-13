@@ -25,24 +25,19 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.addon.update.options.CheckForUpdateOptions;
-import org.exbin.framework.addon.update.options.gui.ApplicationUpdateOptionsPanel;
-import org.exbin.framework.addon.update.preferences.CheckForUpdatePreferences;
 import org.exbin.framework.addon.update.service.CheckForUpdateService;
 import org.exbin.framework.addon.update.service.impl.CheckForUpdateServiceImpl;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.addon.update.action.CheckForUpdateAction;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.menu.MenuContribution;
 import org.exbin.framework.action.api.menu.MenuManagement;
 import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
 import org.exbin.framework.addon.update.api.AddonUpdateModuleApi;
+import org.exbin.framework.addon.update.options.CheckForUpdateOptionsPage;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
-import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsPageManagement;
 
 /**
@@ -88,38 +83,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
 
     @Override
     public void registerOptionsPanels() {
-        DefaultOptionsPage<CheckForUpdateOptions> optionsPage = new DefaultOptionsPage<CheckForUpdateOptions>() {
-            @Override
-            public OptionsComponent<CheckForUpdateOptions> createPanel() {
-                return new ApplicationUpdateOptionsPanel();
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(ApplicationUpdateOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public CheckForUpdateOptions createOptions() {
-                return new CheckForUpdateOptions();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, CheckForUpdateOptions options) {
-                options.loadFromPreferences(new CheckForUpdatePreferences(preferences));
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, CheckForUpdateOptions options) {
-                options.saveToPreferences(new CheckForUpdatePreferences(preferences));
-            }
-
-            @Override
-            public void applyPreferencesChanges(CheckForUpdateOptions options) {
-            }
-        };
+        CheckForUpdateOptionsPage optionsPage = new CheckForUpdateOptionsPage();
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
         optionsPageManagement.registerOptionsPage(optionsPage);

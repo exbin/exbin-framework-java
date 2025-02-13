@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.options.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.ComponentResourceProvider;
 
 /**
@@ -24,7 +23,6 @@ import org.exbin.framework.utils.ComponentResourceProvider;
  * @author ExBin Project (https://exbin.org)
  * @param <T> options data
  */
-@ParametersAreNonnullByDefault
 public interface DefaultOptionsPage<T extends OptionsData> extends OptionsPage<T>, ComponentResourceProvider {
 
 }

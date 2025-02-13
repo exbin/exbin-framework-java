@@ -36,7 +36,6 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
@@ -48,6 +47,7 @@ import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
 import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.toolbar.ToolBarManagement;
 import org.exbin.framework.frame.action.FrameActions;
+import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.utils.DesktopUtils;
 
 /**
@@ -167,7 +167,7 @@ public class FrameModule implements FrameModuleApi {
         saveFramePositionToPreferences(windowPosition, preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
     }
 
-    static private void saveFramePositionToPreferences(WindowPosition windowPosition, Preferences pref, String prefix) {
+    static private void saveFramePositionToPreferences(WindowPosition windowPosition, OptionsStorage pref, String prefix) {
         pref.putInt(prefix + PREFERENCES_SCREEN_INDEX, windowPosition.getScreenIndex());
         pref.putInt(prefix + PREFERENCES_SCREEN_WIDTH, windowPosition.getScreenWidth());
         pref.putInt(prefix + PREFERENCES_SCREEN_HEIGHT, windowPosition.getScreenHeight());
@@ -178,7 +178,7 @@ public class FrameModule implements FrameModuleApi {
         pref.putBoolean(prefix + PREFERENCES_MAXIMIZED, windowPosition.isMaximized());
     }
 
-    static private void loadFramePositionFromPreferences(WindowPosition windowPosition, Preferences pref, String prefix) {
+    static private void loadFramePositionFromPreferences(WindowPosition windowPosition, OptionsStorage pref, String prefix) {
         windowPosition.setScreenIndex(pref.getInt(prefix + PREFERENCES_SCREEN_INDEX, 0));
         windowPosition.setScreenWidth(pref.getInt(prefix + PREFERENCES_SCREEN_WIDTH, 0));
         windowPosition.setScreenHeight(pref.getInt(prefix + PREFERENCES_SCREEN_HEIGHT, 0));
@@ -189,7 +189,7 @@ public class FrameModule implements FrameModuleApi {
         windowPosition.setMaximized(pref.getBoolean(prefix + PREFERENCES_MAXIMIZED, false));
     }
 
-    static private boolean preferencesFramePositionExists(Preferences pref, String prefix) {
+    static private boolean preferencesFramePositionExists(OptionsStorage pref, String prefix) {
         return pref.exists(prefix + PREFERENCES_SCREEN_INDEX);
     }
 

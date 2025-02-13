@@ -21,12 +21,12 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Preferences interface.
+ * Options storage interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface Preferences {
+public interface OptionsStorage {
 
     void flush();
 

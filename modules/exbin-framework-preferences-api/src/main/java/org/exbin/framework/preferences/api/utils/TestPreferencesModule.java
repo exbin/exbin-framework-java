@@ -17,7 +17,7 @@ package org.exbin.framework.preferences.api.utils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 
 /**
@@ -28,7 +28,7 @@ import org.exbin.framework.preferences.api.PreferencesModuleApi;
 @ParametersAreNonnullByDefault
 public class TestPreferencesModule implements PreferencesModuleApi {
 
-    private final Preferences appPreferences = new EmptyPreferences();
+    private final OptionsStorage appPreferences = new EmptyPreferences();
 
     @Override
     public void setupAppPreferences(Class clazz) {
@@ -36,7 +36,7 @@ public class TestPreferencesModule implements PreferencesModuleApi {
 
     @Nonnull
     @Override
-    public Preferences getAppPreferences() {
+    public OptionsStorage getAppPreferences() {
         return appPreferences;
     }
 }

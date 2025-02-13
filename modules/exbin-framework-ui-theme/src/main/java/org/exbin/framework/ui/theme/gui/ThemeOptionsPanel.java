@@ -19,9 +19,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,15 +27,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
-import org.exbin.framework.ui.theme.options.impl.ThemeOptionsImpl;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
+import org.exbin.framework.ui.theme.options.ThemeOptions;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
@@ -48,13 +45,12 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ThemeOptionsPanel extends javax.swing.JPanel implements OptionsComponent<ThemeOptionsImpl> {
+public class ThemeOptionsPanel extends javax.swing.JPanel implements OptionsComponent<ThemeOptions> {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ThemeOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
     private ThemeConfigurationListener themeConfigurationListener;
     private OptionsComponent extendedOptionsPanel = null;
-    private String defaultLocaleName = "";
     private Map<String, ConfigurableLafProvider> themeOptions = null;
 
     public ThemeOptionsPanel() {
@@ -76,7 +72,7 @@ public class ThemeOptionsPanel extends javax.swing.JPanel implements OptionsComp
     }
 
     @Override
-    public void loadFromOptions(ThemeOptionsImpl options) {
+    public void loadFromOptions(ThemeOptions options) {
         visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
         iconSetComboBox.setSelectedIndex(findMatchingElement(iconSetComboBox.getModel(), options.getIconSet()));
         renderingModeComboBox.setSelectedIndex(findMatchingElement(renderingModeComboBox.getModel(), options.getRenderingMode()));
@@ -99,7 +95,7 @@ public class ThemeOptionsPanel extends javax.swing.JPanel implements OptionsComp
     }
 
     @Override
-    public void saveToOptions(ThemeOptionsImpl options) {
+    public void saveToOptions(ThemeOptions options) {
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         options.setIconSet((String) iconSetComboBox.getSelectedItem());
         options.setRenderingMode((String) renderingModeComboBox.getSelectedItem());

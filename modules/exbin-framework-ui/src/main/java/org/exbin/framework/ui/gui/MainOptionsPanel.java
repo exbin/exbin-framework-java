@@ -42,6 +42,7 @@ import org.exbin.framework.ui.model.LanguageRecord;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
+import org.exbin.framework.ui.options.LanguageOptions;
 
 /**
  * Main options panel.
@@ -77,7 +78,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     }
 
     @Override
-    public void loadFromOptions(UiOptionsImpl options) {
+    public void loadFromOptions(LanguageOptions options) {
         Locale languageLocale = options.getLanguageLocale();
         ComboBoxModel<LanguageRecord> languageComboBoxModel = languageComboBox.getModel();
         for (int i = 0; i < languageComboBoxModel.getSize(); i++) {
@@ -109,7 +110,7 @@ public class MainOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     }
 
     @Override
-    public void saveToOptions(UiOptionsImpl options) {
+    public void saveToOptions(LanguageOptions options) {
         options.setLanguageLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         options.setIconSet((String) iconSetComboBox.getSelectedItem());

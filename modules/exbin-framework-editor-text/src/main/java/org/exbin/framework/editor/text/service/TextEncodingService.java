@@ -19,7 +19,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.TextEncodingStatusApi;
-import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
 
 /**
  * Text encoding panel API.
@@ -61,7 +61,7 @@ public interface TextEncodingService {
 
     void setTextEncodingStatus(TextEncodingStatusApi textEncodingStatus);
 
-    void loadFromPreferences(TextEncodingPreferences preferences);
+    void loadFromPreferences(TextEncodingOptions preferences);
 
     void setEncodingChangeListener(EncodingChangeListener listener);
 

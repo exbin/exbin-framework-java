@@ -33,7 +33,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.exbin.framework.App;
-import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsPathItem;
@@ -41,6 +40,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
@@ -56,7 +56,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
 
     public static final String OPTIONS_PANEL_KEY = "options";
 
-    private Preferences preferences = null;
+    private OptionsStorage preferences = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsTreePanel.class);
     private Map<String, PageRecord<?>> optionPages;
     private PageRecord<?> currentOptionsPanel = null;
@@ -308,7 +308,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
         }
     }
 
-    public void setPreferences(Preferences preferences) {
+    public void setPreferences(OptionsStorage preferences) {
         this.preferences = preferences;
     }
 

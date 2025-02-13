@@ -17,7 +17,6 @@ package org.exbin.framework.ui.theme;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,14 +28,13 @@ import org.exbin.framework.App;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.theme.api.LafProvider;
-import org.exbin.framework.ui.theme.api.preferences.UiPreferences;
-import org.exbin.framework.ui.theme.gui.ThemeOptionsPanel;
-import org.exbin.framework.ui.theme.options.impl.ThemeOptionsImpl;
+import org.exbin.framework.ui.theme.options.ThemeOptions;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.ui.theme.api.UiThemeModuleApi;
+import org.exbin.framework.ui.theme.options.ThemeOptionsPage;
 
 /**
  * Module user interface handling.
@@ -49,7 +47,7 @@ public class UiThemeModule implements UiThemeModuleApi {
     private ResourceBundle resourceBundle;
     private final List<LafProvider> lafProviders = new ArrayList<>();
 
-    private ThemeOptionsManager mainOptionsManager;
+    private ThemeOptionsManager themeOptionsManager;
 
     public UiThemeModule() {
     }
@@ -85,7 +83,7 @@ public class UiThemeModule implements UiThemeModuleApi {
         UiModuleApi uiModule = App.getModule(UiModuleApi.class);
         uiModule.addPreInitAction(() -> {
             PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-            UiPreferences uiPreferences = new UiPreferences(preferencesModule.getAppPreferences());
+            ThemeOptions uiPreferences = new ThemeOptions(preferencesModule.getAppPreferences());
 
             // Rendering should be initialized first before any GUI is used
             String renderingMode = uiPreferences.getRenderingMode();
@@ -188,17 +186,17 @@ public class UiThemeModule implements UiThemeModuleApi {
     @Override
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        getMainOptionsManager();
-        OptionsPage<ThemeOptionsImpl> mainOptionsPage = mainOptionsManager.getMainOptionsPage();
-        // TODO optionsModule.addOptionsPage(mainOptionsPage, "");
-        Optional<ThemeOptionsPanel> mainOptionsPanel = mainOptionsManager.getMainOptionsPanel();
+        getThemeOptionsManager();
+        ThemeOptionsPage themeOptionsPage = themeOptionsManager.getThemeOptionsPage();
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+        optionsPageManagement.registerOptionsPage(themeOptionsPage);
     }
 
     @Nonnull
-    public ThemeOptionsManager getMainOptionsManager() {
-        if (mainOptionsManager == null) {
-            mainOptionsManager = new ThemeOptionsManager();
+    public ThemeOptionsManager getThemeOptionsManager() {
+        if (themeOptionsManager == null) {
+            themeOptionsManager = new ThemeOptionsManager();
         }
-        return mainOptionsManager;
+        return themeOptionsManager;
     }
 }

@@ -25,49 +25,29 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.App;
-import org.exbin.framework.preferences.api.Preferences;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.editor.text.action.TextFontAction;
-import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
-import org.exbin.framework.editor.text.options.impl.TextColorOptionsImpl;
-import org.exbin.framework.editor.text.options.impl.TextEncodingOptionsImpl;
-import org.exbin.framework.editor.text.options.impl.TextFontOptionsImpl;
-import org.exbin.framework.editor.text.gui.AddEncodingPanel;
-import org.exbin.framework.editor.text.options.gui.TextAppearanceOptionsPanel;
-import org.exbin.framework.editor.text.options.gui.TextColorOptionsPanel;
-import org.exbin.framework.editor.text.options.gui.TextEncodingOptionsPanel;
-import org.exbin.framework.editor.text.options.gui.TextFontOptionsPanel;
-import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.gui.TextStatusPanel;
-import org.exbin.framework.editor.text.preferences.TextAppearancePreferences;
-import org.exbin.framework.editor.text.preferences.TextColorPreferences;
-import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
-import org.exbin.framework.editor.text.preferences.TextFontPreferences;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
-import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.editor.text.service.TextAppearanceService;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.editor.text.service.TextFontService;
-import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
@@ -80,13 +60,13 @@ import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.toolbar.SeparationToolBarContributionRule;
 import org.exbin.framework.action.api.toolbar.ToolBarContribution;
 import org.exbin.framework.action.api.toolbar.ToolBarManagement;
-import org.exbin.framework.editor.text.options.gui.TextEncodingPanel;
+import org.exbin.framework.editor.text.options.TextColorOptionsPage;
+import org.exbin.framework.editor.text.options.TextEncodingOptionsPage;
+import org.exbin.framework.editor.text.options.TextFontOptionsPage;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.options.api.OptionsComponent;
-import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.ui.api.UiModuleApi;
-import org.exbin.framework.window.api.WindowHandler;
 
 /**
  * Text editor module.
@@ -173,7 +153,10 @@ public class EditorTextModule implements Module {
 
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        TextColorService textColorService = new TextColorService() {
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+
+        TextColorOptionsPage textColorsOptionsPage = new TextColorOptionsPage();
+        textColorsOptionsPage.setTextColorService(new TextColorService() {
             @Nonnull
             @Override
             public Color[] getCurrentTextColors() {
@@ -190,67 +173,11 @@ public class EditorTextModule implements Module {
             public void setCurrentTextColors(Color[] colors) {
                 ((TextPanel) getEditorProvider().getEditorComponent()).setCurrentColors(colors);
             }
-        };
-
-        OptionsPage<TextColorOptionsImpl> textColorsOptionsPage = new DefaultOptionsPage<TextColorOptionsImpl>() {
-            private TextColorOptionsPanel panel;
-
-            @Nonnull
-            @Override
-            public OptionsComponent<TextColorOptionsImpl> createPanel() {
-                if (panel == null) {
-                    panel = new TextColorOptionsPanel();
-                    panel.setTextColorService(textColorService);
-                }
-                return panel;
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(TextColorOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public TextColorOptionsImpl createOptions() {
-                return new TextColorOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, TextColorOptionsImpl options) {
-                options.loadFromPreferences(new TextColorPreferences(preferences));
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, TextColorOptionsImpl options) {
-                options.saveToPreferences(new TextColorPreferences(preferences));
-            }
-
-            @Override
-            public void applyPreferencesChanges(TextColorOptionsImpl options) {
-                if (options.isUseDefaultColors()) {
-                    textColorService.setCurrentTextColors(textColorService.getDefaultTextColors());
-                } else {
-                    Color[] colors = new Color[5];
-                    colors[0] = intToColor(options.getTextColor());
-                    colors[1] = intToColor(options.getTextBackgroundColor());
-                    colors[2] = intToColor(options.getSelectionTextColor());
-                    colors[3] = intToColor(options.getSelectionBackgroundColor());
-                    colors[4] = intToColor(options.getFoundBackgroundColor());
-                    textColorService.setCurrentTextColors(colors);
-                }
-            }
-
-            @Nullable
-            private Color intToColor(@Nullable Integer intValue) {
-                return intValue == null ? null : new Color(intValue);
-            }
-        };
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+        });
         optionsPageManagement.registerOptionsPage(textColorsOptionsPage);
 
-        TextFontService textFontService = new TextFontService() {
+        TextFontOptionsPage textFontOptionsPage = new TextFontOptionsPage();
+        textFontOptionsPage.setTextFontService(new TextFontService() {
             @Nonnull
             @Override
             public Font getCurrentFont() {
@@ -267,89 +194,7 @@ public class EditorTextModule implements Module {
             public void setCurrentFont(Font font) {
                 ((TextPanel) getEditorProvider().getEditorComponent()).setCurrentFont(font);
             }
-        };
-
-        OptionsPage<TextFontOptionsImpl> textFontOptionsPage = new DefaultOptionsPage<TextFontOptionsImpl>() {
-
-            private TextFontOptionsPanel panel;
-
-            @Nonnull
-            @Override
-            public OptionsComponent<TextFontOptionsImpl> createPanel() {
-                if (panel == null) {
-                    panel = new TextFontOptionsPanel();
-                    panel.setTextFontService(textFontService);
-                    panel.setFontChangeAction(new TextFontOptionsPanel.FontChangeAction() {
-                        @Override
-                        public Font changeFont(Font currentFont) {
-                            final Result result = new Result();
-                            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                            final TextFontPanel fontPanel = new TextFontPanel();
-                            fontPanel.setStoredFont(currentFont);
-                            DefaultControlPanel controlPanel = new DefaultControlPanel();
-                            final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
-                            windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
-                            windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
-                            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                                if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
-                                    if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                                        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                                        TextFontPreferences textFontParameters = new TextFontPreferences(preferencesModule.getAppPreferences());
-                                        textFontParameters.setUseDefaultFont(true);
-                                        textFontParameters.setFont(fontPanel.getStoredFont());
-                                    }
-                                    result.font = fontPanel.getStoredFont();
-                                }
-
-                                dialog.close();
-                                dialog.dispose();
-                            });
-                            dialog.showCentered(frameModule.getFrame());
-
-                            return result.font;
-                        }
-
-                        class Result {
-
-                            Font font;
-                        }
-                    });
-                }
-                return panel;
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(TextFontOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public TextFontOptionsImpl createOptions() {
-                return new TextFontOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, TextFontOptionsImpl options) {
-                options.loadFromPreferences(new TextFontPreferences(preferences));
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, TextFontOptionsImpl options) {
-                options.saveToPreferences(new TextFontPreferences(preferences));
-            }
-
-            @Override
-            public void applyPreferencesChanges(TextFontOptionsImpl options) {
-                if (options.isUseDefaultFont()) {
-                    textFontService.setCurrentFont(textFontService.getDefaultFont());
-                } else {
-                    textFontService.setCurrentFont(options.getFont(textFontService.getDefaultFont()));
-                }
-            }
-        };
+        });
         optionsPageManagement.registerOptionsPage(textFontOptionsPage);
 
         TextAppearanceService textAppearanceService;
@@ -365,108 +210,14 @@ public class EditorTextModule implements Module {
             }
         };
 
-        OptionsPage<TextEncodingOptionsImpl> textEncodingOptionsPage = new DefaultOptionsPage<TextEncodingOptionsImpl>() {
-            private TextEncodingOptionsPanel panel;
-
-            @Override
-            public TextEncodingOptionsPanel createPanel() {
-                if (panel == null) {
-                    panel = new TextEncodingOptionsPanel();
-                    panel.setTextEncodingService(getEncodingsHandler().getTextEncodingService());
-                    panel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingPanel.EncodingsUpdate encodingsUpdate) -> {
-                        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                        final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
-                        addEncodingPanel.setUsedEncodings(usedEncodings);
-                        DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-                        final WindowHandler dialog = windowModule.createDialog(addEncodingPanel, controlPanel);
-                        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                            if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                                encodingsUpdate.update(addEncodingPanel.getEncodings());
-                            }
-
-                            dialog.close();
-                            dialog.dispose();
-                        });
-                        windowModule.setWindowTitle(dialog, addEncodingPanel.getResourceBundle());
-                        dialog.showCentered(frameModule.getFrame());
-                    });
-                }
-
-                return panel;
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(TextEncodingOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public TextEncodingOptionsImpl createOptions() {
-                return new TextEncodingOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
-                options.loadFromPreferences(new TextEncodingPreferences(preferences));
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, TextEncodingOptionsImpl options) {
-                options.saveToPreferences(new TextEncodingPreferences(preferences));
-            }
-
-            @Override
-            public void applyPreferencesChanges(TextEncodingOptionsImpl options) {
-                getEncodingsHandler();
-                encodingsHandler.setSelectedEncoding(options.getSelectedEncoding());
-                encodingsHandler.setEncodings(options.getEncodings());
-            }
-        };
+        TextEncodingOptionsPage textEncodingOptionsPage = new TextEncodingOptionsPage();
+        textEncodingOptionsPage.setEncodingsHandler(getEncodingsHandler());
         optionsPageManagement.registerOptionsPage(textEncodingOptionsPage);
 
         UiModuleApi uiModule = App.getModule(UiModuleApi.class);
         throw new UnsupportedOperationException("Not supported yet.");
         // TODO
 /*        uiModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptionsImpl>() {
-            private TextAppearanceOptionsPanel panel;
-
-            @Override
-            public OptionsComponent<TextAppearanceOptionsImpl> createPanel() {
-                if (panel == null) {
-                    panel = new TextAppearanceOptionsPanel();
-                }
-                return panel;
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public TextAppearanceOptionsImpl createOptions() {
-                return new TextAppearanceOptionsImpl();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, TextAppearanceOptionsImpl options) {
-                options.loadFromPreferences(new TextAppearancePreferences(preferences));
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, TextAppearanceOptionsImpl options) {
-                options.saveToPreferences(new TextAppearancePreferences(preferences));
-            }
-
-            @Override
-            public void applyPreferencesChanges(TextAppearanceOptionsImpl options) {
-                textAppearanceService.setWordWrapMode(options.isWordWrapping());
-            }
         }); */
     }
 
@@ -625,8 +376,8 @@ public class EditorTextModule implements Module {
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM));
     }
 
-    public void loadFromPreferences(Preferences preferences) {
-        encodingsHandler.loadFromPreferences(new TextEncodingPreferences(preferences));
+    public void loadFromPreferences(OptionsStorage preferences) {
+        encodingsHandler.loadFromPreferences(new TextEncodingOptions(preferences));
     }
 
     @ParametersAreNonnullByDefault

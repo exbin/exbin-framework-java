@@ -25,7 +25,7 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.TextFontApi;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
-import org.exbin.framework.editor.text.preferences.TextFontPreferences;
+import org.exbin.framework.editor.text.options.TextFontOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.handler.OptionsControlHandler;
@@ -88,7 +88,7 @@ public class TextFontAction extends AbstractAction {
             if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
                 if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
                     PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                    TextFontPreferences parameters = new TextFontPreferences(preferencesModule.getAppPreferences());
+                    TextFontOptions parameters = new TextFontOptions(preferencesModule.getAppPreferences());
                     parameters.setUseDefaultFont(false);
                     parameters.setFont(fontPanel.getStoredFont());
                 }

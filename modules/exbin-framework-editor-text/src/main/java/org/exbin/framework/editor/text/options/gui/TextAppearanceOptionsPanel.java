@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.editor.text.options.impl.TextAppearanceOptionsImpl;
+import org.exbin.framework.editor.text.options.TextAppearanceOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
@@ -33,7 +33,7 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextAppearanceOptionsImpl> {
+public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextAppearanceOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceOptionsPanel.class);
@@ -49,12 +49,12 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
     }
 
     @Override
-    public void saveToOptions(TextAppearanceOptionsImpl options) {
+    public void saveToOptions(TextAppearanceOptions options) {
         options.setWordWrapping(wordWrapCheckBox.isSelected());
     }
 
     @Override
-    public void loadFromOptions(TextAppearanceOptionsImpl options) {
+    public void loadFromOptions(TextAppearanceOptions options) {
         wordWrapCheckBox.setSelected(options.isWordWrapping());
     }
 

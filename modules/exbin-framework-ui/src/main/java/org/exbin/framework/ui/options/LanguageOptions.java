@@ -13,40 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.api;
+package org.exbin.framework.ui.options;
 
+import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
-import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.options.api.OptionsData;
 
 /**
- * Look&feel provider with options handler.
+ * UI language options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface LafOptionsHandler {
+public class LanguageOptions implements OptionsData {
 
-    /**
-     * Returns options component.
-     *
-     * @return component
-     */
     @Nonnull
-    JComponent createOptionsComponent();
+    public Locale getLanguageLocale() {
+        
+    }
 
-    /**
-     * Loads options from preferences.
-     *
-     * @param preferences preferences
-     */
-    void loadFromPreferences(Preferences preferences);
+    public void setLanguageLocale(Locale languageLocale) {
+        
+    }
 
-    /**
-     * Saves options to preferences.
-     *
-     * @param preferences preferences
-     */
-    void saveToPreferences(Preferences preferences);
+    @Override
+    public void copyTo(OptionsData options) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

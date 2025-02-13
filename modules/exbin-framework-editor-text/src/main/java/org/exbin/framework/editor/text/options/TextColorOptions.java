@@ -15,41 +15,130 @@
  */
 package org.exbin.framework.editor.text.options;
 
+import java.util.Optional;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * Text color options.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface TextColorOptions {
+@ParametersAreNonnullByDefault
+public class TextColorOptions implements OptionsData {
+
+    public static final String KEY_TEXT_COLOR_DEFAULT = "textColor.default";
+    public static final String KEY_TEXT_COLOR_TEXT = "textColor.text";
+    public static final String KEY_TEXT_COLOR_BACKGROUND = "textColor.background";
+    public static final String KEY_TEXT_COLOR_SELECTION = "textColor.selection";
+    public static final String KEY_TEXT_COLOR_SELECTION_BACKGROUND = "textColor.selectionBackground";
+    public static final String KEY_TEXT_COLOR_FOUND = "textColor.found";
+
+    private final OptionsStorage storage;
+
+    public TextColorOptions(OptionsStorage storage) {
+        this.storage = storage;
+    }
+
+    public boolean isUseDefaultColors() {
+        return storage.getBoolean(KEY_TEXT_COLOR_DEFAULT, true);
+    }
+
+    public void setUseDefaultColors(boolean useDefaultColor) {
+        storage.putBoolean(KEY_TEXT_COLOR_DEFAULT, useDefaultColor);
+    }
 
     @Nullable
-    Integer getFoundBackgroundColor();
+    public Integer getTextColor() {
+        return getColorAsInt(KEY_TEXT_COLOR_TEXT);
+    }
 
     @Nullable
-    Integer getSelectionBackgroundColor();
+    public Integer getTextBackgroundColor() {
+        return getColorAsInt(KEY_TEXT_COLOR_BACKGROUND);
+    }
 
     @Nullable
-    Integer getSelectionTextColor();
+    public Integer getSelectionTextColor() {
+        return getColorAsInt(KEY_TEXT_COLOR_SELECTION);
+    }
 
     @Nullable
-    Integer getTextBackgroundColor();
+    public Integer getSelectionBackgroundColor() {
+        return getColorAsInt(KEY_TEXT_COLOR_SELECTION_BACKGROUND);
+    }
 
     @Nullable
-    Integer getTextColor();
+    public Integer getFoundBackgroundColor() {
+        return getColorAsInt(KEY_TEXT_COLOR_FOUND);
+    }
 
-    boolean isUseDefaultColors();
+    @Nullable
+    private Integer getColorAsInt(String key) {
+        Optional<String> value = storage.get(key);
+        return value.isPresent() ? Integer.valueOf(value.get()) : null;
+    }
 
-    void setFoundBackgroundColor(@Nullable Integer foundBackgroundColor);
+    public void setTextColor(@Nullable Integer color) {
+        setColor(KEY_TEXT_COLOR_TEXT, color);
+    }
 
-    void setSelectionBackgroundColor(@Nullable Integer selectionBackgroundColor);
+    public void setTextColor(int color) {
+        storage.putInt(KEY_TEXT_COLOR_TEXT, color);
+    }
 
-    void setSelectionTextColor(@Nullable Integer selectionTextColor);
+    public void setTextBackgroundColor(@Nullable Integer color) {
+        setColor(KEY_TEXT_COLOR_BACKGROUND, color);
+    }
 
-    void setTextBackgroundColor(@Nullable Integer textBackgroundColor);
+    public void setTextBackgroundColor(int color) {
+        storage.putInt(KEY_TEXT_COLOR_BACKGROUND, color);
+    }
 
-    void setTextColor(@Nullable Integer textColor);
+    public void setSelectionTextColor(@Nullable Integer color) {
+        setColor(KEY_TEXT_COLOR_SELECTION, color);
+    }
 
-    void setUseDefaultColors(boolean useDefaultColors);
+    public void setSelectionTextColor(int color) {
+        storage.putInt(KEY_TEXT_COLOR_SELECTION, color);
+    }
+
+    public void setSelectionBackgroundColor(@Nullable Integer color) {
+        setColor(KEY_TEXT_COLOR_SELECTION_BACKGROUND, color);
+    }
+
+    public void setSelectionBackgroundColor(int color) {
+        storage.putInt(KEY_TEXT_COLOR_SELECTION_BACKGROUND, color);
+    }
+
+    public void setFoundBackgroundColor(@Nullable Integer color) {
+        setColor(KEY_TEXT_COLOR_FOUND, color);
+    }
+
+    public void setFoundBackgroundColor(int color) {
+        storage.putInt(KEY_TEXT_COLOR_FOUND, color);
+    }
+
+    private void setColor(String preferenceName, @Nullable Integer color) {
+        if (color == null) {
+            storage.remove(preferenceName);
+        } else {
+            storage.putInt(preferenceName, color);
+        }
+    }
+
+    @Override
+    public void copyTo(OptionsData options) {
+        if (options instanceof TextColorOptions) {
+            TextColorOptions with = (TextColorOptions) options;
+            with.setFoundBackgroundColor(getFoundBackgroundColor());
+            with.setSelectionBackgroundColor(getSelectionBackgroundColor());
+            with.setSelectionTextColor(getSelectionTextColor());
+            with.setTextBackgroundColor(getTextBackgroundColor());
+            with.setTextColor(getTextColor());
+            with.setUseDefaultColors(isUseDefaultColors());
+        }
+    }
 }

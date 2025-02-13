@@ -50,12 +50,12 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
 
     @Override
     public void loadFromOptions(CheckForUpdateOptions options) {
-        checkForUpdatesOnStartCheckBox.setSelected(options.isCheckForUpdate());
+        checkForUpdatesOnStartCheckBox.setSelected(options.isShouldCheckForUpdate());
     }
 
     @Override
     public void saveToOptions(CheckForUpdateOptions options) {
-        options.setCheckForUpdate(checkForUpdatesOnStartCheckBox.isSelected());
+        options.setShouldCheckForUpdate(checkForUpdatesOnStartCheckBox.isSelected());
     }
 
     /**

@@ -52,7 +52,7 @@ import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePane
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
-import org.exbin.framework.addon.manager.preferences.AddonManagerPreferences;
+import org.exbin.framework.addon.manager.options.AddonManagerOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -495,7 +495,7 @@ public class AddonManagerAction extends AbstractAction {
                 controlPanel.showManualOnlyWarning();
             } else {
                 PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                AddonManagerPreferences addonPreferences = new AddonManagerPreferences(preferencesModule.getAppPreferences());
+                AddonManagerOptions addonPreferences = new AddonManagerOptions(preferencesModule.getAppPreferences());
                 String activatedVersion = addonPreferences.getActivatedVersion();
                 // Version 0.3.0-SNAPSHOT is bugged to read only single record. Ignore service status
                 boolean buggedVersion = "0.3.0-SNAPSHOT".equals(activatedVersion);

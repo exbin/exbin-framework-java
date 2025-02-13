@@ -18,7 +18,7 @@ package org.exbin.framework.ui.theme.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * Look&feel provider with options handler.
@@ -41,12 +41,12 @@ public interface LafOptionsHandler {
      *
      * @param preferences preferences
      */
-    void loadFromPreferences(Preferences preferences);
+    void loadFromPreferences(OptionsStorage preferences);
 
     /**
      * Saves options to preferences.
      *
      * @param preferences preferences
      */
-    void saveToPreferences(Preferences preferences);
+    void saveToPreferences(OptionsStorage preferences);
 }

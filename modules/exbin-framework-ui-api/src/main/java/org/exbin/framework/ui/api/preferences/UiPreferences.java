@@ -15,10 +15,10 @@
  */
 package org.exbin.framework.ui.api.preferences;
 
-import org.exbin.framework.preferences.api.Preferences;
 import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * Framework preferences.
@@ -41,9 +41,9 @@ public class UiPreferences {
     public static final String PREFERENCES_RENDERING_USE_SCREEN_MENU_BAR = "rendering.useScreenMenuBar";
     public static final String PREFERENCES_RENDERING_MACOS_APPEARANCE = "rendering.macOsAppearance";
 
-    private final Preferences preferences;
+    private final OptionsStorage preferences;
 
-    public UiPreferences(Preferences preferences) {
+    public UiPreferences(OptionsStorage preferences) {
         this.preferences = preferences;
     }
 

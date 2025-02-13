@@ -26,7 +26,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.file.options.impl.FileOptionsImpl;
+import org.exbin.framework.file.options.FileOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsComponent;
@@ -40,7 +40,7 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileOptionsPanel extends javax.swing.JPanel implements OptionsComponent<FileOptionsImpl> {
+public class FileOptionsPanel extends javax.swing.JPanel implements OptionsComponent<FileOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FileOptionsPanel.class);
@@ -79,12 +79,12 @@ public class FileOptionsPanel extends javax.swing.JPanel implements OptionsCompo
     }
 
     @Override
-    public void loadFromOptions(FileOptionsImpl options) {
+    public void loadFromOptions(FileOptions options) {
         fileDialogsComboBox.setSelectedIndex(findMatchingElement(fileDialogsComboBox.getModel(), options.getFileDialogs()));
     }
 
     @Override
-    public void saveToOptions(FileOptionsImpl options) {
+    public void saveToOptions(FileOptions options) {
         options.setFileDialogs((String) fileDialogsComboBox.getSelectedItem());
     }
 

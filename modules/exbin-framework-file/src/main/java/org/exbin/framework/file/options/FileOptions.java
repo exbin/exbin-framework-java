@@ -17,6 +17,9 @@ package org.exbin.framework.file.options;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.file.FileDialogsType;
+import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * File options.
@@ -24,10 +27,27 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface FileOptions {
+public class FileOptions implements OptionsData {
+
+    public static final String KEY_FILE_DIALOGS = "fileDialogs";
+
+    private final OptionsStorage storage;
+
+    public FileOptions(OptionsStorage storage) {
+        this.storage = storage;
+    }
 
     @Nonnull
-    String getFileDialogs();
+    public String getFileDialogs() {
+        return storage.get(KEY_FILE_DIALOGS, FileDialogsType.SWING.name());
+    }
 
-    void setFileDialogs(String fileDialogs);
+    public void setFileDialogs(String fileDialogs) {
+        storage.put(KEY_FILE_DIALOGS, fileDialogs);
+    }
+
+    @Override
+    public void copyTo(OptionsData options) {
+        ((FileOptions) options).setFileDialogs(getFileDialogs());
+    }
 }

@@ -13,24 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.manager.options.impl;
+package org.exbin.framework.action.manager.options;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.manager.options.ActionOptions;
-import org.exbin.framework.action.manager.preferences.ActionPreferences;
 import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Action options.
+ * Action manager options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionOptionsImpl implements OptionsData, ActionOptions {
+public class ActionManagerOptions implements OptionsData {
 
-    public void loadFromPreferences(ActionPreferences preferences) {
+    public static final String KEY_ACTION_KEYS = "action.keys";
+    public static final String KEY_ACTION_KEY_PREFIX = "action.key.";
+    public static final String KEY_ACTION_KEY_ID = "id";
+    public static final String KEY_ACTION_KEY_SHORTCUT = "shortcut";
+
+    private final OptionsStorage storage;
+
+    public ActionManagerOptions(OptionsStorage storage) {
+        this.storage = storage;
     }
 
-    public void saveToParameters(ActionPreferences preferences) {
+    @Override
+    public void copyTo(OptionsData options) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

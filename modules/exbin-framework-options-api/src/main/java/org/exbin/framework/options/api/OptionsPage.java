@@ -17,7 +17,7 @@ package org.exbin.framework.options.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * Interface for basic options page.
@@ -27,6 +27,14 @@ import org.exbin.framework.preferences.api.Preferences;
  */
 @ParametersAreNonnullByDefault
 public interface OptionsPage<T extends OptionsData> {
+
+    /**
+     * Returns options page id.
+     *
+     * @return id
+     */
+    @Nonnull
+    String getId();
 
     /**
      * Creates instance of options panel.
@@ -50,7 +58,7 @@ public interface OptionsPage<T extends OptionsData> {
      * @param preferences preferences
      * @param options output options
      */
-    void loadFromPreferences(Preferences preferences, T options);
+    void loadFromPreferences(OptionsStorage preferences, T options);
 
     /**
      * Saves options to preferences.
@@ -58,7 +66,7 @@ public interface OptionsPage<T extends OptionsData> {
      * @param preferences preferences
      * @param options input options
      */
-    void saveToPreferences(Preferences preferences, T options);
+    void saveToPreferences(OptionsStorage preferences, T options);
 
     /**
      * Applies options.

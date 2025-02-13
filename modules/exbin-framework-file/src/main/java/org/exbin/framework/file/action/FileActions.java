@@ -32,6 +32,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.App;
+import org.exbin.framework.file.FileModule;
 import org.exbin.framework.file.api.FileActionsApi;
 import org.exbin.framework.file.api.FileActionsApi.OpenFileResult;
 import org.exbin.framework.file.api.FileType;
@@ -53,7 +54,6 @@ public class FileActions implements FileActionsApi {
     public static final String ALL_FILES_FILTER = "AllFilesFilter";
 
     private ResourceBundle resourceBundle;
-    private boolean useAwtDialogs = false;
 
     public FileActions() {
     }
@@ -99,7 +99,8 @@ public class FileActions implements FileActionsApi {
     @Override
     public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        if (useAwtDialogs) {
+        FileModule fileModule = App.getModule(FileModule.class);
+        if (fileModule.isUseAwtDialogs()) {
             FileDialog fileDialog = new FileDialog(frameModule.getFrame());
             fileDialog.setMode(FileDialog.LOAD);
             fileDialog.setMultipleMode(false);
@@ -157,18 +158,11 @@ public class FileActions implements FileActionsApi {
         return showSaveFileDialog(fileTypes, selectedFile, usedDirectory, null);
     }
 
-    public boolean isUseAwtDialogs() {
-        return useAwtDialogs;
-    }
-
-    public void setUseAwtDialogs(boolean useAwtDialogs) {
-        this.useAwtDialogs = useAwtDialogs;
-    }
-
     @Nonnull
     private OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        if (useAwtDialogs) {
+        FileModule fileModule = App.getModule(FileModule.class);
+        if (fileModule.isUseAwtDialogs()) {
             FileDialog fileDialog = new FileDialog(frameModule.getFrame());
             fileDialog.setMode(FileDialog.SAVE);
             fileDialog.setMultipleMode(false);

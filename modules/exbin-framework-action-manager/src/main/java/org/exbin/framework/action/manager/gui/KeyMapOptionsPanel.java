@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.action.manager.model.KeyMapRecord;
-import org.exbin.framework.action.manager.options.impl.ActionOptionsImpl;
+import org.exbin.framework.action.manager.options.ActionManagerOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsModifiedListener;
@@ -35,7 +35,7 @@ import org.exbin.framework.utils.WindowUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class KeyMapOptionsPanel extends javax.swing.JPanel implements OptionsComponent<ActionOptionsImpl> {
+public class KeyMapOptionsPanel extends javax.swing.JPanel implements OptionsComponent<ActionManagerOptions> {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(KeyMapOptionsPanel.class);
     
@@ -83,11 +83,11 @@ public class KeyMapOptionsPanel extends javax.swing.JPanel implements OptionsCom
     }
 
     @Override
-    public void loadFromOptions(ActionOptionsImpl options) {
+    public void loadFromOptions(ActionManagerOptions options) {
     }
 
     @Override
-    public void saveToOptions(ActionOptionsImpl options) {
+    public void saveToOptions(ActionManagerOptions options) {
     }
 
     private void notifyModified() {

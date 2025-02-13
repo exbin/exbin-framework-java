@@ -24,9 +24,9 @@ import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
-import org.exbin.framework.ui.options.impl.AppearanceOptionsImpl;
 import org.exbin.framework.utils.ComponentResourceProvider;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.ui.options.AppearanceOptions;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
@@ -36,7 +36,7 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<AppearanceOptionsImpl>, ComponentResourceProvider {
+public class AppearanceOptionsPanel extends javax.swing.JPanel implements OptionsComponent<AppearanceOptions>, ComponentResourceProvider {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AppearanceOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
@@ -53,14 +53,14 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     }
 
     @Override
-    public void loadFromOptions(AppearanceOptionsImpl options) {
+    public void loadFromOptions(AppearanceOptions options) {
         showToolbarCheckBox.setSelected(options.isShowToolBar());
         showCaptionsCheckBox.setSelected(options.isShowToolBarCaptions());
         showStatusbarCheckBox.setSelected(options.isShowStatusBar());
     }
 
     @Override
-    public void saveToOptions(AppearanceOptionsImpl options) {
+    public void saveToOptions(AppearanceOptions options) {
         options.setShowToolBar(showToolbarCheckBox.isSelected());
         options.setShowToolBarCaptions(showCaptionsCheckBox.isSelected());
         options.setShowStatusBar(showStatusbarCheckBox.isSelected());

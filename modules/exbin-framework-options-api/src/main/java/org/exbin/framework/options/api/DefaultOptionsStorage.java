@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.preferences.api.utils;
+package org.exbin.framework.options.api;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Empty preferences.
+ * Default options storage.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EmptyPreferences implements OptionsStorage {
+public class DefaultOptionsStorage implements OptionsStorage {
+
+    private final Map<String, Object> values = new HashMap<>();
 
     @Override
     public void flush() {
@@ -34,85 +37,92 @@ public class EmptyPreferences implements OptionsStorage {
 
     @Override
     public boolean exists(String key) {
-        return false;
+        return values.containsKey(key);
     }
 
-    @Nonnull
     @Override
     public Optional<String> get(String key) {
-        return Optional.empty();
+        return Optional.ofNullable((String) values.get(key));
     }
 
-    @Nonnull
     @Override
     public String get(String key, String def) {
-        return def;
+        return (String) values.getOrDefault(key, def);
     }
 
     @Override
     public boolean getBoolean(String key, boolean def) {
-        return def;
+        return (Boolean) values.getOrDefault(key, def);
     }
 
-    @Nonnull
     @Override
     public byte[] getByteArray(String key, byte[] def) {
-        return def;
+        return (byte[]) values.getOrDefault(key, def);
     }
 
     @Override
     public double getDouble(String key, double def) {
-        return def;
+        return (Double) values.getOrDefault(key, def);
     }
 
     @Override
     public float getFloat(String key, float def) {
-        return def;
+        return (Float) values.getOrDefault(key, def);
     }
 
     @Override
     public int getInt(String key, int def) {
-        return def;
+        return (Integer) values.getOrDefault(key, def);
     }
 
     @Override
     public long getLong(String key, long def) {
-        return def;
+        return (Long) values.getOrDefault(key, def);
     }
 
     @Override
     public void put(String key, String value) {
+        values.put(key, value);
     }
 
     @Override
     public void putBoolean(String key, boolean value) {
+        values.put(key, value);
     }
 
     @Override
     public void putByteArray(String key, byte[] value) {
+        values.put(key, value);
     }
 
     @Override
     public void putDouble(String key, double value) {
+        values.put(key, value);
     }
 
     @Override
     public void putFloat(String key, float value) {
+        values.put(key, value);
     }
 
     @Override
     public void putInt(String key, int value) {
+        values.put(key, value);
     }
 
     @Override
     public void putLong(String key, long value) {
+        values.put(key, value);
     }
 
     @Override
     public void remove(String key) {
+        values.remove(key);
     }
 
     @Override
     public void sync() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
 }

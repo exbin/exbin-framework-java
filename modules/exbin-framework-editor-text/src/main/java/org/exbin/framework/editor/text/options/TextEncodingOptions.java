@@ -1,5 +1,3 @@
-package org.exbin.framework.editor.text.options;
-
 /*
  * Copyright (C) ExBin Project
  *
@@ -15,26 +13,81 @@ package org.exbin.framework.editor.text.options;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.exbin.framework.editor.text.options;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.editor.text.EncodingsHandler;
+import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Text encoding options.
+ * Text editor encodings options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextEncodingOptions {
+public class TextEncodingOptions implements OptionsData {
+
+    public static final String KEY_TEXT_ENCODING_PREFIX = "textEncoding.";
+    public static final String KEY_TEXT_ENCODING_DEFAULT = KEY_TEXT_ENCODING_PREFIX + "default";
+    public static final String KEY_TEXT_ENCODING_SELECTED = "selectedEncoding";
+
+    private final OptionsStorage storage;
+
+    public TextEncodingOptions(OptionsStorage storage) {
+        this.storage = storage;
+    }
 
     @Nonnull
-    List<String> getEncodings();
+    public String getDefaultEncoding() {
+        return storage.get(KEY_TEXT_ENCODING_DEFAULT, EncodingsHandler.ENCODING_UTF8);
+    }
+
+    public void setDefaultEncoding(String encodingName) {
+        storage.put(KEY_TEXT_ENCODING_DEFAULT, encodingName);
+    }
 
     @Nonnull
-    String getSelectedEncoding();
+    public String getSelectedEncoding() {
+        return storage.get(KEY_TEXT_ENCODING_SELECTED, EncodingsHandler.ENCODING_UTF8);
+    }
 
-    void setEncodings(List<String> encodings);
+    public void setSelectedEncoding(String encodingName) {
+        storage.put(KEY_TEXT_ENCODING_SELECTED, encodingName);
+    }
 
     @Nonnull
-    void setSelectedEncoding(String selectedEncoding);
+    public List<String> getEncodings() {
+        List<String> encodings = new ArrayList<>();
+        Optional<String> value;
+        int i = 0;
+        do {
+            value = storage.get(KEY_TEXT_ENCODING_PREFIX + Integer.toString(i));
+            if (value.isPresent()) {
+                encodings.add(value.get());
+                i++;
+            }
+        } while (value.isPresent());
+
+        return encodings;
+    }
+
+    public void setEncodings(List<String> encodings) {
+        for (int i = 0; i < encodings.size(); i++) {
+            storage.put(KEY_TEXT_ENCODING_PREFIX + Integer.toString(i), encodings.get(i));
+        }
+        storage.remove(KEY_TEXT_ENCODING_PREFIX + Integer.toString(encodings.size()));
+    }
+
+    @Override
+    public void copyTo(OptionsData options) {
+        TextEncodingOptions with = (TextEncodingOptions) options;
+        with.setDefaultEncoding(getDefaultEncoding());
+        with.setEncodings(getEncodings());
+        with.setSelectedEncoding(getSelectedEncoding());
+    }
 }

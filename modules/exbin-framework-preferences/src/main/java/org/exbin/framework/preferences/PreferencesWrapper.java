@@ -19,10 +19,10 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
-import org.exbin.framework.preferences.api.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * Wrapper for preferences.
@@ -30,7 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class PreferencesWrapper implements Preferences {
+public class PreferencesWrapper implements OptionsStorage {
 
     private final java.util.prefs.Preferences preferences;
 

@@ -32,7 +32,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.action.ManageEncodingsAction;
-import org.exbin.framework.editor.text.preferences.TextEncodingPreferences;
+import org.exbin.framework.editor.text.options.TextEncodingOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.impl.TextEncodingServiceImpl;
@@ -156,7 +156,7 @@ public class EncodingsHandler {
         item.setSelected(true);
     }
 
-    public void loadFromPreferences(TextEncodingPreferences preferences) {
+    public void loadFromPreferences(TextEncodingOptions preferences) {
         textEncodingService.loadFromPreferences(preferences);
         rebuildEncodings();
     }

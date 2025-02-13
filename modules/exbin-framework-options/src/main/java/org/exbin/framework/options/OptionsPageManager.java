@@ -29,7 +29,7 @@ import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.options.api.OptionsPageRule;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.options.api.PathOptionsPageRule;
-import org.exbin.framework.preferences.api.Preferences;
+import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.utils.ComponentResourceProvider;
 
@@ -79,7 +79,7 @@ public class OptionsPageManager implements OptionsPageManagement {
     public void initialLoadFromPreferences() {
         // TODO use preferences instead of options for initial apply
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-        Preferences preferences = preferencesModule.getAppPreferences();
+        OptionsStorage preferences = preferencesModule.getAppPreferences();
         for (OptionsPage<?> optionsPage : optionsPages) {
             OptionsData options = optionsPage.createOptions();
             ((OptionsPage) optionsPage).loadFromPreferences(preferences, options);

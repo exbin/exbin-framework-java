@@ -13,32 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.addon.update.preferences;
+package org.exbin.framework.addon.manager.options;
 
-import org.exbin.framework.preferences.api.Preferences;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Check for update on start preferences.
+ * Addon manager preferences.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CheckForUpdatePreferences {
+public class AddonManagerOptions {
 
-    public static final String PREFERENCES_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
+    public static final String KEY_ACTIVATED_VERSION = "addonManager.activatedVersion";
 
-    private final Preferences preferences;
+    private final OptionsStorage storage;
 
-    public CheckForUpdatePreferences(Preferences preferences) {
-        this.preferences = preferences;
+    public AddonManagerOptions(OptionsStorage storage) {
+        this.storage = storage;
     }
 
-    public boolean isShouldCheckForUpdate() {
-        return preferences.getBoolean(PREFERENCES_CHECK_FOR_UPDATE_ON_START, true);
+    @Nonnull
+    public String getActivatedVersion() {
+        return storage.get(KEY_ACTIVATED_VERSION, "0.3.0-SNAPSHOT");
     }
 
-    public void setShouldCheckForUpdate(boolean shouldCheck) {
-        preferences.putBoolean(PREFERENCES_CHECK_FOR_UPDATE_ON_START, shouldCheck);
+    public void setActivatedVersion(String activatedVersion) {
+        storage.put(KEY_ACTIVATED_VERSION, activatedVersion);
     }
 }
