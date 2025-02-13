@@ -21,13 +21,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
+ * TODO: Remove
  * Framework preferences.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UiPreferences {
-
+/*
     public static final String PREFERENCES_LOOK_AND_FEEL = "lookAndFeel";
     public static final String PREFERENCES_LOCALE_LANGUAGE = "locale.language";
     public static final String PREFERENCES_LOCALE_COUNTRY = "locale.country";
@@ -181,5 +182,5 @@ public class UiPreferences {
 
     public void setMacOsAppearance(String appearance) {
         preferences.put(PREFERENCES_RENDERING_MACOS_APPEARANCE, appearance);
-    }
+    } */
 }

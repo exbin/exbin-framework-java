@@ -27,9 +27,9 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.ui.api.UiModuleApi;
-import org.exbin.framework.ui.api.preferences.UiPreferences;
 import org.exbin.framework.ui.gui.AppearanceOptionsPanel;
 import org.exbin.framework.ui.options.AppearanceOptionsPage;
+import org.exbin.framework.ui.options.LanguageOptions;
 import org.exbin.framework.utils.ComponentResourceProvider;
 
 /**
@@ -42,7 +42,6 @@ public class UiModule implements UiModuleApi {
 
     private ResourceBundle resourceBundle;
 
-    private MainOptionsManager mainOptionsManager;
     private AppearanceOptionsPanel appearanceOptionsPanel;
     private List<Runnable> preInitActions = new ArrayList<>();
     private List<Runnable> postInitActions = new ArrayList<>();
@@ -70,18 +69,13 @@ public class UiModule implements UiModuleApi {
         executePreInitActions();
         
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-        UiPreferences uiPreferences = new UiPreferences(preferencesModule.getAppPreferences());
+        LanguageOptions languageOptions = new LanguageOptions(preferencesModule.getAppPreferences());
 
         // Switching language
         // TODO Move to language module, because language can be independent of UI
-        Locale locale = uiPreferences.getLocale();
+        Locale locale = languageOptions.getLocale();
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         languageModule.switchToLanguage(locale);
-
-        String iconSet = uiPreferences.getIconSet();
-        if (!iconSet.isEmpty()) {
-            languageModule.switchToIconSet(iconSet);
-        }
 
         executePostInitActions();
     }
@@ -115,7 +109,7 @@ public class UiModule implements UiModuleApi {
     @Override
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        getMainOptionsManager();
+        // getMainOptionsManager();
         // OptionsPage<UiOptions> mainOptionsPage = mainOptionsManager.getMainOptionsPage();
         // TODO optionsModule.addOptionsPage(mainOptionsPage, "");
         // Optional<MainOptionsPanel> mainOptionsPanel = mainOptionsManager.getMainOptionsPanel();
@@ -137,13 +131,5 @@ public class UiModule implements UiModuleApi {
             appearanceOptionsPanel.addExtendedPanel(appearanceOptionsExtPage.createPanel());
         }
         */
-    }
-
-    @Nonnull
-    public MainOptionsManager getMainOptionsManager() {
-        if (mainOptionsManager == null) {
-            mainOptionsManager = new MainOptionsManager();
-        }
-        return mainOptionsManager;
     }
 }

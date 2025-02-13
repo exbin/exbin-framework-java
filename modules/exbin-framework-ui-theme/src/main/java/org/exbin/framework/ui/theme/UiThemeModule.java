@@ -83,10 +83,16 @@ public class UiThemeModule implements UiThemeModuleApi {
         UiModuleApi uiModule = App.getModule(UiModuleApi.class);
         uiModule.addPreInitAction(() -> {
             PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-            ThemeOptions uiPreferences = new ThemeOptions(preferencesModule.getAppPreferences());
+            ThemeOptions themeOptions = new ThemeOptions(preferencesModule.getAppPreferences());
 
+            LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+            String iconSet = themeOptions.getIconSet();
+            if (!iconSet.isEmpty()) {
+                languageModule.switchToIconSet(iconSet);
+            }
+            
             // Rendering should be initialized first before any GUI is used
-            String renderingMode = uiPreferences.getRenderingMode();
+            String renderingMode = themeOptions.getRenderingMode();
             if ("software".equals(renderingMode)) {
                 System.setProperty("sun.java2d.noddraw", "true");
             } else if ("directdraw".equals(renderingMode)) {
@@ -106,10 +112,10 @@ public class UiThemeModule implements UiThemeModuleApi {
                 System.setProperty("awt.toolkit.name", "WLToolkit");
             }
 
-            String guiScaling = uiPreferences.getGuiScaling();
+            String guiScaling = themeOptions.getGuiScaling();
             if (!guiScaling.isEmpty()) {
                 if ("custom".equals(guiScaling)) {
-                    float guiScalingRate = uiPreferences.getGuiScalingRate();
+                    float guiScalingRate = themeOptions.getGuiScalingRate();
                     String scalingRateText = guiScalingRate == Math.floor(guiScalingRate) ? String.format("%.0f", guiScalingRate) : String.valueOf(guiScalingRate);
                     System.setProperty("sun.java2d.uiScale.enabled", "true");
                     System.setProperty("sun.java2d.uiScale", scalingRateText);
@@ -118,18 +124,18 @@ public class UiThemeModule implements UiThemeModuleApi {
                 }
             }
 
-            String fontAntialiasing = uiPreferences.getFontAntialiasing();
+            String fontAntialiasing = themeOptions.getFontAntialiasing();
             if (!fontAntialiasing.isEmpty()) {
                 System.setProperty("awt.useSystemAAFontSettings", fontAntialiasing);
             }
 
             if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
-                boolean useScreenMenuBar = uiPreferences.isUseScreenMenuBar();
+                boolean useScreenMenuBar = themeOptions.isUseScreenMenuBar();
                 if (useScreenMenuBar) {
                     System.setProperty("apple.laf.useScreenMenuBar", "true");
                 }
 
-                String macOsAppearance = uiPreferences.getMacOsAppearance();
+                String macOsAppearance = themeOptions.getMacOsAppearance();
                 if ("light".equals(macOsAppearance)) {
                     System.setProperty("apple.awt.application.appearance", "NSAppearanceNameAqua");
                 } else if ("dark".equals(macOsAppearance)) {
@@ -143,7 +149,7 @@ public class UiThemeModule implements UiThemeModuleApi {
                 lafProvider.installLaf();
             }
 
-            switchToLookAndFeel(uiPreferences.getLookAndFeel());
+            switchToLookAndFeel(themeOptions.getLookAndFeel());
         });
     }
 
@@ -187,7 +193,7 @@ public class UiThemeModule implements UiThemeModuleApi {
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         getThemeOptionsManager();
-        ThemeOptionsPage themeOptionsPage = themeOptionsManager.getThemeOptionsPage();
+        ThemeOptionsPage themeOptionsPage = themeOptionsManager.createThemeOptionsPage();
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
         optionsPageManagement.registerOptionsPage(themeOptionsPage);
     }

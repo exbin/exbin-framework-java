@@ -65,7 +65,7 @@ public class LanguageOptionsPanel extends javax.swing.JPanel implements OptionsC
 
     @Override
     public void loadFromOptions(LanguageOptions options) {
-        Locale languageLocale = options.getLanguageLocale();
+        Locale languageLocale = options.getLocale();
         ComboBoxModel<LanguageRecord> languageComboBoxModel = languageComboBox.getModel();
         for (int i = 0; i < languageComboBoxModel.getSize(); i++) {
             LanguageRecord languageRecord = languageComboBoxModel.getElementAt(i);
@@ -78,7 +78,7 @@ public class LanguageOptionsPanel extends javax.swing.JPanel implements OptionsC
 
     @Override
     public void saveToOptions(LanguageOptions options) {
-        options.setLanguageLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
+        options.setLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
     }
 
     public void setLanguageLocales(List<LanguageRecord> languageLocales) {

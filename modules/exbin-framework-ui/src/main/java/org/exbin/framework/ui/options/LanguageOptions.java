@@ -19,6 +19,7 @@ import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
  * UI language options.
@@ -28,17 +29,89 @@ import org.exbin.framework.options.api.OptionsData;
 @ParametersAreNonnullByDefault
 public class LanguageOptions implements OptionsData {
 
-    @Nonnull
-    public Locale getLanguageLocale() {
-        
+    public static final String KEY_LOCALE_LANGUAGE = "locale.language";
+    public static final String KEY_LOCALE_COUNTRY = "locale.country";
+    public static final String KEY_LOCALE_VARIANT = "locale.variant";
+    public static final String KEY_LOCALE_TAG = "locale.tag";
+
+    private final OptionsStorage preferences;
+
+    public LanguageOptions(OptionsStorage preferences) {
+        this.preferences = preferences;
     }
 
-    public void setLanguageLocale(Locale languageLocale) {
-        
+    @Nonnull
+    public String getLocaleLanguage() {
+        return preferences.get(KEY_LOCALE_LANGUAGE, "");
+    }
+
+    @Nonnull
+    public String getLocaleCountry() {
+        return preferences.get(KEY_LOCALE_COUNTRY, "");
+    }
+
+    @Nonnull
+    public String getLocaleVariant() {
+        return preferences.get(KEY_LOCALE_VARIANT, "");
+    }
+
+    @Nonnull
+    public String getLocaleTag() {
+        return preferences.get(KEY_LOCALE_TAG, "");
+    }
+
+    @Nonnull
+    public Locale getLocale() {
+        String localeTag = getLocaleTag();
+        if (!localeTag.trim().isEmpty()) {
+            try {
+                return Locale.forLanguageTag(localeTag);
+            } catch (SecurityException ex) {
+                // Ignore it in java webstart
+            }
+        }
+
+        String localeLanguage = getLocaleLanguage();
+        String localeCountry = getLocaleCountry();
+        String localeVariant = getLocaleVariant();
+        try {
+            return new Locale(localeLanguage, localeCountry, localeVariant);
+        } catch (SecurityException ex) {
+            // Ignore it in java webstart
+        }
+
+        return Locale.ROOT;
+    }
+
+    public void setLocaleLanguage(String language) {
+        preferences.put(KEY_LOCALE_LANGUAGE, language);
+    }
+
+    public void setLocaleCountry(String country) {
+        preferences.put(KEY_LOCALE_COUNTRY, country);
+    }
+
+    public void setLocaleVariant(String variant) {
+        preferences.put(KEY_LOCALE_VARIANT, variant);
+    }
+
+    public void setLocaleTag(String variant) {
+        preferences.put(KEY_LOCALE_TAG, variant);
+    }
+
+    public void setLocale(Locale locale) {
+        setLocaleTag(locale.toLanguageTag());
+        setLocaleLanguage(locale.getLanguage());
+        setLocaleCountry(locale.getCountry());
+        setLocaleVariant(locale.getVariant());
     }
 
     @Override
     public void copyTo(OptionsData options) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        LanguageOptions with = (LanguageOptions) options;
+        with.setLocaleCountry(getLocaleCountry());
+        with.setLocaleLanguage(getLocaleLanguage());
+        with.setLocaleTag(getLocaleTag());
+        with.setLocaleVariant(getLocaleVariant());
     }
 }
