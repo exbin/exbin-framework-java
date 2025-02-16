@@ -23,7 +23,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.editor.text.gui.TextFontPanel;
 import org.exbin.framework.editor.text.options.gui.TextFontOptionsPanel;
 import org.exbin.framework.editor.text.service.TextFontService;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.DefaultOptionsStorage;
@@ -69,7 +68,6 @@ public class TextFontOptionsPage implements DefaultOptionsPage<TextFontOptions> 
                 public Font changeFont(Font currentFont) {
                     final Result result = new Result();
                     WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                    FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                     final TextFontPanel fontPanel = new TextFontPanel();
                     fontPanel.setStoredFont(currentFont);
                     DefaultControlPanel controlPanel = new DefaultControlPanel();
@@ -90,7 +88,7 @@ public class TextFontOptionsPage implements DefaultOptionsPage<TextFontOptions> 
                         dialog.close();
                         dialog.dispose();
                     });
-                    dialog.showCentered(frameModule.getFrame());
+                    dialog.showCentered(panel);
 
                     return result.font;
                 }
@@ -128,10 +126,6 @@ public class TextFontOptionsPage implements DefaultOptionsPage<TextFontOptions> 
 
     @Override
     public void applyPreferencesChanges(TextFontOptions options) {
-        if (options.isUseDefaultFont()) {
-            textFontService.setCurrentFont(textFontService.getDefaultFont());
-        } else {
-            textFontService.setCurrentFont(options.getFont(textFontService.getDefaultFont()));
-        }
+        textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
     }
 }

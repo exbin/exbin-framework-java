@@ -60,13 +60,13 @@ import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
 import org.exbin.framework.action.api.toolbar.SeparationToolBarContributionRule;
 import org.exbin.framework.action.api.toolbar.ToolBarContribution;
 import org.exbin.framework.action.api.toolbar.ToolBarManagement;
+import org.exbin.framework.editor.text.options.TextAppearanceOptionsPage;
 import org.exbin.framework.editor.text.options.TextColorOptionsPage;
 import org.exbin.framework.editor.text.options.TextEncodingOptionsPage;
 import org.exbin.framework.editor.text.options.TextFontOptionsPage;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.preferences.api.OptionsStorage;
-import org.exbin.framework.ui.api.UiModuleApi;
 
 /**
  * Text editor module.
@@ -174,7 +174,7 @@ public class EditorTextModule implements Module {
                 ((TextPanel) getEditorProvider().getEditorComponent()).setCurrentColors(colors);
             }
         });
-        optionsPageManagement.registerOptionsPage(textColorsOptionsPage);
+        optionsPageManagement.registerPage(textColorsOptionsPage);
 
         TextFontOptionsPage textFontOptionsPage = new TextFontOptionsPage();
         textFontOptionsPage.setTextFontService(new TextFontService() {
@@ -195,10 +195,10 @@ public class EditorTextModule implements Module {
                 ((TextPanel) getEditorProvider().getEditorComponent()).setCurrentFont(font);
             }
         });
-        optionsPageManagement.registerOptionsPage(textFontOptionsPage);
+        optionsPageManagement.registerPage(textFontOptionsPage);
 
-        TextAppearanceService textAppearanceService;
-        textAppearanceService = new TextAppearanceService() {
+        TextAppearanceOptionsPage textAppearanceOptionsPage = new TextAppearanceOptionsPage();
+        textAppearanceOptionsPage.setTextAppearanceService(new TextAppearanceService() {
             @Override
             public boolean getWordWrapMode() {
                 return ((TextPanel) getEditorProvider().getEditorComponent()).getWordWrapMode();
@@ -208,17 +208,12 @@ public class EditorTextModule implements Module {
             public void setWordWrapMode(boolean mode) {
                 ((TextPanel) getEditorProvider().getEditorComponent()).setWordWrapMode(mode);
             }
-        };
+        });
+        optionsPageManagement.registerPage(textAppearanceOptionsPage);
 
         TextEncodingOptionsPage textEncodingOptionsPage = new TextEncodingOptionsPage();
         textEncodingOptionsPage.setEncodingsHandler(getEncodingsHandler());
-        optionsPageManagement.registerOptionsPage(textEncodingOptionsPage);
-
-        UiModuleApi uiModule = App.getModule(UiModuleApi.class);
-        throw new UnsupportedOperationException("Not supported yet.");
-        // TODO
-/*        uiModule.extendAppearanceOptionsPage(new DefaultOptionsPage<TextAppearanceOptionsImpl>() {
-        }); */
+        optionsPageManagement.registerPage(textEncodingOptionsPage);
     }
 
     public void registerUndoHandler() {

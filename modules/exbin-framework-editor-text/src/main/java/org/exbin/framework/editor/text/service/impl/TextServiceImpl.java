@@ -38,7 +38,7 @@ public class TextServiceImpl implements TextSearchService {
         if (pos >= 0) {
             int toPos;
             if (findTextParameters.isShallReplace()) {
-                String replaceText = findTextParameters.getReplaceText();
+                String replaceText = findTextParameters.getReplaceText().get();
                 textArea.replaceRange(replaceText, pos, pos + findText.length());
                 toPos = pos + replaceText.length();
             } else {

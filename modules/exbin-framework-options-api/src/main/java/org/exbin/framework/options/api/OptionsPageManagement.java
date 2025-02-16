@@ -26,17 +26,56 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface OptionsPageManagement {
 
     /**
+     * Registers options group.
+     *
+     * @param optionsGroup options group
+     */
+    void registerGroup(OptionsGroup optionsGroup);
+
+    /**
+     * Registers options group.
+     *
+     * @param groupId group id
+     * @param groupName group name
+     */
+    void registerGroup(String groupId, String groupName);
+
+    /**
+     * Registers options group rule.
+     *
+     * @param optionsGroup options group
+     * @param groupRule options group rule
+     */
+    void registerGroupRule(OptionsGroup optionsGroup, OptionsGroupRule groupRule);
+
+    /**
+     * Registers options group rule.
+     *
+     * @param groupId options group id
+     * @param groupRule options group rule
+     */
+    void registerGroupRule(String groupId, OptionsGroupRule groupRule);
+
+    /**
      * Registers options panel to default path and name.
      *
-     * @param optionsPage options page
+     * @param page options page
      */
-    void registerOptionsPage(OptionsPage<?> optionsPage);
+    void registerPage(OptionsPage<?> page);
 
     /**
      * Registers options page rule.
      *
-     * @param optionsPage options page
-     * @param optionsPageRule options page rule
+     * @param page options page
+     * @param pageRule options page rule
      */
-    void registerOptionsPageRule(OptionsPage<?> optionsPage, OptionsPageRule optionsPageRule);
+    void registerPageRule(OptionsPage<?> page, OptionsPageRule pageRule);
+
+    /**
+     * Registers options page rule.
+     *
+     * @param pageId options page id
+     * @param pageRule options page rule
+     */
+    void registerPageRule(String pageId, OptionsPageRule pageRule);
 }

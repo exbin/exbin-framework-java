@@ -27,6 +27,9 @@ import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
 import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
+import org.exbin.framework.addon.manager.options.page.AddonManagerOptionsPage;
+import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.api.OptionsPageManagement;
 
 /**
  * Implementation of addon manager module.
@@ -65,44 +68,15 @@ public class AddonManagerModule implements AddonManagerModuleApi {
         AddonManagerModule.devMode = devMode;
     }
 
-    /*
     @Override
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        optionsModule.addOptionsPage(new DefaultOptionsPage<CheckForUpdateOptions>() {
-            @Override
-            public OptionsComponent<CheckForUpdateOptions> createPanel() {
-                return new ApplicationUpdateOptionsPanel();
-            }
-
-            @Nonnull
-            @Override
-            public ResourceBundle getResourceBundle() {
-                return App.getModule(LanguageModuleApi.class).getBundle(ApplicationUpdateOptionsPanel.class);
-            }
-
-            @Nonnull
-            @Override
-            public CheckForUpdateOptions createOptions() {
-                return new CheckForUpdateOptions();
-            }
-
-            @Override
-            public void loadFromPreferences(Preferences preferences, CheckForUpdateOptions options) {
-                options.loadFromPreferences(new CheckForUpdatePreferences(preferences));
-            }
-
-            @Override
-            public void saveToPreferences(Preferences preferences, CheckForUpdateOptions options) {
-                options.saveToPreferences(new CheckForUpdatePreferences(preferences));
-            }
-
-            @Override
-            public void applyPreferencesChanges(CheckForUpdateOptions options) {
-            }
-        });
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+        AddonManagerOptionsPage addonManagerOptionsPage = new AddonManagerOptionsPage();
+        optionsPageManagement.registerPage(addonManagerOptionsPage);
     }
 
+/*
     @Override
     public void setUpdateUrl(URL updateUrl) {
         this.checkUpdateUrl = updateUrl;

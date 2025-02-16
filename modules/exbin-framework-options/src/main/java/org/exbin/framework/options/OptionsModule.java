@@ -36,6 +36,8 @@ import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
 import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
+import org.exbin.framework.options.api.OptionsGroup;
+import org.exbin.framework.options.api.OptionsGroupRule;
 import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.options.api.OptionsPageRule;
 import org.exbin.framework.utils.DesktopUtils;
@@ -47,6 +49,8 @@ import org.exbin.framework.utils.DesktopUtils;
  */
 @ParametersAreNonnullByDefault
 public class OptionsModule implements OptionsModuleApi {
+
+    public static final String OPTIONS_GROUP_PREFIX = "optionsGroup.";
 
     private ResourceBundle resourceBundle;
 
@@ -109,15 +113,48 @@ public class OptionsModule implements OptionsModuleApi {
     public OptionsPageManagement getOptionsPageManagement(String moduleId) {
         return new OptionsPageManagement() {
             @Override
-            public void registerOptionsPage(OptionsPage<?> optionsPage) {
-                getOptionsPageManager().registerOptionsPage(optionsPage);
+            public void registerGroup(OptionsGroup optionsGroup) {
+                getOptionsPageManager().registerGroup(optionsGroup);
             }
 
             @Override
-            public void registerOptionsPageRule(OptionsPage<?> optionsPage, OptionsPageRule optionsPageRule) {
-                getOptionsPageManager().registerOptionsPageRule(optionsPage, optionsPageRule);
+            public void registerGroup(String groupId, String groupName) {
+                getOptionsPageManager().registerGroup(groupId, groupName);
+            }
+
+            @Override
+            public void registerGroupRule(OptionsGroup optionsGroup, OptionsGroupRule groupRule) {
+                getOptionsPageManager().registerGroupRule(optionsGroup, groupRule);
+            }
+
+            @Override
+            public void registerGroupRule(String groupId, OptionsGroupRule groupRule) {
+                getOptionsPageManager().registerGroupRule(groupId, groupRule);
+            }
+
+            @Override
+            public void registerPage(OptionsPage<?> optionsPage) {
+                getOptionsPageManager().registerPage(optionsPage);
+            }
+
+            @Override
+            public void registerPageRule(OptionsPage<?> optionsPage, OptionsPageRule optionsPageRule) {
+                getOptionsPageManager().registerPageRule(optionsPage, optionsPageRule);
+            }
+
+            @Override
+            public void registerPageRule(String pageId, OptionsPageRule pageRule) {
+                getOptionsPageManager().registerPageRule(pageId, pageRule);
             }
         };
+    }
+
+    @Nonnull
+    @Override
+    public OptionsGroup createOptionsGroup(String groupId, ResourceBundle resourceBundle) {
+        String groupName = resourceBundle.getString(OPTIONS_GROUP_PREFIX + groupId + ".name");
+        BasicOptionsGroup optionsGroup = new BasicOptionsGroup(groupId, groupName);
+        return optionsGroup;
     }
 
     @Override

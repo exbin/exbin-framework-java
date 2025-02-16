@@ -18,6 +18,7 @@ package org.exbin.framework.options.api;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
@@ -40,14 +41,31 @@ public class DefaultOptionsStorage implements OptionsStorage {
         return values.containsKey(key);
     }
 
+    @Nonnull
     @Override
     public Optional<String> get(String key) {
-        return Optional.ofNullable((String) values.get(key));
+        Object value = values.get(key);
+        if (value == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(valueAsString(value));
     }
 
+    @Nonnull
     @Override
     public String get(String key, String def) {
-        return (String) values.getOrDefault(key, def);
+        Object value = values.getOrDefault(key, def);
+        return valueAsString(value);
+    }
+
+    @Nonnull
+    private static String valueAsString(Object value) {
+        if (value instanceof String) {
+            return (String) value;
+        }
+
+        return value.toString();
     }
 
     @Override
@@ -55,6 +73,7 @@ public class DefaultOptionsStorage implements OptionsStorage {
         return (Boolean) values.getOrDefault(key, def);
     }
 
+    @Nonnull
     @Override
     public byte[] getByteArray(String key, byte[] def) {
         return (byte[]) values.getOrDefault(key, def);

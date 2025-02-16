@@ -15,8 +15,6 @@
  */
 package org.exbin.framework.action.manager;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,11 +22,10 @@ import org.exbin.framework.App;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.manager.options.ActionManagerOptionsPage;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.options.api.GroupOptionsPageRule;
+import org.exbin.framework.options.api.OptionsGroup;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
-import org.exbin.framework.options.api.OptionsPathItem;
-import org.exbin.framework.options.api.PathOptionsPageRule;
-import org.exbin.framework.utils.ComponentResourceProvider;
 
 /**
  * Action manager module.
@@ -69,10 +66,11 @@ public class ActionManagerModule implements org.exbin.framework.Module {
         ActionManagerOptionsPage actionOptionsPage = new ActionManagerOptionsPage();
         
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-        optionsPageManagement.registerOptionsPage(actionOptionsPage);
-        ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) actionOptionsPage).getResourceBundle();
-        List<OptionsPathItem> optionsPath = new ArrayList<>();
-        optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
-        optionsPageManagement.registerOptionsPageRule(actionOptionsPage, new PathOptionsPageRule(optionsPath));
+
+        OptionsGroup keymapOptionsGroup = optionsModule.createOptionsGroup("keymap", getResourceBundle());
+        optionsPageManagement.registerGroup(keymapOptionsGroup);
+
+        optionsPageManagement.registerPage(actionOptionsPage);
+        optionsPageManagement.registerPageRule(actionOptionsPage, new GroupOptionsPageRule(keymapOptionsGroup));
     }
 }

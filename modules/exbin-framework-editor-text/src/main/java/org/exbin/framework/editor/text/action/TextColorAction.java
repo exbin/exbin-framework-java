@@ -108,20 +108,19 @@ public class TextColorAction extends AbstractAction {
         windowModule.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, colorPanel.getResourceBundle());
         controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-                    if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                        if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                            PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                            TextColorOptions options = new TextColorOptions(new DefaultOptionsStorage());
-                            colorPanel.saveToOptions(options);
-                            options.copyTo(new TextColorOptions(preferencesModule.getAppPreferences()));
-                        }
-                        textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());
-                    }
-
-                    dialog.close();
-                    dialog.dispose();
+            if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+                if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                    PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
+                    TextColorOptions options = new TextColorOptions(new DefaultOptionsStorage());
+                    colorPanel.saveToOptions(options);
+                    options.copyTo(new TextColorOptions(preferencesModule.getAppPreferences()));
                 }
-        );
+                textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());
+            }
+
+            dialog.close();
+            dialog.dispose();
+        });
         dialog.showCentered(frameModule.getFrame());
     }
 }

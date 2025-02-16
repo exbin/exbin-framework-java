@@ -13,32 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.manager.options;
+package org.exbin.framework.options.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.options.api.OptionsData;
-import org.exbin.framework.preferences.api.OptionsStorage;
+import org.exbin.framework.action.api.NextToMode;
 
 /**
- * Action manager options.
+ * Options group relative position rule.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionManagerOptions implements OptionsData {
+public class RelativeOptionsGroupRule implements OptionsGroupRule {
 
-    public static final String KEY_ACTION_KEYS = "action.keys";
-    public static final String KEY_ACTION_KEY_PREFIX = "action.key.";
-    public static final String KEY_ACTION_KEY_ID = "id";
-    public static final String KEY_ACTION_KEY_SHORTCUT = "shortcut";
+    private final NextToMode nextToMode;
+    private final String groupId;
 
-    private final OptionsStorage storage;
-
-    public ActionManagerOptions(OptionsStorage storage) {
-        this.storage = storage;
+    public RelativeOptionsGroupRule(NextToMode nextToMode, String groupId) {
+        this.nextToMode = nextToMode;
+        this.groupId = groupId;
     }
 
-    @Override
-    public void copyTo(OptionsData options) {
+    @Nonnull
+    public NextToMode getNextToMode() {
+        return nextToMode;
+    }
+
+    @Nonnull
+    public String getGroupId() {
+        return groupId;
     }
 }

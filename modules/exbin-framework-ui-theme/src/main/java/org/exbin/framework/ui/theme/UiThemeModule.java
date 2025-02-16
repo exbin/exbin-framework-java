@@ -195,7 +195,7 @@ public class UiThemeModule implements UiThemeModuleApi {
         getThemeOptionsManager();
         ThemeOptionsPage themeOptionsPage = themeOptionsManager.createThemeOptionsPage();
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-        optionsPageManagement.registerOptionsPage(themeOptionsPage);
+        optionsPageManagement.registerPage(themeOptionsPage);
     }
 
     @Nonnull

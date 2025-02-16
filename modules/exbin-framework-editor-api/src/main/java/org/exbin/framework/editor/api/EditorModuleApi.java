@@ -119,4 +119,9 @@ public interface EditorModuleApi extends Module {
      * @param listener listener
      */
     void removeEditorProviderComponentListener(EditorProviderComponentListener listener);
+
+    /**
+     * Registers options panels.
+     */
+    void registerOptionsPanels();
 }

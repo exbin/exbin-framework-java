@@ -103,7 +103,11 @@ public class AvailableModuleUpdates {
     }
 
     public void writeConfigFile() {
-        File changesConfigFile = new File(App.getConfigDirectory(), MODULE_UPDATES_FILE);
+        File configDirectory = App.getConfigDirectory();
+        if (!configDirectory.isDirectory()) {
+            configDirectory.mkdirs();
+        }
+        File changesConfigFile = new File(configDirectory, MODULE_UPDATES_FILE);
         try (OutputStreamWriter writer = new FileWriter(changesConfigFile)) {
             writer.write(status + "\r\n");
             for (Map.Entry<String, String> entry : latestVersions.entrySet()) {

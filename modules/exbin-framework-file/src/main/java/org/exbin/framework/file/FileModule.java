@@ -57,12 +57,11 @@ import org.exbin.framework.file.options.FileOptionsPage;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.options.api.GroupOptionsPageRule;
+import org.exbin.framework.options.api.OptionsGroup;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.options.api.OptionsPageManagement;
-import org.exbin.framework.options.api.OptionsPathItem;
-import org.exbin.framework.options.api.PathOptionsPageRule;
-import org.exbin.framework.utils.ComponentResourceProvider;
 
 /**
  * Framework file module.
@@ -279,7 +278,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Nonnull
     public FileOptionsPage createFileOptionsPage() {
         FileOptionsPage fileOptionsPage = new FileOptionsPage();
-        fileOptionsPage.setResourceBundle(resourceBundle);
+        fileOptionsPage.setResourceBundle(getResourceBundle());
         return fileOptionsPage;
     }
 
@@ -287,11 +286,12 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         OptionsPage<FileOptions> fileOptionsPage = createFileOptionsPage();
-        ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) fileOptionsPage).getResourceBundle();
-        List<OptionsPathItem> optionsPath = new ArrayList<>();
-        optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
+
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-        optionsPageManagement.registerOptionsPage(fileOptionsPage);
-        optionsPageManagement.registerOptionsPageRule(fileOptionsPage, new PathOptionsPageRule(optionsPath));
+        OptionsGroup fileOptionsGroup = optionsModule.createOptionsGroup("file", getResourceBundle());
+        optionsPageManagement.registerGroup(fileOptionsGroup);
+
+        optionsPageManagement.registerPage(fileOptionsPage);
+        optionsPageManagement.registerPageRule(fileOptionsPage, new GroupOptionsPageRule(fileOptionsGroup));
     }
 }

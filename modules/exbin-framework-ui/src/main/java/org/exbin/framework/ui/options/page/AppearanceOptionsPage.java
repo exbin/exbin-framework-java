@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.options;
+package org.exbin.framework.ui.options.page;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -27,6 +27,7 @@ import org.exbin.framework.options.api.DefaultOptionsStorage;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.ui.gui.AppearanceOptionsPanel;
+import org.exbin.framework.ui.options.AppearanceOptions;
 
 /**
  * Appearance options page.

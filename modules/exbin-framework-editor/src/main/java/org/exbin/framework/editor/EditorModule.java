@@ -43,6 +43,9 @@ import org.exbin.framework.editor.action.CloseAllFilesAction;
 import org.exbin.framework.editor.action.CloseFileAction;
 import org.exbin.framework.editor.action.CloseOtherFilesAction;
 import org.exbin.framework.editor.action.EditorActions;
+import org.exbin.framework.options.api.OptionsGroup;
+import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
@@ -307,5 +310,14 @@ public class EditorModule implements EditorModuleApi {
     @Override
     public void removeEditorProviderComponentListener(EditorProviderComponentListener listener) {
         componentListeners.remove(listener);
+    }
+
+    @Override
+    public void registerOptionsPanels() {
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+
+        OptionsGroup editorOptionsGroup = optionsModule.createOptionsGroup("editor", getResourceBundle());
+        optionsPageManagement.registerGroup(editorOptionsGroup);
     }
 }

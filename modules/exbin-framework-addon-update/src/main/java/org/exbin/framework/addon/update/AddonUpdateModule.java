@@ -86,7 +86,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
         CheckForUpdateOptionsPage optionsPage = new CheckForUpdateOptionsPage();
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-        optionsPageManagement.registerOptionsPage(optionsPage);
+        optionsPageManagement.registerPage(optionsPage);
     }
 
     @Nonnull

@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.text.service;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -57,9 +58,9 @@ public interface TextSearchService {
             return shallReplace;
         }
 
-        @Nullable
-        public String getReplaceText() {
-            return replaceText;
+        @Nonnull
+        public Optional<String> getReplaceText() {
+            return Optional.ofNullable(replaceText);
         }
 
         public void setStartFrom(int startFrom) {

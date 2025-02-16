@@ -54,17 +54,28 @@ import org.xml.sax.SAXException;
 @ParametersAreNonnullByDefault
 public class AddonCatalogServiceImpl implements AddonCatalogService {
 
-    private static final String CATALOG_URL = "https://bined.exbin.org/addon/";
-    private static final String CATALOG_DEV_URL = "https://bined.exbin.org/addon-dev/";
+    private String catalogServiceUrl;
     private final Map<AddonRecord, String> iconPaths = new HashMap<>();
     private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
+    public AddonCatalogServiceImpl() {
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        this.catalogServiceUrl = addonManagerModule.isDevMode() ? "https://www.exbin.org/addon-dev/" : "https://www.exbin.org/addon/";
+    }
+
+    public AddonCatalogServiceImpl(String catalogServiceUrl) {
+        this.catalogServiceUrl = catalogServiceUrl;
+    }
+
+    public void setCatalogServiceUrl(String catalogServiceUrl) {
+        this.catalogServiceUrl = catalogServiceUrl;
+    }
+
     @Override
     public int checkStatus(String version) throws AddonCatalogServiceException {
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         URL checkUrl;
         try {
-            checkUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=check-" + version);
+            checkUrl = new URL(catalogServiceUrl + "api/?op=check-" + version);
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(checkUrl.openStream()))) {
                 String line = reader.readLine();
                 if (line == null || line.isEmpty()) {
@@ -82,11 +93,10 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Nonnull
     @Override
     public List<AddonRecord> searchForAddons(String searchCondition) throws AddonCatalogServiceException {
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         List<AddonRecord> searchResult = new ArrayList<>();
         URL searchUrl;
         try {
-            searchUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=list");
+            searchUrl = new URL(catalogServiceUrl + "api/?op=list");
             try (InputStream searchStream = searchUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -177,10 +187,9 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Nonnull
     @Override
     public AddonRecord getAddonDependency(String addonId) throws AddonCatalogServiceException {
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         URL requestUrl;
         try {
-            requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addondep&id=" + addonId);
+            requestUrl = new URL(catalogServiceUrl + "api/?op=addondep&id=" + addonId);
             try (InputStream searchStream = requestUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -261,10 +270,9 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Nonnull
     @Override
     public String getAddonFile(String addonId) throws AddonCatalogServiceException {
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         URL requestUrl;
         try {
-            requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addonfile&id=" + addonId);
+            requestUrl = new URL(catalogServiceUrl + "api/?op=addonfile&id=" + addonId);
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
                 String line = reader.readLine();
                 if (line == null || line.isEmpty()) {
@@ -283,10 +291,9 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Override
     public List<UpdateRecord> getUpdateRecords() throws AddonCatalogServiceException {
         List<UpdateRecord> records = new ArrayList<>();
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         URL requestUrl;
         try {
-            requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=updates");
+            requestUrl = new URL(catalogServiceUrl + "api/?op=updates");
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
                 String line;
                 do {
@@ -312,12 +319,12 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
         return new DownloadOperation(records);
     }
 
+    @Nonnull
     @Override
     public String getModuleDetails(String addonId) throws AddonCatalogServiceException {
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         URL requestUrl;
         try {
-            requestUrl = new URL((addonManagerModule.isDevMode() ? CATALOG_DEV_URL : CATALOG_URL) + "api/?op=addondetail&id=" + addonId);
+            requestUrl = new URL(catalogServiceUrl + "api/?op=addondetail&id=" + addonId);
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
                 return reader.lines().collect(Collectors.joining("\n"));
             } catch (IOException ex) {

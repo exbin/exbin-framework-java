@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options.api;
 
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -78,4 +79,14 @@ public interface OptionsModuleApi extends Module {
      * @param optionsPanelType options panel type
      */
     void setOptionsPanelType(OptionsPanelType optionsPanelType);
+
+    /**
+     * Creates options group from resource bundle values.
+     *
+     * @param groupId group id
+     * @param resourceBundle resource bundle
+     * @return options group
+     */
+    @Nonnull
+    OptionsGroup createOptionsGroup(String groupId, ResourceBundle resourceBundle);
 }

@@ -17,15 +17,16 @@ package org.exbin.framework.addon.manager.options;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Addon manager preferences.
+ * Addon manager options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonManagerOptions {
+public class AddonManagerOptions implements OptionsData {
 
     public static final String KEY_ACTIVATED_VERSION = "addonManager.activatedVersion";
 
@@ -42,5 +43,11 @@ public class AddonManagerOptions {
 
     public void setActivatedVersion(String activatedVersion) {
         storage.put(KEY_ACTIVATED_VERSION, activatedVersion);
+    }
+
+    @Override
+    public void copyTo(OptionsData options) {
+        AddonManagerOptions with = (AddonManagerOptions) options;
+        with.setActivatedVersion(getActivatedVersion());
     }
 }

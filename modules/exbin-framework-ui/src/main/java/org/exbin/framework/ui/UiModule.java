@@ -22,15 +22,18 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.options.api.GroupOptionsPageRule;
+import org.exbin.framework.options.api.OptionsGroup;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPathItem;
+import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.options.api.RelativeOptionsPageRule;
 import org.exbin.framework.ui.api.UiModuleApi;
-import org.exbin.framework.ui.gui.AppearanceOptionsPanel;
-import org.exbin.framework.ui.options.AppearanceOptionsPage;
+import org.exbin.framework.ui.options.page.AppearanceOptionsPage;
 import org.exbin.framework.ui.options.LanguageOptions;
-import org.exbin.framework.utils.ComponentResourceProvider;
+import org.exbin.framework.ui.options.page.LanguageOptionsPage;
 
 /**
  * Module user interface handling.
@@ -42,7 +45,6 @@ public class UiModule implements UiModuleApi {
 
     private ResourceBundle resourceBundle;
 
-    private AppearanceOptionsPanel appearanceOptionsPanel;
     private List<Runnable> preInitActions = new ArrayList<>();
     private List<Runnable> postInitActions = new ArrayList<>();
 
@@ -67,7 +69,7 @@ public class UiModule implements UiModuleApi {
     @Override
     public void initSwingUi() {
         executePreInitActions();
-        
+
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         LanguageOptions languageOptions = new LanguageOptions(preferencesModule.getAppPreferences());
 
@@ -109,27 +111,18 @@ public class UiModule implements UiModuleApi {
     @Override
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        // getMainOptionsManager();
-        // OptionsPage<UiOptions> mainOptionsPage = mainOptionsManager.getMainOptionsPage();
-        // TODO optionsModule.addOptionsPage(mainOptionsPage, "");
-        // Optional<MainOptionsPanel> mainOptionsPanel = mainOptionsManager.getMainOptionsPanel();
-        // TODO
-        /*
-        if (mainOptionsExtPage != null) {
-            mainOptionsPanel.get().addExtendedPanel(mainOptionsExtPage.createPanel());
-        } */
+        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+
+        OptionsGroup appearanceOptionsGroup = optionsModule.createOptionsGroup("appearance", getResourceBundle());
+        optionsPageManagement.registerGroup(appearanceOptionsGroup);
+
+        LanguageOptionsPage languageOptionsPage = new LanguageOptionsPage();
+        optionsPageManagement.registerPage(languageOptionsPage);
+        optionsPageManagement.registerPageRule(languageOptionsPage, new GroupOptionsPageRule(appearanceOptionsGroup));
 
         AppearanceOptionsPage appearanceOptionsPage = new AppearanceOptionsPage();
-        ResourceBundle optionsResourceBundle = ((ComponentResourceProvider) appearanceOptionsPage).getResourceBundle();
-        List<OptionsPathItem> optionsPath = new ArrayList<>();
-        optionsPath.add(new OptionsPathItem(optionsResourceBundle.getString("options.name"), optionsResourceBundle.getString("options.caption")));
-        
-        // TODO
-        /*
-        optionsModule.addOptionsPage(appearanceOptionsPage, optionsPath);
-        if (appearanceOptionsExtPage != null) {
-            appearanceOptionsPanel.addExtendedPanel(appearanceOptionsExtPage.createPanel());
-        }
-        */
+        optionsPageManagement.registerPage(appearanceOptionsPage);
+        optionsPageManagement.registerPageRule(appearanceOptionsPage, new GroupOptionsPageRule(appearanceOptionsGroup));
+        optionsPageManagement.registerPageRule(appearanceOptionsPage, new RelativeOptionsPageRule(NextToMode.AFTER, languageOptionsPage.getId()));
     }
 }
