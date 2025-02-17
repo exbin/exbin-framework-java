@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.options.gui;
 
-import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +57,8 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
 
     private OptionsStorage preferences = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsTreePanel.class);
-    private Map<String, PageRecord<?>> optionPages;
-    private PageRecord<?> currentOptionsPanel = null;
+    private final Map<String, PageRecord> optionPages = new HashMap<>();
+    private PageRecord currentOptionsPanel = null;
     private OptionsModifiedListener optionsModifiedListener;
     private final List<LazyComponentListener> listeners = new ArrayList<>();
 
@@ -72,7 +71,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
     }
 
     private void init() {
-        optionPages = new HashMap<>();
         modified = false;
         optionsModifiedListener = () -> {
             setModified(true);
@@ -104,12 +102,12 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
                     optionsAreaTitleLabel.setText(" " + (String) node.getUserObject());
                 }
                 if (currentOptionsPanel != null) {
-                    optionsAreaScrollPane.remove((Component) currentOptionsPanel.getPanel());
+                    optionsAreaScrollPane.remove(currentOptionsPanel.getPanel());
                 }
                 if (caption != null) {
                     currentOptionsPanel = optionPages.get(caption);
                     if (currentOptionsPanel != null) {
-                        optionsAreaScrollPane.setViewportView((Component) currentOptionsPanel.getPanel());
+                        optionsAreaScrollPane.setViewportView(currentOptionsPanel.getPanel());
                     } else {
                         optionsAreaScrollPane.setViewportView(null);
                     }
@@ -219,13 +217,18 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
         if (path == null) {
             panelKey = OPTIONS_PANEL_KEY;
         } else {
-            panelKey = path.get(path.size() - 1).getName();
+            panelKey = path.get(path.size() - 1).getGroupId();
             establishPath(path);
         }
 
-        PageRecord<?> pageRecord = new PageRecord<>(optionPage);
-        optionPages.put(panelKey, pageRecord);
-        pageRecord.getPanel().setOptionsModifiedListener(optionsModifiedListener);
+        PageRecord pageRecord = optionPages.get(panelKey);
+        if (pageRecord != null) {
+            pageRecord.addOptionsPage(optionPage, optionsModifiedListener);
+        } else {
+            pageRecord = new PageRecord(optionPage);
+            optionPages.put(panelKey, pageRecord);
+            pageRecord.setOptionsModifiedListener(optionsModifiedListener);
+        }
         optionsTree.setSelectionRow(0);
     }
 
@@ -267,7 +270,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
 
     private void establishPath(List<OptionsPathItem> path) {
         OptionsMutableTreeNode node = top;
-        if (path.size() == 1 && OPTIONS_PANEL_KEY.equals(path.get(0).getName())) {
+        if (path.size() == 1 && OPTIONS_PANEL_KEY.equals(path.get(0).getGroupId())) {
             return;
         }
 
@@ -281,9 +284,9 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
             while ((childIndex >= 0) && (childIndex < node.getChildCount())) {
                 child = (OptionsMutableTreeNode) node.getChildAt(childIndex);
                 String name = child.getName();
-                if (name.equals(pathItem.getName())) {
+                if (name.equals(pathItem.getGroupId())) {
                     Object caption = child.getUserObject();
-                    String newCaption = pathItem.getCaption();
+                    String newCaption = pathItem.getName();
                     if (caption instanceof String && name.equals(caption) && !name.equals(newCaption)) {
                         child.setUserObject(newCaption);
                     }
@@ -294,7 +297,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
             }
 
             if (childIndex == node.getChildCount()) {
-                OptionsMutableTreeNode newNode = new OptionsMutableTreeNode(pathItem.getCaption(), pathItem.getName());
+                OptionsMutableTreeNode newNode = new OptionsMutableTreeNode(pathItem.getName(), pathItem.getGroupId());
                 node.add(newNode);
                 node = newNode;
             } else {
@@ -315,8 +318,8 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
     @Override
     public void addChildComponentListener(LazyComponentListener listener) {
         listeners.add(listener);
-        for (PageRecord<?> pageRecord : optionPages.values()) {
-            listener.componentCreated((Component) pageRecord.getPanel());
+        for (PageRecord pageRecord : optionPages.values()) {
+            listener.componentCreated(pageRecord.getPanel());
         }
     }
 
@@ -335,6 +338,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
             this.name = name;
         }
 
+        @Nonnull
         public String getName() {
             return name;
         }

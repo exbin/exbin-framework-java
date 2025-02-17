@@ -15,10 +15,11 @@
  */
 package org.exbin.framework.options.gui;
 
-import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,8 +56,8 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
 
     private OptionsStorage preferences = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsListPanel.class);
-    private List<PageRecord<?>> optionPages;
-    private PageRecord<?> currentOptionsPanel = null;
+    private final Map<String, PageRecord> optionPages = new HashMap<>();
+    private PageRecord currentOptionsPanel = null;
     private OptionsModifiedListener optionsModifiedListener;
     private final List<LazyComponentListener> listeners = new ArrayList<>();
 
@@ -68,7 +69,6 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     }
 
     private void init() {
-        optionPages = new ArrayList<>();
         modified = false;
         optionsModifiedListener = () -> {
             setModified(true);
@@ -92,12 +92,12 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
 
             // optionsAreaTitleLabel.setText(selectedIndex >= 0 ? " " + categoriesList.getModel().getElementAt(selectedIndex) : "");
             if (currentOptionsPanel != null) {
-                optionsAreaScrollPane.remove((Component) currentOptionsPanel.getPanel());
+                optionsAreaScrollPane.remove(currentOptionsPanel.getPanel());
             }
             if (selectedIndex >= 0) {
                 currentOptionsPanel = optionPages.get(selectedIndex);
                 if (currentOptionsPanel != null) {
-                    optionsAreaScrollPane.setViewportView((Component) currentOptionsPanel.getPanel());
+                    optionsAreaScrollPane.setViewportView(currentOptionsPanel.getPanel());
                 } else {
                     optionsAreaScrollPane.setViewportView(null);
                 }
@@ -199,15 +199,26 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
 
     @Override
     public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path) {
-        ((DefaultListModel<String>) categoriesList.getModel()).addElement(path == null ? resourceBundle.getString("optionsAreaTitleLabel.text") : path.get(path.size() - 1).getCaption());
-        PageRecord<?> pageRecord = new PageRecord<>(optionPage);
-        optionPages.add(pageRecord);
-        pageRecord.getPanel().setOptionsModifiedListener(optionsModifiedListener);
-        categoriesList.setSelectedIndex(0);
+        ((DefaultListModel<String>) categoriesList.getModel()).addElement(path == null ? resourceBundle.getString("optionsAreaTitleLabel.text") : path.get(path.size() - 1).getName());
+        String panelKey;
+        if (path == null) {
+            panelKey = OPTIONS_PANEL_KEY;
+        } else {
+            panelKey = path.get(path.size() - 1).getGroupId();
+        }
+
+        PageRecord pageRecord = optionPages.get(panelKey);
+        if (pageRecord != null) {
+            pageRecord.addOptionsPage(optionPage, optionsModifiedListener);
+        } else {
+            pageRecord = new PageRecord(optionPage);
+            optionPages.put(panelKey, pageRecord);
+            pageRecord.setOptionsModifiedListener(optionsModifiedListener);
+        }
     }
 
     public void loadAllFromPreferences() {
-        optionPages.forEach((pageRecord) -> {
+        optionPages.values().forEach((pageRecord) -> {
             try {
                 pageRecord.loadFromPreferences(preferences);
             } catch (Exception ex) {
@@ -217,7 +228,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     }
 
     public void saveAndApplyAll() {
-        optionPages.forEach((pageRecord) -> {
+        optionPages.values().forEach((pageRecord) -> {
             try {
                 pageRecord.saveAndApply(preferences);
             } catch (Exception ex) {
@@ -230,7 +241,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     }
 
     public void applyPreferencesChanges() {
-        optionPages.forEach((pageRecord) -> {
+        optionPages.values().forEach((pageRecord) -> {
             try {
                 pageRecord.applyPreferencesChanges(preferences);
             } catch (Exception ex) {
@@ -249,8 +260,8 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     @Override
     public void addChildComponentListener(LazyComponentListener listener) {
         listeners.add(listener);
-        for (PageRecord<?> pageRecord : optionPages) {
-            listener.componentCreated((Component) pageRecord.getPanel());
+        for (PageRecord pageRecord : optionPages.values()) {
+            listener.componentCreated(pageRecord.getPanel());
         }
     }
 

@@ -32,6 +32,7 @@ import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.options.api.OptionsPageRule;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.options.api.ParentOptionsGroupRule;
+import org.exbin.framework.options.api.RelativeOptionsPageRule;
 import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 
@@ -43,20 +44,23 @@ import org.exbin.framework.preferences.api.PreferencesModuleApi;
 @ParametersAreNonnullByDefault
 public class OptionsPageManager implements OptionsPageManagement {
 
-    private final Map<String, OptionsGroup> optionsGroups = new HashMap<>();
-    private final Map<String, List<OptionsGroupRule>> optionsGroupRules = new HashMap<>();
-    private final Map<String, OptionsPage<?>> optionsPages = new HashMap<>();
-    private final Map<String, List<OptionsPageRule>> optionsPagesRules = new HashMap<>();
+    private final List<String> groupsOrder = new ArrayList<>();
+    private final Map<String, OptionsGroup> groups = new HashMap<>();
+    private final Map<String, List<OptionsGroupRule>> groupRules = new HashMap<>();
+    private final List<String> pagesOrder = new ArrayList<>();
+    private final Map<String, OptionsPage<?>> pages = new HashMap<>();
+    private final Map<String, List<OptionsPageRule>> pagesRules = new HashMap<>();
 
     @Override
     public void registerGroup(OptionsGroup optionsGroup) {
         String groupId = optionsGroup.getGroupId();
-        optionsGroups.put(groupId, optionsGroup);
+        groups.put(groupId, optionsGroup);
+        groupsOrder.add(groupId);
     }
 
     @Override
     public void registerGroup(String groupId, String groupName) {
-        optionsGroups.put(groupId, new BasicOptionsGroup(groupId, groupName));
+        registerGroup(new BasicOptionsGroup(groupId, groupName));
     }
 
     @Override
@@ -67,10 +71,10 @@ public class OptionsPageManager implements OptionsPageManagement {
 
     @Override
     public void registerGroupRule(String groupId, OptionsGroupRule groupRule) {
-        List<OptionsGroupRule> rules = optionsGroupRules.get(groupId);
+        List<OptionsGroupRule> rules = groupRules.get(groupId);
         if (rules == null) {
             rules = new ArrayList<>();
-            optionsGroupRules.put(groupId, rules);
+            groupRules.put(groupId, rules);
         }
         rules.add(groupRule);
     }
@@ -78,7 +82,8 @@ public class OptionsPageManager implements OptionsPageManagement {
     @Override
     public void registerPage(OptionsPage<?> optionsPage) {
         String pageId = optionsPage.getId();
-        optionsPages.put(pageId, optionsPage);
+        pages.put(pageId, optionsPage);
+        pagesOrder.add(pageId);
     }
 
     @Override
@@ -89,40 +94,102 @@ public class OptionsPageManager implements OptionsPageManagement {
 
     @Override
     public void registerPageRule(String pageId, OptionsPageRule pageRule) {
-        List<OptionsPageRule> rules = optionsPagesRules.get(pageId);
+        List<OptionsPageRule> rules = pagesRules.get(pageId);
         if (rules == null) {
             rules = new ArrayList<>();
-            optionsPagesRules.put(pageId, rules);
+            pagesRules.put(pageId, rules);
         }
         rules.add(pageRule);
     }
 
     public void passOptionsPages(OptionsPageReceiver optionsPageReceiver) {
-        for (OptionsPage<?> optionsPage : optionsPages.values()) {
-            List<OptionsPathItem> path = null;
-            List<OptionsPageRule> rules = optionsPagesRules.get(optionsPage.getId());
+        List<String> processedGroupOrder = new ArrayList<>();
+        for (String groupId : groupsOrder) {
+            List<OptionsGroupRule> rules = groupRules.get(groupId);
+            String parentGroupId = null;
             if (rules != null) {
-                for (OptionsPageRule rule : rules) {
-                    if (rule instanceof GroupOptionsPageRule) {
-                        path = getGroupPath(((GroupOptionsPageRule) rule).getGroupId());
+                for (OptionsGroupRule rule : rules) {
+                    if (rule instanceof ParentOptionsGroupRule) {
+                        parentGroupId = ((ParentOptionsGroupRule) rule).getParentGroupId();
+                    } else if (rule instanceof RelativeOptionsPageRule) {
+                        // TODO
+                    }
+                }
+            }
+//            if (parentGroupId == null) {
+            processedGroupOrder.add(groupId);
+//            }
+        }
+
+        // TODO Tree order + relative reordering
+//        List<String> path = new ArrayList<>();
+//        for (String groupId : processedGroupOrder) {
+//            path.clear();
+//            path.add(groupId);
+//            int index = processedGroupOrder.indexOf(groupId);
+//            
+//        }
+        // Process pages in groups first
+        for (String groupId : processedGroupOrder) {
+            for (String pageId : pagesOrder) {
+                List<OptionsPageRule> pageRules = pagesRules.get(pageId);
+                if (pageRules != null) {
+                    for (OptionsPageRule pageRule : pageRules) {
+                        if (pageRule instanceof GroupOptionsPageRule) {
+                            if (groupId.equals(((GroupOptionsPageRule) pageRule).getGroupId())) {
+                                processOptionsPage(optionsPageReceiver, pageId);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (String pageId : pagesOrder) {
+            boolean inGroup = false;
+            List<OptionsPageRule> pageRules = pagesRules.get(pageId);
+            if (pageRules != null) {
+                for (OptionsPageRule pageRule : pageRules) {
+                    if (pageRule instanceof GroupOptionsPageRule) {
+                        inGroup = true;
                         break;
                     }
                 }
             }
-            optionsPageReceiver.addOptionsPage(optionsPage, path);
+            if (!inGroup) {
+                processOptionsPage(optionsPageReceiver, pageId);
+            }
         }
+    }
+
+    private void processOptionsPage(OptionsPageReceiver optionsPageReceiver, String pageId) {
+        OptionsPage<?> optionsPage = pages.get(pageId);
+        List<OptionsPathItem> path = null;
+        List<OptionsPageRule> rules = pagesRules.get(pageId);
+        if (rules != null) {
+            for (OptionsPageRule rule : rules) {
+                if (rule instanceof GroupOptionsPageRule) {
+                    path = getGroupPath(((GroupOptionsPageRule) rule).getGroupId());
+                    break;
+                } else if (rule instanceof RelativeOptionsPageRule) {
+                    // TODO
+                }
+            }
+        }
+        optionsPageReceiver.addOptionsPage(optionsPage, path);
     }
 
     @Nonnull
     public List<OptionsPathItem> getGroupPath(String groupId) {
         List<OptionsPathItem> path = new ArrayList<>();
         while (groupId != null) {
-            OptionsGroup group = optionsGroups.get(groupId);
+            OptionsGroup group = groups.get(groupId);
             if (group == null) {
                 throw new IllegalStateException("Missing group: " + groupId);
             }
             path.add(0, new OptionsPathItem(groupId, group.getName()));
-            List<OptionsGroupRule> rules = optionsGroupRules.get(groupId);
+            List<OptionsGroupRule> rules = groupRules.get(groupId);
             groupId = null;
             if (rules != null) {
                 for (OptionsGroupRule rule : rules) {
@@ -141,7 +208,7 @@ public class OptionsPageManager implements OptionsPageManagement {
         // TODO use preferences instead of options for initial apply
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         OptionsStorage preferences = preferencesModule.getAppPreferences();
-        for (OptionsPage<? extends OptionsData> optionsPage : optionsPages.values()) {
+        for (OptionsPage<? extends OptionsData> optionsPage : pages.values()) {
             OptionsData options = optionsPage.createOptions();
             ((OptionsPage) optionsPage).loadFromPreferences(preferences, options);
         }

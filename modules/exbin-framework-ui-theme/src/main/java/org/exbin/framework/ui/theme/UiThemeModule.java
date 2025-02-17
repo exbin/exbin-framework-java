@@ -25,10 +25,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.options.api.GroupOptionsPageRule;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.options.api.RelativeOptionsPageRule;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.theme.api.LafProvider;
 import org.exbin.framework.ui.theme.options.ThemeOptions;
@@ -90,7 +93,7 @@ public class UiThemeModule implements UiThemeModuleApi {
             if (!iconSet.isEmpty()) {
                 languageModule.switchToIconSet(iconSet);
             }
-            
+
             // Rendering should be initialized first before any GUI is used
             String renderingMode = themeOptions.getRenderingMode();
             if ("software".equals(renderingMode)) {
@@ -196,6 +199,8 @@ public class UiThemeModule implements UiThemeModuleApi {
         ThemeOptionsPage themeOptionsPage = themeOptionsManager.createThemeOptionsPage();
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
         optionsPageManagement.registerPage(themeOptionsPage);
+        optionsPageManagement.registerPageRule(themeOptionsPage, new GroupOptionsPageRule("appearance"));
+        optionsPageManagement.registerPageRule(themeOptionsPage, new RelativeOptionsPageRule(NextToMode.AFTER, "language"));
     }
 
     @Nonnull

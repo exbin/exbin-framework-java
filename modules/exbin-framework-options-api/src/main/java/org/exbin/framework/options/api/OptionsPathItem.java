@@ -27,36 +27,36 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class OptionsPathItem {
 
+    private String groupId;
     private String name;
-    private String caption;
 
     public OptionsPathItem() {
     }
 
-    public OptionsPathItem(String name, @Nullable String caption) {
-        this.name = name;
-        if (caption == null) {
-            caption = name;
+    public OptionsPathItem(String groupId, @Nullable String name) {
+        this.groupId = groupId;
+        if (name == null) {
+            name = groupId;
         }
 
-        this.caption = caption;
+        this.name = name;
     }
 
     @Nonnull
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    @Nullable
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
-    }
-
-    @Nullable
-    public String getCaption() {
-        return caption;
-    }
-
-    public void setCaption(@Nullable String caption) {
-        this.caption = caption;
     }
 }

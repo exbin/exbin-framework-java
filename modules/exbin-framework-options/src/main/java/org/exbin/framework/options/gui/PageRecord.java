@@ -15,10 +15,17 @@
  */
 package org.exbin.framework.options.gui;
 
+import java.awt.Component;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.GroupLayout;
+import javax.swing.JPanel;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsData;
+import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsPage;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
@@ -26,51 +33,97 @@ import org.exbin.framework.preferences.api.OptionsStorage;
  * Options page record.
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> options data type
  */
 @ParametersAreNonnullByDefault
-public class PageRecord<T extends OptionsData> {
+public class PageRecord {
 
-    private final OptionsPage<T> page;
-    private final OptionsComponent<T> panel;
+    private final List<OptionsPage<?>> pages = new ArrayList<>();
+    private final List<OptionsComponent<?>> components = new ArrayList<>();
+    private final JPanel panel = new JPanel();
+    private final GroupLayout.ParallelGroup horizontalGroup;
+    private final GroupLayout.SequentialGroup verticalGroup;
 
-    public PageRecord(OptionsPage<T> page) {
-        this.page = page;
-        this.panel = page.createPanel();
+    public PageRecord(OptionsPage<?> page) {
+        GroupLayout groupLayout = new GroupLayout(panel);
+        horizontalGroup = groupLayout.createParallelGroup();
+        groupLayout.setHorizontalGroup(horizontalGroup);
+        verticalGroup = groupLayout.createSequentialGroup();
+        groupLayout.setVerticalGroup(verticalGroup);
+        panel.setLayout(groupLayout);
+        PageRecord.this.addOptionsPage(page);
+    }
+
+    public void addOptionsPage(OptionsPage<?> page) {
+        addOptionsPage(page, null);
+    }
+
+    public void addOptionsPage(OptionsPage<?> page, @Nullable OptionsModifiedListener listener) {
+        pages.add(page);
+        OptionsComponent<?> optionsComponent = page.createPanel();
+        if (listener != null) {
+            optionsComponent.setOptionsModifiedListener(listener);
+        }
+        components.add(optionsComponent);
+        panel.add((Component) optionsComponent);
+        horizontalGroup.addComponent((Component) optionsComponent);
+        verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
+        panel.revalidate();
+        panel.repaint();
     }
 
     @Nonnull
-    public OptionsPage<T> getPage() {
-        return page;
-    }
-
-    @Nonnull
-    public OptionsComponent<T> getPanel() {
+    public JPanel getPanel() {
         return panel;
     }
 
+    @SuppressWarnings("unchecked")
     public void loadFromPreferences(OptionsStorage preferences) {
-        T options = page.createOptions();
-        page.loadFromPreferences(preferences, options);
-        panel.loadFromOptions(options);
+        for (int i = 0; i < pages.size(); i++) {
+            OptionsPage page = pages.get(i);
+            OptionsData options = page.createOptions();
+            page.loadFromPreferences(preferences, options);
+            OptionsComponent component = components.get(i);
+            component.loadFromOptions(options);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     public void saveToPreferences(OptionsStorage preferences) {
-        T options = page.createOptions();
-        panel.saveToOptions(options);
-        page.saveToPreferences(preferences, options);
+        for (int i = 0; i < pages.size(); i++) {
+            OptionsPage page = pages.get(i);
+            OptionsData options = page.createOptions();
+            OptionsComponent component = components.get(i);
+            component.saveToOptions(options);
+            page.saveToPreferences(preferences, options);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     public void saveAndApply(OptionsStorage preferences) {
-        T options = page.createOptions();
-        panel.saveToOptions(options);
-        page.saveToPreferences(preferences, options);
-        page.applyPreferencesChanges(options);
+        for (int i = 0; i < pages.size(); i++) {
+            OptionsPage page = pages.get(i);
+            OptionsData options = page.createOptions();
+            OptionsComponent component = components.get(i);
+            component.saveToOptions(options);
+            page.saveToPreferences(preferences, options);
+            page.applyPreferencesChanges(options);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     public void applyPreferencesChanges(OptionsStorage preferences) {
-        T options = page.createOptions();
-        panel.saveToOptions(options);
-        page.applyPreferencesChanges(options);
+        for (int i = 0; i < pages.size(); i++) {
+            OptionsPage page = pages.get(i);
+            OptionsData options = page.createOptions();
+            OptionsComponent component = components.get(i);
+            component.saveToOptions(options);
+            page.applyPreferencesChanges(options);
+        }
+    }
+
+    public void setOptionsModifiedListener(OptionsModifiedListener listener) {
+        for (OptionsComponent<?> component : components) {
+            component.setOptionsModifiedListener(listener);
+        }
     }
 }
