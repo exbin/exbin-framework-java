@@ -66,7 +66,12 @@ public class PageRecord {
         components.add(optionsComponent);
         panel.add((Component) optionsComponent);
         horizontalGroup.addComponent((Component) optionsComponent);
-        verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
+        if (components.size() == 1) {
+            verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        } else {
+            verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
+        }
+
         panel.revalidate();
         panel.repaint();
     }

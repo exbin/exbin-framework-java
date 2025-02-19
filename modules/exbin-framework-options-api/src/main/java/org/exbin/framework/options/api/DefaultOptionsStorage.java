@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
@@ -100,8 +101,12 @@ public class DefaultOptionsStorage implements OptionsStorage {
     }
 
     @Override
-    public void put(String key, String value) {
-        values.put(key, value);
+    public void put(String key, @Nullable String value) {
+        if (value == null) {
+            values.remove(key);
+        } else {
+            values.put(key, value);
+        }
     }
 
     @Override
@@ -141,7 +146,5 @@ public class DefaultOptionsStorage implements OptionsStorage {
 
     @Override
     public void sync() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }

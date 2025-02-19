@@ -34,10 +34,8 @@ import org.exbin.framework.App;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.editor.text.action.TextFontAction;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.gui.TextStatusPanel;
-import org.exbin.framework.editor.text.options.TextEncodingOptions;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
@@ -45,9 +43,7 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.editor.text.service.TextAppearanceService;
-import org.exbin.framework.editor.text.service.TextEncodingService;
 import org.exbin.framework.editor.text.service.TextColorService;
-import org.exbin.framework.editor.text.service.TextFontService;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
@@ -62,11 +58,15 @@ import org.exbin.framework.action.api.toolbar.ToolBarContribution;
 import org.exbin.framework.action.api.toolbar.ToolBarManagement;
 import org.exbin.framework.editor.text.options.TextAppearanceOptionsPage;
 import org.exbin.framework.editor.text.options.TextColorOptionsPage;
-import org.exbin.framework.editor.text.options.TextEncodingOptionsPage;
-import org.exbin.framework.editor.text.options.TextFontOptionsPage;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
-import org.exbin.framework.preferences.api.OptionsStorage;
+import org.exbin.framework.text.encoding.EncodingsHandler;
+import org.exbin.framework.text.encoding.options.TextEncodingOptionsPage;
+import org.exbin.framework.text.encoding.service.TextEncodingService;
+import org.exbin.framework.text.font.TextFontModule;
+import org.exbin.framework.text.font.action.TextFontAction;
+import org.exbin.framework.text.font.options.TextFontOptionsPage;
+import org.exbin.framework.text.font.service.TextFontService;
 
 /**
  * Text editor module.
@@ -176,6 +176,7 @@ public class EditorTextModule implements Module {
         });
         optionsPageManagement.registerPage(textColorsOptionsPage);
 
+        TextFontModule textFontModule = App.getModule(TextFontModule.class);
         TextFontOptionsPage textFontOptionsPage = new TextFontOptionsPage();
         textFontOptionsPage.setTextFontService(new TextFontService() {
             @Nonnull
@@ -369,10 +370,6 @@ public class EditorTextModule implements Module {
         MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createPrintAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM));
-    }
-
-    public void loadFromPreferences(OptionsStorage preferences) {
-        encodingsHandler.loadFromPreferences(new TextEncodingOptions(preferences));
     }
 
     @ParametersAreNonnullByDefault

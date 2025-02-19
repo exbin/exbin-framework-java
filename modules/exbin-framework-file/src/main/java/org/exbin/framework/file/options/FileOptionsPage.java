@@ -23,6 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.file.FileDialogsType;
 import org.exbin.framework.file.FileModule;
+import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.options.gui.FileOptionsPanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.DefaultOptionsPage;
@@ -92,8 +93,9 @@ public class FileOptionsPage implements DefaultOptionsPage<FileOptions> {
 
     @Override
     public void applyPreferencesChanges(FileOptions options) {
+        // TODO Support for other file dialogs
         String fileDialogs = options.getFileDialogs();
-        FileModule fileModule = App.getModule(FileModule.class);
-        fileModule.setUseAwtDialogs(FileDialogsType.AWT.name().equals(fileDialogs));
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        ((FileModule) fileModule).setUseAwtDialogs(FileDialogsType.AWT.name().equals(fileDialogs));
     }
 }

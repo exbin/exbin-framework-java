@@ -40,6 +40,7 @@ import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoControl;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.text.font.TextFontApi;
 
 /**
  * Text file handler.

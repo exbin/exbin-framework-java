@@ -54,6 +54,8 @@ include ":modules:exbin-framework-search-api"
 include ":modules:exbin-framework-editor"
 include ":modules:exbin-framework-editor-api"
 include ":modules:exbin-framework-editor-text"
+include ":modules:exbin-framework-text-encoding"
+include ":modules:exbin-framework-text-font"
 include ":modules:exbin-framework-preferences"
 include ":modules:exbin-framework-preferences-api"
 
