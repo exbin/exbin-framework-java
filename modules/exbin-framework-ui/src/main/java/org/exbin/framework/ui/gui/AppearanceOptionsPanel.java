@@ -15,8 +15,6 @@
  */
 package org.exbin.framework.ui.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,7 +38,6 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AppearanceOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
-    private OptionsComponent extendedPanel = null;
 
     public AppearanceOptionsPanel() {
         initComponents();
@@ -173,14 +170,5 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     @Override
     public void setOptionsModifiedListener(OptionsModifiedListener listener) {
         optionsModifiedListener = listener;
-    }
-
-    public void addExtendedPanel(OptionsComponent<?> optionsPanel) {
-        if (extendedPanel != null) {
-            remove((Component) extendedPanel);
-        }
-        extendedPanel = optionsPanel;
-        add((Component) extendedPanel, BorderLayout.CENTER);
-        extendedPanel.setOptionsModifiedListener(optionsModifiedListener);
     }
 }

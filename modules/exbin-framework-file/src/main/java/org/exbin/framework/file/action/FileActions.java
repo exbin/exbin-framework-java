@@ -41,6 +41,7 @@ import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.UsedDirectoryApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.file.api.EditableFileHandler;
+import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.LoadableFileHandler;
 
 /**
@@ -99,8 +100,8 @@ public class FileActions implements FileActionsApi {
     @Override
     public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        FileModule fileModule = App.getModule(FileModule.class);
-        if (fileModule.isUseAwtDialogs()) {
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        if (((FileModule) fileModule).isUseAwtDialogs()) {
             FileDialog fileDialog = new FileDialog(frameModule.getFrame());
             fileDialog.setMode(FileDialog.LOAD);
             fileDialog.setMultipleMode(false);
@@ -161,8 +162,8 @@ public class FileActions implements FileActionsApi {
     @Nonnull
     private OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        FileModule fileModule = App.getModule(FileModule.class);
-        if (fileModule.isUseAwtDialogs()) {
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        if (((FileModule) fileModule).isUseAwtDialogs()) {
             FileDialog fileDialog = new FileDialog(frameModule.getFrame());
             fileDialog.setMode(FileDialog.SAVE);
             fileDialog.setMultipleMode(false);

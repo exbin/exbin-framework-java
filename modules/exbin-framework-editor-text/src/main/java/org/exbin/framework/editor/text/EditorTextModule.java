@@ -59,11 +59,13 @@ import org.exbin.framework.action.api.toolbar.ToolBarManagement;
 import org.exbin.framework.editor.text.options.TextAppearanceOptionsPage;
 import org.exbin.framework.editor.text.options.TextColorOptionsPage;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.options.api.GroupOptionsPageRule;
+import org.exbin.framework.options.api.OptionsGroup;
 import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.options.api.ParentOptionsGroupRule;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.options.TextEncodingOptionsPage;
 import org.exbin.framework.text.encoding.service.TextEncodingService;
-import org.exbin.framework.text.font.TextFontModule;
 import org.exbin.framework.text.font.action.TextFontAction;
 import org.exbin.framework.text.font.options.TextFontOptionsPage;
 import org.exbin.framework.text.font.service.TextFontService;
@@ -155,6 +157,13 @@ public class EditorTextModule implements Module {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
 
+        OptionsGroup textEditorGroup = optionsModule.createOptionsGroup("textEditor", resourceBundle);
+        optionsPageManagement.registerGroup(textEditorGroup);
+        optionsPageManagement.registerGroupRule(textEditorGroup, new ParentOptionsGroupRule("editor"));
+
+        OptionsGroup textEditorColorGroup = optionsModule.createOptionsGroup("textEditorColor", resourceBundle);
+        optionsPageManagement.registerGroup(textEditorColorGroup);
+        optionsPageManagement.registerGroupRule(textEditorColorGroup, new ParentOptionsGroupRule(textEditorGroup));
         TextColorOptionsPage textColorsOptionsPage = new TextColorOptionsPage();
         textColorsOptionsPage.setTextColorService(new TextColorService() {
             @Nonnull
@@ -175,8 +184,11 @@ public class EditorTextModule implements Module {
             }
         });
         optionsPageManagement.registerPage(textColorsOptionsPage);
+        optionsPageManagement.registerPageRule(textColorsOptionsPage, new GroupOptionsPageRule(textEditorColorGroup));
 
-        TextFontModule textFontModule = App.getModule(TextFontModule.class);
+        OptionsGroup textEditorFontGroup = optionsModule.createOptionsGroup("textEditorFont", resourceBundle);
+        optionsPageManagement.registerGroup(textEditorFontGroup);
+        optionsPageManagement.registerGroupRule(textEditorFontGroup, new ParentOptionsGroupRule(textEditorGroup));
         TextFontOptionsPage textFontOptionsPage = new TextFontOptionsPage();
         textFontOptionsPage.setTextFontService(new TextFontService() {
             @Nonnull
@@ -197,6 +209,7 @@ public class EditorTextModule implements Module {
             }
         });
         optionsPageManagement.registerPage(textFontOptionsPage);
+        optionsPageManagement.registerPageRule(textFontOptionsPage, new GroupOptionsPageRule(textEditorFontGroup));
 
         TextAppearanceOptionsPage textAppearanceOptionsPage = new TextAppearanceOptionsPage();
         textAppearanceOptionsPage.setTextAppearanceService(new TextAppearanceService() {
@@ -211,10 +224,15 @@ public class EditorTextModule implements Module {
             }
         });
         optionsPageManagement.registerPage(textAppearanceOptionsPage);
+        optionsPageManagement.registerPageRule(textAppearanceOptionsPage, new GroupOptionsPageRule(textEditorGroup));
 
+        OptionsGroup textEditorEncodingGroup = optionsModule.createOptionsGroup("textEditorEncoding", resourceBundle);
+        optionsPageManagement.registerGroup(textEditorEncodingGroup);
+        optionsPageManagement.registerGroupRule(textEditorEncodingGroup, new ParentOptionsGroupRule(textEditorGroup));
         TextEncodingOptionsPage textEncodingOptionsPage = new TextEncodingOptionsPage();
         textEncodingOptionsPage.setEncodingsHandler(getEncodingsHandler());
         optionsPageManagement.registerPage(textEncodingOptionsPage);
+        optionsPageManagement.registerPageRule(textEncodingOptionsPage, new GroupOptionsPageRule(textEditorEncodingGroup));
     }
 
     public void registerUndoHandler() {

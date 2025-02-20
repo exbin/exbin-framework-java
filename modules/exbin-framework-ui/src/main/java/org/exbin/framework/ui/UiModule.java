@@ -22,14 +22,12 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.GroupOptionsPageRule;
 import org.exbin.framework.options.api.OptionsGroup;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
-import org.exbin.framework.options.api.RelativeOptionsPageRule;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.options.page.AppearanceOptionsPage;
 import org.exbin.framework.ui.options.LanguageOptions;
@@ -120,9 +118,11 @@ public class UiModule implements UiModuleApi {
         optionsPageManagement.registerPage(languageOptionsPage);
         optionsPageManagement.registerPageRule(languageOptionsPage, new GroupOptionsPageRule(appearanceOptionsGroup));
 
+        OptionsGroup uiOptionsGroup = optionsModule.createOptionsGroup("ui", getResourceBundle());
+        optionsPageManagement.registerGroup(uiOptionsGroup);
+
         AppearanceOptionsPage appearanceOptionsPage = new AppearanceOptionsPage();
         optionsPageManagement.registerPage(appearanceOptionsPage);
-        optionsPageManagement.registerPageRule(appearanceOptionsPage, new GroupOptionsPageRule(appearanceOptionsGroup));
-        optionsPageManagement.registerPageRule(appearanceOptionsPage, new RelativeOptionsPageRule(NextToMode.AFTER, languageOptionsPage.getId()));
+        optionsPageManagement.registerPageRule(appearanceOptionsPage, new GroupOptionsPageRule(uiOptionsGroup));
     }
 }

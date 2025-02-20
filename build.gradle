@@ -93,7 +93,7 @@ if (!project.gradle.startParameter.projectProperties.containsKey("moduleDep")) {
                 project(':core').subprojects.each { p ->
                     p.plugins.withType(JavaPlugin) {
                         into('lib') {
-                            from p.jar.archivePath
+                            from p.jar.archiveFile
                             include '*'
                             from p.configurations.runtimeClasspath
                             include '*'
@@ -103,7 +103,7 @@ if (!project.gradle.startParameter.projectProperties.containsKey("moduleDep")) {
                 project(':modules').subprojects.each { p ->
                     p.plugins.withType(JavaPlugin) {
                         into('lib') {
-                            from p.jar.archivePath
+                            from p.jar.archiveFile
                             include '*'
                             from p.configurations.runtimeClasspath
                             include '*'

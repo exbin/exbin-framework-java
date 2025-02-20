@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
@@ -62,8 +61,8 @@ import org.exbin.framework.utils.ClipboardUtils;
 @ParametersAreNonnullByDefault
 public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
 
-    private static String MAP_PROPERTY = "__MAP__";
-    private static String IMAGE_CACHE_PROPERTY = "imageCache";
+    private static final String MAP_PROPERTY = "__MAP__";
+    private static final String IMAGE_CACHE_PROPERTY = "imageCache";
 
     private final JEditorPane editorPane;
 
@@ -204,6 +203,7 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
         // Note: From HTMLEditorKit.LinkController.mouseMoved
         Document document = editorPane.getDocument();
         if (document instanceof HTMLDocument) {
+            @SuppressWarnings("deprecation")
             int pos = editorPane.viewToModel(position);
             if (pos >= 0) {
                 return getLinkUrl(editorPane, pos, position.x, position.y);
@@ -229,15 +229,17 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
                     Object map = null;
                     Object maps = htmlDocument.getProperty(MAP_PROPERTY);
 
-                    if (maps != null && (maps instanceof Hashtable)) {
-                        map = ((Hashtable) maps).get((String) useMap);
+                    if (maps != null && (maps instanceof java.util.Hashtable)) {
+                        map = ((java.util.Hashtable) maps).get((String) useMap);
                     }
 
                     if (map != null && caretPosition < htmlDocument.getLength()) {
                         Rectangle bounds;
                         TextUI ui = editorPane.getUI();
                         try {
+                            @SuppressWarnings("deprecation")
                             Shape lBounds = ui.modelToView(editorPane, caretPosition, Position.Bias.Forward);
+                            @SuppressWarnings("deprecation")
                             Shape rBounds = ui.modelToView(editorPane, caretPosition + 1, Position.Bias.Backward);
                             bounds = lBounds.getBounds();
                             bounds.add((rBounds instanceof Rectangle) ? (Rectangle) rBounds : rBounds.getBounds());
@@ -280,6 +282,7 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
     public static String hasImageSrc(JEditorPane editorPane, Point position) {
         Document document = editorPane.getDocument();
         if (document instanceof HTMLDocument) {
+            @SuppressWarnings("deprecation")
             int pos = editorPane.viewToModel(position);
             if (pos >= 0) {
                 return EditorPanePopupHandler.hasImageSrc(editorPane, pos, position.x, position.y);
@@ -314,6 +317,7 @@ public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActi
             URL reference = document.getBase();
             URL imageUrl = new URL(reference, imageSrc);
             Image image;
+            @SuppressWarnings("unchecked")
             Dictionary<URL, Image> cache = (Dictionary<URL, Image>) document.getProperty(IMAGE_CACHE_PROPERTY);
             if (cache != null) {
                 image = cache.get(imageUrl);

@@ -37,7 +37,6 @@ public class TextAppearanceOptionsPage implements DefaultOptionsPage<TextAppeara
 
     public static final String PAGE_ID = "textAppearance";
 
-    private TextAppearanceOptionsPanel panel;
     private TextAppearanceService textAppearanceService;
 
     @Nonnull
@@ -53,10 +52,7 @@ public class TextAppearanceOptionsPage implements DefaultOptionsPage<TextAppeara
     @Nonnull
     @Override
     public OptionsComponent<TextAppearanceOptions> createPanel() {
-        if (panel == null) {
-            panel = new TextAppearanceOptionsPanel();
-        }
-        return panel;
+        return new TextAppearanceOptionsPanel();
     }
 
     @Nonnull
