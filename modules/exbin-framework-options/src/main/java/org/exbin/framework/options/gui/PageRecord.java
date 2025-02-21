@@ -27,6 +27,7 @@ import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.options.api.VisualOptionsPageParams;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
@@ -43,21 +44,17 @@ public class PageRecord {
     private final GroupLayout.ParallelGroup horizontalGroup;
     private final GroupLayout.SequentialGroup verticalGroup;
 
-    public PageRecord(OptionsPage<?> page) {
+    public PageRecord(OptionsPage<?> page, @Nullable VisualOptionsPageParams visualParams) {
         GroupLayout groupLayout = new GroupLayout(panel);
         horizontalGroup = groupLayout.createParallelGroup();
         groupLayout.setHorizontalGroup(horizontalGroup);
         verticalGroup = groupLayout.createSequentialGroup();
         groupLayout.setVerticalGroup(verticalGroup);
         panel.setLayout(groupLayout);
-        PageRecord.this.addOptionsPage(page);
+        PageRecord.this.addOptionsPage(page, null, visualParams);
     }
 
-    public void addOptionsPage(OptionsPage<?> page) {
-        addOptionsPage(page, null);
-    }
-
-    public void addOptionsPage(OptionsPage<?> page, @Nullable OptionsModifiedListener listener) {
+    public void addOptionsPage(OptionsPage<?> page, @Nullable OptionsModifiedListener listener, @Nullable VisualOptionsPageParams visualParams) {
         pages.add(page);
         OptionsComponent<?> optionsComponent = page.createPanel();
         if (listener != null) {
@@ -66,7 +63,7 @@ public class PageRecord {
         components.add(optionsComponent);
         panel.add((Component) optionsComponent);
         horizontalGroup.addComponent((Component) optionsComponent);
-        if (components.size() == 1) {
+        if (visualParams != null && visualParams.isExpand()) {
             verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
         } else {
             verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);

@@ -42,6 +42,7 @@ import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.api.OptionsPageReceiver;
+import org.exbin.framework.options.api.VisualOptionsPageParams;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
@@ -198,7 +199,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     }
 
     @Override
-    public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path) {
+    public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path, @Nullable VisualOptionsPageParams visualParams) {
         ((DefaultListModel<String>) categoriesList.getModel()).addElement(path == null ? resourceBundle.getString("optionsAreaTitleLabel.text") : path.get(path.size() - 1).getName());
         String panelKey;
         if (path == null) {
@@ -209,9 +210,9 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
 
         PageRecord pageRecord = optionPages.get(panelKey);
         if (pageRecord != null) {
-            pageRecord.addOptionsPage(optionPage, optionsModifiedListener);
+            pageRecord.addOptionsPage(optionPage, optionsModifiedListener, visualParams);
         } else {
-            pageRecord = new PageRecord(optionPage);
+            pageRecord = new PageRecord(optionPage, visualParams);
             optionPages.put(panelKey, pageRecord);
             pageRecord.setOptionsModifiedListener(optionsModifiedListener);
         }

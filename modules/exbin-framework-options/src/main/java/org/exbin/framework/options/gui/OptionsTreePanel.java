@@ -39,6 +39,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsPage;
+import org.exbin.framework.options.api.VisualOptionsPageParams;
 import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
@@ -212,7 +213,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
     }
 
     @Override
-    public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path) {
+    public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path, @Nullable VisualOptionsPageParams visualParams) {
         String panelKey;
         if (path == null) {
             panelKey = OPTIONS_PANEL_KEY;
@@ -223,9 +224,9 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
 
         PageRecord pageRecord = optionPages.get(panelKey);
         if (pageRecord != null) {
-            pageRecord.addOptionsPage(optionPage, optionsModifiedListener);
+            pageRecord.addOptionsPage(optionPage, optionsModifiedListener, visualParams);
         } else {
-            pageRecord = new PageRecord(optionPage);
+            pageRecord = new PageRecord(optionPage, visualParams);
             optionPages.put(panelKey, pageRecord);
             pageRecord.setOptionsModifiedListener(optionsModifiedListener);
         }

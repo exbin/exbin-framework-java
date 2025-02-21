@@ -15,17 +15,30 @@
  */
 package org.exbin.framework.options.api;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for options panel page receiver.
+ * Visual options page parameters.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface OptionsPageReceiver {
+public class VisualOptionsPageParams {
 
-    void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path, @Nullable VisualOptionsPageParams visualParams);
+    private boolean expand;
+
+    public VisualOptionsPageParams() {
+    }
+
+    public VisualOptionsPageParams(boolean expand) {
+        this.expand = expand;
+    }
+
+    public boolean isExpand() {
+        return expand;
+    }
+
+    public void setExpand(boolean expand) {
+        this.expand = expand;
+    }
 }

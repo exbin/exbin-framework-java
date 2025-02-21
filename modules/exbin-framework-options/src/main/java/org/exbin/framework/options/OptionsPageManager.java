@@ -33,6 +33,8 @@ import org.exbin.framework.options.api.OptionsPageRule;
 import org.exbin.framework.options.api.OptionsPathItem;
 import org.exbin.framework.options.api.ParentOptionsGroupRule;
 import org.exbin.framework.options.api.RelativeOptionsPageRule;
+import org.exbin.framework.options.api.VisualOptionsPageParams;
+import org.exbin.framework.options.api.VisualOptionsPageRule;
 import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 
@@ -166,18 +168,20 @@ public class OptionsPageManager implements OptionsPageManagement {
     private void processOptionsPage(OptionsPageReceiver optionsPageReceiver, String pageId) {
         OptionsPage<?> optionsPage = pages.get(pageId);
         List<OptionsPathItem> path = null;
+        VisualOptionsPageParams visualParams = null;
         List<OptionsPageRule> rules = pagesRules.get(pageId);
         if (rules != null) {
             for (OptionsPageRule rule : rules) {
                 if (rule instanceof GroupOptionsPageRule) {
                     path = getGroupPath(((GroupOptionsPageRule) rule).getGroupId());
-                    break;
+                } else if (rule instanceof VisualOptionsPageRule) {
+                    visualParams = ((VisualOptionsPageRule) rule).getVisualParams();
                 } else if (rule instanceof RelativeOptionsPageRule) {
                     // TODO
                 }
             }
         }
-        optionsPageReceiver.addOptionsPage(optionsPage, path);
+        optionsPageReceiver.addOptionsPage(optionsPage, path, visualParams);
     }
 
     @Nonnull

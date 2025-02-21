@@ -63,6 +63,8 @@ import org.exbin.framework.options.api.GroupOptionsPageRule;
 import org.exbin.framework.options.api.OptionsGroup;
 import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.options.api.ParentOptionsGroupRule;
+import org.exbin.framework.options.api.VisualOptionsPageParams;
+import org.exbin.framework.options.api.VisualOptionsPageRule;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.options.TextEncodingOptionsPage;
 import org.exbin.framework.text.encoding.service.TextEncodingService;
@@ -233,6 +235,7 @@ public class EditorTextModule implements Module {
         textEncodingOptionsPage.setEncodingsHandler(getEncodingsHandler());
         optionsPageManagement.registerPage(textEncodingOptionsPage);
         optionsPageManagement.registerPageRule(textEncodingOptionsPage, new GroupOptionsPageRule(textEditorEncodingGroup));
+        optionsPageManagement.registerPageRule(textEncodingOptionsPage, new VisualOptionsPageRule(new VisualOptionsPageParams(true)));
     }
 
     public void registerUndoHandler() {

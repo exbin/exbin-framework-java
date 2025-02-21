@@ -15,17 +15,25 @@
  */
 package org.exbin.framework.options.api;
 
-import java.util.List;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for options panel page receiver.
+ * Options page visual parameters rule.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface OptionsPageReceiver {
+public class VisualOptionsPageRule implements OptionsPageRule {
 
-    void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path, @Nullable VisualOptionsPageParams visualParams);
+    private final VisualOptionsPageParams visualParams;
+
+    public VisualOptionsPageRule(VisualOptionsPageParams visualParams) {
+        this.visualParams = visualParams;
+    }
+
+    @Nonnull
+    public VisualOptionsPageParams getVisualParams() {
+        return visualParams;
+    }
 }

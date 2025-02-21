@@ -26,6 +26,8 @@ import org.exbin.framework.options.api.GroupOptionsPageRule;
 import org.exbin.framework.options.api.OptionsGroup;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.options.api.VisualOptionsPageParams;
+import org.exbin.framework.options.api.VisualOptionsPageRule;
 
 /**
  * Action manager module.
@@ -62,15 +64,14 @@ public class ActionManagerModule implements org.exbin.framework.Module {
 
     public void registerOptionsPanels() {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-
-        ActionManagerOptionsPage actionOptionsPage = new ActionManagerOptionsPage();
-        
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
 
         OptionsGroup keymapOptionsGroup = optionsModule.createOptionsGroup("keymap", getResourceBundle());
         optionsPageManagement.registerGroup(keymapOptionsGroup);
 
-        optionsPageManagement.registerPage(actionOptionsPage);
-        optionsPageManagement.registerPageRule(actionOptionsPage, new GroupOptionsPageRule(keymapOptionsGroup));
+        ActionManagerOptionsPage actionManagerOptionsPage = new ActionManagerOptionsPage();
+        optionsPageManagement.registerPage(actionManagerOptionsPage);
+        optionsPageManagement.registerPageRule(actionManagerOptionsPage, new GroupOptionsPageRule(keymapOptionsGroup));
+        optionsPageManagement.registerPageRule(actionManagerOptionsPage, new VisualOptionsPageRule(new VisualOptionsPageParams(true)));
     }
 }
