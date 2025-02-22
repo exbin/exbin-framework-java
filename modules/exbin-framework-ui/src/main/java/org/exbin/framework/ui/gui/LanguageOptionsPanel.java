@@ -120,15 +120,10 @@ public class LanguageOptionsPanel extends javax.swing.JPanel implements OptionsC
     private void initComponents() {
 
         mainOptionsBasicPanel = new javax.swing.JPanel();
-        generalPanel = new javax.swing.JPanel();
         languageLabel = new javax.swing.JLabel();
         languageComboBox = new javax.swing.JComboBox<>();
-        mainOptionsNotePanel = new javax.swing.JPanel();
-        requireRestartLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
-
-        mainOptionsBasicPanel.setLayout(new java.awt.BorderLayout());
 
         languageLabel.setText(resourceBundle.getString("languageLabel.text") + " *"); // NOI18N
 
@@ -138,22 +133,22 @@ public class LanguageOptionsPanel extends javax.swing.JPanel implements OptionsC
             }
         });
 
-        javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
-        generalPanel.setLayout(generalPanelLayout);
-        generalPanelLayout.setHorizontalGroup(
-            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generalPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout mainOptionsBasicPanelLayout = new javax.swing.GroupLayout(mainOptionsBasicPanel);
+        mainOptionsBasicPanel.setLayout(mainOptionsBasicPanelLayout);
+        mainOptionsBasicPanelLayout.setHorizontalGroup(
+            mainOptionsBasicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainOptionsBasicPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainOptionsBasicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(languageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(generalPanelLayout.createSequentialGroup()
+                    .addGroup(mainOptionsBasicPanelLayout.createSequentialGroup()
                         .addComponent(languageLabel)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        generalPanelLayout.setVerticalGroup(
-            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generalPanelLayout.createSequentialGroup()
+        mainOptionsBasicPanelLayout.setVerticalGroup(
+            mainOptionsBasicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainOptionsBasicPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(languageLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -161,30 +156,7 @@ public class LanguageOptionsPanel extends javax.swing.JPanel implements OptionsC
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        mainOptionsBasicPanel.add(generalPanel, java.awt.BorderLayout.CENTER);
-
         add(mainOptionsBasicPanel, java.awt.BorderLayout.NORTH);
-
-        requireRestartLabel.setText(resourceBundle.getString("requireRestartLabel.text")); // NOI18N
-
-        javax.swing.GroupLayout mainOptionsNotePanelLayout = new javax.swing.GroupLayout(mainOptionsNotePanel);
-        mainOptionsNotePanel.setLayout(mainOptionsNotePanelLayout);
-        mainOptionsNotePanelLayout.setHorizontalGroup(
-            mainOptionsNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainOptionsNotePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(requireRestartLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        mainOptionsNotePanelLayout.setVerticalGroup(
-            mainOptionsNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainOptionsNotePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(requireRestartLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        add(mainOptionsNotePanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
     private void languageComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_languageComboBoxItemStateChanged
@@ -205,12 +177,9 @@ public class LanguageOptionsPanel extends javax.swing.JPanel implements OptionsC
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel generalPanel;
     private javax.swing.JComboBox<LanguageRecord> languageComboBox;
     private javax.swing.JLabel languageLabel;
     private javax.swing.JPanel mainOptionsBasicPanel;
-    private javax.swing.JPanel mainOptionsNotePanel;
-    private javax.swing.JLabel requireRestartLabel;
     // End of variables declaration//GEN-END:variables
 
     private void notifyModified() {

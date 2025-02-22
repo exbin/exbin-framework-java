@@ -33,6 +33,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsModifiedListener;
 import org.exbin.framework.options.api.OptionsComponent;
+import org.exbin.framework.ui.theme.ThemeConfigurationAction;
 import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
 import org.exbin.framework.ui.theme.options.ThemeOptions;
 import org.exbin.framework.utils.DesktopUtils;
@@ -49,7 +50,7 @@ public class ThemeOptionsPanel extends javax.swing.JPanel implements OptionsComp
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ThemeOptionsPanel.class);
     private OptionsModifiedListener optionsModifiedListener;
-    private ThemeConfigurationListener themeConfigurationListener;
+    private ThemeConfigurationAction themeConfigurationListener;
     private OptionsComponent extendedOptionsPanel = null;
     private Map<String, ConfigurableLafProvider> themeOptions = null;
 
@@ -522,7 +523,7 @@ public class ThemeOptionsPanel extends javax.swing.JPanel implements OptionsComp
         optionsModifiedListener = listener;
     }
 
-    public void setThemeConfigurationListener(ThemeConfigurationListener themeConfigurationListener) {
+    public void setThemeConfigurationListener(ThemeConfigurationAction themeConfigurationListener) {
         this.themeConfigurationListener = themeConfigurationListener;
     }
 
@@ -533,10 +534,5 @@ public class ThemeOptionsPanel extends javax.swing.JPanel implements OptionsComp
         extendedOptionsPanel = optionsPanel;
         add((Component) extendedOptionsPanel, BorderLayout.CENTER);
         extendedOptionsPanel.setOptionsModifiedListener(optionsModifiedListener);
-    }
-
-    public interface ThemeConfigurationListener {
-
-        void configureTheme(ConfigurableLafProvider lafProvider);
     }
 }

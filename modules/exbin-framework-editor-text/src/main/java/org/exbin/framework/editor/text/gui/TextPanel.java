@@ -47,8 +47,6 @@ import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.text.encoding.EncodingsHandler;
-import org.exbin.framework.text.encoding.TextCharsetApi;
-import org.exbin.framework.text.font.TextFontApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.TestApplication;
 
@@ -58,7 +56,7 @@ import org.exbin.framework.utils.TestApplication;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHandler, TextCharsetApi, TextFontApi {
+public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHandler {
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
     private boolean modified = false;
@@ -258,12 +256,10 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         }
     }
 
-    @Override
     public void setCurrentFont(Font font) {
         textArea.setFont(font);
     }
 
-    @Override
     public Font getCurrentFont() {
         return textArea.getFont();
     }
@@ -365,18 +361,15 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
     }
 
     @Nonnull
-    @Override
     public Charset getCharset() {
         return charset;
     }
 
-    @Override
     public void setCharset(Charset charset) {
         this.charset = charset;
     }
 
     @Nonnull
-    @Override
     public Font getDefaultFont() {
         return defaultFont;
     }
@@ -420,7 +413,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
 
     @Override
     public boolean canSelectAll() {
-        return textArea.getSelectionEnd() > textArea.getSelectionStart();
+        return true;
     }
 
     @Override

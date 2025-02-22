@@ -13,40 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.font;
+package org.exbin.framework.ui.theme;
 
-import java.awt.Font;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
 
 /**
- * Text font access interface.
+ * Theme configuration action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextFontApi {
+public interface ThemeConfigurationAction {
 
     /**
-     * Returns font.
+     * Invokes theme configuration action.
      *
-     * @return font
+     * @param lafProvider theme provider
      */
-    @Nonnull
-    Font getCurrentFont();
-
-    /**
-     * Returns default font.
-     *
-     * @return font
-     */
-    @Nonnull
-    Font getDefaultFont();
-
-    /**
-     * Sets font.
-     *
-     * @param font font
-     */
-    void setCurrentFont(Font font);
+    void configureTheme(ConfigurableLafProvider lafProvider);
 }

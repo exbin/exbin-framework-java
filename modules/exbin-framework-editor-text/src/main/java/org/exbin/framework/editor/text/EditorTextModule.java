@@ -22,6 +22,7 @@ import org.exbin.framework.editor.text.action.WordWrappingAction;
 import org.exbin.framework.editor.text.action.PropertiesAction;
 import org.exbin.framework.editor.text.action.GoToLineAction;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
 import java.nio.charset.Charset;
@@ -29,6 +30,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.App;
 import org.exbin.framework.Module;
@@ -71,6 +73,8 @@ import org.exbin.framework.text.encoding.service.TextEncodingService;
 import org.exbin.framework.text.font.action.TextFontAction;
 import org.exbin.framework.text.font.options.TextFontOptionsPage;
 import org.exbin.framework.text.font.service.TextFontService;
+import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Text editor module.
@@ -84,6 +88,13 @@ public class EditorTextModule implements Module {
 
     private static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
     private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
+
+    public static final String TEXT_POPUP_MENU_ID = MODULE_ID + ".textPopupMenu";
+    public static final String TEXT_POPUP_VIEW_GROUP_ID = MODULE_ID + ".viewPopupMenuGroup";
+    public static final String TEXT_POPUP_EDIT_GROUP_ID = MODULE_ID + ".editPopupMenuGroup";
+    public static final String TEXT_POPUP_SELECTION_GROUP_ID = MODULE_ID + ".selectionPopupMenuGroup";
+    public static final String TEXT_POPUP_FIND_GROUP_ID = MODULE_ID + ".findPopupMenuGroup";
+    public static final String TEXT_POPUP_TOOLS_GROUP_ID = MODULE_ID + ".toolsPopupMenuGroup";
 
     public static final String XBT_FILE_TYPE = "XBTextEditor.XBTFileType";
     public static final String TXT_FILE_TYPE = "XBTextEditor.TXTFileType";
@@ -257,6 +268,53 @@ public class EditorTextModule implements Module {
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM));
     }
 
+    public void registerTextPopupMenu() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        ClipboardActionsApi clipboardActions = actionModule.getClipboardActions();
+
+        mgmt.registerMenu(TEXT_POPUP_MENU_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_VIEW_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMode.AROUND));
+        contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_EDIT_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMode.AROUND));
+        contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_SELECTION_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMode.AROUND));
+        contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_FIND_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMode.AROUND));
+        contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_TOOLS_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMode.AROUND));
+
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createCutAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createCopyAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createPasteAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createDeleteAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
+
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createSelectAllAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
+        /* contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, createEditSelectionAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID)); */
+
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, findReplaceActions.createEditFindAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, findReplaceActions.createEditReplaceAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, createGoToLineAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
+
+        /* contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, getOptionsAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_TOOLS_GROUP_ID)); */
+    }
+
     public TextStatusPanel getTextStatusPanel() {
         return textStatusPanel;
     }
@@ -391,6 +449,22 @@ public class EditorTextModule implements Module {
         MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createPrintAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM));
+    }
+
+    @Nonnull
+    public JPopupMenu createPopupMenu(TextPanel textPanel) {
+        JPopupMenu popupMenu = new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                JPopupMenu popupMenu = UiUtils.createPopupMenu();
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+                MenuManagement menuManagement = actionModule.getMenuManagement(MODULE_ID);
+                menuManagement.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, frameModule.getFrameHandler().getActionContextService());
+                popupMenu.show(invoker, x, y);
+            }
+        };
+        return popupMenu;
     }
 
     @ParametersAreNonnullByDefault

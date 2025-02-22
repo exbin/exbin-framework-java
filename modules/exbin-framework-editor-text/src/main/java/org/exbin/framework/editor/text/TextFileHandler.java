@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.editor.text;
 
-import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,13 +33,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
-import org.exbin.framework.action.api.ComponentActivationProvider;
-import org.exbin.framework.action.api.DefaultActionContextService;
 import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoControl;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
-import org.exbin.framework.action.api.ActionContextService;
-import org.exbin.framework.text.font.TextFontApi;
+import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.editor.api.EditorFileHandler;
+import org.exbin.framework.utils.ClipboardActionsHandler;
 
 /**
  * Text file handler.
@@ -48,14 +46,14 @@ import org.exbin.framework.text.font.TextFontApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFileHandler implements EditableFileHandler, ComponentActivationProvider, TextFontApi {
+public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
 
     protected final TextPanel textPanel = new TextPanel();
 
     protected URI fileUri = null;
     protected String title;
     protected FileType fileType = null;
-    protected DefaultActionContextService componentActivationService = new DefaultActionContextService();
+    protected ComponentActivationListener componentActivationListener;
     protected UndoRedoControl undoRedoControl = null;
 
     public TextFileHandler() {
@@ -63,6 +61,11 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
     }
 
     private void init() {
+        textPanel.setUpdateListener(() -> {
+            if (componentActivationListener != null) {
+                componentActivationListener.updated(ClipboardActionsHandler.class, textPanel);
+            }
+        });
     }
 
     public void registerUndoHandler() {
@@ -210,32 +213,27 @@ public class TextFileHandler implements EditableFileHandler, ComponentActivation
         return textPanel.isModified();
     }
 
-    @Nonnull
     @Override
-    public Font getCurrentFont() {
-        return textPanel.getCurrentFont();
-    }
-
-    @Nonnull
-    @Override
-    public Font getDefaultFont() {
-        return textPanel.getDefaultFont();
+    public void componentActivated(ComponentActivationListener componentActivationListener) {
+        this.componentActivationListener = componentActivationListener;
+//        componentActivationListener.updated(CodeAreaCore.class, getCodeArea());
+        componentActivationListener.updated(UndoRedoState.class, undoRedoControl);
+        componentActivationListener.updated(ClipboardActionsHandler.class, textPanel);
     }
 
     @Override
-    public void setCurrentFont(Font font) {
-        textPanel.setCurrentFont(font);
-    }
-
-    @Nonnull
-    @Override
-    public ActionContextService getActionContextService() {
-        return componentActivationService;
+    public void componentDeactivated(ComponentActivationListener componentActivationListener) {
+        this.componentActivationListener = null;
+//        componentActivationListener.updated(CodeAreaCore.class, null);
+        componentActivationListener.updated(UndoRedoState.class, null);
+        componentActivationListener.updated(ClipboardActionsHandler.class, null);
     }
 
     public void notifyUndoChanged() {
         if (undoRedoControl != null) {
-            componentActivationService.updated(UndoRedoState.class, undoRedoControl);
+            if (componentActivationListener != null) {
+                componentActivationListener.updated(UndoRedoState.class, undoRedoControl);
+            }
         }
     }
 }

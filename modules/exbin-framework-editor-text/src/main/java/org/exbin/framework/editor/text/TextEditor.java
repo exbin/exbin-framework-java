@@ -59,6 +59,7 @@ public class TextEditor implements EditorProvider {
     }
 
     private void init() {
+        EditorTextModule editorTextModule = App.getModule(EditorTextModule.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
 
@@ -71,13 +72,16 @@ public class TextEditor implements EditorProvider {
                 propertyChangeListener.propertyChange(evt);
             }
         });
-        activeFile.getActionContextService().registerListener(componentActivationListener);
+        textPanel.setPopupMenu(editorTextModule.createPopupMenu(textPanel));
 
         activeFileChanged();
     }
 
     private void activeFileChanged() {
         componentActivationListener.updated(FileHandler.class, activeFile);
+        if (activeFile instanceof TextFileHandler) {
+            ((TextFileHandler) activeFile).componentActivated(componentActivationListener);
+        }
     }
 
     public void registerUndoHandler() {

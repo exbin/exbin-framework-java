@@ -23,7 +23,6 @@ import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.text.font.TextFontApi;
 import org.exbin.framework.text.font.gui.TextFontPanel;
 import org.exbin.framework.text.font.options.TextFontOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -34,6 +33,7 @@ import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.text.font.service.TextFontService;
 
 /**
  * Text font action handler.
@@ -47,6 +47,7 @@ public class TextFontAction extends AbstractAction {
 
     private ResourceBundle resourceBundle;
     private FileHandler fileHandler;
+    private TextFontService textFontService;
 
     public TextFontAction() {
     }
@@ -62,22 +63,21 @@ public class TextFontAction extends AbstractAction {
             public void register(ActionContextChangeManager manager) {
                 manager.registerUpdateListener(FileHandler.class, (instance) -> {
                     fileHandler = instance;
-                    setEnabled(fileHandler instanceof TextFontApi);
+                    setEnabled(textFontService != null && fileHandler != null);
                 });
             }
         });
     }
 
+    public void setTextFontService(TextFontService textFontService) {
+        this.textFontService = textFontService;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!(fileHandler instanceof TextFontApi)) {
-            return;
-        }
-
-        TextFontApi textFontApi = (TextFontApi) fileHandler;
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();
-        fontPanel.setStoredFont(textFontApi.getCurrentFont());
+        fontPanel.setStoredFont(textFontService.getCurrentFont());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
         final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
@@ -90,7 +90,7 @@ public class TextFontAction extends AbstractAction {
                     parameters.setUseDefaultFont(false);
                     parameters.setFont(fontPanel.getStoredFont());
                 }
-                textFontApi.setCurrentFont(fontPanel.getStoredFont());
+                textFontService.setCurrentFont(fontPanel.getStoredFont());
             }
 
             dialog.close();
