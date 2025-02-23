@@ -22,16 +22,18 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.text.TextEditorProvider;
 import org.exbin.framework.editor.text.gui.TextPropertiesPanel;
-import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.editor.text.TextFileHandler;
+import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.CloseControlPanel;
 
 /**
- * Properties action.
+ * Text file properties action.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -40,27 +42,32 @@ public class PropertiesAction extends AbstractAction {
 
     public static final String ACTION_ID = "propertiesAction";
 
-    private EditorProvider editorProvider;
-    private ResourceBundle resourceBundle;
+    private FileHandler fileHandler;
 
     public PropertiesAction() {
     }
 
-    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.editorProvider = editorProvider;
-        this.resourceBundle = resourceBundle;
-
+    public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
+            @Override
+            public void register(ActionContextChangeManager manager) {
+                manager.registerUpdateListener(FileHandler.class, (instance) -> {
+                    fileHandler = instance;
+                    setEnabled(fileHandler instanceof TextFileHandler);
+                });
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof TextEditorProvider) {
+        if (fileHandler instanceof TextFileHandler) {
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             TextPropertiesPanel propertiesPanel = new TextPropertiesPanel();
-            propertiesPanel.setDocument((TextEditorProvider) editorProvider);
+            propertiesPanel.setDocument((TextFileHandler) fileHandler);
             CloseControlPanel controlPanel = new CloseControlPanel();
             final WindowHandler dialog = windowModule.createDialog(propertiesPanel, controlPanel);
             windowModule.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());

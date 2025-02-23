@@ -19,6 +19,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.options.TextColorOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -34,6 +35,7 @@ import org.exbin.framework.utils.UtilsModule;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TextColorOptionsPanel extends javax.swing.JPanel implements OptionsComponent<TextColorOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;

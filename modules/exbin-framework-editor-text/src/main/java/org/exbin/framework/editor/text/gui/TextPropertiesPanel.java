@@ -29,10 +29,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.text.Document;
 import org.exbin.framework.App;
-import org.exbin.framework.editor.text.TextEditorProvider;
+import org.exbin.framework.editor.text.TextFileHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 
@@ -188,13 +187,7 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
         });
     }
 
-    public void setDocument(TextEditorProvider textEditor) {
-        Optional<FileHandler> activeFile = textEditor.getActiveFile();
-        if (!activeFile.isPresent()) {
-            throw new IllegalStateException();
-        }
-
-        FileHandler fileHandler = activeFile.get();
+    public void setDocument(TextFileHandler fileHandler) {
         Optional<URI> fileUri = fileHandler.getFileUri();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
         TextPanel textPanel = (TextPanel) fileHandler.getComponent();

@@ -27,6 +27,7 @@ import javax.swing.JTextArea;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface TextSearchService {
 
     @Nullable

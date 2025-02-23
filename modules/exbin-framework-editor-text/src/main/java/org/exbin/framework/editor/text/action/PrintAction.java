@@ -17,18 +17,17 @@ package org.exbin.framework.editor.text.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.gui.TextPanel;
-import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Print action.
@@ -40,32 +39,34 @@ public class PrintAction extends AbstractAction {
 
     public static final String ACTION_ID = "printAction";
 
-    private EditorProvider editorProvider;
-    private ResourceBundle resourceBundle;
+    private Component component;
 
     public PrintAction() {
     }
 
-    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.editorProvider = editorProvider;
-        this.resourceBundle = resourceBundle;
-
+    public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
+            @Override
+            public void register(ActionContextChangeManager manager) {
+                manager.registerUpdateListener(Component.class, (instance) -> {
+                    component = instance;
+                    setEnabled(component instanceof TextPanel);
+                });
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-        if (!activeFile.isPresent()) {
-            throw new IllegalStateException();
+        if (!(component instanceof TextPanel)) {
+            return;
         }
 
-        Component component = activeFile.get().getComponent();
-        if (component instanceof TextPanel) {
-            ((TextPanel) component).printFile();
-        }
+        TextPanel textPanel = (TextPanel) component;
+        textPanel.printFile();
     }
 }

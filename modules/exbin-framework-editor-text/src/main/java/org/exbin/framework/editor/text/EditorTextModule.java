@@ -328,7 +328,7 @@ public class EditorTextModule implements Module {
         if (findReplaceActions == null) {
             ensureSetup();
             findReplaceActions = new FindReplaceActions();
-            findReplaceActions.setup(editorProvider, resourceBundle);
+            findReplaceActions.setup(resourceBundle);
         }
 
         return findReplaceActions;
@@ -376,7 +376,7 @@ public class EditorTextModule implements Module {
     private WordWrappingAction createWordWrappingAction() {
         ensureSetup();
         WordWrappingAction wordWrappingAction = new WordWrappingAction();
-        wordWrappingAction.setup(editorProvider, resourceBundle);
+        wordWrappingAction.setup(resourceBundle);
         return wordWrappingAction;
     }
 
@@ -384,7 +384,7 @@ public class EditorTextModule implements Module {
     private GoToLineAction createGoToLineAction() {
         ensureSetup();
         GoToLineAction goToLineAction = new GoToLineAction();
-        goToLineAction.setup(editorProvider, resourceBundle);
+        goToLineAction.setup(resourceBundle);
         return goToLineAction;
     }
 
@@ -392,7 +392,7 @@ public class EditorTextModule implements Module {
     private PropertiesAction createPropertiesAction() {
         ensureSetup();
         PropertiesAction propertiesAction = new PropertiesAction();
-        propertiesAction.setup(editorProvider, resourceBundle);
+        propertiesAction.setup(resourceBundle);
         return propertiesAction;
     }
 
@@ -400,7 +400,7 @@ public class EditorTextModule implements Module {
     private PrintAction createPrintAction() {
         ensureSetup();
         PrintAction printAction = new PrintAction();
-        printAction.setup(editorProvider, resourceBundle);
+        printAction.setup(resourceBundle);
         return printAction;
     }
 

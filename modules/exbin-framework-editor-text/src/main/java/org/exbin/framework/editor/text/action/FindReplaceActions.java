@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.text.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -23,10 +24,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.text.TextEditorProvider;
 import org.exbin.framework.editor.text.gui.FindTextPanel;
-import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.window.api.handler.DefaultControlHandler;
@@ -47,18 +49,16 @@ public class FindReplaceActions {
     public static final String EDIT_FIND_AGAIN_ACTION_ID = "editFindAgainAction";
     public static final String EDIT_REPLACE_ACTION_ID = "editReplaceAction";
 
-    private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
 
     public FindReplaceActions() {
     }
 
-    public void setup(EditorProvider editorProvider, ResourceBundle resourceBundle) {
-        this.editorProvider = editorProvider;
+    public void setup(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 
-    public void showFindDialog(boolean shallReplace) {
+    public void showFindDialog(TextPanel textPanel, boolean shallReplace) {
         final WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final FindTextPanel findPanel = new FindTextPanel();
@@ -68,15 +68,13 @@ public class FindReplaceActions {
         final WindowHandler dialog = windowModule.createDialog(findPanel, controlPanel);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                if (editorProvider instanceof TextEditorProvider) {
-                    TextSearchService.FindTextParameters findTextParameters = new TextSearchService.FindTextParameters();
-                    findTextParameters.setFindText(findPanel.getFindText());
-                    findTextParameters.setSearchFromStart(findPanel.isSearchFromStart());
-                    findTextParameters.setShallReplace(findPanel.isShallReplace());
-                    findTextParameters.setReplaceText(findPanel.getReplaceText());
+                TextSearchService.FindTextParameters findTextParameters = new TextSearchService.FindTextParameters();
+                findTextParameters.setFindText(findPanel.getFindText());
+                findTextParameters.setSearchFromStart(findPanel.isSearchFromStart());
+                findTextParameters.setShallReplace(findPanel.isShallReplace());
+                findTextParameters.setReplaceText(findPanel.getReplaceText());
 
-                    ((TextEditorProvider) editorProvider).getEditorComponent().findText(findTextParameters);
-                }
+                textPanel.findText(findTextParameters);
             }
 
             dialog.close();
@@ -89,45 +87,96 @@ public class FindReplaceActions {
 
     @Nonnull
     public Action createEditFindAction() {
-        AbstractAction editFindAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showFindDialog(false);
-            }
-        };
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(editFindAction, resourceBundle, EDIT_FIND_ACTION_ID);
-        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
-        editFindAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        return editFindAction;
+        return new EditFindAction();
     }
 
     @Nonnull
     public Action createEditFindAgainAction() {
-        AbstractAction editFindAgainAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showFindDialog(false);
-            }
-        };
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(editFindAgainAction, resourceBundle, EDIT_FIND_AGAIN_ACTION_ID);
-        editFindAgainAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
-        return editFindAgainAction;
+        return new EditFindAgainAction();
     }
 
     @Nonnull
     public Action createEditReplaceAction() {
-        AbstractAction editReplaceAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showFindDialog(true);
-            }
-        };
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(editReplaceAction, resourceBundle, EDIT_REPLACE_ACTION_ID);
-        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
-        editReplaceAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        return editReplaceAction;
+        return new EditReplaceAction();
+    }
+
+    @ParametersAreNonnullByDefault
+    public class EditFindAction extends AbstractAction {
+
+        private Component component;
+
+        public EditFindAction() {
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.initAction(this, resourceBundle, EDIT_FIND_ACTION_ID);
+            putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
+            putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
+                @Override
+                public void register(ActionContextChangeManager manager) {
+                    manager.registerUpdateListener(Component.class, (instance) -> {
+                        component = instance;
+                        setEnabled(instance != null);
+                    });
+                }
+            });
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            showFindDialog((TextPanel) component, false);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    public class EditFindAgainAction extends AbstractAction {
+
+        private Component component;
+
+        public EditFindAgainAction() {
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.initAction(this, resourceBundle, EDIT_FIND_AGAIN_ACTION_ID);
+            putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
+                @Override
+                public void register(ActionContextChangeManager manager) {
+                    manager.registerUpdateListener(Component.class, (instance) -> {
+                        component = instance;
+                        setEnabled(instance != null);
+                    });
+                }
+            });
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            showFindDialog((TextPanel) component, false);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    public class EditReplaceAction extends AbstractAction {
+
+        private Component component;
+
+        public EditReplaceAction() {
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.initAction(this, resourceBundle, EDIT_REPLACE_ACTION_ID);
+            putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
+            putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
+                @Override
+                public void register(ActionContextChangeManager manager) {
+                    manager.registerUpdateListener(Component.class, (instance) -> {
+                        component = instance;
+                        setEnabled(instance != null);
+                    });
+                }
+            });
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            showFindDialog((TextPanel) component, false);
+        }
     }
 }
