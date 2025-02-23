@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.text.Document;
 import org.exbin.framework.App;
-import org.exbin.framework.editor.text.TextEditor;
+import org.exbin.framework.editor.text.TextEditorProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.file.api.FileHandler;
@@ -188,7 +188,7 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
         });
     }
 
-    public void setDocument(TextEditor textEditor) {
+    public void setDocument(TextEditorProvider textEditor) {
         Optional<FileHandler> activeFile = textEditor.getActiveFile();
         if (!activeFile.isPresent()) {
             throw new IllegalStateException();

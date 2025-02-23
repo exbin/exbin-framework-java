@@ -195,13 +195,13 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
         fillDefaultFontButton.setEnabled(selected);
         fillCurrentFontButton.setEnabled(selected);
         changeFontButton.setEnabled(selected);
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_defaultFontCheckBoxItemStateChanged
 
     private void fillDefaultFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultFontButtonActionPerformed
         codeFont = textFontService.getDefaultFont();
         updateFontFields();
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_fillDefaultFontButtonActionPerformed
 
     private void changeFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeFontButtonActionPerformed
@@ -210,7 +210,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
             if (resultFont != null) {
                 codeFont = resultFont;
                 updateFontFields();
-                setModified(true);
+                notifyModified();
             }
         }
     }//GEN-LAST:event_changeFontButtonActionPerformed
@@ -218,7 +218,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
     private void fillCurrentFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentFontButtonActionPerformed
         codeFont = textFontService.getCurrentFont();
         updateFontFields();
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_fillCurrentFontButtonActionPerformed
 
     /**
@@ -260,7 +260,7 @@ public class TextFontOptionsPanel extends javax.swing.JPanel implements OptionsC
         fontPreviewLabel.setFont(codeFont);
     }
 
-    private void setModified(boolean b) {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }

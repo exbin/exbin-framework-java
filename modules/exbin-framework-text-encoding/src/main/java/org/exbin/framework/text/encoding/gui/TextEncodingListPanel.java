@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.encoding.options.gui;
+package org.exbin.framework.text.encoding.gui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +40,13 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComponent<TextEncodingOptions> {
+public class TextEncodingListPanel extends javax.swing.JPanel implements OptionsComponent<TextEncodingOptions> {
 
     private OptionsModifiedListener optionsModifiedListener;
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingListPanel.class);
     private AddEncodingsOperation addEncodingsOperation = null;
 
-    public TextEncodingPanel() {
+    public TextEncodingListPanel() {
         initComponents();
         init();
     }
@@ -231,7 +231,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
                 if (encodings != null) {
                     ((EncodingsListModel) encodingsList.getModel()).addAll(encodings, encodingsList.getSelectedIndex());
                     encodingsList.clearSelection();
-                    wasModified();
+                    notifyModified();
                 }
             });
         }
@@ -240,7 +240,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         ((EncodingsListModel) encodingsList.getModel()).removeIndices(encodingsList.getSelectedIndices());
         encodingsList.clearSelection();
-        wasModified();
+        notifyModified();
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void upButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upButtonActionPerformed
@@ -258,7 +258,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
                 last++;
             }
         }
-        wasModified();
+        notifyModified();
     }//GEN-LAST:event_upButtonActionPerformed
 
     private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
@@ -276,7 +276,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
                 last--;
             }
         }
-        wasModified();
+        notifyModified();
     }//GEN-LAST:event_downButtonActionPerformed
 
     private void selectAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllButtonActionPerformed
@@ -292,6 +292,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
         encodingsList.repaint();
     }
 
+    @Nonnull
     public List<String> getEncodingList() {
         return ((EncodingsListModel) encodingsList.getModel()).getCharsets();
     }
@@ -305,7 +306,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new TextEncodingPanel());
+            WindowUtils.invokeWindow(new TextEncodingListPanel());
         });
     }
 
@@ -325,7 +326,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
         this.optionsModifiedListener = optionsModifiedListener;
     }
 
-    public void wasModified() {
+    public void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }
@@ -339,11 +340,13 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
         ((EncodingsListModel) encodingsList.getModel()).addAll(encodings, encodingsList.isSelectionEmpty() ? -1 : encodingsList.getSelectedIndex());
     }
 
+    @ParametersAreNonnullByDefault
     public static interface AddEncodingsOperation {
 
         void run(List<String> usedEncodings, EncodingsUpdate encodingsUpdate);
     }
 
+    @ParametersAreNonnullByDefault
     public static interface EncodingsUpdate {
 
         void update(List<String> encodings);
@@ -359,6 +362,7 @@ public class TextEncodingPanel extends javax.swing.JPanel implements OptionsComp
             return charsets.size();
         }
 
+        @Nonnull
         @Override
         public String getElementAt(int index) {
             return charsets.get(index);

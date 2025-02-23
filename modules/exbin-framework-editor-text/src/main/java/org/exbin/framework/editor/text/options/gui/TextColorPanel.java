@@ -521,13 +521,13 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
     private void fillCurrentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentButtonActionPerformed
         Color[] currentColors = textColorService.getCurrentTextColors();
         setColorsFromArray(currentColors);
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_fillCurrentButtonActionPerformed
 
     private void fillDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultButtonActionPerformed
         Color[] defaultColors = textColorService.getDefaultTextColors();
         setColorsFromArray(defaultColors);
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
 
     /**
@@ -588,7 +588,7 @@ public class TextColorPanel extends javax.swing.JPanel implements OptionsCompone
         return colors;
     }
 
-    private void setModified(boolean b) {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }

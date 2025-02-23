@@ -94,7 +94,7 @@ public class AddonManagerOptionsPanel extends javax.swing.JPanel implements Opti
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    private void setModified(boolean b) {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }

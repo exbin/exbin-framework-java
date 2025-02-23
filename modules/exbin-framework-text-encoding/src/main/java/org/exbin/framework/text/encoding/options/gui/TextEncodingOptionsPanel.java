@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.text.encoding.options.gui;
 
+import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +48,11 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     private OptionsModifiedListener optionsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingOptionsPanel.class);
     private TextEncodingService textEncodingService;
-    private final TextEncodingPanel encodingPanel;
+    private final TextEncodingListPanel encodingPanel;
     private final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
 
     public TextEncodingOptionsPanel() {
-        encodingPanel = new TextEncodingPanel();
+        encodingPanel = new TextEncodingListPanel();
 
         initComponents();
         init();
@@ -60,7 +61,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     private void init() {
         encodingPanel.setEnabled(false);
         encodingPanel.setOptionsModifiedListener(() -> {
-            setModified(true);
+            notifyModified();
             updateEncodings();
         });
         super.add(encodingPanel, BorderLayout.CENTER);
@@ -193,17 +194,17 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         encodingPanel.setEncodingList(textEncodingService.getEncodings());
         encodingPanel.repaint();
         updateEncodings();
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_fillCurrentEncodingsButtonActionPerformed
 
     private void fillCurrentEncodingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingButtonActionPerformed
         defaultEncodingComboBox.setSelectedItem(textEncodingService.getSelectedEncoding());
         defaultEncodingComboBox.repaint();
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_fillCurrentEncodingButtonActionPerformed
 
     private void defaultEncodingComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_defaultEncodingComboBoxItemStateChanged
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_defaultEncodingComboBoxItemStateChanged
 
     /**
@@ -228,7 +229,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
     private javax.swing.JButton fillCurrentEncodingsButton;
     // End of variables declaration//GEN-END:variables
 
-    private void setModified(boolean b) {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }
@@ -244,7 +245,7 @@ public class TextEncodingOptionsPanel extends javax.swing.JPanel implements Opti
         defaultEncodingComboBox.repaint();
     }
 
-    public void setAddEncodingsOperation(TextEncodingPanel.AddEncodingsOperation addEncodingsOperation) {
+    public void setAddEncodingsOperation(TextEncodingListPanel.AddEncodingsOperation addEncodingsOperation) {
         encodingPanel.setAddEncodingsOperation(addEncodingsOperation);
     }
 

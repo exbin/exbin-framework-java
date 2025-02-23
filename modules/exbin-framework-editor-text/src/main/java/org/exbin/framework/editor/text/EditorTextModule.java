@@ -70,6 +70,7 @@ import org.exbin.framework.options.api.VisualOptionsPageRule;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.options.TextEncodingOptionsPage;
 import org.exbin.framework.text.encoding.service.TextEncodingService;
+import org.exbin.framework.text.font.TextFontModule;
 import org.exbin.framework.text.font.action.TextFontAction;
 import org.exbin.framework.text.font.options.TextFontOptionsPage;
 import org.exbin.framework.text.font.service.TextFontService;
@@ -96,12 +97,11 @@ public class EditorTextModule implements Module {
     public static final String TEXT_POPUP_FIND_GROUP_ID = MODULE_ID + ".findPopupMenuGroup";
     public static final String TEXT_POPUP_TOOLS_GROUP_ID = MODULE_ID + ".toolsPopupMenuGroup";
 
-    public static final String XBT_FILE_TYPE = "XBTextEditor.XBTFileType";
     public static final String TXT_FILE_TYPE = "XBTextEditor.TXTFileType";
 
     public static final String TEXT_STATUS_BAR_ID = "textStatusBar";
 
-    private TextEditor editorProvider;
+    private TextEditorProvider editorProvider;
     private ResourceBundle resourceBundle;
     private TextStatusPanel textStatusPanel;
 
@@ -124,10 +124,15 @@ public class EditorTextModule implements Module {
     @Nonnull
     public EditorProvider getEditorProvider() {
         if (editorProvider == null) {
-            editorProvider = new TextEditor();
+            editorProvider = new TextEditorProvider();
         }
 
         return editorProvider;
+    }
+
+    @Nonnull
+    public void setEditorProvider(TextEditorProvider editorProvider) {
+        this.editorProvider = editorProvider;
     }
 
     @Nonnull
@@ -142,7 +147,6 @@ public class EditorTextModule implements Module {
     public void registerFileTypes() {
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileModule.addFileType(new TXTFileType());
-        fileModule.addFileType(new XBTFileType());
     }
 
     public void registerStatusBar() {
@@ -332,10 +336,8 @@ public class EditorTextModule implements Module {
 
     @Nonnull
     private TextFontAction createTextFontAction() {
-        ensureSetup();
-        TextFontAction textFontAction = new TextFontAction();
-        textFontAction.setup(resourceBundle);
-        return textFontAction;
+        TextFontModule textFontModule = App.getModule(TextFontModule.class);
+        return textFontModule.createTextFontAction();
     }
 
     @Nonnull
@@ -465,37 +467,6 @@ public class EditorTextModule implements Module {
             }
         };
         return popupMenu;
-    }
-
-    @ParametersAreNonnullByDefault
-    public class XBTFileType extends FileFilter implements FileType {
-
-        @Override
-        public boolean accept(File file) {
-            if (file.isDirectory()) {
-                return true;
-            }
-            String extension = getExtension(file);
-            if (extension != null) {
-                if (extension.length() < 3) {
-                    return false;
-                }
-                return "xbt".contains(extension.substring(0, 3));
-            }
-            return false;
-        }
-
-        @Nonnull
-        @Override
-        public String getDescription() {
-            return "XBUP Text Files (*.xbt*)";
-        }
-
-        @Nonnull
-        @Override
-        public String getFileTypeId() {
-            return XBT_FILE_TYPE;
-        }
     }
 
     @ParametersAreNonnullByDefault

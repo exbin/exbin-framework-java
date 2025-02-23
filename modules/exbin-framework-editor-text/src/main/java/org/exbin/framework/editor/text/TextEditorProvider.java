@@ -33,16 +33,17 @@ import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
- * Text editor.
+ * Text editor provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEditor implements EditorProvider {
+public class TextEditorProvider implements EditorProvider {
 
     private TextFileHandler activeFile;
     private FileTypes fileTypes;
@@ -54,7 +55,12 @@ public class TextEditor implements EditorProvider {
     @Nullable
     private File lastUsedDirectory;
 
-    public TextEditor() {
+    public TextEditorProvider() {
+        this(new TextFileHandler());
+    }
+
+    public TextEditorProvider(TextFileHandler activeFile) {
+        this.activeFile = activeFile;
         init();
     }
 
@@ -63,7 +69,6 @@ public class TextEditor implements EditorProvider {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
 
-        activeFile = new TextFileHandler();
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
         TextPanel textPanel = activeFile.getComponent();
@@ -82,6 +87,7 @@ public class TextEditor implements EditorProvider {
         if (activeFile instanceof TextFileHandler) {
             ((TextFileHandler) activeFile).componentActivated(componentActivationListener);
         }
+        componentActivationListener.updated(FileOperations.class, this);
     }
 
     public void registerUndoHandler() {

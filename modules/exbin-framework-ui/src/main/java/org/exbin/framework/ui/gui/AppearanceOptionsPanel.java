@@ -130,15 +130,15 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     }// </editor-fold>//GEN-END:initComponents
 
     private void showToolbarCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showToolbarCheckBoxjCheckBoxItemStateChanged
-        setModified();
+        notifyModified();
     }//GEN-LAST:event_showToolbarCheckBoxjCheckBoxItemStateChanged
 
     private void showCaptionsCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showCaptionsCheckBoxjCheckBoxItemStateChanged
-        setModified();
+        notifyModified();
     }//GEN-LAST:event_showCaptionsCheckBoxjCheckBoxItemStateChanged
 
     private void showStatusbarCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showStatusbarCheckBoxjCheckBoxItemStateChanged
-        setModified();
+        notifyModified();
     }//GEN-LAST:event_showStatusbarCheckBoxjCheckBoxItemStateChanged
 
     /**
@@ -161,7 +161,7 @@ public class AppearanceOptionsPanel extends javax.swing.JPanel implements Option
     private javax.swing.JPanel toolBarsOptionsPanel;
     // End of variables declaration//GEN-END:variables
 
-    private void setModified() {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }

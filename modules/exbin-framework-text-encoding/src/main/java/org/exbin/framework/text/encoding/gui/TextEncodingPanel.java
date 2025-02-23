@@ -17,6 +17,7 @@ package org.exbin.framework.text.encoding.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,12 +35,12 @@ import org.exbin.framework.utils.WindowUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddEncodingPanel extends javax.swing.JPanel {
+public class TextEncodingPanel extends javax.swing.JPanel {
 
-    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddEncodingPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingPanel.class);
     private final EncodingsTableModel tableModel = new EncodingsTableModel();
 
-    public AddEncodingPanel() {
+    public TextEncodingPanel() {
         initComponents();
         init();
     }
@@ -163,6 +164,7 @@ public class AddEncodingPanel extends javax.swing.JPanel {
 
         supportedEncodingsLabel.setText(resourceBundle.getString("supportedEncodingsLabel.text")); // NOI18N
 
+        encodingsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         encodinsScrollPane.setViewportView(encodingsTable);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -198,6 +200,7 @@ public class AddEncodingPanel extends javax.swing.JPanel {
 
     public void setUsedEncodings(List<String> encodings) {
         tableModel.setUsedEncodings(encodings);
+        encodingsTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     }
 
     @Nonnull
@@ -209,6 +212,19 @@ public class AddEncodingPanel extends javax.swing.JPanel {
             result.add((String) value);
         }
         return result;
+    }
+
+    public void setCurrentEncoding(String encoding) {
+        tableModel.setSingleEncoding(encoding);
+    }
+
+    @Nonnull
+    public Optional<String> getCurrentEncoding() {
+        int selectedRow = encodingsTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            return Optional.of((String) tableModel.getValueAt(selectedRow, 0));
+        }
+        return Optional.empty();
     }
 
     @Nonnull
@@ -225,7 +241,7 @@ public class AddEncodingPanel extends javax.swing.JPanel {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new AddEncodingPanel());
+            WindowUtils.invokeWindow(new TextEncodingPanel());
         });
     }
 

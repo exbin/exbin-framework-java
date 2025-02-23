@@ -13,41 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.font.action;
+package org.exbin.framework.text.encoding.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.text.font.gui.TextFontPanel;
-import org.exbin.framework.text.font.options.TextFontOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.window.api.handler.OptionsControlHandler;
-import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
-import org.exbin.framework.text.font.TextFontHandler;
+import org.exbin.framework.text.encoding.TextEncodingHandler;
+import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
+import org.exbin.framework.window.api.gui.DefaultControlPanel;
+import org.exbin.framework.window.api.handler.DefaultControlHandler;
 
 /**
- * Text font action.
+ * Text encoding action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontAction extends AbstractAction {
+public class TextEncodingAction extends AbstractAction {
 
-    public static final String ACTION_ID = "textFontAction";
+    public static final String ACTION_ID = "textEncodingAction";
 
-    private TextFontHandler textFontHandler;
+    private TextEncodingHandler textEncodingHandler;
     private Component component;
 
-    public TextFontAction() {
+    public TextEncodingAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
@@ -55,9 +55,9 @@ public class TextFontAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
-            manager.registerUpdateListener(TextFontHandler.class, (instance) -> {
-                textFontHandler = instance;
-                setEnabled(textFontHandler != null);
+            manager.registerUpdateListener(TextEncodingHandler.class, (instance) -> {
+                textEncodingHandler = instance;
+                setEnabled(textEncodingHandler != null);
             });
             manager.registerUpdateListener(Component.class, (instance) -> {
                 component = instance;
@@ -68,21 +68,18 @@ public class TextFontAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        final TextFontPanel fontPanel = new TextFontPanel();
-        fontPanel.setStoredFont(textFontHandler.getCurrentFont());
-        OptionsControlPanel controlPanel = new OptionsControlPanel();
-        final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
-        windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
-        windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
-        controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-            if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
-                    PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                    TextFontOptions parameters = new TextFontOptions(preferencesModule.getAppPreferences());
-                    parameters.setUseDefaultFont(false);
-                    parameters.setFont(fontPanel.getStoredFont());
+        final TextEncodingPanel encodingPanel = new TextEncodingPanel();
+        encodingPanel.setCurrentEncoding(textEncodingHandler.getCharset().name());
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        final WindowHandler dialog = windowModule.createDialog(encodingPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), encodingPanel.getClass(), encodingPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, encodingPanel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
+                Optional<String> encoding = encodingPanel.getCurrentEncoding();
+                if (encoding.isPresent()) {
+                    textEncodingHandler.setCharset(Charset.forName(encoding.get()));
                 }
-                textFontHandler.setCurrentFont(fontPanel.getStoredFont());
             }
 
             dialog.close();

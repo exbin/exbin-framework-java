@@ -129,7 +129,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     private void defaultColorCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_defaultColorCheckBoxItemStateChanged
         boolean checked = evt.getStateChange() != ItemEvent.SELECTED;
         colorPanel.setEnabled(checked);
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_defaultColorCheckBoxItemStateChanged
 
     /**
@@ -151,7 +151,7 @@ public class TextColorOptionsPanel extends javax.swing.JPanel implements Options
     private javax.swing.JColorChooser jColorChooser1;
     // End of variables declaration//GEN-END:variables
 
-    private void setModified(boolean b) {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }

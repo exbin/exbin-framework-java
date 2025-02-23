@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
   <id>org.exbin.framework.editor.text.EditorTextModule</id>
-  <name>Text Editor Module</name>
+  <name>Text Editor Support</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module supporting editation of plain text documents</description>

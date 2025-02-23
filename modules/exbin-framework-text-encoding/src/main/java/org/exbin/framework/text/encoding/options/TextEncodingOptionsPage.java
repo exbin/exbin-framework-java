@@ -21,9 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.text.encoding.EncodingsHandler;
-import org.exbin.framework.text.encoding.gui.AddEncodingPanel;
+import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.text.encoding.options.gui.TextEncodingOptionsPanel;
-import org.exbin.framework.text.encoding.options.gui.TextEncodingPanel;
+import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.DefaultOptionsStorage;
@@ -56,14 +56,15 @@ public class TextEncodingOptionsPage implements DefaultOptionsPage<TextEncodingO
         this.encodingsHandler = encodingsHandler;
     }
 
+    @Nonnull
     @Override
     public TextEncodingOptionsPanel createPanel() {
         if (panel == null) {
             panel = new TextEncodingOptionsPanel();
             panel.setTextEncodingService(encodingsHandler.getTextEncodingService());
-            panel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingPanel.EncodingsUpdate encodingsUpdate) -> {
+            panel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingListPanel.EncodingsUpdate encodingsUpdate) -> {
                 WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
+                final TextEncodingPanel addEncodingPanel = new TextEncodingPanel();
                 addEncodingPanel.setUsedEncodings(usedEncodings);
                 DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
                 final WindowHandler dialog = windowModule.createDialog(addEncodingPanel, controlPanel);

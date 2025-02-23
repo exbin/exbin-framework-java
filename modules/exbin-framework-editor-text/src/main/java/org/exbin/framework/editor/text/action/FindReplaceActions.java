@@ -24,7 +24,7 @@ import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.text.TextEditor;
+import org.exbin.framework.editor.text.TextEditorProvider;
 import org.exbin.framework.editor.text.gui.FindTextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -68,14 +68,14 @@ public class FindReplaceActions {
         final WindowHandler dialog = windowModule.createDialog(findPanel, controlPanel);
         controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
             if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                if (editorProvider instanceof TextEditor) {
+                if (editorProvider instanceof TextEditorProvider) {
                     TextSearchService.FindTextParameters findTextParameters = new TextSearchService.FindTextParameters();
                     findTextParameters.setFindText(findPanel.getFindText());
                     findTextParameters.setSearchFromStart(findPanel.isSearchFromStart());
                     findTextParameters.setShallReplace(findPanel.isShallReplace());
                     findTextParameters.setReplaceText(findPanel.getReplaceText());
 
-                    ((TextEditor) editorProvider).getEditorComponent().findText(findTextParameters);
+                    ((TextEditorProvider) editorProvider).getEditorComponent().findText(findTextParameters);
                 }
             }
 

@@ -98,7 +98,7 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
     }// </editor-fold>//GEN-END:initComponents
 
     private void checkForUpdatesOnStartCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkForUpdatesOnStartCheckBoxjCheckBoxItemStateChanged
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_checkForUpdatesOnStartCheckBoxjCheckBoxItemStateChanged
 
     /**
@@ -118,7 +118,7 @@ public class ApplicationUpdateOptionsPanel extends javax.swing.JPanel implements
     private javax.swing.JCheckBox checkForUpdatesOnStartCheckBox;
     // End of variables declaration//GEN-END:variables
 
-    private void setModified(boolean b) {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }

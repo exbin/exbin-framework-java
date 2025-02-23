@@ -27,8 +27,8 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.text.encoding.EncodingsHandler;
-import org.exbin.framework.text.encoding.gui.AddEncodingPanel;
-import org.exbin.framework.text.encoding.options.gui.TextEncodingPanel;
+import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
+import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
 import org.exbin.framework.text.encoding.options.TextEncodingOptions;
 import org.exbin.framework.text.encoding.service.TextEncodingService;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
@@ -75,7 +75,7 @@ public class ManageEncodingsAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        final TextEncodingPanel textEncodingPanel = new TextEncodingPanel();
+        final TextEncodingListPanel textEncodingPanel = new TextEncodingListPanel();
         textEncodingPanel.setPreferredSize(new Dimension(536, 358));
         textEncodingPanel.setEncodingList(textEncodingService.getEncodings());
         final OptionsControlPanel optionsControlPanel = new OptionsControlPanel();
@@ -97,13 +97,14 @@ public class ManageEncodingsAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
-        textEncodingPanel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingPanel.EncodingsUpdate encodingsUpdate) -> {
-            final AddEncodingPanel addEncodingPanel = new AddEncodingPanel();
+        textEncodingPanel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingListPanel.EncodingsUpdate encodingsUpdate) -> {
+            final TextEncodingPanel addEncodingPanel = new TextEncodingPanel();
+            ResourceBundle addEncodingResourceBundle = addEncodingPanel.getResourceBundle();
             addEncodingPanel.setUsedEncodings(usedEncodings);
-            DefaultControlPanel encodingsControlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
+            DefaultControlPanel encodingsControlPanel = new DefaultControlPanel(addEncodingResourceBundle);
             final WindowHandler addEncodingDialog = windowModule.createDialog(addEncodingPanel, encodingsControlPanel);
-            windowModule.addHeaderPanel(addEncodingDialog.getWindow(), addEncodingPanel.getClass(), addEncodingPanel.getResourceBundle());
-            windowModule.setWindowTitle(addEncodingDialog, addEncodingPanel.getResourceBundle());
+            windowModule.addHeaderPanel(addEncodingDialog.getWindow(), addEncodingPanel.getClass(), addEncodingResourceBundle);
+            windowModule.setWindowTitle(addEncodingDialog, addEncodingResourceBundle);
 
             encodingsControlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
                 if (actionType == DefaultControlHandler.ControlActionType.OK) {

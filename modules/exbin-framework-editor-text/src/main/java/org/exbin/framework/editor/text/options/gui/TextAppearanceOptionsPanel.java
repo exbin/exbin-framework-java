@@ -98,7 +98,7 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
     }// </editor-fold>//GEN-END:initComponents
 
     private void wordWrapCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_wordWrapCheckBoxjCheckBoxItemStateChanged
-        setModified(true);
+        notifyModified();
     }//GEN-LAST:event_wordWrapCheckBoxjCheckBoxItemStateChanged
 
     /**
@@ -118,7 +118,7 @@ public class TextAppearanceOptionsPanel extends javax.swing.JPanel implements Op
     private javax.swing.JCheckBox wordWrapCheckBox;
     // End of variables declaration//GEN-END:variables
 
-    private void setModified(boolean b) {
+    private void notifyModified() {
         if (optionsModifiedListener != null) {
             optionsModifiedListener.wasModified();
         }

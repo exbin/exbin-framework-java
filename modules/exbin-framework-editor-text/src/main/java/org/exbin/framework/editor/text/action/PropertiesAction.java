@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.text.TextEditor;
+import org.exbin.framework.editor.text.TextEditorProvider;
 import org.exbin.framework.editor.text.gui.TextPropertiesPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -57,10 +57,10 @@ public class PropertiesAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof TextEditor) {
+        if (editorProvider instanceof TextEditorProvider) {
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             TextPropertiesPanel propertiesPanel = new TextPropertiesPanel();
-            propertiesPanel.setDocument((TextEditor) editorProvider);
+            propertiesPanel.setDocument((TextEditorProvider) editorProvider);
             CloseControlPanel controlPanel = new CloseControlPanel();
             final WindowHandler dialog = windowModule.createDialog(propertiesPanel, controlPanel);
             windowModule.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
