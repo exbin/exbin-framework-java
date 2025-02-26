@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +47,7 @@ public class EncodingsTableModel extends AbstractTableModel {
     private final Set<String> usedEncodings = new HashSet<>();
     private String nameFilter = "";
     private String countryFilter = "";
+    private ResourceBundle resourceBundle;
 
     public EncodingsTableModel() {
         initEncodings();
@@ -84,18 +86,22 @@ public class EncodingsTableModel extends AbstractTableModel {
         }
     }
 
+    public void setResourceBundle(ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+    }
+
     @Nonnull
     @Override
     public String getColumnName(int column) {
         switch (column) {
             case 0:
-                return "Name";
+                return resourceBundle.getString("encodingsTable.columnName.name");
             case 1:
-                return "Description";
+                return resourceBundle.getString("encodingsTable.columnName.description");
             case 2:
-                return "Country Codes";
+                return resourceBundle.getString("encodingsTable.columnName.countryCodes");
             case 3:
-                return "Max Bytes";
+                return resourceBundle.getString("encodingsTable.columnName.maxBytes");
             default:
                 throw new IllegalStateException("Incorrect column index");
         }

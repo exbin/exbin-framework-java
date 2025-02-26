@@ -15,13 +15,10 @@
  */
 package org.exbin.framework.text.encoding.gui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
@@ -350,72 +347,5 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Options
     public static interface EncodingsUpdate {
 
         void update(List<String> encodings);
-    }
-
-    @ParametersAreNonnullByDefault
-    private class EncodingsListModel extends AbstractListModel<String> {
-
-        private final List<String> charsets = new ArrayList<>();
-
-        @Override
-        public int getSize() {
-            return charsets.size();
-        }
-
-        @Nonnull
-        @Override
-        public String getElementAt(int index) {
-            return charsets.get(index);
-        }
-
-        /**
-         * @return the charsets
-         */
-        @Nonnull
-        public List<String> getCharsets() {
-            return charsets;
-        }
-
-        /**
-         * @param charsets the charsets to set
-         */
-        public void setCharsets(@Nullable List<String> charsets) {
-            this.charsets.clear();
-            if (charsets != null) {
-                this.charsets.addAll(charsets);
-            }
-            fireContentsChanged(this, 0, this.charsets.size());
-        }
-
-        public void addAll(List<String> list, int pos) {
-            if (pos >= 0) {
-                charsets.addAll(pos, list);
-                fireIntervalAdded(this, pos, list.size() + pos);
-            } else {
-                charsets.addAll(list);
-                fireIntervalAdded(this, charsets.size() - list.size(), charsets.size());
-            }
-        }
-
-        public void removeIndices(int[] indices) {
-            if (indices.length == 0) {
-                return;
-            }
-
-            for (int i = indices.length - 1; i >= 0; i--) {
-                charsets.remove(indices[i]);
-                fireIntervalRemoved(this, indices[i], indices[i]);
-            }
-        }
-
-        public void remove(int index) {
-            charsets.remove(index);
-            fireIntervalRemoved(this, index, index);
-        }
-
-        public void add(int index, String item) {
-            charsets.add(index, item);
-            fireIntervalAdded(this, index, index);
-        }
     }
 }

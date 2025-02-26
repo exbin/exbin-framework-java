@@ -148,11 +148,8 @@ public class EncodingsHandler {
         }
     }
 
-    private void updateEncodingsSelection(int menuIndex) {
-        if (menuIndex > 0) {
-            menuIndex++;
-        }
-        JMenuItem item = toolsEncodingMenu.getItem(menuIndex);
+    private void updateEncodingsSelection(int encodingIndex) {
+        JMenuItem item = toolsEncodingMenu.getItem(encodingIndex);
         item.setSelected(true);
     }
 
@@ -161,20 +158,37 @@ public class EncodingsHandler {
         rebuildEncodings();
     }
 
-    public void cycleEncodings() {
-        int menuIndex = 0;
+    public void cycleNextEncoding() {
+        int encodingIndex = 0;
         List<String> encodings = textEncodingService.getEncodings();
         if (!encodings.isEmpty()) {
             int selectedEncodingIndex = encodings.indexOf(textEncodingService.getSelectedEncoding());
             if (selectedEncodingIndex < 0 || selectedEncodingIndex == encodings.size() - 1) {
                 textEncodingService.setSelectedEncoding(encodings.get(0));
             } else {
-                textEncodingService.setSelectedEncoding(encodings.get(selectedEncodingIndex + 1));
-                menuIndex = selectedEncodingIndex;
+                encodingIndex = selectedEncodingIndex + 1;
+                textEncodingService.setSelectedEncoding(encodings.get(encodingIndex));
             }
         }
 
-        updateEncodingsSelection(menuIndex);
+        updateEncodingsSelection(encodingIndex);
+    }
+
+    public void cyclePreviousEncoding() {
+        int encodingIndex = 0;
+        List<String> encodings = textEncodingService.getEncodings();
+        if (!encodings.isEmpty()) {
+            int selectedEncodingIndex = encodings.indexOf(textEncodingService.getSelectedEncoding());
+            if (selectedEncodingIndex > 0) {
+                encodingIndex = selectedEncodingIndex - 1;
+                textEncodingService.setSelectedEncoding(encodings.get(encodingIndex));
+            } else if (!encodings.isEmpty()) {
+                encodingIndex = encodings.size() - 1;
+                textEncodingService.setSelectedEncoding(encodings.get(encodingIndex));
+            }
+        }
+
+        updateEncodingsSelection(encodingIndex);
     }
 
     public void popupEncodingsMenu(MouseEvent mouseEvent) {

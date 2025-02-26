@@ -46,6 +46,7 @@ public class TextEncodingPanel extends javax.swing.JPanel {
     }
 
     private void init() {
+        tableModel.setResourceBundle(resourceBundle);
         encodingsTable.setModel(tableModel);
 
         nameTextField.getDocument().addDocumentListener(new DocumentListener() {
