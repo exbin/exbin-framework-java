@@ -67,6 +67,11 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
 
             @Override
+            public void setFilter(String filter, Runnable finished) {
+                controller.setFilter(filter, finished);
+            }
+
+            @Override
             public void notifyItemSelected(@Nullable ItemRecord itemRecord) {
                 if (activeRecord != itemRecord) {
                     if (activeRecord == null) {
@@ -138,7 +143,8 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
         });
         controller.addUpdateAvailabilityListener((AvailableModuleUpdates availableModuleUpdates) -> {
-            for (int i = 0; i < controller.getItemsCount(); i++) {
+            int itemsCount = controller.getItemsCount();
+            for (int i = 0; i < itemsCount; i++) {
                 availableModuleUpdates.applyTo(controller.getItem(i));
             }
             filterListPanel.notifyItemsChanged();
@@ -195,6 +201,8 @@ public class AddonsPanel extends javax.swing.JPanel {
 
     @ParametersAreNonnullByDefault
     public interface Controller {
+
+        void setFilter(String filter, Runnable finished);
 
         int getItemsCount();
 

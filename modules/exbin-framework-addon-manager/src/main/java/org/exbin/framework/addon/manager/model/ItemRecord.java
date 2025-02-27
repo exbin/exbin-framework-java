@@ -41,6 +41,10 @@ public class ItemRecord {
     private String homepage = null;
     private String description = null;
 
+    public ItemRecord() {
+        this("", "");
+    }
+
     public ItemRecord(String id, String name) {
         this.id = id;
         this.name = name;

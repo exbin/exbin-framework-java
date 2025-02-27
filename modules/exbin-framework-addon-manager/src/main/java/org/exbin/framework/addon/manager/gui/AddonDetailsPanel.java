@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.awt.Component;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,9 +25,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.html.HTMLDocument;
 import org.exbin.framework.App;
+import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependenciesTableModel;
@@ -46,9 +50,10 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonDetailsPanel.class);
     private Controller controller;
-    private MouseListener homepageLinkListener;
+    private MouseListener providerLinkListener;
     private final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
     private boolean recordChangeInProgress = false;
+    private String providerLink = null;
     // TODO private final Thread detailsThread
 
     public AddonDetailsPanel() {
@@ -72,6 +77,23 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         } catch (MalformedURLException ex) {
             Logger.getLogger(AddonDetailsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        providerLinkListener = new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getButton() == MouseEvent.BUTTON1 && !evt.isPopupTrigger()) {
+                    DesktopUtils.openDesktopURL(providerLink);
+                }
+            }
+        };
+        providerLabel.addMouseListener(providerLinkListener);
+        providerLabel.setComponentPopupMenu(new JPopupMenu() {
+
+            @Override
+            public void show(Component invoker, int x, int y) {
+                ActionPopupModuleApi actionPopupModule = App.getModule(ActionPopupModuleApi.class);
+                actionPopupModule.createLinkPopupMenu(providerLink).show(invoker, x, y);
+            }
+        });
     }
 
     @Nonnull
@@ -88,23 +110,20 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         addonNameLabel.setText(itemRecord.getName());
         versionLabel.setText(itemRecord.getVersion());
         String provider = itemRecord.getProvider().orElse("");
-        String homepage = itemRecord.getHomepage().orElse(null);
+        String providerHomepage = itemRecord.getHomepage().orElse(null);
 
-        if (homepageLinkListener != null) {
-            providerLabel.removeMouseListener(homepageLinkListener);
+        if (providerLinkListener != null) {
+            providerLabel.removeMouseListener(providerLinkListener);
         }
-        if (homepage != null) {
-            provider = "<html><body><a href=\"" + homepage + "\">" + (provider.isEmpty() ? resourceBundle.getString("record.provider") : provider) + "</a></body></html>";
+        if (providerHomepage != null) {
+            provider = "<html><body><a href=\"" + providerHomepage + "\">" + (provider.isEmpty() ? resourceBundle.getString("record.provider") : provider) + "</a></body></html>";
             providerLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-            homepageLinkListener = new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    DesktopUtils.openDesktopURL(homepage);
-                }
-            };
-            providerLabel.addMouseListener(homepageLinkListener);
+            providerLabel.setToolTipText(providerHomepage);
+            providerLink = providerHomepage;
         } else {
             providerLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            providerLabel.setToolTipText(null);
+            providerLink = null;
         }
         providerLabel.setText(provider);
         String description = itemRecord.getDescription().orElse("");

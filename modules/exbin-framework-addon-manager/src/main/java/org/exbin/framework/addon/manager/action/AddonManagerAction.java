@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
@@ -154,14 +155,43 @@ public class AddonManagerAction extends AbstractAction {
             @Override
             public AddonsPanel.Controller getInstalledItemsController() {
                 return new AddonsPanel.Controller() {
+
+                    private List<Integer> filterItems = null;
+
+                    @Override
+                    public void setFilter(String filter, Runnable finished) {
+                        // TODO Implement as background thread
+                        List<Integer> items = null;
+                        filter = filter.trim().toLowerCase();
+                        if (!filter.isEmpty()) {
+                            items = new ArrayList<>();
+                            for (int i = 0; i < installedAddons.size(); i++) {
+                                ItemRecord record = installedAddons.get(i);
+                                if (record.getName().toLowerCase().contains(filter)) {
+                                    items.add(i);
+                                }
+                            }
+                        }
+                        filterItems = items;
+                        finished.run();
+                    }
+
                     @Override
                     public int getItemsCount() {
+                        if (filterItems != null) {
+                            return filterItems.size();
+                        }
+
                         return installedAddons.size();
                     }
 
                     @Nonnull
                     @Override
                     public ItemRecord getItem(int index) {
+                        if (filterItems != null) {
+                            return installedAddons.get(filterItems.get(index));
+                        }
+
                         return installedAddons.get(index);
                     }
 
@@ -240,6 +270,12 @@ public class AddonManagerAction extends AbstractAction {
                 return new AddonsPanel.Controller() {
 
                     private List<AddonRecord> searchResult;
+
+                    @Override
+                    public void setFilter(String filter, Runnable finished) {
+                        // TODO
+                        finished.run();
+                    }
 
                     @Override
                     public int getItemsCount() {

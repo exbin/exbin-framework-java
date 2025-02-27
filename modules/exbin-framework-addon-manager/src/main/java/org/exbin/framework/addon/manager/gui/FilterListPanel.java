@@ -20,10 +20,13 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.model.FilterListModel;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -40,9 +43,14 @@ public class FilterListPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FilterListPanel.class);
     private Controller controller;
+    private FilterListModel filterListModel = new FilterListModel();
 
     public FilterListPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
         itemsList.setCellRenderer(new DefaultListCellRenderer() {
 
             private AddonItemPanel addonItemPanel = new AddonItemPanel();
@@ -64,6 +72,40 @@ public class FilterListPanel extends javax.swing.JPanel {
                 }
             }
         });
+        Document document = filterTextField.getDocument();
+        document.addDocumentListener(new DocumentListener() {
+
+            private final Runnable filterFinished = () -> {
+                filterListModel.setController(controller);
+            };
+            private String lastFilter = "";
+
+            @Override
+            public void insertUpdate(DocumentEvent de) {
+                filterValueChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent de) {
+                filterValueChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+                filterValueChanged();
+            }
+
+            public void filterValueChanged() {
+                if (controller != null) {
+                    String newFilter = filterTextField.getText();
+                    if (!lastFilter.equals(newFilter)) {
+                        lastFilter = newFilter;
+                        controller.setFilter(newFilter, filterFinished);
+                    }
+                }
+            }
+        });
+        itemsList.setModel(filterListModel);
     }
 
     @Nonnull
@@ -73,20 +115,9 @@ public class FilterListPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
-        AbstractListModel<ItemRecord> listModel = new AbstractListModel<ItemRecord>() {
-            @Override
-            public int getSize() {
-                return controller.getItemsCount();
-            }
-
-            @Override
-            public ItemRecord getElementAt(int index) {
-                return controller.getItem(index);
-            }
-        };
-        itemsList.setModel(listModel);
+        filterListModel.setController(controller);
     }
-    
+
     public void notifyItemsChanged() {
         itemsList.repaint();
     }
@@ -107,8 +138,6 @@ public class FilterListPanel extends javax.swing.JPanel {
 
         filterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/view-filter.png"))); // NOI18N
 
-        filterTextField.setEditable(false);
-
         itemsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         itemsListScrollPane.setViewportView(itemsList);
 
@@ -116,30 +145,26 @@ public class FilterListPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 104, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(filterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(filterTextField))
-                        .addComponent(itemsListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addContainerGap()))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(itemsListScrollPane)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(filterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filterTextField)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 57, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(filterTextField)
-                        .addComponent(filterLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(itemsListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
-                    .addContainerGap()))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(filterTextField)
+                    .addComponent(filterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(itemsListScrollPane)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -159,11 +184,13 @@ public class FilterListPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
     private javax.swing.JTextField filterTextField;
-    private javax.swing.JList<ItemRecord> itemsList;
+    private javax.swing.JList<org.exbin.framework.addon.manager.model.ItemRecord> itemsList;
     private javax.swing.JScrollPane itemsListScrollPane;
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
+
+        void setFilter(String filter, Runnable finished);
 
         int getItemsCount();
 
