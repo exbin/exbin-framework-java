@@ -20,13 +20,13 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
+import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.OkCancelListener;
@@ -75,9 +75,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     }
 
     public void showManualOnlyWarning() {
-        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-        ResourceBundle appBundle = languageModule.getAppBundle();
-        String link = "https://github.com/exbin/bined/releases/tag/" + appBundle.getString("Application.release");
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        String link = addonManagerModule.getManualLegacyUrl();
         manualOnlyModeLabel.setText(String.format(resourceBundle.getString("manualOnlyModeLabel.text"), link));
         manualOnlyModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

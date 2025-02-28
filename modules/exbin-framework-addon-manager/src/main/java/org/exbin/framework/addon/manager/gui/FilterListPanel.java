@@ -55,6 +55,7 @@ public class FilterListPanel extends javax.swing.JPanel {
 
             private AddonItemPanel addonItemPanel = new AddonItemPanel();
 
+            @Nonnull
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 ItemRecord record = (ItemRecord) value;
@@ -188,6 +189,7 @@ public class FilterListPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane itemsListScrollPane;
     // End of variables declaration//GEN-END:variables
 
+    @ParametersAreNonnullByDefault
     public interface Controller {
 
         void setFilter(String filter, Runnable finished);

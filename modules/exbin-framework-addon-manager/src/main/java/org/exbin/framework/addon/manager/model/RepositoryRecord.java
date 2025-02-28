@@ -46,6 +46,7 @@ public class RepositoryRecord {
         this.id = id;
     }
 
+    @Nonnull
     public String getName() {
         return name;
     }

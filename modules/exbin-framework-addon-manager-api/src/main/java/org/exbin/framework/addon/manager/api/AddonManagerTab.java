@@ -15,46 +15,21 @@
  */
 package org.exbin.framework.addon.manager.api;
 
+import java.awt.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface of the addon manager module.
+ * Addon manager tab.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface AddonManagerModuleApi extends Module {
-
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(AddonManagerModuleApi.class);
+public interface AddonManagerTab {
 
     @Nonnull
-    Action createAddonManagerAction();
+    String getTitle();
 
     @Nonnull
-    String getAddonServiceUrl();
-
-    @Nonnull
-    String getManualLegacyUrl();
-
-    @Nonnull
-    String getAddonServiceCoreUrl();
-
-    void setAddonServiceCoreUrl(String addonServiceCoreUrl);
-
-    @Nonnull
-    String getManualLegacyGitHubUrl();
-
-    void setManualLegacyGitHubUrl(String manualLegacyGitHubUrl);
-
-    void registerAddonManagerMenuItem();
-
-    boolean isDevMode();
-
-    void setDevMode(boolean devMode);
-
-    void registerOptionsPanels();
+    Component getComponent();
 }

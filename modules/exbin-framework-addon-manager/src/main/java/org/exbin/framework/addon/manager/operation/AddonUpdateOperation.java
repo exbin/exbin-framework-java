@@ -111,7 +111,7 @@ public class AddonUpdateOperation {
     @Nonnull
     public List<LicenseItemRecord> getLicenseRecords() {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String licenseDownloadPrefix = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/license/" : "https://bined.exbin.org/addon/license/";
+        String licenseDownloadPrefix = addonManagerModule.getAddonServiceUrl() + "license/";
         for (LicenseItemRecord record : licenseRecords) {
             try {
                 record.setUrl(new URL(licenseDownloadPrefix + record.getRemoteFile()));
@@ -126,7 +126,7 @@ public class AddonUpdateOperation {
     @Nonnull
     public List<DownloadItemRecord> getDownloadRecords() {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String libraryDownloadPrefix = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/download/?f=" : "https://bined.exbin.org/addon/download/?f=";
+        String libraryDownloadPrefix = addonManagerModule.getAddonServiceUrl() + "download/?f=";
         List<DownloadItemRecord> downloadRecords = new ArrayList<>();
         String downloadItemDescription = resourceBundle.getString("downloadItemDescription.module");
         for (String moduleFile : updateOperations.downloadModule) {

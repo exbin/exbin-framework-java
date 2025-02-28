@@ -70,9 +70,9 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         });
         try {
             AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-            String baseUrl = addonManagerModule.isDevMode() ? "https://bined.exbin.org/addon-dev/" : "https://bined.exbin.org/addon/";
+            String addonServiceUrl = addonManagerModule.getAddonServiceUrl();
             HTMLDocument htmlDocument = new HTMLDocument();
-            htmlDocument.setBase(new URL(baseUrl));
+            htmlDocument.setBase(new URL(addonServiceUrl));
             overviewTextPane.setDocument(htmlDocument);
         } catch (MalformedURLException ex) {
             Logger.getLogger(AddonDetailsPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -352,6 +352,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
+    @ParametersAreNonnullByDefault
     public interface Controller {
 
         boolean isAlreadyInstalled(String moduleId);

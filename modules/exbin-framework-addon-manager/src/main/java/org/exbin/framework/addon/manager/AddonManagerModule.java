@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager;
 
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -28,6 +29,8 @@ import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.options.page.AddonManagerOptionsPage;
+import org.exbin.framework.language.api.ApplicationInfoKeys;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
 
@@ -40,6 +43,9 @@ import org.exbin.framework.options.api.OptionsPageManagement;
 public class AddonManagerModule implements AddonManagerModuleApi {
 
     private static boolean devMode = false;
+    private String addonServiceCoreUrl = "https://www.exbin.org/";
+    private String manualLegacyGitHubUrl = "https://github.com/exbin/bined/releases/tag/";
+    private AddonManager addonManager = null;
 
     public AddonManagerModule() {
     }
@@ -48,6 +54,42 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     @Override
     public Action createAddonManagerAction() {
         return new AddonManagerAction();
+    }
+
+    @Nonnull
+    @Override
+    public String getAddonServiceUrl() {
+        return devMode ? addonServiceCoreUrl + "addon-dev/" : addonServiceCoreUrl + "addon/";
+    }
+
+    @Nonnull
+    @Override
+    public String getAddonServiceCoreUrl() {
+        return addonServiceCoreUrl;
+    }
+
+    @Override
+    public void setAddonServiceCoreUrl(String addonServiceCoreUrl) {
+        this.addonServiceCoreUrl = addonServiceCoreUrl;
+    }
+
+    @Nonnull
+    @Override
+    public String getManualLegacyUrl() {
+        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+        ResourceBundle appBundle = languageModule.getAppBundle();
+        return manualLegacyGitHubUrl + appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE);
+    }
+
+    @Nonnull
+    @Override
+    public String getManualLegacyGitHubUrl() {
+        return manualLegacyGitHubUrl;
+    }
+
+    @Override
+    public void setManualLegacyGitHubUrl(String manualLegacyGitHubUrl) {
+        this.manualLegacyGitHubUrl = manualLegacyGitHubUrl;
     }
 
     @Override
@@ -76,7 +118,15 @@ public class AddonManagerModule implements AddonManagerModuleApi {
         optionsPageManagement.registerPage(addonManagerOptionsPage);
     }
 
-/*
+    @Nonnull
+    public AddonManager getAddonManager() {
+        if (addonManager == null) {
+            addonManager = new AddonManager();
+        }
+        return addonManager;
+    }
+
+    /*
     @Override
     public void setUpdateUrl(URL updateUrl) {
         this.checkUpdateUrl = updateUrl;

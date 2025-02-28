@@ -15,8 +15,12 @@
  */
 package org.exbin.framework.addon.manager.options;
 
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
+import org.exbin.framework.language.api.ApplicationInfoKeys;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsData;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
@@ -38,7 +42,10 @@ public class AddonManagerOptions implements OptionsData {
 
     @Nonnull
     public String getActivatedVersion() {
-        return storage.get(KEY_ACTIVATED_VERSION, "0.3.0-SNAPSHOT");
+        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+        ResourceBundle appBundle = languageModule.getAppBundle();
+        String defaultVersion = appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE) + "-SNAPSHOT";
+        return storage.get(KEY_ACTIVATED_VERSION, defaultVersion);
     }
 
     public void setActivatedVersion(String activatedVersion) {

@@ -15,14 +15,14 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.ChangeEvent;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
@@ -38,12 +38,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerPanel.class);
     private Controller controller;
-    private PacksPanel packsPanel = new PacksPanel();
-    private AddonsPanel addonsPanel = new AddonsPanel();
-    private AddonsPanel installedPanel = new AddonsPanel();
-    private Set<String> toInstall = new HashSet<>();
-    private Set<String> toUpdate = new HashSet<>();
-    private Tab activeTab = Tab.ADDONS;
+    private final List<AddonManagerTab> managerTabs = new ArrayList<>();
 
     public AddonManagerPanel() {
         initComponents();
@@ -52,25 +47,10 @@ public class AddonManagerPanel extends javax.swing.JPanel {
                 return;
             }
 
-            switch (tabbedPane.getSelectedIndex()) {
-                case 0:
-                    activeTab = Tab.ADDONS;
-                    break;
-                case 1:
-                    activeTab = Tab.INSTALLED;
-                    break;
-                default:
-                    throw new AssertionError();
-            }
-
-            controller.tabSwitched(activeTab);
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            AddonManagerTab managerTab = managerTabs.get(selectedIndex);
+            controller.tabSwitched(managerTab);
         });
-        // TODO: Support for multimodule packs
-//        tabbedPane.add(resourceBundle.getString("packsTab.title"), packsPanel);
-        tabbedPane.add(resourceBundle.getString("addonsTab.title"), addonsPanel);
-        tabbedPane.add(resourceBundle.getString("installedTab.title"), installedPanel);
-        tabbedPane.revalidate();
-        tabbedPane.repaint();
     }
 
     @Nonnull
@@ -80,31 +60,19 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
-        installedPanel.setController(controller.getInstalledItemsController());
-        addonsPanel.setController(controller.getAddonsCatalogController());
+    }
+
+    public void addManagerTab(AddonManagerTab managerTab) {
+        managerTabs.add(managerTab);
+        tabbedPane.add(managerTab.getTitle(), managerTab.getComponent());
+        tabbedPane.revalidate();
+        tabbedPane.repaint();
     }
 
     @Nonnull
-    public Set<String> getToInstall() {
-        return toInstall;
-    }
-
-    public int getToInstallCount() {
-        return toInstall.size();
-    }
-
-    @Nonnull
-    public Set<String> getToUpdate() {
-        return toUpdate;
-    }
-
-    public int getToUpdateCount() {
-        return toUpdate.size();
-    }
-
-    @Nonnull
-    public Tab getActiveTab() {
-        return activeTab;
+    public AddonManagerTab getActiveTab() {
+        int selectedIndex = tabbedPane.getSelectedIndex();
+        return managerTabs.get(selectedIndex);
     }
 
     /**
@@ -142,28 +110,6 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     @ParametersAreNonnullByDefault
     public interface Controller {
 
-        @Nonnull
-        AddonsPanel.Controller getInstalledItemsController();
-
-        @Nonnull
-        AddonsPanel.Controller getAddonsCatalogController();
-        
-        void installItem(ItemRecord item);
-
-        void updateItem(ItemRecord item);
-
-        void removeItem(ItemRecord item);
-
-        void installSelectionChanged(int toInstall);
-
-        void updateSelectionChanged(int toUpdate);
-
-        void tabSwitched(Tab tab);
-    }
-
-    public enum Tab {
-        PACKS,
-        ADDONS,
-        INSTALLED
+        void tabSwitched(AddonManagerTab managerTab);
     }
 }
