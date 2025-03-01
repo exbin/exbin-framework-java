@@ -80,11 +80,13 @@ public class AddonManagerAction extends AbstractAction {
 
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
+
         AddonsManagerTab addonsManagerTab = new AddonsManagerTab();
         addonsManagerTab.setController(addonManager.createAddonsCatalogController(addonManagerPanel, addonsManagerTab));
+        addonManagerPanel.addManagerTab(addonsManagerTab);
+
         InstalledManagerTab installedManagerTab = new InstalledManagerTab();
         installedManagerTab.setController(addonManager.createInstalledItemsController(addonManagerPanel, installedManagerTab));
-        addonManagerPanel.addManagerTab(addonsManagerTab);
         addonManagerPanel.addManagerTab(installedManagerTab);
 
         controlPanel.setController(new AddonsControlPanel.Controller() {

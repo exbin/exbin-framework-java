@@ -46,7 +46,6 @@ import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePane
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
-import org.exbin.framework.addon.manager.options.AddonManagerOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.service.AddonCatalogService;
@@ -56,7 +55,6 @@ import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleFileLocation;
 import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.gui.MultiStepControlPanel;
 import org.exbin.framework.window.api.handler.MultiStepControlHandler;
 
@@ -147,22 +145,12 @@ public class AddonManager {
             if (serviceStatus == -1) {
                 // TODO controlPanel.showManualOnlyWarning();
             } else {
-                PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                AddonManagerOptions addonPreferences = new AddonManagerOptions(preferencesModule.getAppPreferences());
-                String activatedVersion = addonPreferences.getActivatedVersion();
-                // Version 0.3.0-SNAPSHOT is bugged to read only single record. Ignore service status
-                boolean buggedVersion = "0.3.0-SNAPSHOT".equals(activatedVersion);
-                if (serviceStatus > availableModuleUpdates.getStatus() || buggedVersion) {
+                if (serviceStatus > availableModuleUpdates.getStatus()) {
                     UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
                     Thread thread = new Thread(() -> {
                         availabilityOperation.run();
                         availableModuleUpdates.setLatestVersion(serviceStatus, availabilityOperation.getLatestVersions());
                         availableModuleUpdates.writeConfigFile();
-                        if (buggedVersion) {
-                            if (addonUpdateChanges.hasRemoveAddon("org.exbin.framework.addon.manager.AddonManagerModule")) {
-                                addonPreferences.setActivatedVersion("0.3.0-SNAPSHOT.1");
-                            }
-                        }
                     });
                     thread.start();
                 }
@@ -493,7 +481,7 @@ public class AddonManager {
         AddonOperationPanel operationPanel = new AddonOperationPanel();
         operationPanel.setPreferredSize(new Dimension(600, 300));
         operationPanel.goToStep(AddonOperationPanel.Step.OVERVIEW);
-        AddonOperationOverviewPanel panel = (AddonOperationOverviewPanel) operationPanel.getActiveComponent();
+        AddonOperationOverviewPanel panel = (AddonOperationOverviewPanel) operationPanel.getActiveComponent().get();
         for (String operation : addonUpdateOperation.getOperations()) {
             panel.addOperation(operation);
         }
@@ -524,7 +512,7 @@ public class AddonManager {
                                 if (!licenseRecords.isEmpty()) {
                                     step = AddonOperationPanel.Step.LICENSE;
                                     operationPanel.goToStep(step);
-                                    AddonOperationLicensePanel panel = (AddonOperationLicensePanel) operationPanel.getActiveComponent();
+                                    AddonOperationLicensePanel panel = (AddonOperationLicensePanel) operationPanel.getActiveComponent().get();
                                     panel.setController(new AddonOperationLicensePanel.Controller() {
                                         @Override
                                         public void approvalStateChanged(int toApprove) {
@@ -578,7 +566,7 @@ public class AddonManager {
             private void goToDownload(List<DownloadItemRecord> downloadRecords) {
                 step = AddonOperationPanel.Step.DOWNLOAD;
                 operationPanel.goToStep(step);
-                AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent();
+                AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent().get();
                 panel.setDownloadedItemRecords(downloadRecords);
                 downloadOperation = addonCatalogService.createDownloadsOperation(downloadRecords);
                 downloadOperation.setItemChangeListener(new DownloadOperation.ItemChangeListener() {

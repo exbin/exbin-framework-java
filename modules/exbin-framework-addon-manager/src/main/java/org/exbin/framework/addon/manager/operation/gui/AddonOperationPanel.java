@@ -16,9 +16,9 @@
 package org.exbin.framework.addon.manager.operation.gui;
 
 import java.awt.BorderLayout;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
@@ -90,9 +90,9 @@ public class AddonOperationPanel extends javax.swing.JPanel {
         repaint();
     }
     
-    @Nullable
-    public JComponent getActiveComponent() {
-        return activePanel;
+    @Nonnull
+    public Optional<JComponent> getActiveComponent() {
+        return Optional.ofNullable(activePanel);
     }
     
     /**

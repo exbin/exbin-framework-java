@@ -57,6 +57,7 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
             private final ImageIcon inprogressIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("downloadItem.inprogress.icon")));
             private final ImageIcon doneIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("downloadItem.done.icon")));
 
+            @Nonnull
             @Override
             public Component getListCellRendererComponent(JList<?> list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value instanceof DownloadItemRecord) {

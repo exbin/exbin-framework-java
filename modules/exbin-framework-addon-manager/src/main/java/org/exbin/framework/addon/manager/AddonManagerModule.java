@@ -35,7 +35,7 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
 
 /**
- * Implementation of addon manager module.
+ * Addon manager module.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -59,7 +59,7 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     @Nonnull
     @Override
     public String getAddonServiceUrl() {
-        return devMode ? addonServiceCoreUrl + "addon-dev/" : addonServiceCoreUrl + "addon/";
+        return addonServiceCoreUrl + (devMode ? "addon-dev/" : "addon/");
     }
 
     @Nonnull
@@ -122,23 +122,8 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     public AddonManager getAddonManager() {
         if (addonManager == null) {
             addonManager = new AddonManager();
+            addonManager.init();
         }
         return addonManager;
     }
-
-    /*
-    @Override
-    public void setUpdateUrl(URL updateUrl) {
-        this.checkUpdateUrl = updateUrl;
-        if (checkUpdateAction != null) {
-            checkUpdateAction.setUpdateUrl(updateUrl);
-        }
-    }
-
-    @Nullable
-    @Override
-    public URL getUpdateUrl() {
-        return checkUpdateUrl;
-    }
-     */
 }
