@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -37,7 +36,6 @@ import org.exbin.framework.utils.UtilsModule;
 public class AddonsPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsPanel.class);
-    private Controller controller;
     private FilterListPanel filterListPanel = new FilterListPanel();
     private ItemRecord activeRecord;
     private AddonDetailsPanel addonDetailsPanel = new AddonDetailsPanel();
@@ -53,7 +51,6 @@ public class AddonsPanel extends javax.swing.JPanel {
     }
 
     public void setController(Controller controller) {
-        this.controller = controller;
         filterListPanel.setController(new FilterListPanel.Controller() {
             @Override
             public int getItemsCount() {
@@ -142,13 +139,10 @@ public class AddonsPanel extends javax.swing.JPanel {
                 return controller.getModuleDetails(itemRecord);
             }
         });
-        controller.addUpdateAvailabilityListener((AvailableModuleUpdates availableModuleUpdates) -> {
-            int itemsCount = controller.getItemsCount();
-            for (int i = 0; i < itemsCount; i++) {
-                availableModuleUpdates.applyTo(controller.getItem(i));
-            }
-            filterListPanel.notifyItemsChanged();
-        });
+    }
+
+    public void notifyItemsChanged() {
+        filterListPanel.notifyItemsChanged();
     }
 
     /**
@@ -224,8 +218,6 @@ public class AddonsPanel extends javax.swing.JPanel {
         boolean isItemSelectedForOperation(ItemRecord item);
 
         void addItemChangedListener(ItemChangedListener listener);
-
-        void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener);
 
         @Nonnull
         String getModuleDetails(ItemRecord itemRecord);

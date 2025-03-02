@@ -77,7 +77,7 @@ public class FilterListPanel extends javax.swing.JPanel {
         document.addDocumentListener(new DocumentListener() {
 
             private final Runnable filterFinished = () -> {
-                filterListModel.setController(controller);
+                filterListModel.notifyItemsChanged();
             };
             private String lastFilter = "";
 
@@ -120,6 +120,7 @@ public class FilterListPanel extends javax.swing.JPanel {
     }
 
     public void notifyItemsChanged() {
+        filterListModel.notifyItemsChanged();
         itemsList.repaint();
     }
 

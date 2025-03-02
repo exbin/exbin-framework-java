@@ -32,15 +32,17 @@ public class FilterListModel extends AbstractListModel<ItemRecord> {
     private int size = 0;
 
     public void setController(FilterListPanel.Controller controller) {
-        int newSize = controller.getItemsCount();
-        if (this.controller != null && size > 0) {
+        this.controller = controller;
+    }
+
+    public void notifyItemsChanged() {
+        if (size > 0) {
             fireIntervalRemoved(this, 0, size - 1);
         }
-        this.controller = controller;
-        if (newSize > 0) {
-            fireIntervalAdded(this, 0, newSize - 1);
+        size = controller.getItemsCount();
+        if (size > 0) {
+            fireIntervalAdded(this, 0, size - 1);
         }
-        this.size = newSize;
     }
 
     @Override

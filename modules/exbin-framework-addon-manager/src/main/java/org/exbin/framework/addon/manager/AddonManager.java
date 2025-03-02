@@ -24,14 +24,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JOptionPane;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleProvider;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
-import org.exbin.framework.addon.manager.gui.AddonsPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.model.DependencyRecord;
@@ -73,7 +71,6 @@ public class AddonManager {
     private AvailableModuleUpdates availableModuleUpdates = new AvailableModuleUpdates();
     private AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
     private List<ItemRecord> installedAddons = new ArrayList<>();
-    private List<AddonsPanel.ItemChangedListener> itemChangedListeners = new ArrayList<>();
     private int serviceStatus = -1;
 
     public AddonManager() {
@@ -160,247 +157,21 @@ public class AddonManager {
         }
     }
 
-    @Nonnull
-    public AddonsPanel.Controller createInstalledItemsController(Component parentComponent, InstalledManagerTab installedManagerTab) {
-        return new AddonsPanel.Controller() {
-
-            private List<Integer> filterItems = null;
-
-            @Override
-            public void setFilter(String filter, Runnable finished) {
-                // TODO Implement as background thread
-                List<Integer> items = null;
-                filter = filter.trim().toLowerCase();
-                if (!filter.isEmpty()) {
-                    items = new ArrayList<>();
-                    for (int i = 0; i < installedAddons.size(); i++) {
-                        ItemRecord record = installedAddons.get(i);
-                        if (record.getName().toLowerCase().contains(filter)) {
-                            items.add(i);
-                        }
-                    }
-                }
-                filterItems = items;
-                finished.run();
-            }
-
-            @Override
-            public int getItemsCount() {
-                if (filterItems != null) {
-                    return filterItems.size();
-                }
-
-                return installedAddons.size();
-            }
-
-            @Nonnull
-            @Override
-            public ItemRecord getItem(int index) {
-                if (filterItems != null) {
-                    return installedAddons.get(filterItems.get(index));
-                }
-
-                return installedAddons.get(index);
-            }
-
-            @Override
-            public boolean isAlreadyInstalled(String moduleId) {
-                return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
-            }
-
-            @Override
-            public boolean isAlreadyRemoved(String moduleId) {
-                return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
-            }
-
-            @Override
-            public void install(ItemRecord item) {
-                throw new IllegalStateException("Already installed");
-            }
-
-            @Override
-            public void update(ItemRecord item) {
-                updateItem(item, parentComponent);
-            }
-
-            @Override
-            public void remove(ItemRecord item) {
-                removeItem(item, parentComponent);
-            }
-
-            @Override
-            public void changeSelection(ItemRecord item) {
-                String moduleId = item.getId();
-                Set<String> toUpdate = installedManagerTab.getToUpdate();
-                if (toUpdate.contains(moduleId)) {
-                    toUpdate.remove(moduleId);
-                } else {
-                    toUpdate.add(moduleId);
-                }
-                // TODO updateSelectionChanged(installedManagerTab.getToUpdateCount());
-            }
-
-            @Override
-            public boolean isItemSelectedForOperation(ItemRecord item) {
-                Set<String> toUpdate = installedManagerTab.getToUpdate();
-                return toUpdate.contains(item.getId());
-            }
-
-            @Override
-            public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
-                availableModuleUpdates.addChangeListener(listener);
-            }
-
-            @Override
-            public void addItemChangedListener(AddonsPanel.ItemChangedListener listener) {
-                itemChangedListeners.add(listener);
-            }
-
-            @Nonnull
-            @Override
-            public String getModuleDetails(ItemRecord itemRecord) {
-                if (itemRecord.isAddon()) {
-                    try {
-                        return addonCatalogService.getModuleDetails(itemRecord.getId());
-                    } catch (AddonCatalogServiceException ex) {
-                        Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
-                return "";
-            }
-        };
+    public boolean isAlreadyInstalled(String moduleId) {
+        return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
     }
 
-    @Nonnull
-    public AddonsPanel.Controller createAddonsCatalogController(Component parentComponent, AddonsManagerTab addonsManagerTab) {
-        return new AddonsPanel.Controller() {
-
-            private List<AddonRecord> searchResult;
-
-            @Override
-            public void setFilter(String filter, Runnable finished) {
-                // TODO
-                finished.run();
-            }
-
-            @Override
-            public int getItemsCount() {
-                if (searchResult == null) {
-                    searchForAddons();
-                }
-                return searchResult.size();
-            }
-
-            @Nonnull
-            @Override
-            public ItemRecord getItem(int index) {
-                return searchResult.get(index);
-            }
-
-            @Override
-            public boolean isAlreadyInstalled(String moduleId) {
-                return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
-            }
-
-            @Override
-            public boolean isAlreadyRemoved(String moduleId) {
-                return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
-            }
-
-            @Override
-            public void install(ItemRecord item) {
-                installItem(item, parentComponent);
-            }
-
-            @Override
-            public void update(ItemRecord item) {
-                updateItem(item, parentComponent);
-            }
-
-            @Override
-            public void remove(ItemRecord item) {
-                removeItem(item, parentComponent);
-            }
-
-            @Override
-            public void changeSelection(ItemRecord item) {
-                String moduleId = item.getId();
-                Set<String> toInstall = addonsManagerTab.getToInstall();
-                if (toInstall.contains(moduleId)) {
-                    toInstall.remove(moduleId);
-                } else {
-                    toInstall.add(moduleId);
-                }
-                // TODO installSelectionChanged(addonsManagerTab.getToInstallCount());
-            }
-
-            private void searchForAddons() {
-                if (serviceStatus == -1) {
-                    searchResult = new ArrayList<>();
-                    return;
-                }
-
-                try {
-                    searchResult = addonCatalogService.searchForAddons("");
-                    for (int i = searchResult.size() - 1; i >= 0; i--) {
-                        AddonRecord record = searchResult.get(i);
-                        ModuleProvider moduleProvider = App.getModuleProvider();
-                        if (((BasicModuleProvider) moduleProvider).hasModule(record.getId()) && !addonUpdateChanges.hasRemoveAddon(record.getId())) {
-                            searchResult.remove(i);
-                        } else {
-                            if (availableModuleUpdates.getStatus() != -1) {
-                                record.setUpdateAvailable(availableModuleUpdates.isUpdateAvailable(record.getId(), record.getVersion()));
-                            }
-                        }
-                    }
-                } catch (AddonCatalogServiceException ex) {
-                    Logger.getLogger(AddonManagerPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(parentComponent, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
-                }
-            }
-
-            @Override
-            public boolean isItemSelectedForOperation(ItemRecord item) {
-                Set<String> toInstall = addonsManagerTab.getToInstall();
-                return toInstall.contains(item.getId());
-            }
-
-            @Override
-            public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
-                if (searchResult != null) {
-                    availableModuleUpdates.addChangeListener(listener);
-                }
-            }
-
-            @Override
-            public void addItemChangedListener(AddonsPanel.ItemChangedListener listener) {
-                itemChangedListeners.add(listener);
-            }
-
-            @Nonnull
-            @Override
-            public String getModuleDetails(ItemRecord itemRecord) {
-                if (itemRecord.isAddon()) {
-                    try {
-                        return addonCatalogService.getModuleDetails(itemRecord.getId());
-                    } catch (AddonCatalogServiceException ex) {
-                        Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
-                return "";
-            }
-        };
+    public boolean isAlreadyRemoved(String moduleId) {
+        return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
     }
 
-    public void installItem(ItemRecord item, Component parentComponent) {
+    public void installItem(ItemRecord item, Component parentComponent, @Nullable Runnable finishListener) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         addonUpdateOperation.installItem(item);
-        performAddonsOperation(addonUpdateOperation, parentComponent, itemChangedListeners);
+        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
     }
 
-    public void updateItem(ItemRecord item, Component parentComponent) {
+    public void updateItem(ItemRecord item, Component parentComponent, @Nullable Runnable finishListener) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         AddonRecord addonRecord;
         try {
@@ -409,16 +180,16 @@ public class AddonManager {
         } catch (AddonCatalogServiceException ex) {
             Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        performAddonsOperation(addonUpdateOperation, parentComponent, itemChangedListeners);
+        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
     }
 
-    public void removeItem(ItemRecord item, Component parentComponent) {
+    public void removeItem(ItemRecord item, Component parentComponent, @Nullable Runnable finishListener) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         addonUpdateOperation.removeItem(item);
-        performAddonsOperation(addonUpdateOperation, parentComponent, itemChangedListeners);
+        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
     }
 
-    public void installAddons(Set<String> toInstall, Component parentComponent) {
+    public void installAddons(Set<String> toInstall, Component parentComponent, @Nullable Runnable finishListener) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         if (toInstall.isEmpty()) {
             for (ItemRecord addon : installedAddons) {
@@ -443,10 +214,10 @@ public class AddonManager {
                 }
             }
         }
-        performAddonsOperation(addonUpdateOperation, parentComponent, itemChangedListeners);
+        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
     }
 
-    public void updateAddons(Set<String> toUpdate, Component parentComponent) {
+    public void updateAddons(Set<String> toUpdate, Component parentComponent, @Nullable Runnable finishListener) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         if (toUpdate.isEmpty()) {
             for (ItemRecord addon : installedAddons) {
@@ -473,10 +244,53 @@ public class AddonManager {
                 }
             }
         }
-        performAddonsOperation(addonUpdateOperation, parentComponent, itemChangedListeners);
+        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
     }
 
-    public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, Component parentComponent, List<AddonsPanel.ItemChangedListener> finishListeners) {
+    @Nonnull
+    public List<ItemRecord> getInstalledAddons() {
+        return installedAddons;
+    }
+
+    public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
+        availableModuleUpdates.addChangeListener(listener);
+    }
+
+    @Nonnull
+    public String getModuleDetails(ItemRecord itemRecord) {
+        if (itemRecord.isAddon()) {
+            try {
+                return addonCatalogService.getModuleDetails(itemRecord.getId());
+            } catch (AddonCatalogServiceException ex) {
+                Logger.getLogger(InstalledManagerTab.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return "";
+    }
+
+    @Nonnull
+    public List<AddonRecord> searchForAddons() throws AddonCatalogServiceException {
+        if (serviceStatus == -1) {
+            return new ArrayList<>();
+        }
+
+        List<AddonRecord> searchResult = addonCatalogService.searchForAddons("");
+        for (int i = searchResult.size() - 1; i >= 0; i--) {
+            AddonRecord record = searchResult.get(i);
+            ModuleProvider moduleProvider = App.getModuleProvider();
+            if (((BasicModuleProvider) moduleProvider).hasModule(record.getId()) && !addonUpdateChanges.hasRemoveAddon(record.getId())) {
+                searchResult.remove(i);
+            } else {
+                if (availableModuleUpdates.getStatus() != -1) {
+                    record.setUpdateAvailable(availableModuleUpdates.isUpdateAvailable(record.getId(), record.getVersion()));
+                }
+            }
+        }
+        return searchResult;
+    }
+
+    public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, Component parentComponent, @Nullable Runnable finishListener) {
         MultiStepControlPanel controlPanel = new MultiStepControlPanel();
         AddonOperationPanel operationPanel = new AddonOperationPanel();
         operationPanel.setPreferredSize(new Dimension(600, 300));
@@ -553,8 +367,8 @@ public class AddonManager {
                         break;
                     case FINISH:
                         addonUpdateOperation.finished();
-                        for (AddonsPanel.ItemChangedListener listener : finishListeners) {
-                            listener.itemChanged();
+                        if (finishListener != null) {
+                            finishListener.run();
                         }
                         dialog.close();
                         break;

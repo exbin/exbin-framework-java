@@ -82,11 +82,11 @@ public class AddonManagerAction extends AbstractAction {
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
 
         AddonsManagerTab addonsManagerTab = new AddonsManagerTab();
-        addonsManagerTab.setController(addonManager.createAddonsCatalogController(addonManagerPanel, addonsManagerTab));
+        addonsManagerTab.setAddonManager(addonManager);
         addonManagerPanel.addManagerTab(addonsManagerTab);
 
         InstalledManagerTab installedManagerTab = new InstalledManagerTab();
-        installedManagerTab.setController(addonManager.createInstalledItemsController(addonManagerPanel, installedManagerTab));
+        installedManagerTab.setAddonManager(addonManager);
         addonManagerPanel.addManagerTab(installedManagerTab);
 
         controlPanel.setController(new AddonsControlPanel.Controller() {
@@ -94,11 +94,9 @@ public class AddonManagerAction extends AbstractAction {
             public void performOperation() {
                 AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
                 if (managerTab instanceof AddonsManagerTab) {
-                    AddonsManagerTab addonsManagerTab = ((AddonsManagerTab) managerTab);
-                    addonManager.installAddons(addonsManagerTab.getToInstall(), addonManagerPanel);
+                    ((AddonsManagerTab) managerTab).installAddons();
                 } else if (managerTab instanceof InstalledManagerTab) {
-                    InstalledManagerTab installedManagerTab = ((InstalledManagerTab) managerTab);
-                    addonManager.updateAddons(installedManagerTab.getToUpdate(), addonManagerPanel);
+                    ((InstalledManagerTab) managerTab).updateAddons();
                 } else {
                     throw new IllegalStateException();
                 }
