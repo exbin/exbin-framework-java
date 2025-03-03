@@ -51,7 +51,7 @@ public class TextAppearanceOptionsPage implements DefaultOptionsPage<TextAppeara
 
     @Nonnull
     @Override
-    public OptionsComponent<TextAppearanceOptions> createPanel() {
+    public OptionsComponent<TextAppearanceOptions> createComponent() {
         return new TextAppearanceOptionsPanel();
     }
 

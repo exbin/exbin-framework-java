@@ -47,7 +47,7 @@ public class AppearanceOptionsPage implements DefaultOptionsPage<AppearanceOptio
 
     @Nonnull
     @Override
-    public OptionsComponent<AppearanceOptions> createPanel() {
+    public OptionsComponent<AppearanceOptions> createComponent() {
         return new AppearanceOptionsPanel();
     }
 

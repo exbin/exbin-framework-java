@@ -187,7 +187,7 @@ public class ThemeOptionsPage implements DefaultOptionsPage<ThemeOptions> {
 
     @Nonnull
     @Override
-    public OptionsComponent<ThemeOptions> createPanel() {
+    public OptionsComponent<ThemeOptions> createComponent() {
         if (!valuesInitialized) {
             valuesInitialized = true;
             initValues();

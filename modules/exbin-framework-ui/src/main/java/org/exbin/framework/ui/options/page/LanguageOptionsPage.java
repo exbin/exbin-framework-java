@@ -53,7 +53,7 @@ public class LanguageOptionsPage implements DefaultOptionsPage<LanguageOptions> 
 
     @Nonnull
     @Override
-    public OptionsComponent<LanguageOptions> createPanel() {
+    public OptionsComponent<LanguageOptions> createComponent() {
         ResourceBundle resourceBundle = getResourceBundle();
         List<LanguageRecord> languageLocales = new ArrayList<>();
         languageLocales.add(new LanguageRecord(Locale.ROOT, null));

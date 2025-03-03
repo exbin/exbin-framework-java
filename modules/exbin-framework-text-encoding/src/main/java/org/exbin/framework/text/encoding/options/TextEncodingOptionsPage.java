@@ -43,7 +43,6 @@ public class TextEncodingOptionsPage implements DefaultOptionsPage<TextEncodingO
 
     public static final String PAGE_ID = "textEncoding";
 
-    private TextEncodingOptionsPanel panel;
     private EncodingsHandler encodingsHandler;
 
     @Nonnull
@@ -58,28 +57,26 @@ public class TextEncodingOptionsPage implements DefaultOptionsPage<TextEncodingO
 
     @Nonnull
     @Override
-    public TextEncodingOptionsPanel createPanel() {
-        if (panel == null) {
-            panel = new TextEncodingOptionsPanel();
-            panel.setTextEncodingService(encodingsHandler.getTextEncodingService());
-            panel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingListPanel.EncodingsUpdate encodingsUpdate) -> {
-                WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                final TextEncodingPanel addEncodingPanel = new TextEncodingPanel();
-                addEncodingPanel.setUsedEncodings(usedEncodings);
-                DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
-                final WindowHandler dialog = windowModule.createDialog(addEncodingPanel, controlPanel);
-                controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                    if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                        encodingsUpdate.update(addEncodingPanel.getEncodings());
-                    }
+    public TextEncodingOptionsPanel createComponent() {
+        TextEncodingOptionsPanel panel = new TextEncodingOptionsPanel();
+        panel.setTextEncodingService(encodingsHandler.getTextEncodingService());
+        panel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingListPanel.EncodingsUpdate encodingsUpdate) -> {
+            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+            final TextEncodingPanel addEncodingPanel = new TextEncodingPanel();
+            addEncodingPanel.setUsedEncodings(usedEncodings);
+            DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
+            final WindowHandler dialog = windowModule.createDialog(addEncodingPanel, controlPanel);
+            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                    encodingsUpdate.update(addEncodingPanel.getEncodings());
+                }
 
-                    dialog.close();
-                    dialog.dispose();
-                });
-                windowModule.setWindowTitle(dialog, addEncodingPanel.getResourceBundle());
-                dialog.showCentered(panel);
+                dialog.close();
+                dialog.dispose();
             });
-        }
+            windowModule.setWindowTitle(dialog, addEncodingPanel.getResourceBundle());
+            dialog.showCentered(panel);
+        });
 
         return panel;
     }

@@ -43,7 +43,7 @@ public class CheckForUpdateOptionsPage implements DefaultOptionsPage<CheckForUpd
     }
 
     @Override
-    public OptionsComponent<CheckForUpdateOptions> createPanel() {
+    public OptionsComponent<CheckForUpdateOptions> createComponent() {
         return new ApplicationUpdateOptionsPanel();
     }
 

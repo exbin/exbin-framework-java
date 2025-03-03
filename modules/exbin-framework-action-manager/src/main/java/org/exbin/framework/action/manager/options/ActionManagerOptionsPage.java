@@ -51,7 +51,7 @@ public class ActionManagerOptionsPage implements DefaultOptionsPage<ActionManage
 
     @Nonnull
     @Override
-    public OptionsComponent<ActionManagerOptions> createPanel() {
+    public OptionsComponent<ActionManagerOptions> createComponent() {
         KeyMapOptionsPanel panel = new KeyMapOptionsPanel();
         List<KeyMapRecord> records = new ArrayList<>();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);

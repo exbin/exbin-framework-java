@@ -59,7 +59,7 @@ public class TextFontOptionsPage implements DefaultOptionsPage<TextFontOptions> 
 
     @Nonnull
     @Override
-    public OptionsComponent<TextFontOptions> createPanel() {
+    public OptionsComponent<TextFontOptions> createComponent() {
         if (panel == null) {
             panel = new TextFontOptionsPanel();
             panel.setTextFontService(textFontService);

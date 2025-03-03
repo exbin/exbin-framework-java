@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Interface for basic options page.
+ * Interface for basic options component.
  *
  * @author ExBin Project (https://exbin.org)
  * @param <T> options data
@@ -29,7 +29,7 @@ import org.exbin.framework.preferences.api.OptionsStorage;
 public interface OptionsPage<T extends OptionsData> {
 
     /**
-     * Returns options page id.
+     * Returns options component id.
      *
      * @return id
      */
@@ -37,12 +37,12 @@ public interface OptionsPage<T extends OptionsData> {
     String getId();
 
     /**
-     * Creates instance of options panel.
+     * Creates instance of options component.
      *
      * @return panel
      */
     @Nonnull
-    OptionsComponent<T> createPanel();
+    OptionsComponent<T> createComponent();
 
     /**
      * Returns options data.

@@ -55,7 +55,7 @@ public class FileOptionsPage implements DefaultOptionsPage<FileOptions> {
 
     @Nonnull
     @Override
-    public OptionsComponent<FileOptions> createPanel() {
+    public OptionsComponent<FileOptions> createComponent() {
         FileOptionsPanel fileOptionsPanel = new FileOptionsPanel();
         List<String> fileDialogsKeys = new ArrayList<>();
         fileDialogsKeys.add(FileDialogsType.SWING.name());

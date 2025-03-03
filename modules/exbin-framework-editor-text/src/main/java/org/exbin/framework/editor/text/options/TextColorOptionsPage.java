@@ -54,7 +54,7 @@ public class TextColorOptionsPage implements DefaultOptionsPage<TextColorOptions
 
     @Nonnull
     @Override
-    public OptionsComponent<TextColorOptions> createPanel() {
+    public OptionsComponent<TextColorOptions> createComponent() {
         if (panel == null) {
             panel = new TextColorOptionsPanel();
             panel.setTextColorService(textColorService);

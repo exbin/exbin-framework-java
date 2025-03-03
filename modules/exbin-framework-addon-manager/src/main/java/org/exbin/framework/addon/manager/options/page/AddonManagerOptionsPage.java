@@ -45,7 +45,7 @@ public class AddonManagerOptionsPage implements DefaultOptionsPage<AddonManagerO
 
     @Nonnull
     @Override
-    public OptionsComponent<AddonManagerOptions> createPanel() {
+    public OptionsComponent<AddonManagerOptions> createComponent() {
         return new AddonManagerOptionsPanel();
     }
 

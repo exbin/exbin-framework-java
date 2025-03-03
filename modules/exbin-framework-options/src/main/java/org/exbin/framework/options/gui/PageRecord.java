@@ -56,7 +56,7 @@ public class PageRecord {
 
     public void addOptionsPage(OptionsPage<?> page, @Nullable OptionsModifiedListener listener, @Nullable VisualOptionsPageParams visualParams) {
         pages.add(page);
-        OptionsComponent<?> optionsComponent = page.createPanel();
+        OptionsComponent<?> optionsComponent = page.createComponent();
         if (listener != null) {
             optionsComponent.setOptionsModifiedListener(listener);
         }
