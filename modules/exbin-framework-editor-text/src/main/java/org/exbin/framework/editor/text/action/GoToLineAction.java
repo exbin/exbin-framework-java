@@ -67,27 +67,29 @@ public class GoToLineAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (component instanceof TextPanel) {
-            final TextPanel textPanel = (TextPanel) component;
-            final TextGoToPanel goToPanel = new TextGoToPanel();
-            goToPanel.initFocus();
-            goToPanel.setMaxLine(textPanel.getLineCount());
-            goToPanel.setCharPos(1);
-            DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
-            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-            final WindowHandler dialog = windowModule.createDialog(goToPanel, controlPanel);
-            windowModule.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
-            windowModule.setWindowTitle(dialog, goToPanel.getResourceBundle());
-            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                if (actionType == DefaultControlHandler.ControlActionType.OK) {
-                    textPanel.gotoLine(goToPanel.getLine());
-                    textPanel.gotoRelative(goToPanel.getCharPos());
-                }
-
-                dialog.close();
-                dialog.dispose();
-            });
-            dialog.showCentered(textPanel);
+        if (!(component instanceof TextPanel)) {
+            return;
         }
+
+        final TextPanel textPanel = (TextPanel) component;
+        final TextGoToPanel goToPanel = new TextGoToPanel();
+        goToPanel.initFocus();
+        goToPanel.setMaxLine(textPanel.getLineCount());
+        goToPanel.setCharPos(1);
+        DefaultControlPanel controlPanel = new DefaultControlPanel(goToPanel.getResourceBundle());
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        final WindowHandler dialog = windowModule.createDialog(goToPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, goToPanel.getResourceBundle());
+        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+                textPanel.gotoLine(goToPanel.getLine());
+                textPanel.gotoRelative(goToPanel.getCharPos());
+            }
+
+            dialog.close();
+            dialog.dispose();
+        });
+        dialog.showCentered(textPanel);
     }
 }

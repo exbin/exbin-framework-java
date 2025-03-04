@@ -183,7 +183,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public NewFileAction createNewFileAction() {
         ensureSetup();
         NewFileAction newFileAction = new NewFileAction();
-        newFileAction.init(resourceBundle, this);
+        newFileAction.init(resourceBundle);
         return newFileAction;
     }
 
@@ -192,7 +192,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public OpenFileAction createOpenFileAction() {
         ensureSetup();
         OpenFileAction openFileAction = new OpenFileAction();
-        openFileAction.init(resourceBundle, this);
+        openFileAction.init(resourceBundle);
         return openFileAction;
     }
 

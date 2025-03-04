@@ -15,7 +15,8 @@
  */
 package org.exbin.framework.editor.text.service.impl;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTextArea;
 import org.exbin.framework.editor.text.service.*;
@@ -28,9 +29,9 @@ import org.exbin.framework.editor.text.service.*;
 @ParametersAreNonnullByDefault
 public class TextServiceImpl implements TextSearchService {
 
-    @Nullable
+    @Nonnull
     @Override
-    public FoundMatch findText(JTextArea textArea, FindTextParameters findTextParameters) {
+    public Optional<FoundMatch> findText(JTextArea textArea, FindTextParameters findTextParameters) {
         String text = textArea.getText();
         int pos = findTextParameters.getStartFrom();
         String findText = findTextParameters.getFindText();
@@ -44,9 +45,9 @@ public class TextServiceImpl implements TextSearchService {
             } else {
                 toPos = pos + findText.length();
             }
-            return new FoundMatch(pos, toPos);
+            return Optional.of(new FoundMatch(pos, toPos));
         }
 
-        return null;
+        return Optional.empty();
     }
 }

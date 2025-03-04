@@ -58,11 +58,11 @@ public class FindReplaceActions {
         this.resourceBundle = resourceBundle;
     }
 
-    public void showFindDialog(TextPanel textPanel, boolean shallReplace) {
+    public void showFindDialog(TextPanel textPanel, FindDialogMode findDialogMode) {
         final WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final FindTextPanel findPanel = new FindTextPanel();
-        findPanel.setShallReplace(shallReplace);
+        findPanel.setShallReplace(findDialogMode == FindDialogMode.REPLACE);
         findPanel.setSelected();
         DefaultControlPanel controlPanel = new DefaultControlPanel(findPanel.getResourceBundle());
         final WindowHandler dialog = windowModule.createDialog(findPanel, controlPanel);
@@ -123,7 +123,7 @@ public class FindReplaceActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            showFindDialog((TextPanel) component, false);
+            showFindDialog((TextPanel) component, FindDialogMode.FIND);
         }
     }
 
@@ -149,7 +149,7 @@ public class FindReplaceActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            showFindDialog((TextPanel) component, false);
+            showFindDialog((TextPanel) component, FindDialogMode.FIND);
         }
     }
 
@@ -176,7 +176,12 @@ public class FindReplaceActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            showFindDialog((TextPanel) component, false);
+            showFindDialog((TextPanel) component, FindDialogMode.REPLACE);
         }
+    }
+    
+    public enum FindDialogMode {
+        FIND,
+        REPLACE
     }
 }

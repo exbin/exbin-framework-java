@@ -21,9 +21,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.api.FileOperations;
-import org.exbin.framework.file.api.FileOperationsProvider;
 import org.exbin.framework.utils.ActionUtils;
 
 /**
@@ -37,23 +39,30 @@ public class NewFileAction extends AbstractAction {
     public static final String ACTION_ID = "newFileAction";
 
     private ResourceBundle resourceBundle;
-    private FileOperationsProvider fileOperationsProvider;
+    private FileOperations fileOperations;
 
     public NewFileAction() {
     }
 
-    public void init(ResourceBundle resourceBundle, FileOperationsProvider fileOperationsProvider) {
-        this.fileOperationsProvider = fileOperationsProvider;
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, ActionUtils.getMetaMask()));
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
+            @Override
+            public void register(ActionContextChangeManager manager) {
+                manager.registerUpdateListener(FileOperations.class, (instance) -> {
+                    fileOperations = instance;
+                    setEnabled(instance != null);
+                });
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        FileOperations fileOperations = fileOperationsProvider.getFileOperations();
         if (fileOperations != null) {
             fileOperations.newFile();
         }

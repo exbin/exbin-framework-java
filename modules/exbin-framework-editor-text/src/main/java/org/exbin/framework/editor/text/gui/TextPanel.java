@@ -25,6 +25,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -39,6 +40,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter.Highlight;
+import org.exbin.framework.App;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
@@ -46,6 +48,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.TestApplication;
@@ -57,6 +60,8 @@ import org.exbin.framework.utils.TestApplication;
  */
 @ParametersAreNonnullByDefault
 public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHandler {
+
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextPanel.class);
 
     private final TextPanelCompoundUndoManager undoManagement = new TextPanelCompoundUndoManager();
     private boolean modified = false;
@@ -142,9 +147,10 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
 
         findTextParameters.setStartFrom(pos);
         TextSearchService textService = new TextServiceImpl();
-        TextSearchService.FoundMatch foundMatch = textService.findText(textArea, findTextParameters);
+        Optional<TextSearchService.FoundMatch> optFoundMatch = textService.findText(textArea, findTextParameters);
 
-        if (foundMatch != null) {
+        if (optFoundMatch.isPresent()) {
+            TextSearchService.FoundMatch foundMatch = optFoundMatch.get();
             try {
                 textArea.setCaretPosition(foundMatch.getTo());
                 highlight = textArea.getHighlighter().addHighlight(foundMatch.getFrom(), foundMatch.getTo(), new DefaultHighlighter.DefaultHighlightPainter(foundTextBackgroundColor));
@@ -152,7 +158,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
                 Logger.getLogger(TextPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(UiUtils.getFrame(this), "String was not found", "Find text", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(UiUtils.getFrame(this), resourceBundle.getString("notFound.message"), resourceBundle.getString("notFound.title"), JOptionPane.INFORMATION_MESSAGE);
             highlight = null;
         }
     }

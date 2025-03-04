@@ -30,8 +30,8 @@ import javax.swing.JTextArea;
 @ParametersAreNonnullByDefault
 public interface TextSearchService {
 
-    @Nullable
-    FoundMatch findText(JTextArea textArea, FindTextParameters findTextParameters);
+    @Nonnull
+    Optional<FoundMatch> findText(JTextArea textArea, FindTextParameters findTextParameters);
 
     @ParametersAreNonnullByDefault
     public static class FindTextParameters {
