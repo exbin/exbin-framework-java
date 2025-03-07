@@ -32,14 +32,12 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.ActionContextService;
-import org.exbin.framework.action.api.menu.MenuContribution;
-import org.exbin.framework.action.api.menu.MenuManagement;
-import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
-import org.exbin.framework.action.api.PositionMode;
+import org.exbin.framework.menu.api.MenuContribution;
+import org.exbin.framework.menu.api.MenuManagement;
+import org.exbin.framework.menu.api.PositionMenuContributionRule;
 import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.editor.api.EditorModuleApi;
@@ -54,6 +52,7 @@ import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileOperations;
+import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.UiUtils;
 
 /**
@@ -84,16 +83,16 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     }
 
     private void init() {
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
-        MenuManagement mgmt = actionModule.getMenuManagement(EditorModule.MODULE_ID);
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuManagement mgmt = menuModule.getMenuManagement(EditorModule.MODULE_ID);
         mgmt.registerMenu(FILE_CONTEXT_MENU_ID);
         MenuContribution contribution = mgmt.registerMenuItem(FILE_CONTEXT_MENU_ID, editorModule.createCloseFileAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(FILE_CONTEXT_MENU_ID, editorModule.createCloseAllFilesAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(FILE_CONTEXT_MENU_ID, editorModule.createCloseOtherFilesAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
 
         multiEditorPanel.setController(new MultiEditorPanel.Controller() {
             @Override
@@ -109,8 +108,8 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 ActionContextService actionContextService = frameModule.getFrameHandler().getActionContextService();
-                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                MenuManagement mgmt = actionModule.getMenuManagement(EditorModule.MODULE_ID);
+                MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+                MenuManagement mgmt = menuModule.getMenuManagement(EditorModule.MODULE_ID);
                 JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
                 mgmt.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, actionContextService);
                 fileContextPopupMenu.show(component, positionX, positionY);

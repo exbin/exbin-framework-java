@@ -24,11 +24,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
-import org.exbin.framework.action.api.menu.MenuContribution;
-import org.exbin.framework.action.api.menu.MenuManagement;
-import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
-import org.exbin.framework.action.api.PositionMode;
+import org.exbin.framework.menu.api.GroupMenuContributionRule;
+import org.exbin.framework.menu.api.MenuContribution;
+import org.exbin.framework.menu.api.MenuManagement;
+import org.exbin.framework.menu.api.PositionMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.project.action.NewProjectAction;
 import org.exbin.framework.project.action.OpenProjectAction;
@@ -37,6 +36,7 @@ import org.exbin.framework.project.api.ProjectCategory;
 import org.exbin.framework.project.api.ProjectModuleApi;
 import org.exbin.framework.project.api.ProjectType;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.menu.api.MenuModuleApi;
 
 /**
  * Implementation of framework project module.
@@ -107,10 +107,10 @@ public class ProjectModule implements ProjectModuleApi {
 
     @Override
     public void registerMenuFileHandlingActions() {
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuManagement mgmt = actionModule.getMenuManagement(FrameModuleApi.MODULE_ID);
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuManagement mgmt = menuModule.getMenuManagement(FrameModuleApi.MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuGroup(PROJECT_MENU_ID, PROJECT_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(PROJECT_MENU_ID, getNewProjectAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(PROJECT_MENU_GROUP_ID));
         contribution = mgmt.registerMenuItem(PROJECT_MENU_ID, getOpenProjectAction());

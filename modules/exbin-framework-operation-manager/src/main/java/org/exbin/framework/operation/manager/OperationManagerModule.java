@@ -21,9 +21,10 @@ import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
-import org.exbin.framework.action.api.menu.MenuContribution;
-import org.exbin.framework.action.api.menu.MenuManagement;
+import org.exbin.framework.menu.api.MenuModuleApi;
+import org.exbin.framework.menu.api.GroupMenuContributionRule;
+import org.exbin.framework.menu.api.MenuContribution;
+import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.operation.manager.action.UndoManagerAction;
 import org.exbin.framework.operation.manager.api.OperationManagerModuleApi;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
@@ -47,8 +48,8 @@ public class OperationManagerModule implements OperationManagerModuleApi {
 
     @Override
     public void registerOperationManagerInMainMenu() {
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuManagement mgmt = actionModule.getMenuManagement(OperationManagerModuleApi.MODULE_ID);
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuManagement mgmt = menuModule.getMenuManagement(OperationManagerModuleApi.MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.EDIT_MENU_ID, createUndoManagerAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
     }

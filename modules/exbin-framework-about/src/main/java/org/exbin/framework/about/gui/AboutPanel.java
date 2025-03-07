@@ -31,7 +31,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.App;
-import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
+import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -410,8 +410,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
             @Override
             public void show(Component invoker, int x, int y) {
-                ActionPopupModuleApi actionPopupModule = App.getModule(ActionPopupModuleApi.class);
-                actionPopupModule.createLinkPopupMenu(appHomepageLink).show(invoker, x, y);
+                MenuPopupModuleApi menuPopupModule = App.getModule(MenuPopupModuleApi.class);
+                menuPopupModule.createLinkPopupMenu(appHomepageLink).show(invoker, x, y);
             }
         });
     }

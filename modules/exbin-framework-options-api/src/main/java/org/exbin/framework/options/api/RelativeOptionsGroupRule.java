@@ -17,7 +17,6 @@ package org.exbin.framework.options.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.NextToMode;
 
 /**
  * Options group relative position rule.
@@ -43,5 +42,11 @@ public class RelativeOptionsGroupRule implements OptionsGroupRule {
     @Nonnull
     public String getGroupId() {
         return groupId;
+    }
+
+    public enum NextToMode {
+
+        BEFORE,
+        AFTER
     }
 }

@@ -23,13 +23,13 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.text.encoding.options.TextEncodingOptions;
-import org.exbin.framework.action.api.PositionMode;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.menu.MenuContribution;
-import org.exbin.framework.action.api.menu.MenuManagement;
-import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
+import org.exbin.framework.menu.api.MenuModuleApi;
+import org.exbin.framework.menu.api.MenuContribution;
+import org.exbin.framework.menu.api.MenuManagement;
+import org.exbin.framework.menu.api.PositionMenuContributionRule;
 import org.exbin.framework.text.encoding.options.TextEncodingOptionsPage;
 import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.preferences.api.OptionsStorage;
@@ -70,10 +70,10 @@ public class TextEncodingModule implements Module {
         getEncodingsHandler();
         encodingsHandler.rebuildEncodings();
 
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, () -> encodingsHandler.getToolsEncodingMenu());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP_LAST));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP_LAST));
     }
 
     public void registerOptionsPanels() {

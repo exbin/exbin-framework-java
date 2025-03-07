@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.toolbar.api.ToolBarModuleApi</api>
+  <name>Tool Bar Support API</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for action handling</description>
+  <dependency>
+  </dependency>
+</module>

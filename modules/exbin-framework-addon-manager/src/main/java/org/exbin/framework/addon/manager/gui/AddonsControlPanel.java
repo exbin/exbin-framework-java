@@ -25,7 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
-import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
+import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
@@ -91,7 +91,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
             @Override
             public void show(Component invoker, int x, int y) {
-                ActionPopupModuleApi actionPopupModule = App.getModule(ActionPopupModuleApi.class);
+                MenuPopupModuleApi actionPopupModule = App.getModule(MenuPopupModuleApi.class);
                 actionPopupModule.createLinkPopupMenu(link).show(invoker, x, y);
             }
         });

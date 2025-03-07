@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.menu.api.MenuModuleApi</api>
+  <name>Menu Support API</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for menu handling</description>
+  <dependency>
+  </dependency>
+</module>

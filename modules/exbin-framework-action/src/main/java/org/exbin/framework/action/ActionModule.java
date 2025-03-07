@@ -17,10 +17,7 @@ package org.exbin.framework.action;
 
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -30,39 +27,17 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionManager;
-import org.exbin.framework.utils.ClipboardActionsApi;
 import org.exbin.framework.utils.ClipboardActionsHandler;
-import org.exbin.framework.action.api.PositionMode;
-import org.exbin.framework.action.api.SeparationMode;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
-import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
-import org.exbin.framework.action.api.toolbar.GroupToolBarContributionRule;
-import org.exbin.framework.action.api.menu.MenuContribution;
-import org.exbin.framework.action.api.menu.MenuContributionRule;
-import org.exbin.framework.action.api.menu.MenuManagement;
-import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
-import org.exbin.framework.action.api.toolbar.PositionToolBarContributionRule;
-import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
-import org.exbin.framework.action.api.toolbar.ToolBarContribution;
-import org.exbin.framework.action.api.toolbar.ToolBarContributionRule;
-import org.exbin.framework.action.api.toolbar.ToolBarManagement;
-import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionContextChangeManager;
-import org.exbin.framework.action.api.menu.MenuItemProvider;
 
 /**
  * Implementation of action module.
@@ -74,8 +49,6 @@ public class ActionModule implements ActionModuleApi {
 
     private ClipboardActions clipboardActions = null;
     private ClipboardTextActions clipboardTextActions = null;
-    private MenuManager menuManager = null;
-    private ToolBarManager toolBarManager = null;
     private ResourceBundle resourceBundle;
 
     public ActionModule() {
@@ -127,12 +100,6 @@ public class ActionModule implements ActionModuleApi {
     @Override
     public ActionManager createActionManager() {
         return new DefaultActionManager();
-    }
-
-    @Override
-    public void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position) {
-        ActionPopupModuleApi popupModule = App.getModule(ActionPopupModuleApi.class);
-        popupModule.fillDefaultEditPopupMenu(popupMenu, position);
     }
 
     @Override
@@ -230,194 +197,6 @@ public class ActionModule implements ActionModuleApi {
             menuItem.setText(languageModule.getActionWithDialogText(menuItem.getText()));
         }
         return menuItem;
-    }
-
-    @Nonnull
-    @Override
-    public List<Action> getMenuManagedActions() {
-        List<Action> actions = new ArrayList<>();
-        getMenuManager();
-        actions.addAll(menuManager.getAllManagedActions());
-
-        return actions;
-    }
-
-    @Nonnull
-    @Override
-    public List<Action> getToolBarManagedActions() {
-        List<Action> actions = new ArrayList<>();
-        getToolBarManager();
-        actions.addAll(toolBarManager.getAllManagedActions());
-
-        return actions;
-    }
-
-    @Nonnull
-    private MenuManager getMenuManager() {
-        if (menuManager == null) {
-            menuManager = new MenuManager();
-        }
-
-        return menuManager;
-    }
-
-    @Nonnull
-    private ToolBarManager getToolBarManager() {
-        if (toolBarManager == null) {
-            toolBarManager = new ToolBarManager();
-        }
-
-        return toolBarManager;
-    }
-
-    @Nonnull
-    @Override
-    public MenuManagement getMenuManagement(String moduleId) {
-        return new MenuManagement() {
-            @Override
-            public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService activationUpdateService) {
-                getMenuManager().buildMenu(targetMenu, menuId, activationUpdateService);
-            }
-
-            @Override
-            public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService activationUpdateService) {
-                getMenuManager().buildMenu(targetMenuBar, menuId, activationUpdateService);
-            }
-
-            @Override
-            public void registerMenu(String menuId) {
-                getMenuManager().registerMenu(menuId, moduleId);
-            }
-
-            @Override
-            public void unregisterMenu(String menuId) {
-                getMenuManager().unregisterMenu(menuId);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, MenuItemProvider menuItemProvider) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, menuItemProvider);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, Action action) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, action);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, String subMenuId, Action subMenuAction) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, subMenuId, subMenuAction);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, String subMenuId, String subMenuName) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, subMenuId, subMenuName);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuGroup(String menuId, String groupId) {
-                return getMenuManager().registerMenuGroup(menuId, moduleId, groupId);
-            }
-
-            @Override
-            public boolean menuGroupExists(String menuId, String groupId) {
-                return menuManager.menuGroupExists(menuId, groupId);
-            }
-
-            @Override
-            public void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule) {
-                getMenuManager().registerMenuRule(menuContribution, rule);
-            }
-        };
-    }
-
-    @Nonnull
-    @Override
-    public ToolBarManagement getToolBarManagement(String moduleId) {
-        return new ToolBarManagement() {
-            @Override
-            public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
-                getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
-            }
-
-            @Override
-            public void registerToolBar(String toolBarId) {
-                getToolBarManager().registerToolBar(toolBarId, moduleId);
-            }
-
-            @Nonnull
-            @Override
-            public ToolBarContribution registerToolBarItem(String toolBarId, Action action) {
-                return getToolBarManager().registerToolBarItem(toolBarId, moduleId, action);
-            }
-
-            @Nonnull
-            @Override
-            public ToolBarContribution registerToolBarGroup(String toolBarId, String groupId) {
-                return getToolBarManager().registerToolBarGroup(toolBarId, moduleId, groupId);
-            }
-
-            @Override
-            public void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule) {
-                getToolBarManager().registerToolBarRule(toolBarContribution, rule);
-            }
-        };
-    }
-
-    @Override
-    public void registerClipboardMenuItems(String menuId, String moduleId, SeparationMode separationMode) {
-        registerClipboardMenuItems(getClipboardActions(), menuId, moduleId, separationMode);
-    }
-
-    @Override
-    public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMode separationMode) {
-        MenuManagement mgmt = getMenuManagement(moduleId);
-        MenuContribution contribution = mgmt.registerMenuGroup(menuId, CLIPBOARD_ACTIONS_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.TOP));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(separationMode));
-        contribution = mgmt.registerMenuItem(menuId, actions.createCutAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, actions.createCopyAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, actions.createPasteAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, actions.createDeleteAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, actions.createSelectAllAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-    }
-
-    @Override
-    public void registerClipboardTextActions() {
-        getClipboardTextActions();
-        ActionPopupModuleApi popupModule = App.getModule(ActionPopupModuleApi.class);
-        popupModule.registerDefaultClipboardPopupMenu(resourceBundle, ActionModule.class);
-    }
-
-    @Override
-    public void registerMenuClipboardActions() {
-        registerClipboardMenuItems(ActionConsts.EDIT_MENU_ID, MODULE_ID, SeparationMode.NONE);
-    }
-
-    @Override
-    public void registerToolBarClipboardActions() {
-        getClipboardActions();
-        ToolBarManagement mgmt = getToolBarManagement(MODULE_ID);
-        ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
-        mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCutAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCopyAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createPasteAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createDeleteAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
     }
 
     @Override

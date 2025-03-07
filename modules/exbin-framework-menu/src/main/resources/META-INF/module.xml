@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.menu.MenuModule</id>
+  <name>Menu Support</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for menu handling</description>
+  <dependency>
+    <module id="org.exbin.framework.window.api.WindowModuleApi" />
+    <module id="org.exbin.framework.frame.api.FrameModuleApi" />
+    <module id="org.exbin.framework.action.popup.api.ActionPopupModuleApi" />
+    <module id="org.exbin.framework.utils.UtilsModule" />
+    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+  </dependency>
+</module>

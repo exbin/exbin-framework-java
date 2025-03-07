@@ -17,7 +17,6 @@ package org.exbin.framework.options.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.NextToMode;
 
 /**
  * Options page relative position rule.
@@ -43,5 +42,14 @@ public class RelativeOptionsPageRule implements OptionsPageRule {
     @Nonnull
     public String getPageId() {
         return pageId;
+    }
+
+    /**
+     * Enumeration of menu next to modes.
+     */
+    public enum NextToMode {
+
+        BEFORE,
+        AFTER
     }
 }

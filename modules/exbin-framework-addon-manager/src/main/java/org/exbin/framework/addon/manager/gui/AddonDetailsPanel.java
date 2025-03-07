@@ -29,7 +29,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.html.HTMLDocument;
 import org.exbin.framework.App;
-import org.exbin.framework.action.popup.api.ActionPopupModuleApi;
+import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.model.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependenciesTableModel;
@@ -90,7 +90,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
             @Override
             public void show(Component invoker, int x, int y) {
-                ActionPopupModuleApi actionPopupModule = App.getModule(ActionPopupModuleApi.class);
+                MenuPopupModuleApi actionPopupModule = App.getModule(MenuPopupModuleApi.class);
                 actionPopupModule.createLinkPopupMenu(providerLink).show(invoker, x, y);
             }
         });

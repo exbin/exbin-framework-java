@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.menu.popup.api.MenuPopupModuleApi</api>
+  <name>Popup Menu Support API</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Module to support popup operations</description>
+  <dependency>
+  </dependency>
+</module>

@@ -15,9 +15,6 @@
  */
 package org.exbin.framework.action.api;
 
-import org.exbin.framework.action.api.toolbar.ToolBarManagement;
-import org.exbin.framework.action.api.menu.MenuManagement;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -28,7 +25,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
@@ -91,24 +87,6 @@ public interface ActionModuleApi extends Module {
     JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups);
 
     /**
-     * Returns menu management interface.
-     *
-     * @param moduleId module id
-     * @return menu management interface
-     */
-    @Nonnull
-    MenuManagement getMenuManagement(String moduleId);
-
-    /**
-     * Returns tool bar management interface.
-     *
-     * @param moduleId module id
-     * @return tool bar management interface
-     */
-    @Nonnull
-    ToolBarManagement getToolBarManagement(String moduleId);
-
-    /**
      * Returns clipboard/editing actions.
      *
      * @return clipboard editing actions
@@ -125,67 +103,9 @@ public interface ActionModuleApi extends Module {
     ClipboardActionsApi getClipboardTextActions();
 
     /**
-     * Registers menu clipboard actions.
-     */
-    void registerMenuClipboardActions();
-
-    /**
-     * Fills given popup menu with default clipboard actions.
-     *
-     * @param popupMenu popup menu
-     * @param position target index position or -1 for adding at the end
-     */
-    void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position);
-
-    /**
-     * Registers tool bar clipboard actions.
-     */
-    void registerToolBarClipboardActions();
-
-    /**
-     * Registers default clipboard menu items.
-     *
-     * @param menuId menu id
-     * @param moduleId module id
-     * @param separationMode separation mode
-     */
-    void registerClipboardMenuItems(String menuId, String moduleId, SeparationMode separationMode);
-
-    /**
-     * Registers clipboard menu items.
-     *
-     * @param actions clipboard actions
-     * @param menuId menu id
-     * @param moduleId module id
-     * @param separationMode separation mode
-     */
-    void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMode separationMode);
-
-    /**
      * Registers clipboard handler for main clipboard actions.
      *
      * @param clipboardHandler clipboard handler
      */
     void registerClipboardHandler(ClipboardActionsHandler clipboardHandler);
-
-    /**
-     * Registers default clipboard actions in default popup menu.
-     */
-    void registerClipboardTextActions();
-
-    /**
-     * Returns list of action managed by menu managers.
-     *
-     * @return list of actions
-     */
-    @Nonnull
-    List<Action> getMenuManagedActions();
-
-    /**
-     * Returns list of action managed by toolbar managers.
-     *
-     * @return list of actions
-     */
-    @Nonnull
-    List<Action> getToolBarManagedActions();
 }

@@ -24,14 +24,15 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.manager.gui.KeyMapOptionsPanel;
 import org.exbin.framework.action.manager.model.KeyMapRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.api.DefaultOptionsPage;
 import org.exbin.framework.options.api.DefaultOptionsStorage;
 import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.preferences.api.OptionsStorage;
+import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 
 /**
  * Action manager options page.
@@ -40,7 +41,7 @@ import org.exbin.framework.preferences.api.OptionsStorage;
  */
 @ParametersAreNonnullByDefault
 public class ActionManagerOptionsPage implements DefaultOptionsPage<ActionManagerOptions> {
-    
+
     public static final String PAGE_ID = "actionManager";
 
     @Nonnull
@@ -54,8 +55,8 @@ public class ActionManagerOptionsPage implements DefaultOptionsPage<ActionManage
     public OptionsComponent<ActionManagerOptions> createComponent() {
         KeyMapOptionsPanel panel = new KeyMapOptionsPanel();
         List<KeyMapRecord> records = new ArrayList<>();
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        List<Action> actions = actionModule.getMenuManagedActions();
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        List<Action> actions = menuModule.getMenuManagedActions();
         for (Action action : actions) {
             String name = (String) action.getValue(Action.NAME);
             ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
@@ -64,7 +65,8 @@ public class ActionManagerOptionsPage implements DefaultOptionsPage<ActionManage
             records.add(new KeyMapRecord(name, icon, type, keyStroke));
         }
 
-        actions = actionModule.getToolBarManagedActions();
+        ToolBarModuleApi toolbarModule = App.getModule(ToolBarModuleApi.class);
+        actions = toolbarModule.getToolBarManagedActions();
         for (Action action : actions) {
             String name = (String) action.getValue(Action.NAME);
             ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);

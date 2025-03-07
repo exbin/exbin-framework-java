@@ -23,17 +23,15 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.about.action.AboutAction;
-import org.exbin.framework.action.api.PositionMode;
-import org.exbin.framework.action.api.SeparationMode;
-import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.about.api.AboutModuleApi;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.menu.GroupMenuContributionRule;
-import org.exbin.framework.action.api.menu.MenuContribution;
-import org.exbin.framework.action.api.menu.MenuManagement;
-import org.exbin.framework.action.api.menu.PositionMenuContributionRule;
-import org.exbin.framework.action.api.menu.SeparationMenuContributionRule;
+import org.exbin.framework.menu.api.GroupMenuContributionRule;
+import org.exbin.framework.menu.api.MenuContribution;
+import org.exbin.framework.menu.api.MenuManagement;
+import org.exbin.framework.menu.api.PositionMenuContributionRule;
+import org.exbin.framework.menu.api.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 
 /**
@@ -64,7 +62,7 @@ public class AboutModule implements AboutModuleApi {
 
     @Override
     public void registerDefaultMenuItem() {
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         boolean aboutActionRegistered = false;
 
@@ -81,10 +79,10 @@ public class AboutModule implements AboutModuleApi {
             aboutActionRegistered = true;
         }
 
-        MenuManagement mgmt = actionModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.HELP_MENU_ID, HELP_ABOUT_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMode.BOTTOM_LAST));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(aboutActionRegistered ? SeparationMode.NONE : SeparationMode.ABOVE));
+        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM_LAST));
+        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(aboutActionRegistered ? SeparationMenuContributionRule.SeparationMode.NONE : SeparationMenuContributionRule.SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
             contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, createAboutAction());
             mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(HELP_ABOUT_MENU_GROUP_ID));

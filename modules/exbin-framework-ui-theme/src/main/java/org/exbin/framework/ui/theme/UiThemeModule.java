@@ -25,7 +25,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.NextToMode;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.GroupOptionsPageRule;
@@ -200,7 +199,7 @@ public class UiThemeModule implements UiThemeModuleApi {
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
         optionsPageManagement.registerPage(themeOptionsPage);
         optionsPageManagement.registerPageRule(themeOptionsPage, new GroupOptionsPageRule("appearance"));
-        optionsPageManagement.registerPageRule(themeOptionsPage, new RelativeOptionsPageRule(NextToMode.AFTER, "language"));
+        optionsPageManagement.registerPageRule(themeOptionsPage, new RelativeOptionsPageRule(RelativeOptionsPageRule.NextToMode.AFTER, "language"));
     }
 
     @Nonnull
