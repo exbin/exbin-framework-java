@@ -76,7 +76,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     @Override
     public void registerDefaultMenuItem() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, getCheckUpdateAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE_LAST));
     }

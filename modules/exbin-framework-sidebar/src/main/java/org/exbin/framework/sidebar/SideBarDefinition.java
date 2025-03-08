@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.toolbar.api.toolbar.ToolBarContribution;
-import org.exbin.framework.toolbar.api.toolbar.ToolBarContributionRule;
+import org.exbin.framework.sidebar.api.SideBarContribution;
+import org.exbin.framework.sidebar.api.SideBarContributionRule;
 
 /**
  * Sidebar definition.
@@ -33,28 +33,28 @@ import org.exbin.framework.toolbar.api.toolbar.ToolBarContributionRule;
 public class SideBarDefinition {
 
     private final String pluginId;
-    private List<ToolBarContribution> contributions = new ArrayList<>();
-    private Map<ToolBarContribution, List<ToolBarContributionRule>> rules = new HashMap<>();
+    private List<SideBarContribution> contributions = new ArrayList<>();
+    private Map<SideBarContribution, List<SideBarContributionRule>> rules = new HashMap<>();
 
     public SideBarDefinition(String pluginId) {
         this.pluginId = pluginId;
     }
 
     @Nonnull
-    public List<ToolBarContribution> getContributions() {
+    public List<SideBarContribution> getContributions() {
         return contributions;
     }
 
-    public void setContributions(List<ToolBarContribution> contributions) {
+    public void setContributions(List<SideBarContribution> contributions) {
         this.contributions = contributions;
     }
 
     @Nonnull
-    public Map<ToolBarContribution, List<ToolBarContributionRule>> getRules() {
+    public Map<SideBarContribution, List<SideBarContributionRule>> getRules() {
         return rules;
     }
 
-    public void setRules(Map<ToolBarContribution, List<ToolBarContributionRule>> rules) {
+    public void setRules(Map<SideBarContribution, List<SideBarContributionRule>> rules) {
         this.rules = rules;
     }
 }

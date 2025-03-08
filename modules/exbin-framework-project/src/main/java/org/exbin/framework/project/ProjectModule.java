@@ -108,7 +108,7 @@ public class ProjectModule implements ProjectModuleApi {
     @Override
     public void registerMenuFileHandlingActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(FrameModuleApi.MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(FrameModuleApi.MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuGroup(PROJECT_MENU_ID, PROJECT_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(PROJECT_MENU_ID, getNewProjectAction());

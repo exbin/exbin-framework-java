@@ -38,13 +38,13 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.toolbar.api.ActionToolBarContribution;
-import org.exbin.framework.toolbar.api.toolbar.ToolBarContribution;
-import org.exbin.framework.toolbar.api.toolbar.GroupToolBarContribution;
-import org.exbin.framework.toolbar.api.toolbar.GroupToolBarContributionRule;
-import org.exbin.framework.toolbar.api.toolbar.PositionToolBarContributionRule;
-import org.exbin.framework.toolbar.api.toolbar.SeparationToolBarContributionRule;
-import org.exbin.framework.toolbar.api.toolbar.ToolBarContributionRule;
+import org.exbin.framework.sidebar.api.ActionSideBarContribution;
+import org.exbin.framework.sidebar.api.SideBarContribution;
+import org.exbin.framework.sidebar.api.GroupSideBarContribution;
+import org.exbin.framework.sidebar.api.GroupSideBarContributionRule;
+import org.exbin.framework.sidebar.api.PositionSideBarContributionRule;
+import org.exbin.framework.sidebar.api.SeparationSideBarContributionRule;
+import org.exbin.framework.sidebar.api.SideBarContributionRule;
 import org.exbin.framework.utils.ObjectUtils;
 import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionType;
@@ -75,45 +75,45 @@ public class SideBarManager {
     public SideBarManager() {
     }
 
-    // TODO support for multiple frames / toolbars
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
-        SideBarDefinition toolBarDef = sideBars.get(toolBarId);
+    // TODO support for multiple frames / sidebars
+    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextService activationUpdateService) {
+        SideBarDefinition sideBarDef = sideBars.get(sideBarId);
 
-        if (toolBarDef == null) {
+        if (sideBarDef == null) {
             return;
         }
 
-        List<ToolBarGroupRecord> groupRecords = new LinkedList<>();
+        List<SideBarGroupRecord> groupRecords = new LinkedList<>();
 
         // Create list of build-in groups
-        Map<String, ToolBarGroupRecord> groupsMap = new HashMap<>();
-        for (PositionToolBarContributionRule.PositionMode mode : PositionToolBarContributionRule.PositionMode.values()) {
-            ToolBarGroupRecord toolBarGroupRecord = new ToolBarGroupRecord(mode.name());
-            groupsMap.put(mode.name(), toolBarGroupRecord);
-            groupRecords.add(toolBarGroupRecord);
+        Map<String, SideBarGroupRecord> groupsMap = new HashMap<>();
+        for (PositionSideBarContributionRule.PositionMode mode : PositionSideBarContributionRule.PositionMode.values()) {
+            SideBarGroupRecord sideBarGroupRecord = new SideBarGroupRecord(mode.name());
+            groupsMap.put(mode.name(), sideBarGroupRecord);
+            groupRecords.add(sideBarGroupRecord);
         }
 
         // Build full tree of groups
-        for (ToolBarContribution contribution : toolBarDef.getContributions()) {
-            if (!(contribution instanceof GroupToolBarContribution)) {
+        for (SideBarContribution contribution : sideBarDef.getContributions()) {
+            if (!(contribution instanceof GroupSideBarContribution)) {
                 continue;
             }
-            String groupId = ((GroupToolBarContribution) contribution).getGroupId();
-            SeparationToolBarContributionRule.SeparationMode separationMode = getSeparationMode(toolBarId, contribution);
-            String parentGroupId = getParentGroup(toolBarId, contribution);
+            String groupId = ((GroupSideBarContribution) contribution).getGroupId();
+            SeparationSideBarContributionRule.SeparationMode separationMode = getSeparationMode(sideBarId, contribution);
+            String parentGroupId = getParentGroup(sideBarId, contribution);
             if (parentGroupId != null) {
-                ToolBarGroupRecord groupRecord = groupsMap.get(parentGroupId);
-                ToolBarGroupRecord menuGroupRecord = new ToolBarGroupRecord(groupId);
+                SideBarGroupRecord groupRecord = groupsMap.get(parentGroupId);
+                SideBarGroupRecord menuGroupRecord = new SideBarGroupRecord(groupId);
                 menuGroupRecord.separationMode = separationMode;
                 groupRecord.subGroups.add(menuGroupRecord);
                 groupsMap.put(groupId, menuGroupRecord);
             } else {
-                PositionToolBarContributionRule.PositionMode positionMode = getPositionMode(toolBarId, contribution);
+                PositionSideBarContributionRule.PositionMode positionMode = getPositionMode(sideBarId, contribution);
                 if (positionMode == null) {
-                    positionMode = PositionToolBarContributionRule.PositionMode.DEFAULT;
+                    positionMode = PositionSideBarContributionRule.PositionMode.DEFAULT;
                 }
-                ToolBarGroupRecord groupRecord = groupsMap.get(positionMode.name());
-                ToolBarGroupRecord menuGroupRecord = new ToolBarGroupRecord(groupId);
+                SideBarGroupRecord groupRecord = groupsMap.get(positionMode.name());
+                SideBarGroupRecord menuGroupRecord = new SideBarGroupRecord(groupId);
                 menuGroupRecord.separationMode = separationMode;
                 groupRecord.subGroups.add(menuGroupRecord);
                 groupsMap.put(groupId, menuGroupRecord);
@@ -121,87 +121,87 @@ public class SideBarManager {
         }
 
         // Go thru all contributions and link them to its target group
-        for (ToolBarContribution contribution : toolBarDef.getContributions()) {
-            if (contribution instanceof GroupToolBarContribution) {
+        for (SideBarContribution contribution : sideBarDef.getContributions()) {
+            if (contribution instanceof GroupSideBarContribution) {
                 continue;
             }
-            PositionToolBarContributionRule.PositionMode positionMode = getPositionMode(toolBarId, contribution);
-            String parentGroupId = getParentGroup(toolBarId, contribution);
+            PositionSideBarContributionRule.PositionMode positionMode = getPositionMode(sideBarId, contribution);
+            String parentGroupId = getParentGroup(sideBarId, contribution);
             if (positionMode != null) {
-                ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(positionMode.name());
-                toolBarGroupRecord.contributions.add(contribution);
+                SideBarGroupRecord sideBarGroupRecord = groupsMap.get(positionMode.name());
+                sideBarGroupRecord.contributions.add(contribution);
             } else {
                 if (parentGroupId != null) {
-                    ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(parentGroupId);
-                    toolBarGroupRecord.contributions.add(contribution);
+                    SideBarGroupRecord sideBarGroupRecord = groupsMap.get(parentGroupId);
+                    sideBarGroupRecord.contributions.add(contribution);
                 } else {
-                    ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(PositionToolBarContributionRule.PositionMode.DEFAULT.name());
-                    toolBarGroupRecord.contributions.add(contribution);
+                    SideBarGroupRecord sideBarGroupRecord = groupsMap.get(PositionSideBarContributionRule.PositionMode.DEFAULT.name());
+                    sideBarGroupRecord.contributions.add(contribution);
                 }
             }
         }
 
-        processToolBarGroup(groupRecords, targetToolBar, activationUpdateService);
+        processSideBarGroup(groupRecords, targetSideBar, activationUpdateService);
     }
 
-    private void processToolBarGroup(List<ToolBarGroupRecord> groups, JToolBar targetToolBar, ActionContextService activationUpdateService) {
-        List<ToolBarGroupRecordPathNode> processingPath = new LinkedList<>();
-        processingPath.add(new ToolBarGroupRecordPathNode(groups));
+    private void processSideBarGroup(List<SideBarGroupRecord> groups, JToolBar targetSideBar, ActionContextService activationUpdateService) {
+        List<SideBarGroupRecordPathNode> processingPath = new LinkedList<>();
+        processingPath.add(new SideBarGroupRecordPathNode(groups));
 
         boolean separatorQueued = false;
-        boolean toolBarContinues = false;
+        boolean sideBarContinues = false;
 
         while (!processingPath.isEmpty()) {
-            ToolBarGroupRecordPathNode pathNode = processingPath.get(processingPath.size() - 1);
+            SideBarGroupRecordPathNode pathNode = processingPath.get(processingPath.size() - 1);
             if (pathNode.childIndex == pathNode.records.size()) {
                 processingPath.remove(processingPath.size() - 1);
                 continue;
             }
 
-            ToolBarGroupRecord groupRecord = pathNode.records.get(pathNode.childIndex);
+            SideBarGroupRecord groupRecord = pathNode.records.get(pathNode.childIndex);
             pathNode.childIndex++;
 
-            if ((groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND) && toolBarContinues) {
-                addToolbarSeparator(targetToolBar);
+            if ((groupRecord.separationMode == SeparationSideBarContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationSideBarContributionRule.SeparationMode.AROUND) && sideBarContinues) {
+                addSideBarSeparator(targetSideBar);
                 separatorQueued = false;
             }
 
-            for (ToolBarContribution contribution : groupRecord.contributions) {
+            for (SideBarContribution contribution : groupRecord.contributions) {
                 if (separatorQueued) {
-                    addToolbarSeparator(targetToolBar);
+                    addSideBarSeparator(targetSideBar);
                     separatorQueued = false;
                 }
 
-                if (contribution instanceof ActionToolBarContribution) {
-                    Action action = ((ActionToolBarContribution) contribution).getAction();
-                    JComponent toolBarItem = createToolBarComponent(action);
-                    targetToolBar.add(toolBarItem);
-                    finishToolbarAction(action, activationUpdateService);
+                if (contribution instanceof ActionSideBarContribution) {
+                    Action action = ((ActionSideBarContribution) contribution).getAction();
+                    JComponent sideBarItem = createSideBarComponent(action);
+                    targetSideBar.add(sideBarItem);
+                    finishSideBarAction(action, activationUpdateService);
                 }
 
-                toolBarContinues = true;
+                sideBarContinues = true;
             }
 
-            if (groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND || groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.BELOW) {
+            if (groupRecord.separationMode == SeparationSideBarContributionRule.SeparationMode.AROUND || groupRecord.separationMode == SeparationSideBarContributionRule.SeparationMode.BELOW) {
                 separatorQueued = true;
             }
 
             if (!groupRecord.subGroups.isEmpty()) {
-                processingPath.add(new ToolBarGroupRecordPathNode(groupRecord.subGroups));
+                processingPath.add(new SideBarGroupRecordPathNode(groupRecord.subGroups));
             }
         }
     }
 
     @Nonnull
-    private static JComponent createToolBarComponent(Action action) {
+    private static JComponent createSideBarComponent(Action action) {
         if (SwingUtilities.isEventDispatchThread()) {
-            return createToolBarComponentInt(action);
+            return createSideBarComponentInt(action);
         }
 
         final JComponent[] result = new JComponent[1];
         try {
             SwingUtilities.invokeAndWait(() -> {
-                result[0] = createToolBarComponentInt(action);
+                result[0] = createSideBarComponentInt(action);
             });
         } catch (InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(SideBarManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -210,9 +210,9 @@ public class SideBarManager {
     }
 
     @Nonnull
-    private static JComponent createToolBarComponentInt(Action action) {
+    private static JComponent createSideBarComponentInt(Action action) {
         ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
-        JComponent toolBarItem;
+        JComponent sideBarItem;
         if (actionType != null) {
             switch (actionType) {
                 case CHECK: {
@@ -221,13 +221,13 @@ public class SideBarManager {
                         newItem.setFocusable(false);
                         newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                         newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                        toolBarItem = newItem;
+                        sideBarItem = newItem;
                     } else {
                         JCheckBox newItem = new JCheckBox(action);
                         newItem.setFocusable(false);
                         newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                         newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                        toolBarItem = newItem;
+                        sideBarItem = newItem;
                     }
 
                     break;
@@ -237,7 +237,7 @@ public class SideBarManager {
                     newItem.setFocusable(false);
                     newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
                     newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-                    toolBarItem = newItem;
+                    sideBarItem = newItem;
                     break;
                 }
                 case CYCLE: {
@@ -247,28 +247,28 @@ public class SideBarManager {
 //                    action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
 //                        dropDown.setActionText((String) action.getValue(Action.NAME));
 //                    });
-//                    // createDefaultToolBarItem(action);
-//                    toolBarItem = dropDown;
-                    toolBarItem = null;
+//                    // createDefaultSideBarItem(action);
+//                    sideBarItem = dropDown;
+                    sideBarItem = null;
                     break;
                 }
                 default: {
-                    toolBarItem = createDefaultToolBarItem(action);
+                    sideBarItem = createDefaultSideBarItem(action);
                 }
             }
         } else {
-            toolBarItem = createDefaultToolBarItem(action);
+            sideBarItem = createDefaultSideBarItem(action);
         }
-        return toolBarItem;
+        return sideBarItem;
     }
 
-    private static void addToolbarSeparator(JToolBar targetToolBar) {
+    private static void addSideBarSeparator(JToolBar targetSideBar) {
         if (SwingUtilities.isEventDispatchThread()) {
-            targetToolBar.addSeparator();
+            targetSideBar.addSeparator();
         } else {
             try {
                 SwingUtilities.invokeAndWait(() -> {
-                    targetToolBar.addSeparator();
+                    targetSideBar.addSeparator();
                 });
             } catch (InterruptedException | InvocationTargetException ex) {
                 Logger.getLogger(SideBarManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -277,7 +277,7 @@ public class SideBarManager {
     }
 
     @Nonnull
-    private static JComponent createDefaultToolBarItem(Action action) {
+    private static JComponent createDefaultSideBarItem(Action action) {
         JButton newItem = new JButton(action);
         newItem.setFocusable(false);
         newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -285,54 +285,54 @@ public class SideBarManager {
         return newItem;
     }
 
-    public void finishToolbarAction(Action action, ActionContextService activationUpdateService) {
+    public void finishSideBarAction(Action action, ActionContextService activationUpdateService) {
         if (action != null) {
             activationUpdateService.requestUpdate(action);
         }
     }
 
-    public void registerToolBar(String toolBarId, String pluginId) {
-        ObjectUtils.requireNonNull(toolBarId);
+    public void registerSideBar(String sideBarId, String pluginId) {
+        ObjectUtils.requireNonNull(sideBarId);
         ObjectUtils.requireNonNull(pluginId);
 
-        SideBarDefinition toolBar = sideBars.get(toolBarId);
-        if (toolBar != null) {
-            throw new IllegalStateException("Tool bar with Id " + toolBarId + " already exists.");
+        SideBarDefinition sideBar = sideBars.get(sideBarId);
+        if (sideBar != null) {
+            throw new IllegalStateException("Tool bar with Id " + sideBarId + " already exists.");
         }
 
-        SideBarDefinition toolBarDefinition = new SideBarDefinition(pluginId);
-        sideBars.put(toolBarId, toolBarDefinition);
+        SideBarDefinition sideBarDefinition = new SideBarDefinition(pluginId);
+        sideBars.put(sideBarId, sideBarDefinition);
     }
 
     @Nonnull
-    public ToolBarContribution registerToolBarItem(String toolBarId, String pluginId, Action action) {
-        SideBarDefinition toolBarDef = sideBars.get(toolBarId);
-        if (toolBarDef == null) {
-            throw new IllegalStateException("Tool bar with Id " + toolBarId + " doesn't exist");
+    public SideBarContribution registerSideBarItem(String sideBarId, String pluginId, Action action) {
+        SideBarDefinition sideBarDef = sideBars.get(sideBarId);
+        if (sideBarDef == null) {
+            throw new IllegalStateException("Tool bar with Id " + sideBarId + " doesn't exist");
         }
 
-        ActionToolBarContribution toolBarContribution = new ActionToolBarContribution(action);
-        toolBarDef.getContributions().add(toolBarContribution);
-        return toolBarContribution;
+        ActionSideBarContribution sideBarContribution = new ActionSideBarContribution(action);
+        sideBarDef.getContributions().add(sideBarContribution);
+        return sideBarContribution;
     }
 
     @Nonnull
-    public ToolBarContribution registerToolBarGroup(String toolBarId, String pluginId, String groupId) {
-        SideBarDefinition toolBarDef = sideBars.get(toolBarId);
-        if (toolBarDef == null) {
-            throw new IllegalStateException("Tool bar with Id " + toolBarId + " doesn't exist");
+    public SideBarContribution registerSideBarGroup(String sideBarId, String pluginId, String groupId) {
+        SideBarDefinition sideBarDef = sideBars.get(sideBarId);
+        if (sideBarDef == null) {
+            throw new IllegalStateException("Tool bar with Id " + sideBarId + " doesn't exist");
         }
 
-        GroupToolBarContribution groupContribution = new GroupToolBarContribution(groupId);
-        toolBarDef.getContributions().add(groupContribution);
+        GroupSideBarContribution groupContribution = new GroupSideBarContribution(groupId);
+        sideBarDef.getContributions().add(groupContribution);
         return groupContribution;
     }
 
-    public void registerToolBarRule(ToolBarContribution contribution, ToolBarContributionRule rule) {
+    public void registerSideBarRule(SideBarContribution contribution, SideBarContributionRule rule) {
         SideBarDefinition match = null;
-        for (SideBarDefinition toolBarDef : sideBars.values()) {
-            if (toolBarDef.getContributions().contains(contribution)) {
-                match = toolBarDef;
+        for (SideBarDefinition sideBarDef : sideBars.values()) {
+            if (sideBarDef.getContributions().contains(contribution)) {
+                match = sideBarDef;
                 break;
             }
         }
@@ -340,7 +340,7 @@ public class SideBarManager {
             throw new IllegalStateException("Invalid tool bar contribution rule");
         }
 
-        List<ToolBarContributionRule> rules = match.getRules().get(contribution);
+        List<SideBarContributionRule> rules = match.getRules().get(contribution);
         if (rules == null) {
             rules = new ArrayList<>();
             match.getRules().put(contribution, rules);
@@ -349,12 +349,12 @@ public class SideBarManager {
     }
 
     @Nullable
-    private GroupToolBarContribution getGroup(String toolBarId, String groupId) {
-        SideBarDefinition toolBarDefinition = sideBars.get(toolBarId);
-        for (ToolBarContribution contribution : toolBarDefinition.getContributions()) {
-            if (contribution instanceof GroupToolBarContribution) {
-                if (((GroupToolBarContribution) contribution).getGroupId().equals(groupId)) {
-                    return (GroupToolBarContribution) contribution;
+    private GroupSideBarContribution getGroup(String sideBarId, String groupId) {
+        SideBarDefinition sideBarDefinition = sideBars.get(sideBarId);
+        for (SideBarContribution contribution : sideBarDefinition.getContributions()) {
+            if (contribution instanceof GroupSideBarContribution) {
+                if (((GroupSideBarContribution) contribution).getGroupId().equals(groupId)) {
+                    return (GroupSideBarContribution) contribution;
                 }
             }
         }
@@ -362,45 +362,45 @@ public class SideBarManager {
     }
 
     @Nullable
-    private SeparationToolBarContributionRule.SeparationMode getSeparationMode(String toolBarId, ToolBarContribution contribution) {
-        SideBarDefinition toolBarDefinition = sideBars.get(toolBarId);
-        List<ToolBarContributionRule> rules = toolBarDefinition.getRules().get(contribution);
+    private SeparationSideBarContributionRule.SeparationMode getSeparationMode(String sideBarId, SideBarContribution contribution) {
+        SideBarDefinition sideBarDefinition = sideBars.get(sideBarId);
+        List<SideBarContributionRule> rules = sideBarDefinition.getRules().get(contribution);
         if (rules == null) {
             return null;
         }
-        for (ToolBarContributionRule rule : rules) {
-            if (rule instanceof SeparationToolBarContributionRule) {
-                return ((SeparationToolBarContributionRule) rule).getSeparationMode();
+        for (SideBarContributionRule rule : rules) {
+            if (rule instanceof SeparationSideBarContributionRule) {
+                return ((SeparationSideBarContributionRule) rule).getSeparationMode();
             }
         }
         return null;
     }
 
     @Nullable
-    private PositionToolBarContributionRule.PositionMode getPositionMode(String toolBarId, ToolBarContribution contribution) {
-        SideBarDefinition toolBarDefinition = sideBars.get(toolBarId);
-        List<ToolBarContributionRule> rules = toolBarDefinition.getRules().get(contribution);
+    private PositionSideBarContributionRule.PositionMode getPositionMode(String sideBarId, SideBarContribution contribution) {
+        SideBarDefinition sideBarDefinition = sideBars.get(sideBarId);
+        List<SideBarContributionRule> rules = sideBarDefinition.getRules().get(contribution);
         if (rules == null) {
             return null;
         }
-        for (ToolBarContributionRule rule : rules) {
-            if (rule instanceof PositionToolBarContributionRule) {
-                return ((PositionToolBarContributionRule) rule).getPositionMode();
+        for (SideBarContributionRule rule : rules) {
+            if (rule instanceof PositionSideBarContributionRule) {
+                return ((PositionSideBarContributionRule) rule).getPositionMode();
             }
         }
         return null;
     }
 
     @Nullable
-    private String getParentGroup(String toolBarId, ToolBarContribution contribution) {
-        SideBarDefinition menuDefinition = sideBars.get(toolBarId);
-        List<ToolBarContributionRule> rules = menuDefinition.getRules().get(contribution);
+    private String getParentGroup(String sideBarId, SideBarContribution contribution) {
+        SideBarDefinition menuDefinition = sideBars.get(sideBarId);
+        List<SideBarContributionRule> rules = menuDefinition.getRules().get(contribution);
         if (rules == null) {
             return null;
         }
-        for (ToolBarContributionRule rule : rules) {
-            if (rule instanceof GroupToolBarContributionRule) {
-                return ((GroupToolBarContributionRule) rule).getGroupId();
+        for (SideBarContributionRule rule : rules) {
+            if (rule instanceof GroupSideBarContributionRule) {
+                return ((GroupSideBarContributionRule) rule).getGroupId();
             }
         }
         return null;
@@ -409,10 +409,10 @@ public class SideBarManager {
     @Nonnull
     public List<Action> getAllManagedActions() {
         List<Action> actions = new ArrayList<>();
-        for (SideBarDefinition toolBarDef : sideBars.values()) {
-            for (ToolBarContribution contribution : toolBarDef.getContributions()) {
-                if (contribution instanceof ActionToolBarContribution) {
-                    actions.add(((ActionToolBarContribution) contribution).getAction());
+        for (SideBarDefinition sideBarDef : sideBars.values()) {
+            for (SideBarContribution contribution : sideBarDef.getContributions()) {
+                if (contribution instanceof ActionSideBarContribution) {
+                    actions.add(((ActionSideBarContribution) contribution).getAction());
                 }
             }
         }
@@ -420,30 +420,30 @@ public class SideBarManager {
     }
 
     @ParametersAreNonnullByDefault
-    private class ToolBarGroupRecord {
+    private class SideBarGroupRecord {
 
         String groupId;
-        SeparationToolBarContributionRule.SeparationMode separationMode;
-        List<ToolBarGroupRecord> subGroups = new LinkedList<>();
-        List<ToolBarContribution> contributions = new LinkedList<>();
+        SeparationSideBarContributionRule.SeparationMode separationMode;
+        List<SideBarGroupRecord> subGroups = new LinkedList<>();
+        List<SideBarContribution> contributions = new LinkedList<>();
 
-        public ToolBarGroupRecord(String groupId) {
+        public SideBarGroupRecord(String groupId) {
             this.groupId = groupId;
         }
 
-        public ToolBarGroupRecord(String groupId, SeparationToolBarContributionRule.SeparationMode separationMode) {
+        public SideBarGroupRecord(String groupId, SeparationSideBarContributionRule.SeparationMode separationMode) {
             this(groupId);
             this.separationMode = separationMode;
         }
     }
 
     @ParametersAreNonnullByDefault
-    private class ToolBarGroupRecordPathNode {
+    private class SideBarGroupRecordPathNode {
 
-        List<ToolBarGroupRecord> records;
+        List<SideBarGroupRecord> records;
         int childIndex;
 
-        public ToolBarGroupRecordPathNode(List<ToolBarGroupRecord> records) {
+        public SideBarGroupRecordPathNode(List<SideBarGroupRecord> records) {
             this.records = records;
         }
     }

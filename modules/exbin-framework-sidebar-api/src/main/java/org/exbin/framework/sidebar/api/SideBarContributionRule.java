@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api.toolbar;
+package org.exbin.framework.sidebar.api;
 
 /**
- * Interface for tool bar contributions rule.
+ * Interface for side bar contributions rule.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ToolBarContributionRule {
+public interface SideBarContributionRule {
 }

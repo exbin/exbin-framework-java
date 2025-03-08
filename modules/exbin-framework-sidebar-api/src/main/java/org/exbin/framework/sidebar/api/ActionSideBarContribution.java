@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api.toolbar;
+package org.exbin.framework.sidebar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
+import javax.swing.Action;
 
 /**
- * Toolbar contribution rule for items group.
+ * Record for action as side bar contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-@Immutable
-public class GroupToolBarContributionRule implements ToolBarContributionRule {
+public class ActionSideBarContribution implements SideBarContribution {
 
-    private final String groupId;
+    private final Action action;
 
-    public GroupToolBarContributionRule(String groupId) {
-        this.groupId = groupId;
+    public ActionSideBarContribution(Action action) {
+        this.action = action;
     }
 
     @Nonnull
-    public String getGroupId() {
-        return groupId;
+    public Action getAction() {
+        return action;
     }
 }

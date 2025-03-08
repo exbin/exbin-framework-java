@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.toolbar.api.ToolBarModuleApi</api>
-  <name>Tool Bar Support API</name>
+  <api>org.exbin.framework.sidebar.api.SideBarModuleApi</api>
+  <name>Side Bar Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Support for action handling</description>

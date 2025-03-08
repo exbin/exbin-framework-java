@@ -24,9 +24,12 @@ import org.exbin.framework.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.action.api.ActionContextService;
 
 /**
  * Interface for menu support module.
@@ -65,7 +68,35 @@ public interface MenuModuleApi extends Module {
      * @return menu management interface
      */
     @Nonnull
-    MenuManagement getMenuManagement(String moduleId);
+    MenuManagement getMainMenuManagement(String moduleId);
+
+    /**
+     * Returns menu management interface.
+     *
+     * @param menuId menu id
+     * @param moduleId module id
+     * @return menu management interface
+     */
+    @Nonnull
+    MenuManagement getMenuManagement(String menuId, String moduleId);
+
+    /**
+     * Returns menu using given identificator.
+     *
+     * @param targetMenu target menu
+     * @param menuId menu identificator
+     * @param actionContextService action context service
+     */
+    void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService actionContextService);
+
+    /**
+     * Returns menu using given identificator.
+     *
+     * @param targetMenuBar target menu bar
+     * @param menuId menu identificator
+     * @param actionContextService action context service
+     */
+    void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService actionContextService);
 
     /**
      * Returns clipboard/editing actions.

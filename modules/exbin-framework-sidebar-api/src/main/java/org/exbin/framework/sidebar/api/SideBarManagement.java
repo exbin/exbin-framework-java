@@ -13,52 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api;
+package org.exbin.framework.sidebar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
- * Interface for registered tool bars management.
+ * Interface for registered side bars management.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ToolBarManagement {
+public interface SideBarManagement {
 
     /**
-     * Registers tool bar associating it with given identificator.
+     * Registers side bar associating it with given identificator.
      *
-     * @param toolBarId toolbar id
+     * @param sideBarId sidebar id
      */
-    void registerToolBar(String toolBarId);
+    void registerSideBar(String sideBarId);
 
     /**
-     * Registers item as a child item for given tool bar.
+     * Registers item as a child item for given side bar.
      *
-     * @param toolBarId toolbar id
+     * @param sideBarId sidebar id
      * @param action action
-     * @return toolbar contribution
+     * @return sidebar contribution
      */
     @Nonnull
-    ToolBarContribution registerToolBarItem(String toolBarId, Action action);
+    SideBarContribution registerSideBarItem(String sideBarId, Action action);
 
     /**
-     * Registers group as a child item for given tool bar.
+     * Registers group as a child item for given side bar.
      *
-     * @param toolBarId toolbar id
+     * @param sideBarId sidebar id
      * @param groupId group id
-     * @return toolbar contribution
+     * @return sidebar contribution
      */
     @Nonnull
-    ToolBarContribution registerToolBarGroup(String toolBarId, String groupId);
+    SideBarContribution registerSideBarGroup(String sideBarId, String groupId);
 
     /**
-     * Registers tool bar contribution rule.
+     * Registers side bar contribution rule.
      *
-     * @param toolBarContribution tool bar contribution
-     * @param rule tool bar contribution rule
+     * @param sideBarContribution side bar contribution
+     * @param rule side bar contribution rule
      */
-    void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule);
+    void registerSideBarRule(SideBarContribution sideBarContribution, SideBarContributionRule rule);
 }

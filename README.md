@@ -10,6 +10,7 @@ Structure
 
 Project is constructed from multiple repositories.
 
+  * core - Sources split in separate core modules
   * modules - Sources split in separate modules
   * src - Sources related to building distribution packages
   * deps - Folder for downloading libraries for dependency resolution
@@ -33,10 +34,6 @@ Alternative is to have all dependecy modules stored in local maven repository:
 
     git clone https://github.com/exbin/exbin-auxiliary-java.git
     cd exbin-auxiliary-java
-    gradlew build publish
-    cd ..
-    git clone https://github.com/exbin/bined-lib-java.git
-    cd bined-lib-java
     gradlew build publish
     cd ..
 

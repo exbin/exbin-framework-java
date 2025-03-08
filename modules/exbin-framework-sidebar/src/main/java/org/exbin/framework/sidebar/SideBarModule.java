@@ -23,22 +23,22 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
-import org.exbin.framework.toolbar.api.toolbar.ToolBarContribution;
-import org.exbin.framework.toolbar.api.toolbar.ToolBarContributionRule;
-import org.exbin.framework.toolbar.api.toolbar.ToolBarManagement;
+import org.exbin.framework.sidebar.api.SideBarContribution;
+import org.exbin.framework.sidebar.api.SideBarContributionRule;
+import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionContextService;
-import org.exbin.framework.toolbar.api.SideBarModuleApi;
+import org.exbin.framework.sidebar.api.SideBarModuleApi;
 
 /**
- * Implementation of tool bar module.
+ * Implementation of side bar module.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SideBarModule implements SideBarModuleApi {
 
-    private SideBarManager toolBarManager = null;
+    private SideBarManager sideBarManager = null;
     private ResourceBundle resourceBundle;
 
     public SideBarModule() {
@@ -64,69 +64,69 @@ public class SideBarModule implements SideBarModuleApi {
 
     @Nonnull
     @Override
-    public List<Action> getToolBarManagedActions() {
+    public List<Action> getSideBarManagedActions() {
         List<Action> actions = new ArrayList<>();
-        getToolBarManager();
-        actions.addAll(toolBarManager.getAllManagedActions());
+        getSideBarManager();
+        actions.addAll(sideBarManager.getAllManagedActions());
 
         return actions;
     }
 
     @Nonnull
-    private SideBarManager getToolBarManager() {
-        if (toolBarManager == null) {
-            toolBarManager = new SideBarManager();
+    private SideBarManager getSideBarManager() {
+        if (sideBarManager == null) {
+            sideBarManager = new SideBarManager();
         }
 
-        return toolBarManager;
+        return sideBarManager;
+    }
+
+    @Override
+    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextService activationUpdateService) {
+        getSideBarManager().buildSideBar(targetSideBar, sideBarId, activationUpdateService);
     }
 
     @Nonnull
     @Override
-    public ToolBarManagement getToolBarManagement(String moduleId) {
-        return new ToolBarManagement() {
+    public SideBarManagement getSideBarManagement(String moduleId) {
+        return new SideBarManagement() {
             @Override
-            public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
-                getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
-            }
-
-            @Override
-            public void registerToolBar(String toolBarId) {
-                getToolBarManager().registerToolBar(toolBarId, moduleId);
+            public void registerSideBar(String sideBarId) {
+                getSideBarManager().registerSideBar(sideBarId, moduleId);
             }
 
             @Nonnull
             @Override
-            public ToolBarContribution registerToolBarItem(String toolBarId, Action action) {
-                return getToolBarManager().registerToolBarItem(toolBarId, moduleId, action);
+            public SideBarContribution registerSideBarItem(String sideBarId, Action action) {
+                return getSideBarManager().registerSideBarItem(sideBarId, moduleId, action);
             }
 
             @Nonnull
             @Override
-            public ToolBarContribution registerToolBarGroup(String toolBarId, String groupId) {
-                return getToolBarManager().registerToolBarGroup(toolBarId, moduleId, groupId);
+            public SideBarContribution registerSideBarGroup(String sideBarId, String groupId) {
+                return getSideBarManager().registerSideBarGroup(sideBarId, moduleId, groupId);
             }
 
             @Override
-            public void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule) {
-                getToolBarManager().registerToolBarRule(toolBarContribution, rule);
+            public void registerSideBarRule(SideBarContribution sideBarContribution, SideBarContributionRule rule) {
+                getSideBarManager().registerSideBarRule(sideBarContribution, rule);
             }
         };
     }
 
     @Override
-    public void registerToolBarClipboardActions() {
-/*        getClipboardActions();
+    public void registerSideBarClipboardActions() {
+        /*        getClipboardActions();
         ToolBarManagement mgmt = getToolBarManagement(MODULE_ID);
-        ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
-        mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCutAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCopyAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createPasteAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createDeleteAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID)); */
+        ToolBarContribution contribution = mgmt.registerSideBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
+        mgmt.registerSideBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
+        contribution = mgmt.registerSideBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCutAction());
+        mgmt.registerSideBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerSideBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCopyAction());
+        mgmt.registerSideBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerSideBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createPasteAction());
+        mgmt.registerSideBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerSideBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createDeleteAction());
+        mgmt.registerSideBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID)); */
     }
 }

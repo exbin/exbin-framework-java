@@ -13,29 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api.toolbar;
+package org.exbin.framework.sidebar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Toolbar contribution rule for items group.
+ * Side bar contribution rule for items separation.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class GroupToolBarContribution implements ToolBarContribution {
+public class SeparationSideBarContributionRule implements SideBarContributionRule {
 
-    private final String groupId;
+    private final SeparationMode separationMode;
 
-    public GroupToolBarContribution(String groupId) {
-        this.groupId = groupId;
+    public SeparationSideBarContributionRule(SeparationMode separationMode) {
+        this.separationMode = separationMode;
     }
 
     @Nonnull
-    public String getGroupId() {
-        return groupId;
+    public SeparationMode getSeparationMode() {
+        return separationMode;
+    }
+
+    /**
+     * Enumeration of menu separator placement modes.
+     */
+    public enum SeparationMode {
+
+        NONE,
+        ABOVE,
+        /**
+         * Includes separator both above and below
+         */
+        AROUND,
+        BELOW
     }
 }

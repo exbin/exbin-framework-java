@@ -18,9 +18,6 @@ package org.exbin.framework.menu.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JMenuBar;
-import javax.swing.JPopupMenu;
-import org.exbin.framework.action.api.ActionContextService;
 
 /**
  * Interface for registered menus management.
@@ -29,24 +26,6 @@ import org.exbin.framework.action.api.ActionContextService;
  */
 @ParametersAreNonnullByDefault
 public interface MenuManagement {
-
-    /**
-     * Returns menu using given identificator.
-     *
-     * @param targetMenu target menu
-     * @param menuId menu identificator
-     * @param actionContextService action context service
-     */
-    void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService actionContextService);
-
-    /**
-     * Returns menu using given identificator.
-     *
-     * @param targetMenuBar target menu bar
-     * @param menuId menu identificator
-     * @param actionContextService action context service
-     */
-    void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService actionContextService);
 
     /**
      * Registers menu associating it with given identificator.

@@ -276,8 +276,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(FrameModuleApi.MODULE_ID);
-        mgmt.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID, new ActionContextService() {
+        menuModule.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID, new ActionContextService() {
             @Override
             public void registerListener(ComponentActivationListener listener) {
                 frameActionContextService.registerListener(listener);
@@ -300,8 +299,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainToolBar() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        ToolBarManagement mgmt = toolBarModule.getToolBarManagement(FrameModuleApi.MODULE_ID);
-        mgmt.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, new ActionContextService() {
+        toolBarModule.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, new ActionContextService() {
             @Override
             public void registerListener(ComponentActivationListener listener) {
                 frameActionContextService.registerListener(listener);

@@ -13,45 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api.toolbar;
+package org.exbin.framework.sidebar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Toolbar contribution rule for item relative position.
+ * Sidebar contribution rule for items group.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class RelativeToolBarContributionRule implements ToolBarContributionRule {
+public class GroupSideBarContribution implements SideBarContribution {
 
-    private final NextToMode nextToMode;
-    private final String toolbarContributionId;
+    private final String groupId;
 
-    public RelativeToolBarContributionRule(NextToMode nextToMode, String toolbarContributionId) {
-        this.nextToMode = nextToMode;
-        this.toolbarContributionId = toolbarContributionId;
+    public GroupSideBarContribution(String groupId) {
+        this.groupId = groupId;
     }
 
     @Nonnull
-    public NextToMode getNextToMode() {
-        return nextToMode;
-    }
-
-    @Nonnull
-    public String getToolbarContributionId() {
-        return toolbarContributionId;
-    }
-
-    /**
-     * Enumeration of menu next to modes.
-     */
-    public enum NextToMode {
-
-        BEFORE,
-        AFTER
+    public String getGroupId() {
+        return groupId;
     }
 }

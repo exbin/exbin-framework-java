@@ -107,7 +107,7 @@ public class FrameModule implements FrameModuleApi {
 
     private void initMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         mgmt.registerMenu(ActionConsts.MAIN_MENU_ID);
         mgmt.registerMenu(ActionConsts.FILE_MENU_ID);
         mgmt.registerMenu(ActionConsts.EDIT_MENU_ID);
@@ -132,7 +132,7 @@ public class FrameModule implements FrameModuleApi {
 
     private void initMainToolBar() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        ToolBarManagement mgmt = toolBarModule.getToolBarManagement(MODULE_ID);
+        ToolBarManagement mgmt = toolBarModule.getMainToolBarManagement(MODULE_ID);
         mgmt.registerToolBar(ActionConsts.MAIN_TOOL_BAR_ID);
     }
 
@@ -250,7 +250,7 @@ public class FrameModule implements FrameModuleApi {
             exitActionRegistered = true;
         }
 
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.FILE_MENU_ID, appClosingActionsGroup);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(exitActionRegistered ? SeparationMenuContributionRule.SeparationMode.NONE : SeparationMenuContributionRule.SeparationMode.ABOVE));
@@ -344,7 +344,7 @@ public class FrameModule implements FrameModuleApi {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.VIEW_MENU_ID, frameActions.getViewToolBarAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
         contribution = mgmt.registerMenuItem(ActionConsts.VIEW_MENU_ID, frameActions.getViewToolBarCaptionsAction());
@@ -356,14 +356,14 @@ public class FrameModule implements FrameModuleApi {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.VIEW_MENU_ID, frameActions.getViewStatusBarAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
     }
 
     private void createViewBarsMenuGroup() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         if (!mgmt.menuGroupExists(ActionConsts.VIEW_MENU_ID, VIEW_BARS_GROUP_ID)) {
             MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.VIEW_MENU_ID, VIEW_BARS_GROUP_ID);
             mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));

@@ -85,7 +85,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     private void init() {
         EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(EditorModule.MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(EditorModule.MODULE_ID);
         mgmt.registerMenu(FILE_CONTEXT_MENU_ID);
         MenuContribution contribution = mgmt.registerMenuItem(FILE_CONTEXT_MENU_ID, editorModule.createCloseFileAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
@@ -109,9 +109,8 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 ActionContextService actionContextService = frameModule.getFrameHandler().getActionContextService();
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-                MenuManagement mgmt = menuModule.getMenuManagement(EditorModule.MODULE_ID);
                 JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
-                mgmt.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, actionContextService);
+                menuModule.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, actionContextService);
                 fileContextPopupMenu.show(component, positionX, positionY);
                 // TODO dispose?
             }

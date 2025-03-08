@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api.toolbar;
+package org.exbin.framework.sidebar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Tool bar contribution rule for item position.
+ * Side bar contribution rule for item position.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class PositionToolBarContributionRule implements ToolBarContributionRule {
+public class PositionSideBarContributionRule implements SideBarContributionRule {
 
     private final PositionMode positionMode;
 
-    public PositionToolBarContributionRule(PositionMode positionMode) {
+    public PositionSideBarContributionRule(PositionMode positionMode) {
         this.positionMode = positionMode;
     }
 

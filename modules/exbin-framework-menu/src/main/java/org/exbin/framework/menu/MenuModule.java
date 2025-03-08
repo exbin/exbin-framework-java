@@ -43,8 +43,8 @@ import org.exbin.framework.menu.api.SeparationMenuContributionRule;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.menu.api.MenuItemProvider;
 import org.exbin.framework.menu.api.MenuModuleApi;
 
@@ -182,18 +182,8 @@ public class MenuModule implements MenuModuleApi {
 
     @Nonnull
     @Override
-    public MenuManagement getMenuManagement(String moduleId) {
+    public MenuManagement getMenuManagement(String menuId, String moduleId) {
         return new MenuManagement() {
-            @Override
-            public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService activationUpdateService) {
-                getMenuManager().buildMenu(targetMenu, menuId, activationUpdateService);
-            }
-
-            @Override
-            public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService activationUpdateService) {
-                getMenuManager().buildMenu(targetMenuBar, menuId, activationUpdateService);
-            }
-
             @Override
             public void registerMenu(String menuId) {
                 getMenuManager().registerMenu(menuId, moduleId);
@@ -246,6 +236,22 @@ public class MenuModule implements MenuModuleApi {
         };
     }
 
+    @Nonnull
+    @Override
+    public MenuManagement getMainMenuManagement(String moduleId) {
+        return getMenuManagement(ActionConsts.MAIN_MENU_ID, moduleId);
+    }
+
+    @Override
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService activationUpdateService) {
+        getMenuManager().buildMenu(targetMenu, menuId, activationUpdateService);
+    }
+
+    @Override
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService activationUpdateService) {
+        getMenuManager().buildMenu(targetMenuBar, menuId, activationUpdateService);
+    }
+
     @Override
     public void registerClipboardMenuItems(String menuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode) {
         registerClipboardMenuItems(getClipboardActions(), menuId, moduleId, separationMode);
@@ -253,7 +259,7 @@ public class MenuModule implements MenuModuleApi {
 
     @Override
     public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode) {
-        MenuManagement mgmt = getMenuManagement(moduleId);
+        MenuManagement mgmt = getMainMenuManagement(moduleId);
         MenuContribution contribution = mgmt.registerMenuGroup(menuId, CLIPBOARD_ACTIONS_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(separationMode));
@@ -295,7 +301,7 @@ public class MenuModule implements MenuModuleApi {
             private final ClipboardFlavorState clipboardFlavorState = new ClipboardFlavorState();
 
             @Override
-            public void flavorsChanged(FlavorEvent fe) {
+            public void flavorsChanged(@Nonnull FlavorEvent fe) {
                 activationManager.updateActionsForComponent(ClipboardFlavorState.class, clipboardFlavorState);
             }
         });

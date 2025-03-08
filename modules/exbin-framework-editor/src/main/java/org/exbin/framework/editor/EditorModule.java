@@ -247,7 +247,7 @@ public class EditorModule implements EditorModuleApi {
     @Override
     public void registerMenuFileCloseActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.FILE_MENU_ID, FileModuleApi.FILE_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createCloseFileAction());

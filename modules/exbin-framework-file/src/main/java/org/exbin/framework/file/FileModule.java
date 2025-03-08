@@ -129,7 +129,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerMenuFileHandlingActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.FILE_MENU_ID, FILE_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createNewFileAction());
@@ -145,7 +145,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerToolBarFileHandlingActions() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        ToolBarManagement mgmt = toolBarModule.getToolBarManagement(MODULE_ID);
+        ToolBarManagement mgmt = toolBarModule.getMainToolBarManagement(MODULE_ID);
         ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, FILE_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionToolBarContributionRule.PositionMode.TOP));
         contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, createNewFileAction());
@@ -172,7 +172,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public void registerRecenFilesMenuActions() {
         getRecentFilesActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(MODULE_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
         MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, () -> recentFilesActions.getOpenRecentMenu());
         mgmt.registerMenuRule(contribution, new RelativeMenuContributionRule(RelativeMenuContributionRule.NextToMode.AFTER, OpenFileAction.ACTION_ID));
     }

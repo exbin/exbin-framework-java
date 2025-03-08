@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api;
+package org.exbin.framework.sidebar.api;
 
-import org.exbin.framework.toolbar.api.toolbar.ToolBarManagement;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JToolBar;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.action.api.ActionContextService;
 
 /**
- * Interface for tool bar support module.
+ * Interface for side bar support module.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -32,27 +33,35 @@ import org.exbin.framework.ModuleUtils;
 public interface SideBarModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(SideBarModuleApi.class);
-    public static final String CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID = MODULE_ID + ".clipboardActionsToolBarGroup";
 
     /**
-     * Returns tool bar management interface.
+     * Returns side bar management interface.
      *
      * @param moduleId module id
-     * @return tool bar management interface
+     * @return side bar management interface
      */
     @Nonnull
-    ToolBarManagement getToolBarManagement(String moduleId);
+    SideBarManagement getSideBarManagement(String moduleId);
 
     /**
-     * Registers tool bar clipboard actions.
+     * Returns side bar using given identificator.
+     *
+     * @param targetSideBar target sidebar
+     * @param sideBarId sidebar id
+     * @param activationUpdateService activation update service
      */
-    void registerToolBarClipboardActions();
+    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextService activationUpdateService);
 
     /**
-     * Returns list of action managed by toolbar managers.
+     * Registers side bar clipboard actions.
+     */
+    void registerSideBarClipboardActions();
+
+    /**
+     * Returns list of action managed by sidebar managers.
      *
      * @return list of actions
      */
     @Nonnull
-    List<Action> getToolBarManagedActions();
+    List<Action> getSideBarManagedActions();
 }

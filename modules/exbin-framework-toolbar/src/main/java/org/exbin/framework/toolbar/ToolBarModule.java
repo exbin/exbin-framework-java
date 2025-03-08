@@ -81,15 +81,15 @@ public class ToolBarModule implements ToolBarModuleApi {
         return toolBarManager;
     }
 
+    @Override
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
+        getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
+    }
+
     @Nonnull
     @Override
-    public ToolBarManagement getToolBarManagement(String moduleId) {
+    public ToolBarManagement getMainToolBarManagement(String moduleId) {
         return new ToolBarManagement() {
-            @Override
-            public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
-                getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
-            }
-
             @Override
             public void registerToolBar(String toolBarId) {
                 getToolBarManager().registerToolBar(toolBarId, moduleId);
@@ -116,8 +116,8 @@ public class ToolBarModule implements ToolBarModuleApi {
 
     @Override
     public void registerToolBarClipboardActions() {
-/*        getClipboardActions();
-        ToolBarManagement mgmt = getToolBarManagement(MODULE_ID);
+        /*        getClipboardActions();
+        ToolBarManagement mgmt = getMainToolBarManagement(MODULE_ID);
         ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
         contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCutAction());
