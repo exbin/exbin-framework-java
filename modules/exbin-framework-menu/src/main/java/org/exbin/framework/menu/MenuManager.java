@@ -16,6 +16,7 @@
 package org.exbin.framework.menu;
 
 import java.awt.event.ActionEvent;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -145,10 +146,16 @@ public class MenuManager {
             String parentGroupId = getParentGroup(menuId, contribution);
             if (positionMode != null) {
                 MenuGroupRecord menuGroupRecord = groupsMap.get(positionMode.name());
+                if (menuGroupRecord == null) {
+                    throw new InvalidParameterException("Invalid parent group: " + positionMode.name());
+                }
                 menuGroupRecord.contributions.add(contribution);
             } else {
                 if (parentGroupId != null) {
                     MenuGroupRecord menuGroupRecord = groupsMap.get(parentGroupId);
+                    if (menuGroupRecord == null) {
+                        throw new InvalidParameterException("Invalid parent group: " + parentGroupId);
+                    }
                     menuGroupRecord.contributions.add(contribution);
                 } else {
                     // TODO Rework for multiple rules and other stuff

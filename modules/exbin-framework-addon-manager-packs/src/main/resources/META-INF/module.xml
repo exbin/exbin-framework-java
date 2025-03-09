@@ -8,7 +8,6 @@
   <dependency>
     <module id="org.exbin.framework.addon.AddonManagerModule" />
     <module id="org.exbin.framework.action.api.ActionModuleApi" />
-    <module id="org.exbin.framework.action.popup.api.ActionPopupModuleApi" />
     <module id="org.exbin.framework.window.api.WindowModuleApi" />
     <module id="org.exbin.framework.options.api.OptionsModuleApi" />
     <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />

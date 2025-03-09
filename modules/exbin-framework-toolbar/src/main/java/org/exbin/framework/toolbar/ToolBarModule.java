@@ -23,12 +23,18 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.toolbar.api.ToolBarContribution;
 import org.exbin.framework.toolbar.api.ToolBarContributionRule;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.toolbar.api.GroupToolBarContributionRule;
+import org.exbin.framework.toolbar.api.PositionToolBarContributionRule;
+import org.exbin.framework.toolbar.api.PositionToolBarContributionRule.PositionMode;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
+import org.exbin.framework.utils.ClipboardActionsApi;
 
 /**
  * Implementation of tool bar module.
@@ -116,7 +122,8 @@ public class ToolBarModule implements ToolBarModuleApi {
 
     @Override
     public void registerToolBarClipboardActions() {
-        /*        getClipboardActions();
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        ClipboardActionsApi clipboardActions = actionModule.getClipboardActions();
         ToolBarManagement mgmt = getMainToolBarManagement(MODULE_ID);
         ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
@@ -127,6 +134,6 @@ public class ToolBarModule implements ToolBarModuleApi {
         contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createPasteAction());
         mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
         contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createDeleteAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID)); */
+        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
     }
 }

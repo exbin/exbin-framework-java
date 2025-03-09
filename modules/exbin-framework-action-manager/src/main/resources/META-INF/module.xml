@@ -6,9 +6,9 @@
   <homepage>https://exbin.org</homepage>
   <description>Module to provide support for action handling</description>
   <dependency>
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
     <module id="org.exbin.framework.window.api.WindowModuleApi" />
     <module id="org.exbin.framework.frame.api.FrameModuleApi" />
-    <module id="org.exbin.framework.action.popup.api.ActionPopupModuleApi" />
     <module id="org.exbin.framework.utils.UtilsModule" />
     <module id="org.exbin.framework.language.api.LanguageModuleApi" />
   </dependency>
