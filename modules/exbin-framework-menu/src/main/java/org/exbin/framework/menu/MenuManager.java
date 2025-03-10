@@ -658,24 +658,26 @@ public class MenuManager {
         abstract void finish();
     }
 
+    @ParametersAreNonnullByDefault
     private static class QueuedContribution {
 
         ProcessedContribution parent;
         MenuContribution contribution;
         RelativeMenuContributionRule.NextToMode nextToMode = null;
 
-        public QueuedContribution(ProcessedContribution parent, MenuContribution contribution) {
+        public QueuedContribution(@Nullable ProcessedContribution parent, MenuContribution contribution) {
             this.parent = parent;
             this.contribution = contribution;
         }
 
-        public QueuedContribution(ProcessedContribution parent, MenuContribution contribution, RelativeMenuContributionRule.NextToMode nextToMode) {
+        public QueuedContribution(@Nullable ProcessedContribution parent, MenuContribution contribution, RelativeMenuContributionRule.NextToMode nextToMode) {
             this.parent = parent;
             this.contribution = contribution;
             this.nextToMode = nextToMode;
         }
     }
 
+    @ParametersAreNonnullByDefault
     private static class OrderingContribution {
 
         OrderingMode mode;

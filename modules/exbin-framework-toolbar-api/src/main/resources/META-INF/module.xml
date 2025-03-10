@@ -4,7 +4,7 @@
   <name>Tool Bar Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
-  <description>Support for action handling</description>
+  <description>Support for toolbar handling</description>
   <dependency>
   </dependency>
 </module>
