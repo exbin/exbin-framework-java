@@ -28,31 +28,22 @@ import javax.swing.Action;
 public interface ToolBarManagement {
 
     /**
-     * Registers tool bar associating it with given identificator.
-     *
-     * @param toolBarId toolbar id
-     */
-    void registerToolBar(String toolBarId);
-
-    /**
      * Registers item as a child item for given tool bar.
      *
-     * @param toolBarId toolbar id
      * @param action action
      * @return toolbar contribution
      */
     @Nonnull
-    ToolBarContribution registerToolBarItem(String toolBarId, Action action);
+    ToolBarContribution registerToolBarItem(Action action);
 
     /**
      * Registers group as a child item for given tool bar.
      *
-     * @param toolBarId toolbar id
      * @param groupId group id
      * @return toolbar contribution
      */
     @Nonnull
-    ToolBarContribution registerToolBarGroup(String toolBarId, String groupId);
+    ToolBarContribution registerToolBarGroup(String groupId);
 
     /**
      * Registers tool bar contribution rule.

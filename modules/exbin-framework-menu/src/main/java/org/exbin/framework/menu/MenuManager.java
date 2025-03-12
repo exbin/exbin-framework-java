@@ -693,21 +693,21 @@ public class MenuManager {
         BEFORE, ITEM, AFTER
     };
 
-    public void registerMenu(String menuId, String pluginId) {
+    public void registerMenu(String menuId, String moduleId) {
         ObjectUtils.requireNonNull(menuId);
-        ObjectUtils.requireNonNull(pluginId);
+        ObjectUtils.requireNonNull(moduleId);
 
         MenuDefinition menu = menus.get(menuId);
         if (menu != null) {
-            if (menu.getPluginId().isPresent()) {
+            if (menu.getModuleId().isPresent()) {
                 throw new IllegalStateException("Menu with ID " + menuId + " already exists.");
             } else {
-                menu.setPluginId(pluginId);
+                menu.setModuleId(moduleId);
                 return;
             }
         }
 
-        MenuDefinition menuDefinition = new MenuDefinition(pluginId);
+        MenuDefinition menuDefinition = new MenuDefinition(moduleId);
         menus.put(menuId, menuDefinition);
     }
 

@@ -85,13 +85,13 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     private void init() {
         EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(EditorModule.MODULE_ID);
-        mgmt.registerMenu(FILE_CONTEXT_MENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(FILE_CONTEXT_MENU_ID, editorModule.createCloseFileAction());
+        menuModule.registerMenu(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
+        MenuManagement mgmt = menuModule.getMenuManagement(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(editorModule.createCloseFileAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(FILE_CONTEXT_MENU_ID, editorModule.createCloseAllFilesAction());
+        contribution = mgmt.registerMenuItem(editorModule.createCloseAllFilesAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(FILE_CONTEXT_MENU_ID, editorModule.createCloseOtherFilesAction());
+        contribution = mgmt.registerMenuItem( editorModule.createCloseOtherFilesAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
 
         multiEditorPanel.setController(new MultiEditorPanel.Controller() {

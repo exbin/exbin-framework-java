@@ -172,12 +172,12 @@ public class OptionsModule implements OptionsModuleApi {
             }); */
             optionsActionRegistered = true;
         }
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.TOOLS_MENU_ID, TOOLS_OPTIONS_MENU_GROUP_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.TOOLS_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(optionsActionRegistered ? SeparationMenuContributionRule.SeparationMode.NONE : SeparationMenuContributionRule.SeparationMode.AROUND));
         if (!optionsActionRegistered) {
-            contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, optionsAction);
+            contribution = mgmt.registerMenuItem(optionsAction);
             mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TOOLS_OPTIONS_MENU_GROUP_ID));
         }
     }

@@ -152,7 +152,7 @@ public class ToolBarManager {
         processingPath.add(new ToolBarGroupRecordPathNode(groups));
 
         boolean separatorQueued = false;
-        boolean toolBarContinues = false;
+        boolean itemsAdded = false;
 
         while (!processingPath.isEmpty()) {
             ToolBarGroupRecordPathNode pathNode = processingPath.get(processingPath.size() - 1);
@@ -164,7 +164,7 @@ public class ToolBarManager {
             ToolBarGroupRecord groupRecord = pathNode.records.get(pathNode.childIndex);
             pathNode.childIndex++;
 
-            if ((groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND) && toolBarContinues) {
+            if (itemsAdded && (groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND)) {
                 addToolbarSeparator(targetToolBar);
                 separatorQueued = false;
             }
@@ -182,7 +182,7 @@ public class ToolBarManager {
                     finishToolbarAction(action, activationUpdateService);
                 }
 
-                toolBarContinues = true;
+                itemsAdded = true;
             }
 
             if (groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND || groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.BELOW) {

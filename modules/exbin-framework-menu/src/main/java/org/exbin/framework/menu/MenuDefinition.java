@@ -34,27 +34,27 @@ import org.exbin.framework.menu.api.MenuContributionRule;
 @ParametersAreNonnullByDefault
 public class MenuDefinition {
 
-    private String pluginId = null;
+    private String moduleId = null;
     private List<MenuContribution> contributions = new ArrayList<>();
     private Map<MenuContribution, List<MenuContributionRule>> rules = new HashMap<>();
 
-    public MenuDefinition(@Nullable String pluginId) {
-        this.pluginId = pluginId;
+    public MenuDefinition(@Nullable String moduleId) {
+        this.moduleId = moduleId;
     }
 
     /**
-     * Returns plugin registering this menu or null if menu is not yet
+     * Returns module ID registering this menu or null if menu is not yet
      * registered.
      *
      * @return plugin id
      */
     @Nonnull
-    public Optional<String> getPluginId() {
-        return Optional.ofNullable(pluginId);
+    public Optional<String> getModuleId() {
+        return Optional.ofNullable(moduleId);
     }
 
-    public void setPluginId(String pluginId) {
-        this.pluginId = pluginId;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
     @Nonnull

@@ -51,8 +51,8 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
     @Override
     public void registerOnlineHelpMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, createOnlineHelpAction());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.HELP_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createOnlineHelpAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
     }
 

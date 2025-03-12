@@ -81,6 +81,21 @@ public interface MenuModuleApi extends Module {
     MenuManagement getMenuManagement(String menuId, String moduleId);
 
     /**
+     * Registers menu associating it with given identificator.
+     *
+     * @param menuId menu identificator
+     * @param moduleId module ID
+     */
+    void registerMenu(String menuId, String moduleId);
+
+    /**
+     * Unregisters menu and all it's items.
+     *
+     * @param menuId menu id
+     */
+    void unregisterMenu(String menuId);
+
+    /**
      * Returns menu using given identificator.
      *
      * @param targetMenu target menu

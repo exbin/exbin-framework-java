@@ -28,79 +28,59 @@ import javax.swing.Action;
 public interface MenuManagement {
 
     /**
-     * Registers menu associating it with given identificator.
-     *
-     * @param menuId menu identificator
-     */
-    void registerMenu(String menuId);
-
-    /**
-     * Unregisters menu and all it's items.
-     *
-     * @param menuId menu id
-     */
-    void unregisterMenu(String menuId);
-
-    /**
      * Registers menu as a child item for given menu.
      *
-     * @param menuId menu Id
      * @param menuProvider menu provider
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(String menuId, MenuItemProvider menuProvider);
+    MenuContribution registerMenuItem(MenuItemProvider menuProvider);
 
     /**
      * Registers menu item as a child item for given menu.
      *
-     * @param menuId menu Id
      * @param action action
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(String menuId, Action action);
+    MenuContribution registerMenuItem(Action action);
 
     /**
      * Registers menu item as a child item for given menu.
      *
-     * @param menuId menu Id
      * @param subMenuId sub-menu id
      * @param subMenuAction sub-menu action
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(String menuId, String subMenuId, Action subMenuAction);
+    MenuContribution registerMenuItem(String subMenuId, Action subMenuAction);
 
     /**
      * Registers menu item as a child item for given menu.
      *
-     * @param menuId menu Id
      * @param subMenuId sub-menu id
      * @param subMenuName sub-menu name
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(String menuId, String subMenuId, String subMenuName);
+    MenuContribution registerMenuItem(String subMenuId, String subMenuName);
 
     /**
      * Registers menu item as a child item for given menu.
      *
-     * @param menuId menu Id
      * @param groupId group id
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuGroup(String menuId, String groupId);
+    MenuContribution registerMenuGroup(String groupId);
 
     /**
      * Returns true if given menu group exists.
      *
-     * @param menuId menu id
      * @param groupId group id
      * @return true if group exists
      */
-    boolean menuGroupExists(String menuId, String groupId);
+    boolean menuGroupExists(String groupId);
 
     /**
      * Registers menu contribution rule.
@@ -109,4 +89,13 @@ public interface MenuManagement {
      * @param rule menu contribution rule
      */
     void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule);
+
+    /**
+     * Returns submenu management.
+     *
+     * @param subMenuId submenu id
+     * @return menu management
+     */
+    @Nonnull
+    MenuManagement getSubMenu(String subMenuId);
 }

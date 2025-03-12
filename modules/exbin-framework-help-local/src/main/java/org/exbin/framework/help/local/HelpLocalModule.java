@@ -48,8 +48,8 @@ public class HelpLocalModule {
 
     public void registerMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, createHelpLocalAction());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.HELP_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createHelpLocalAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
     }
 }

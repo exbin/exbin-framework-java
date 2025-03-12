@@ -79,12 +79,12 @@ public class AboutModule implements AboutModuleApi {
             aboutActionRegistered = true;
         }
 
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.HELP_MENU_ID, HELP_ABOUT_MENU_GROUP_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.HELP_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(HELP_ABOUT_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(aboutActionRegistered ? SeparationMenuContributionRule.SeparationMode.NONE : SeparationMenuContributionRule.SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
-            contribution = mgmt.registerMenuItem(ActionConsts.HELP_MENU_ID, createAboutAction());
+            contribution = mgmt.registerMenuItem(createAboutAction());
             mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(HELP_ABOUT_MENU_GROUP_ID));
         }
     }

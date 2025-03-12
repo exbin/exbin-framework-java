@@ -49,8 +49,8 @@ public class OperationManagerModule implements OperationManagerModuleApi {
     @Override
     public void registerOperationManagerInMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(OperationManagerModuleApi.MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.EDIT_MENU_ID, createUndoManagerAction());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(OperationManagerModuleApi.MODULE_ID).getSubMenu(ActionConsts.EDIT_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createUndoManagerAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
     }
 

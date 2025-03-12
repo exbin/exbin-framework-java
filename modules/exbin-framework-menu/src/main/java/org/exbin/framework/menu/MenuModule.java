@@ -183,57 +183,17 @@ public class MenuModule implements MenuModuleApi {
     @Nonnull
     @Override
     public MenuManagement getMenuManagement(String menuId, String moduleId) {
-        return new MenuManagement() {
-            @Override
-            public void registerMenu(String menuId) {
-                getMenuManager().registerMenu(menuId, moduleId);
-            }
+        return new DefaultMenuManagement(getMenuManager(), menuId, moduleId);
+    }
 
-            @Override
-            public void unregisterMenu(String menuId) {
-                getMenuManager().unregisterMenu(menuId);
-            }
+    @Override
+    public void registerMenu(String menuId, String moduleId) {
+        getMenuManager().registerMenu(menuId, moduleId);
+    }
 
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, MenuItemProvider menuItemProvider) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, menuItemProvider);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, Action action) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, action);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, String subMenuId, Action subMenuAction) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, subMenuId, subMenuAction);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuItem(String menuId, String subMenuId, String subMenuName) {
-                return getMenuManager().registerMenuItem(menuId, moduleId, subMenuId, subMenuName);
-            }
-
-            @Nonnull
-            @Override
-            public MenuContribution registerMenuGroup(String menuId, String groupId) {
-                return getMenuManager().registerMenuGroup(menuId, moduleId, groupId);
-            }
-
-            @Override
-            public boolean menuGroupExists(String menuId, String groupId) {
-                return menuManager.menuGroupExists(menuId, groupId);
-            }
-
-            @Override
-            public void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule) {
-                getMenuManager().registerMenuRule(menuContribution, rule);
-            }
-        };
+    @Override
+    public void unregisterMenu(String menuId) {
+        getMenuManager().unregisterMenu(menuId);
     }
 
     @Nonnull
@@ -259,25 +219,25 @@ public class MenuModule implements MenuModuleApi {
 
     @Override
     public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode) {
-        MenuManagement mgmt = getMainMenuManagement(moduleId);
-        MenuContribution contribution = mgmt.registerMenuGroup(menuId, CLIPBOARD_ACTIONS_MENU_GROUP_ID);
+        MenuManagement mgmt = getMenuManagement(menuId, moduleId);
+        MenuContribution contribution = mgmt.registerMenuGroup(CLIPBOARD_ACTIONS_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(separationMode));
-        contribution = mgmt.registerMenuItem(menuId, actions.createCutAction());
+        contribution = mgmt.registerMenuItem(actions.createCutAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, actions.createCopyAction());
+        contribution = mgmt.registerMenuItem(actions.createCopyAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, actions.createPasteAction());
+        contribution = mgmt.registerMenuItem(actions.createPasteAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, actions.createDeleteAction());
+        contribution = mgmt.registerMenuItem(actions.createDeleteAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(menuId, actions.createSelectAllAction());
+        contribution = mgmt.registerMenuItem(actions.createSelectAllAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
 
     @Override
     public void registerMenuClipboardActions() {
-        registerClipboardMenuItems(ActionConsts.EDIT_MENU_ID, MODULE_ID, SeparationMenuContributionRule.SeparationMode.NONE);
+        registerClipboardMenuItems(ActionConsts.EDIT_SUBMENU_ID, MODULE_ID, SeparationMenuContributionRule.SeparationMode.NONE);
     }
 
     @Override

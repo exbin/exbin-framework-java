@@ -36,7 +36,25 @@ public interface ToolBarModuleApi extends Module {
     public static final String CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID = MODULE_ID + ".clipboardActionsToolBarGroup";
 
     /**
+     * Registers tool bar associating it with given identificator.
+     *
+     * @param toolBarId toolbar id
+     * @param moduleId module id
+     */
+    void registerToolBar(String toolBarId, String moduleId);
+
+    /**
      * Returns tool bar management interface.
+     *
+     * @param toolBarId tool bar id
+     * @param moduleId module id
+     * @return tool bar management interface
+     */
+    @Nonnull
+    ToolBarManagement getToolBarManagement(String toolBarId, String moduleId);
+
+    /**
+     * Returns main tool bar management interface.
      *
      * @param moduleId module id
      * @return tool bar management interface

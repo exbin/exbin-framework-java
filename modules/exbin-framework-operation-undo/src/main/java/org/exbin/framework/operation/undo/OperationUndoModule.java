@@ -69,13 +69,13 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     public void registerMainMenu() {
         getDefaultUndoActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.EDIT_MENU_ID, OperationUndoModuleApi.UNDO_MENU_GROUP_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.EDIT_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(OperationUndoModuleApi.UNDO_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.BELOW));
-        contribution = mgmt.registerMenuItem(ActionConsts.EDIT_MENU_ID, defaultUndoActions.createUndoAction());
+        contribution = mgmt.registerMenuItem(defaultUndoActions.createUndoAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(ActionConsts.EDIT_MENU_ID, defaultUndoActions.createRedoAction());
+        contribution = mgmt.registerMenuItem(defaultUndoActions.createRedoAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
     }
 
@@ -84,12 +84,12 @@ public class OperationUndoModule implements OperationUndoModuleApi {
         getDefaultUndoActions();
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
         ToolBarManagement mgmt = toolBarModule.getMainToolBarManagement(MODULE_ID);
-        ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, OperationUndoModuleApi.UNDO_TOOL_BAR_GROUP_ID);
+        ToolBarContribution contribution = mgmt.registerToolBarGroup(OperationUndoModuleApi.UNDO_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionToolBarContributionRule.PositionMode.TOP));
         mgmt.registerToolBarRule(contribution, new SeparationToolBarContributionRule(SeparationToolBarContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, defaultUndoActions.createUndoAction());
+        contribution = mgmt.registerToolBarItem(defaultUndoActions.createUndoAction());
         mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(OperationUndoModuleApi.UNDO_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, defaultUndoActions.createRedoAction());
+        contribution = mgmt.registerToolBarItem(defaultUndoActions.createRedoAction());
         mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(OperationUndoModuleApi.UNDO_TOOL_BAR_GROUP_ID));
     }
 

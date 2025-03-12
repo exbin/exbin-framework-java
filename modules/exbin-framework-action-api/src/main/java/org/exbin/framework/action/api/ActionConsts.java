@@ -71,12 +71,12 @@ public class ActionConsts {
 
     public static final String MAIN_MENU_ID = "mainMenu";
     public static final String MAIN_TOOL_BAR_ID = "mainToolBar";
-    public static final String FILE_MENU_ID = MAIN_MENU_ID + "/File";
-    public static final String EDIT_MENU_ID = MAIN_MENU_ID + "/Edit";
-    public static final String VIEW_MENU_ID = MAIN_MENU_ID + "/View";
-    public static final String TOOLS_MENU_ID = MAIN_MENU_ID + "/Tools";
-    public static final String OPTIONS_MENU_ID = MAIN_MENU_ID + "/Options";
-    public static final String HELP_MENU_ID = MAIN_MENU_ID + "/Help";
+    public static final String FILE_SUBMENU_ID = MAIN_MENU_ID + "/File";
+    public static final String EDIT_SUBMENU_ID = MAIN_MENU_ID + "/Edit";
+    public static final String VIEW_SUBMENU_ID = MAIN_MENU_ID + "/View";
+    public static final String TOOLS_SUBMENU_ID = MAIN_MENU_ID + "/Tools";
+    public static final String OPTIONS_SUBMENU_ID = MAIN_MENU_ID + "/Options";
+    public static final String HELP_SUBMENU_ID = MAIN_MENU_ID + "/Help";
 
     private ActionConsts() {
     }

@@ -164,8 +164,8 @@ public class EditorTextModule implements Module {
         encodingsHandler.rebuildEncodings();
 
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, () -> encodingsHandler.getToolsEncodingMenu());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.TOOLS_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(() -> encodingsHandler.getToolsEncodingMenu());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP_LAST));
     }
 
@@ -259,59 +259,59 @@ public class EditorTextModule implements Module {
     public void registerWordWrapping() {
         createWordWrappingAction();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.VIEW_MENU_ID, createWordWrappingAction());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.VIEW_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createWordWrappingAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.EDIT_MENU_ID, createGoToLineAction());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.EDIT_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createGoToLineAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerTextPopupMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
+        menuModule.registerMenu(TEXT_POPUP_MENU_ID, MODULE_ID);
+        MenuManagement mgmt = menuModule.getMenuManagement(TEXT_POPUP_MENU_ID, MODULE_ID);
         ClipboardActionsApi clipboardActions = menuModule.getClipboardActions();
 
-        mgmt.registerMenu(TEXT_POPUP_MENU_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_VIEW_GROUP_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(TEXT_POPUP_VIEW_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_EDIT_GROUP_ID);
+        contribution = mgmt.registerMenuGroup(TEXT_POPUP_EDIT_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_SELECTION_GROUP_ID);
+        contribution = mgmt.registerMenuGroup(TEXT_POPUP_SELECTION_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_FIND_GROUP_ID);
+        contribution = mgmt.registerMenuGroup(TEXT_POPUP_FIND_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerMenuGroup(TEXT_POPUP_MENU_ID, TEXT_POPUP_TOOLS_GROUP_ID);
+        contribution = mgmt.registerMenuGroup(TEXT_POPUP_TOOLS_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
 
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createCutAction());
+        contribution = mgmt.registerMenuItem(clipboardActions.createCutAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createCopyAction());
+        contribution = mgmt.registerMenuItem(clipboardActions.createCopyAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createPasteAction());
+        contribution = mgmt.registerMenuItem(clipboardActions.createPasteAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createDeleteAction());
+        contribution = mgmt.registerMenuItem(clipboardActions.createDeleteAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
 
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, clipboardActions.createSelectAllAction());
+        contribution = mgmt.registerMenuItem(clipboardActions.createSelectAllAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
         /* contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, createEditSelectionAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID)); */
 
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, findReplaceActions.createEditFindAction());
+        contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, findReplaceActions.createEditReplaceAction());
+        contribution = mgmt.registerMenuItem(findReplaceActions.createEditReplaceAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, createGoToLineAction());
+        contribution = mgmt.registerMenuItem(createGoToLineAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
 
         /* contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, getOptionsAction());
@@ -406,15 +406,15 @@ public class EditorTextModule implements Module {
     public void registerEditFindMenuActions() {
         getFindReplaceActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(ActionConsts.EDIT_MENU_ID, EDIT_FIND_MENU_GROUP_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.EDIT_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuGroup(EDIT_FIND_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerMenuItem(ActionConsts.EDIT_MENU_ID, findReplaceActions.createEditFindAction());
+        contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(ActionConsts.EDIT_MENU_ID, findReplaceActions.createEditFindAgainAction());
+        contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAgainAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(ActionConsts.EDIT_MENU_ID, findReplaceActions.createEditReplaceAction());
+        contribution = mgmt.registerMenuItem(findReplaceActions.createEditReplaceAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
     }
 
@@ -422,33 +422,33 @@ public class EditorTextModule implements Module {
         getFindReplaceActions();
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
         ToolBarManagement mgmt = toolBarModule.getMainToolBarManagement(MODULE_ID);
-        ToolBarContribution contribution = mgmt.registerToolBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, EDIT_FIND_TOOL_BAR_GROUP_ID);
+        ToolBarContribution contribution = mgmt.registerToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionToolBarContributionRule.PositionMode.MIDDLE));
         mgmt.registerToolBarRule(contribution, new SeparationToolBarContributionRule(SeparationToolBarContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerToolBarItem(ActionConsts.MAIN_TOOL_BAR_ID, findReplaceActions.createEditFindAction());
+        contribution = mgmt.registerToolBarItem(findReplaceActions.createEditFindAction());
         mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, createTextFontAction());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.TOOLS_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createTextFontAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(ActionConsts.TOOLS_MENU_ID, createTextColorAction());
+        contribution = mgmt.registerMenuItem(createTextColorAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
     }
 
     public void registerPropertiesMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createPropertiesAction());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.FILE_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createPropertiesAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(ActionConsts.FILE_MENU_ID, createPrintAction());
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.FILE_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createPrintAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
     }
 
