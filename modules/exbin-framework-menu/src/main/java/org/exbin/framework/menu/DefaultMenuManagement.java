@@ -23,6 +23,7 @@ import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuContributionRule;
 import org.exbin.framework.menu.api.MenuItemProvider;
 import org.exbin.framework.menu.api.MenuManagement;
+import org.exbin.framework.menu.api.SubMenuContributionRule;
 
 /**
  * Default menu management.
@@ -54,7 +55,7 @@ public class DefaultMenuManagement implements MenuManagement {
     public MenuContribution registerMenuItem(MenuItemProvider menuItemProvider) {
         MenuContribution contribution = menuManager.registerMenuItem(menuId, moduleId, menuItemProvider);
         if (currentSubMenuId != null) {
-            // TODO menuManager.registerMenuRule(contribution, new SubMenuContribution(currentSubMenuId, ;));
+            menuManager.registerMenuRule(contribution, new SubMenuContributionRule(currentSubMenuId));
         }
         return contribution;
     }
@@ -62,25 +63,41 @@ public class DefaultMenuManagement implements MenuManagement {
     @Nonnull
     @Override
     public MenuContribution registerMenuItem(Action action) {
-        return menuManager.registerMenuItem(menuId, moduleId, action);
+        MenuContribution contribution = menuManager.registerMenuItem(menuId, moduleId, action);
+        if (currentSubMenuId != null) {
+            menuManager.registerMenuRule(contribution, new SubMenuContributionRule(currentSubMenuId));
+        }
+        return contribution;
     }
 
     @Nonnull
     @Override
     public MenuContribution registerMenuItem(String subMenuId, Action subMenuAction) {
-        return menuManager.registerMenuItem(menuId, moduleId, subMenuId, subMenuAction);
+        MenuContribution contribution = menuManager.registerMenuItem(menuId, moduleId, subMenuId, subMenuAction);
+        if (currentSubMenuId != null) {
+            menuManager.registerMenuRule(contribution, new SubMenuContributionRule(currentSubMenuId));
+        }
+        return contribution;
     }
 
     @Nonnull
     @Override
     public MenuContribution registerMenuItem(String subMenuId, String subMenuName) {
-        return menuManager.registerMenuItem(menuId, moduleId, subMenuId, subMenuName);
+        MenuContribution contribution = menuManager.registerMenuItem(menuId, moduleId, subMenuId, subMenuName);
+        if (currentSubMenuId != null) {
+            menuManager.registerMenuRule(contribution, new SubMenuContributionRule(currentSubMenuId));
+        }
+        return contribution;
     }
 
     @Nonnull
     @Override
     public MenuContribution registerMenuGroup(String groupId) {
-        return menuManager.registerMenuGroup(menuId, moduleId, groupId);
+        MenuContribution contribution = menuManager.registerMenuGroup(menuId, moduleId, groupId);
+        if (currentSubMenuId != null) {
+            menuManager.registerMenuRule(contribution, new SubMenuContributionRule(currentSubMenuId));
+        }
+        return contribution;
     }
 
     @Override

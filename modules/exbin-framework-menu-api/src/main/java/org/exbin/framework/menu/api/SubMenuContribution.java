@@ -27,17 +27,17 @@ import javax.swing.Action;
 @ParametersAreNonnullByDefault
 public class SubMenuContribution implements MenuContribution {
 
-    private final String menuId;
+    private final String subMenuId;
     private final Action action;
 
-    public SubMenuContribution(String menuId, Action action) {
-        this.menuId = menuId;
+    public SubMenuContribution(String subMenuId, Action action) {
+        this.subMenuId = subMenuId;
         this.action = action;
     }
 
     @Nonnull
-    public String getMenuId() {
-        return menuId;
+    public String getSubMenuId() {
+        return subMenuId;
     }
 
     @Nonnull

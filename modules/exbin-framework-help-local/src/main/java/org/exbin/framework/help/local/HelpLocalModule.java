@@ -19,7 +19,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.help.local.action.HelpLocalAction;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.menu.api.MenuContribution;
@@ -48,7 +47,7 @@ public class HelpLocalModule {
 
     public void registerMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(ActionConsts.HELP_SUBMENU_ID);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
         MenuContribution contribution = mgmt.registerMenuItem(createHelpLocalAction());
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
     }

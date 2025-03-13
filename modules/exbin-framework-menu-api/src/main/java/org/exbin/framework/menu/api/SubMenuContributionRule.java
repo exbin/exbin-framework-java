@@ -13,21 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.search.api;
+package org.exbin.framework.menu.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * Interface for framework search module.
+ * Menu contribution rule for sub menu items.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface SearchModuleApi extends Module {
+@Immutable
+public class SubMenuContributionRule implements MenuContributionRule {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(SearchModuleApi.class);
-    public static final String SEARCH_MENU_GROUP_ID = MODULE_ID + ".searchMenuGroup";
+    private final String subMenuId;
 
+    public SubMenuContributionRule(String subMenuId) {
+        this.subMenuId = subMenuId;
+    }
+
+    @Nonnull
+    public String getSubMenuId() {
+        return subMenuId;
+    }
 }

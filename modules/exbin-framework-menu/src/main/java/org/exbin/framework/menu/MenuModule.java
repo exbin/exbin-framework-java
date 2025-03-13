@@ -36,7 +36,6 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.menu.api.GroupMenuContributionRule;
 import org.exbin.framework.menu.api.MenuContribution;
-import org.exbin.framework.menu.api.MenuContributionRule;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.menu.api.PositionMenuContributionRule;
 import org.exbin.framework.menu.api.SeparationMenuContributionRule;
@@ -45,7 +44,6 @@ import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionContextService;
-import org.exbin.framework.menu.api.MenuItemProvider;
 import org.exbin.framework.menu.api.MenuModuleApi;
 
 /**
@@ -199,7 +197,7 @@ public class MenuModule implements MenuModuleApi {
     @Nonnull
     @Override
     public MenuManagement getMainMenuManagement(String moduleId) {
-        return getMenuManagement(ActionConsts.MAIN_MENU_ID, moduleId);
+        return getMenuManagement(MAIN_MENU_ID, moduleId);
     }
 
     @Override
@@ -213,13 +211,16 @@ public class MenuModule implements MenuModuleApi {
     }
 
     @Override
-    public void registerClipboardMenuItems(String menuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode) {
-        registerClipboardMenuItems(getClipboardActions(), menuId, moduleId, separationMode);
+    public void registerClipboardMenuItems(String menuId, @Nullable String subMenuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode) {
+        registerClipboardMenuItems(getClipboardActions(), menuId, subMenuId, moduleId, separationMode);
     }
 
     @Override
-    public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode) {
+    public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, @Nullable String subMenuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode) {
         MenuManagement mgmt = getMenuManagement(menuId, moduleId);
+        if (subMenuId != null) {
+            mgmt = mgmt.getSubMenu(subMenuId);
+        }
         MenuContribution contribution = mgmt.registerMenuGroup(CLIPBOARD_ACTIONS_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(separationMode));
@@ -237,7 +238,7 @@ public class MenuModule implements MenuModuleApi {
 
     @Override
     public void registerMenuClipboardActions() {
-        registerClipboardMenuItems(ActionConsts.EDIT_SUBMENU_ID, MODULE_ID, SeparationMenuContributionRule.SeparationMode.NONE);
+        registerClipboardMenuItems(MenuModuleApi.MAIN_MENU_ID, EDIT_SUBMENU_ID, MODULE_ID, SeparationMenuContributionRule.SeparationMode.NONE);
     }
 
     @Override

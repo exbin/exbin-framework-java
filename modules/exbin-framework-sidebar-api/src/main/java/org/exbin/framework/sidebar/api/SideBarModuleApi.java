@@ -33,15 +33,34 @@ import org.exbin.framework.action.api.ActionContextService;
 public interface SideBarModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(SideBarModuleApi.class);
+    public static final String MAIN_SIDE_BAR_ID = "mainSideBar";
 
     /**
-     * Returns side bar management interface.
+     * Returns main side bar management interface.
      *
      * @param moduleId module id
      * @return side bar management interface
      */
     @Nonnull
-    SideBarManagement getSideBarManagement(String moduleId);
+    SideBarManagement getMainSideBarManagement(String moduleId);
+
+    /**
+     * Returns side bar management interface.
+     *
+     * @param sideBarId side bar id
+     * @param moduleId module id
+     * @return side bar management interface
+     */
+    @Nonnull
+    SideBarManagement getSideBarManagement(String sideBarId, String moduleId);
+
+    /**
+     * Registers side bar associating it with given identificator.
+     *
+     * @param sideBarId sidebar id
+     * @param moduleId module id
+     */
+    void registerSideBar(String sideBarId, String moduleId);
 
     /**
      * Returns side bar using given identificator.

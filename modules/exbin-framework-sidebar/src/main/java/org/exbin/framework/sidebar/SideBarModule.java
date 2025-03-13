@@ -23,8 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
-import org.exbin.framework.sidebar.api.SideBarContribution;
-import org.exbin.framework.sidebar.api.SideBarContributionRule;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionContextService;
@@ -86,32 +84,21 @@ public class SideBarModule implements SideBarModuleApi {
         getSideBarManager().buildSideBar(targetSideBar, sideBarId, activationUpdateService);
     }
 
+    @Override
+    public void registerSideBar(String sideBarId, String moduleId) {
+        getSideBarManager().registerSideBar(sideBarId, moduleId);
+    }
+
     @Nonnull
     @Override
-    public SideBarManagement getSideBarManagement(String moduleId) {
-        return new SideBarManagement() {
-            @Override
-            public void registerSideBar(String sideBarId) {
-                getSideBarManager().registerSideBar(sideBarId, moduleId);
-            }
+    public SideBarManagement getMainSideBarManagement(String moduleId) {
+        return getSideBarManagement(MAIN_SIDE_BAR_ID, moduleId);
+    }
 
-            @Nonnull
-            @Override
-            public SideBarContribution registerSideBarItem(String sideBarId, Action action) {
-                return getSideBarManager().registerSideBarItem(sideBarId, moduleId, action);
-            }
-
-            @Nonnull
-            @Override
-            public SideBarContribution registerSideBarGroup(String sideBarId, String groupId) {
-                return getSideBarManager().registerSideBarGroup(sideBarId, moduleId, groupId);
-            }
-
-            @Override
-            public void registerSideBarRule(SideBarContribution sideBarContribution, SideBarContributionRule rule) {
-                getSideBarManager().registerSideBarRule(sideBarContribution, rule);
-            }
-        };
+    @Nonnull
+    @Override
+    public SideBarManagement getSideBarManagement(String sideBarId, String moduleId) {
+        return new DefaultSideBarManagement(getSideBarManager(), sideBarId, moduleId);
     }
 
     @Override

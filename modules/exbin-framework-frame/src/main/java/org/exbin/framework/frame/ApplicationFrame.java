@@ -34,15 +34,12 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
-import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
@@ -276,7 +273,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        menuModule.buildMenu(menuBar, ActionConsts.MAIN_MENU_ID, new ActionContextService() {
+        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, new ActionContextService() {
             @Override
             public void registerListener(ComponentActivationListener listener) {
                 frameActionContextService.registerListener(listener);
@@ -299,7 +296,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainToolBar() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        toolBarModule.buildToolBar(toolBar, ActionConsts.MAIN_TOOL_BAR_ID, new ActionContextService() {
+        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, new ActionContextService() {
             @Override
             public void registerListener(ComponentActivationListener listener) {
                 frameActionContextService.registerListener(listener);

@@ -53,7 +53,7 @@ public interface FrameModuleApi extends Module {
     /**
      * Creates and initializes main menu and toolbar.
      */
-    void createMainMenu();
+    void init();
 
     /**
      * Notifies frame was updated.

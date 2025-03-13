@@ -40,6 +40,14 @@ import org.exbin.framework.action.api.ActionContextService;
 public interface MenuModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(MenuModuleApi.class);
+    public static final String MAIN_MENU_ID = "mainMenu";
+    public static final String FILE_SUBMENU_ID = MAIN_MENU_ID + "/File";
+    public static final String EDIT_SUBMENU_ID = MAIN_MENU_ID + "/Edit";
+    public static final String VIEW_SUBMENU_ID = MAIN_MENU_ID + "/View";
+    public static final String TOOLS_SUBMENU_ID = MAIN_MENU_ID + "/Tools";
+    public static final String OPTIONS_SUBMENU_ID = MAIN_MENU_ID + "/Options";
+    public static final String HELP_SUBMENU_ID = MAIN_MENU_ID + "/Help";
+
     public static final String CLIPBOARD_ACTIONS_MENU_GROUP_ID = MODULE_ID + ".clipboardActionsMenuGroup";
 
     /**
@@ -138,20 +146,22 @@ public interface MenuModuleApi extends Module {
      * Registers default clipboard menu items.
      *
      * @param menuId menu id
+     * @param subMenuId optional sub menu id
      * @param moduleId module id
      * @param separationMode separation mode
      */
-    void registerClipboardMenuItems(String menuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode);
+    void registerClipboardMenuItems(String menuId, @Nullable String subMenuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode);
 
     /**
      * Registers clipboard menu items.
      *
      * @param actions clipboard actions
      * @param menuId menu id
+     * @param subMenuId optional sub menu id
      * @param moduleId module id
      * @param separationMode separation mode
      */
-    void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode);
+    void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, @Nullable String subMenuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode);
 
     /**
      * Registers clipboard handler for main clipboard actions.

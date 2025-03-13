@@ -28,13 +28,6 @@ import javax.swing.Action;
 public interface SideBarManagement {
 
     /**
-     * Registers side bar associating it with given identificator.
-     *
-     * @param sideBarId sidebar id
-     */
-    void registerSideBar(String sideBarId);
-
-    /**
      * Registers item as a child item for given side bar.
      *
      * @param sideBarId sidebar id

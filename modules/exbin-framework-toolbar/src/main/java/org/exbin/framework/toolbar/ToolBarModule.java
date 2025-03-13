@@ -23,9 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.toolbar.api.ToolBarContribution;
-import org.exbin.framework.toolbar.api.ToolBarContributionRule;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionContextService;
@@ -100,30 +98,13 @@ public class ToolBarModule implements ToolBarModuleApi {
     @Nonnull
     @Override
     public ToolBarManagement getToolBarManagement(String toolBarId, String moduleId) {
-        return new ToolBarManagement() {
-            @Nonnull
-            @Override
-            public ToolBarContribution registerToolBarItem(Action action) {
-                return getToolBarManager().registerToolBarItem(toolBarId, moduleId, action);
-            }
-
-            @Nonnull
-            @Override
-            public ToolBarContribution registerToolBarGroup(String groupId) {
-                return getToolBarManager().registerToolBarGroup(toolBarId, moduleId, groupId);
-            }
-
-            @Override
-            public void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule) {
-                getToolBarManager().registerToolBarRule(toolBarContribution, rule);
-            }
-        };
+        return new DefaultToolBarManagement(getToolBarManager(), toolBarId, moduleId);
     }
 
     @Nonnull
     @Override
     public ToolBarManagement getMainToolBarManagement(String moduleId) {
-        return getToolBarManagement(ActionConsts.MAIN_TOOL_BAR_ID, moduleId);
+        return getToolBarManagement(MAIN_TOOL_BAR_ID, moduleId);
     }
 
     @Override
