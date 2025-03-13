@@ -30,15 +30,17 @@ public interface ActionMenuCreation {
      * Checks whether menu item should be created.
      *
      * @param menuId menu ID
+     * @param subMenuId sub menu ID or empty string
      * @return true if menu item should be created
      */
-    boolean shouldCreate(String menuId);
+    boolean shouldCreate(String menuId, String subMenuId);
 
     /**
      * Called when new menu item is created.
      *
      * @param menuItem new menu item instance
      * @param menuId menu ID
+     * @param subMenuId sub menu ID or empty string
      */
-    void onCreate(JMenuItem menuItem, String menuId);
+    void onCreate(JMenuItem menuItem, String menuId, String subMenuId);
 }
