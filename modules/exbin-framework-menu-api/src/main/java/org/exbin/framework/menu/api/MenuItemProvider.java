@@ -25,6 +25,11 @@ import javax.swing.JMenuItem;
  */
 public interface MenuItemProvider {
 
+    /**
+     * Creates new instance of menu item.
+     *
+     * @return menu item
+     */
     @Nonnull
     JMenuItem createMenuItem();
 }

@@ -32,7 +32,7 @@ import org.exbin.framework.action.api.ActionContextService;
 @ParametersAreNonnullByDefault
 public interface ToolBarModuleApi extends Module {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ToolBarModuleApi.class);
+    public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(ToolBarModuleApi.class);
     public static final String MAIN_TOOL_BAR_ID = "mainToolBar";
     public static final String CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID = MODULE_ID + ".clipboardActionsToolBarGroup";
 

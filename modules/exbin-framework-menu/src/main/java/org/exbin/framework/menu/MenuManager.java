@@ -60,9 +60,6 @@ import org.exbin.framework.menu.api.MenuItemProvider;
 @ParametersAreNonnullByDefault
 public class MenuManager {
 
-    /**
-     * Menu records: menuItem id -> menuItem definition.
-     */
     private final Map<String, MenuDefinition> menus = new HashMap<>();
 
     public MenuManager() {
@@ -90,127 +87,145 @@ public class MenuManager {
             return;
         }
 
-        for (Map.Entry<String, SubMenuRecord> entry : subMenus.entrySet()) {
-            SubMenuRecord subMenu = entry.getValue();
-            String subMenuId = entry.getKey();
-            List<MenuGroupRecord> groups = subMenu.groupRecords;
-            List<MenuGroupRecordPathNode> processingPath = new LinkedList<>();
-            processingPath.add(new MenuGroupRecordPathNode(groups));
+        List<ProcessingNode> processingPath = new LinkedList<>();
+        processingPath.add(new ProcessingNode(subMenus.get("")));
+        while (!processingPath.isEmpty()) {
+            ProcessingNode processingNode = processingPath.get(processingPath.size() - 1);
+            SubMenuRecord subMenu = processingNode.subMenu;
+            String subMenuId = subMenu.subMenuId;
 
-            boolean separatorQueued = false;
-            boolean itemsAdded = false;
+            if (processingNode.currentGroup == processingNode.groupRecords.size()) {
+                processingPath.remove(processingPath.size() - 1);
+                continue;
+            }
 
-            while (!processingPath.isEmpty()) {
-                MenuGroupRecordPathNode pathNode = processingPath.get(processingPath.size() - 1);
-                if (pathNode.childIndex == pathNode.records.size()) {
-                    processingPath.remove(processingPath.size() - 1);
-                    continue;
-                }
+            MenuGroupRecordNode groupRecordNode = processingNode.groupRecords.get(processingNode.currentGroup);
 
-                MenuGroupRecord groupRecord = pathNode.records.get(pathNode.childIndex);
-                MenuOutput output = groupRecord.outputMenu;
-                pathNode.childIndex++;
+            if (groupRecordNode.currentGroupRecord == groupRecordNode.records.size()) {
+                processingNode.currentGroup++;
+                continue;
+            }
 
-                if (itemsAdded && (groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND)) {
-                    itemsAdded = false;
-                    separatorQueued = true;
-                }
+            MenuGroupRecord groupRecord = groupRecordNode.records.get(groupRecordNode.currentGroupRecord);
 
-                for (MenuContribution contribution : groupRecord.contributions) {
-                    // Process all contributions, but don't insert them yet
-                    List<QueuedContribution> queue = new LinkedList<>();
-                    queue.add(new QueuedContribution(null, contribution));
-                    ProcessedContribution rootProcessed = null;
-                    while (!queue.isEmpty()) {
-                        final QueuedContribution next = queue.remove(0);
-                        ProcessedContribution processed = createProcessedContribution(output, next.contribution, menuId, subMenuId, subMenu, subMenus, activationUpdateService);
+            if (groupRecordNode.currentContribution == groupRecord.contributions.size()) {
+                groupRecordNode.currentContribution = 0;
+                groupRecordNode.currentGroupRecord++;
+                continue;
+            }
+           
+            MenuOutput output = subMenu.menuOutput;
+            MenuContribution contribution = groupRecord.contributions.get(groupRecordNode.currentContribution);
+            groupRecordNode.currentContribution++;
+            
+            if (processingNode.itemsAdded && (groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND)) {
+                processingNode.itemsAdded = false;
+                processingNode.separatorQueued = true;
+            }
+/*
+            for (MenuContribution contribution : groupRecord.contributions) {
+                // Process all contributions, but don't insert them yet
+                List<QueuedContribution> queue = new LinkedList<>();
+                queue.add(new QueuedContribution(null, contribution));
+                ContributionHandler rootProcessed = null;
+                while (!queue.isEmpty()) {
+                    final QueuedContribution next = queue.remove(0);
+                    ContributionHandler handler = createProcessedContribution(output, next.contribution, menuId, subMenuId, subMenu, subMenus, activationUpdateService);
+                    
+                    handler.process();
 
-                        processed.process();
-                        if (next.parent == null) {
-                            rootProcessed = processed;
-                        }
-                        String actionId = processed.getActionId();
-                        RelativeMenuContributionRule.NextToMode nextToMode = next.nextToMode;
-                        if (nextToMode != null) {
-                            switch (nextToMode) {
-                                case BEFORE: {
-                                    next.parent.before.add(processed);
-                                    break;
-                                }
-                                case AFTER: {
-                                    next.parent.after.add(processed);
-                                    break;
-                                }
-                            }
-                        }
-
-                        List<MenuContribution> nextToBefore = subMenu.beforeItem.get(actionId);
-                        if (nextToBefore != null) {
-                            nextToBefore.forEach((menuContribution) -> {
-                                queue.add(new QueuedContribution(processed, menuContribution, RelativeMenuContributionRule.NextToMode.BEFORE));
-                            });
-                        }
-
-                        List<MenuContribution> nextToAfter = subMenu.afterItem.get(actionId);
-                        if (nextToAfter != null) {
-                            nextToAfter.forEach((menuContribution) -> {
-                                queue.add(new QueuedContribution(processed, menuContribution, RelativeMenuContributionRule.NextToMode.AFTER));
-                            });
-                        }
+                    if (next.contribution instanceof SubMenuContribution) {
+                        SubMenuRecord subMenuRecord = subMenus.get(((SubMenuContribution) next.contribution).getSubMenuId());
+                        processingPath.add(new ProcessingNode(subMenuRecord));
+                        continue;
                     }
 
-                    // Perform insertion of all processed menuItem contributions
-                    List<OrderingContribution> orderingPath = new LinkedList<>();
-
-                    orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, rootProcessed));
-                    while (!orderingPath.isEmpty()) {
-                        OrderingContribution orderingContribution = orderingPath.get(orderingPath.size() - 1);
-                        switch (orderingContribution.mode) {
+                    if (next.parent == null) {
+                        rootProcessed = handler;
+                    }
+                    String actionId = handler.getActionId();
+                    RelativeMenuContributionRule.NextToMode nextToMode = next.nextToMode;
+                    if (nextToMode != null) {
+                        switch (nextToMode) {
                             case BEFORE: {
-                                if (orderingContribution.processed.before.isEmpty()) {
-                                    orderingContribution.mode = OrderingMode.ITEM;
-                                } else {
-                                    orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, orderingContribution.processed.before.remove(0)));
-                                }
-                                break;
-                            }
-                            case ITEM: {
-                                boolean itemAdded = orderingContribution.processed.shouldCreate();
-                                if (itemAdded) {
-                                    if (separatorQueued) {
-                                        output.addSeparator();
-                                        separatorQueued = false;
-                                    }
-                                    orderingContribution.processed.finish();
-                                }
-
-                                itemsAdded |= itemAdded;
-                                orderingContribution.mode = OrderingMode.AFTER;
+                                next.parent.before.add(handler);
                                 break;
                             }
                             case AFTER: {
-                                if (orderingContribution.processed.after.isEmpty()) {
-                                    orderingPath.remove(orderingPath.size() - 1);
-                                } else {
-                                    orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, orderingContribution.processed.after.remove(0)));
-                                }
+                                next.parent.after.add(handler);
                                 break;
                             }
-                            default:
-                                throw new IllegalStateException();
                         }
+                    }
+
+                    List<MenuContribution> nextToBefore = subMenu.beforeItem.get(actionId);
+                    if (nextToBefore != null) {
+                        nextToBefore.forEach((menuContribution) -> {
+                            queue.add(new QueuedContribution(handler, menuContribution, RelativeMenuContributionRule.NextToMode.BEFORE));
+                        });
+                    }
+
+                    List<MenuContribution> nextToAfter = subMenu.afterItem.get(actionId);
+                    if (nextToAfter != null) {
+                        nextToAfter.forEach((menuContribution) -> {
+                            queue.add(new QueuedContribution(handler, menuContribution, RelativeMenuContributionRule.NextToMode.AFTER));
+                        });
                     }
                 }
 
-                if (itemsAdded && groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND || groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW) {
-                    itemsAdded = false;
-                    separatorQueued = true;
-                }
+                // Perform insertion of all processed menuItem contributions
+                List<OrderingContribution> orderingPath = new LinkedList<>();
 
-                if (!groupRecord.subGroups.isEmpty()) {
-                    processingPath.add(new MenuGroupRecordPathNode(groupRecord.subGroups));
+                orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, rootProcessed));
+                while (!orderingPath.isEmpty()) {
+                    OrderingContribution orderingContribution = orderingPath.get(orderingPath.size() - 1);
+                    switch (orderingContribution.mode) {
+                        case BEFORE: {
+                            if (orderingContribution.handler.before.isEmpty()) {
+                                orderingContribution.mode = OrderingMode.ITEM;
+                            } else {
+                                orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, orderingContribution.handler.before.remove(0)));
+                            }
+                            break;
+                        }
+                        case ITEM: {
+                            boolean itemAdded = orderingContribution.handler.shouldCreate();
+                            if (itemAdded) {
+                                if (processingNode.separatorQueued) {
+                                    output.addSeparator();
+                                    processingNode.separatorQueued = false;
+                                }
+                                orderingContribution.handler.finish();
+                            }
+
+                            processingNode.itemsAdded |= itemAdded;
+                            orderingContribution.mode = OrderingMode.AFTER;
+                            break;
+                        }
+                        case AFTER: {
+                            if (orderingContribution.handler.after.isEmpty()) {
+                                orderingPath.remove(orderingPath.size() - 1);
+                            } else {
+                                orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, orderingContribution.handler.after.remove(0)));
+                            }
+                            break;
+                        }
+                        default:
+                            throw new IllegalStateException();
+                    }
                 }
             }
+
+            if (processingNode.itemsAdded && groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND || groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW) {
+                processingNode.itemsAdded = false;
+                processingNode.separatorQueued = true;
+            }
+
+            if (!groupRecord.subGroups.isEmpty()) {
+                ProcessingNode subGroupNode = new ProcessingNode(processingNode.subMenu);
+                // TODO subGroupNode.records = groupRecord.subGroups;
+                processingPath.add(subGroupNode);
+            } */
         }
     }
 
@@ -345,10 +360,10 @@ public class MenuManager {
     }
 
     @Nonnull
-    private ProcessedContribution createProcessedContribution(MenuOutput output, MenuContribution contribution, String menuId, String subMenuId, SubMenuRecord subMenu, Map<String, SubMenuRecord> subMenus, ActionContextService activationUpdateService) {
-        ProcessedContribution processed;
+    private ContributionHandler createProcessedContribution(MenuOutput output, MenuContribution contribution, String menuId, String subMenuId, SubMenuRecord subMenu, Map<String, SubMenuRecord> subMenus, ActionContextService activationUpdateService) {
+        ContributionHandler processed;
         if (contribution instanceof ActionMenuContribution) {
-            processed = new ProcessedContribution() {
+            processed = new ContributionHandler() {
                 JMenuItem menuItem;
                 String actionId;
 
@@ -397,7 +412,7 @@ public class MenuManager {
                 }
             };
         } else if (contribution instanceof SubMenuContribution) {
-            processed = new ProcessedContribution() {
+            processed = new ContributionHandler() {
                 JMenu menuItem;
                 String actionId;
 
@@ -430,7 +445,7 @@ public class MenuManager {
                         }
                     }
 
-                    return true; // TODO menuItem.getMenuComponentCount() > 0;
+                    return menuItem.getMenuComponentCount() > 0;
                 }
 
                 @Override
@@ -449,7 +464,7 @@ public class MenuManager {
                 }
             };
         } else if (contribution instanceof DirectSubMenuContribution) {
-            processed = new ProcessedContribution() {
+            processed = new ContributionHandler() {
                 DirectSubMenuContribution directMenuContribution;
                 JMenuItem menuItem;
                 String actionId;
@@ -673,10 +688,10 @@ public class MenuManager {
         return actions;
     }
 
-    private static abstract class ProcessedContribution {
+    private static abstract class ContributionHandler {
 
-        List<ProcessedContribution> before = new LinkedList<>();
-        List<ProcessedContribution> after = new LinkedList<>();
+        List<ContributionHandler> before = new LinkedList<>();
+        List<ContributionHandler> after = new LinkedList<>();
 
         abstract void process();
 
@@ -691,16 +706,16 @@ public class MenuManager {
     @ParametersAreNonnullByDefault
     private static class QueuedContribution {
 
-        ProcessedContribution parent;
+        ContributionHandler parent;
         MenuContribution contribution;
         RelativeMenuContributionRule.NextToMode nextToMode = null;
 
-        public QueuedContribution(@Nullable ProcessedContribution parent, MenuContribution contribution) {
+        public QueuedContribution(@Nullable ContributionHandler parent, MenuContribution contribution) {
             this.parent = parent;
             this.contribution = contribution;
         }
 
-        public QueuedContribution(@Nullable ProcessedContribution parent, MenuContribution contribution, RelativeMenuContributionRule.NextToMode nextToMode) {
+        public QueuedContribution(@Nullable ContributionHandler parent, MenuContribution contribution, RelativeMenuContributionRule.NextToMode nextToMode) {
             this.parent = parent;
             this.contribution = contribution;
             this.nextToMode = nextToMode;
@@ -711,11 +726,11 @@ public class MenuManager {
     private static class OrderingContribution {
 
         OrderingMode mode;
-        ProcessedContribution processed;
+        ContributionHandler handler;
 
-        public OrderingContribution(OrderingMode mode, ProcessedContribution processed) {
+        public OrderingContribution(OrderingMode mode, ContributionHandler handler) {
             this.mode = mode;
-            this.processed = processed;
+            this.handler = handler;
         }
     }
 
@@ -871,12 +886,28 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
-    private class MenuGroupRecordPathNode {
+    private class ProcessingNode {
+        
+        SubMenuRecord subMenu;
+        List<MenuGroupRecordNode> groupRecords = new ArrayList<>();
+        int currentGroup = 0;
+        boolean separatorQueued = false;
+        boolean itemsAdded = false;
+
+        public ProcessingNode(SubMenuRecord subMenu) {
+            this.subMenu = subMenu;
+            groupRecords.add(new MenuGroupRecordNode(subMenu.groupRecords));
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class MenuGroupRecordNode {
 
         List<MenuGroupRecord> records;
-        int childIndex;
+        int currentGroupRecord = 0;
+        int currentContribution = 0;
 
-        public MenuGroupRecordPathNode(List<MenuGroupRecord> records) {
+        public MenuGroupRecordNode(List<MenuGroupRecord> records) {
             this.records = records;
         }
     }
