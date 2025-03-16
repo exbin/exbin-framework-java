@@ -87,6 +87,7 @@ public class MenuManager {
             return;
         }
 
+        Map<String, ButtonGroup> buttonGroups = new HashMap<>();
         List<ProcessingNode> processingPath = new LinkedList<>();
         processingPath.add(new ProcessingNode(subMenus.get("")));
         while (!processingPath.isEmpty()) {
@@ -178,9 +179,20 @@ public class MenuManager {
                 processingNode.itemsAdded = false;
                 processingNode.separatorQueued = true;
             }
+            
+            // Process contribution
+            ContributionHandler handler = createProcessedContribution(output, contribution, menuId, subMenuId, subMenu, subMenus, buttonGroups, activationUpdateService);
+            handler.process();
+            
+            if (contribution instanceof SubMenuContribution) {
+                SubMenuRecord subMenuRecord = subMenus.get(((SubMenuContribution) contribution).getSubMenuId());
+                processingPath.add(new ProcessingNode(subMenuRecord));
+            }
+            
+            
 
-            // Process all contributions, but don't insert them yet
-            List<QueuedContribution> queue = new LinkedList<>();
+//            // Process all contributions, but don't insert them yet
+/*            List<QueuedContribution> queue = new LinkedList<>();
             queue.add(new QueuedContribution(null, contribution));
             while (!queue.isEmpty()) {
                 final QueuedContribution next = queue.remove(0);
@@ -220,11 +232,7 @@ public class MenuManager {
                     });
                 }
 
-                if (next.contribution instanceof SubMenuContribution) {
-                    SubMenuRecord subMenuRecord = subMenus.get(((SubMenuContribution) next.contribution).getSubMenuId());
-                    processingPath.add(new ProcessingNode(subMenuRecord));
-                }
-            }
+            } */
         }
     }
 
@@ -325,7 +333,8 @@ public class MenuManager {
                     // TODO Rework for multiple rules and other stuff
                     RelativeMenuContributionRule relativeContributionRule = getRelativeToRule(menuId, contribution);
                     if (relativeContributionRule != null) {
-                        switch (relativeContributionRule.getNextToMode()) {
+                        // TODO
+/*                        switch (relativeContributionRule.getNextToMode()) {
                             case BEFORE: {
                                 List<MenuContribution> contributions = subMenu.beforeItem.get(relativeContributionRule.getContributionActionId());
                                 if (contributions == null) {
@@ -346,7 +355,7 @@ public class MenuManager {
                             }
                             default:
                                 throw new IllegalStateException();
-                        }
+                        } */
                     } else {
                         MenuGroupRecord menuGroupRecord = subMenu.groupsMap.get(PositionMenuContributionRule.PositionMode.DEFAULT.name());
                         menuGroupRecord.contributions.add(contribution);
@@ -359,7 +368,7 @@ public class MenuManager {
     }
 
     @Nonnull
-    private ContributionHandler createProcessedContribution(MenuOutput output, MenuContribution contribution, String menuId, String subMenuId, SubMenuRecord subMenu, Map<String, SubMenuRecord> subMenus, ActionContextService activationUpdateService) {
+    private ContributionHandler createProcessedContribution(MenuOutput output, MenuContribution contribution, String menuId, String subMenuId, SubMenuRecord subMenu, Map<String, SubMenuRecord> subMenus, Map<String, ButtonGroup> buttonGroups, ActionContextService activationUpdateService) {
         ContributionHandler processed;
         if (contribution instanceof ActionMenuContribution) {
             processed = new ContributionHandler() {
@@ -371,7 +380,7 @@ public class MenuManager {
                     Action action = ((ActionMenuContribution) contribution).getAction();
                     actionId = (String) action.getValue(ActionConsts.ACTION_ID);
                     ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                    menuItem = actionModule.actionToMenuItem(action, subMenu.buttonGroups);
+                    menuItem = actionModule.actionToMenuItem(action, buttonGroups);
                 }
 
                 @Nonnull
@@ -838,6 +847,35 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
+    private class SubMenuRecord {
+
+        String subMenuId;
+        MenuOutput menuOutput;
+        List<MenuGroupRecord> groupRecords = new LinkedList<>();
+        Map<String, MenuGroupRecord> groupsMap = new HashMap<>();
+        List<ContributionHandler> items = new ArrayList<>();
+        // list of contribution assigned to specific action Id
+        Map<String, List<ContributionHandler>> beforeItem = new HashMap<>();
+        // list of contribution assigned to specific action Id
+        Map<String, List<ContributionHandler>> afterItem = new HashMap<>();
+
+        public SubMenuRecord(String subMenuId, MenuOutput menuOutput) {
+            this.subMenuId = subMenuId;
+            this.menuOutput = menuOutput;
+        }
+
+        @Nonnull
+        public String getSubMenuId() {
+            return subMenuId;
+        }
+
+        @Nonnull
+        public MenuOutput getOutput() {
+            return menuOutput;
+        }
+    }
+
+    @ParametersAreNonnullByDefault
     private class MenuGroupRecord {
 
         String groupId;
@@ -854,33 +892,6 @@ public class MenuManager {
         public MenuGroupRecord(String groupId, MenuOutput outputMenu, SeparationMenuContributionRule.SeparationMode separationMode) {
             this(groupId, outputMenu);
             this.separationMode = separationMode;
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    private class SubMenuRecord {
-
-        String subMenuId;
-        MenuOutput menuOutput;
-        List<MenuGroupRecord> groupRecords = new LinkedList<>();
-        Map<String, MenuGroupRecord> groupsMap = new HashMap<>();
-        Map<String, List<MenuContribution>> beforeItem = new HashMap<>();
-        Map<String, List<MenuContribution>> afterItem = new HashMap<>();
-        Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-
-        public SubMenuRecord(String subMenuId, MenuOutput menuOutput) {
-            this.subMenuId = subMenuId;
-            this.menuOutput = menuOutput;
-        }
-
-        @Nonnull
-        public String getSubMenuId() {
-            return subMenuId;
-        }
-
-        @Nonnull
-        public MenuOutput getOutput() {
-            return menuOutput;
         }
     }
 
