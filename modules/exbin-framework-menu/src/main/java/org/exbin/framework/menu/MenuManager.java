@@ -847,7 +847,7 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
-    private class SubMenuRecord {
+    private static class SubMenuRecord {
 
         String subMenuId;
         MenuOutput menuOutput;
@@ -876,7 +876,7 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
-    private class MenuGroupRecord {
+    private static class MenuGroupRecord {
 
         String groupId;
         MenuOutput outputMenu;
@@ -896,7 +896,7 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
-    private class ProcessingNode {
+    private static class ProcessingNode {
 
         SubMenuRecord subMenu;
         List<MenuGroupRecordNode> groupRecords = new ArrayList<>();
@@ -911,7 +911,7 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
-    private class MenuGroupRecordNode {
+    private static class MenuGroupRecordNode {
 
         List<MenuGroupRecord> records;
         int currentGroupRecord = 0;
