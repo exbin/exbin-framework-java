@@ -86,12 +86,14 @@ public class MenuManager {
         BuilderRecord builderRecord = new BuilderRecord();
         MenuDefinition menuDef = menus.get(menuId);
 
-        // Groups
+        // Build contributions tree
         for (MenuContribution contribution : menuDef.getContributions()) {
             String parentGroupId = null;
-            String subMenuId = null;
+            String parentSubMenuId = null;
             PositionMenuContributionRule.PositionMode positionMode = null;
             SeparationMenuContributionRule.SeparationMode separationMode = null;
+            List<String> afterIds = new ArrayList<>();
+            List<String> beforeIds = new ArrayList<>();
             List<MenuContributionRule> rules = menuDef.getRules().get(contribution);
             for (MenuContributionRule rule : rules) {
                 if (rule instanceof PositionMenuContributionRule) {
@@ -100,12 +102,13 @@ public class MenuManager {
                     separationMode = ((SeparationMenuContributionRule) rule).getSeparationMode();
                 } else if (rule instanceof RelativeMenuContributionRule) {
                     RelativeMenuContributionRule.NextToMode nextToMode = ((RelativeMenuContributionRule) rule).getNextToMode();
+                    String contributionId = ((RelativeMenuContributionRule) rule).getContributionId();
                     switch (nextToMode) {
                         case AFTER:
-
+                            afterIds.add(contributionId);
                             break;
                         case BEFORE:
-
+                            beforeIds.add(contributionId);
                             break;
                         default:
                             throw new AssertionError();
@@ -113,20 +116,35 @@ public class MenuManager {
                 } else if (rule instanceof GroupMenuContributionRule) {
                     parentGroupId = ((GroupMenuContributionRule) rule).getGroupId();
                 } else if (rule instanceof SubMenuContributionRule) {
-                    subMenuId = ((SubMenuContributionRule) rule).getSubMenuId();
+                    parentSubMenuId = ((SubMenuContributionRule) rule).getSubMenuId();
                 }
             }
-            
-            BuilderSectionRecord section = getSection(builderRecord, subMenuId, parentGroupId);
+
+            BuilderSectionRecord section = createSection(builderRecord, parentSubMenuId, parentGroupId);
 
             if (contribution instanceof GroupMenuContribution) {
                 String groupId = ((GroupMenuContribution) contribution).getGroupId();
-                BuilderGroupRecord record = new BuilderGroupRecord(groupId, outputMenu);
-                record.separationMode = separationMode;
-                record.positionMode = positionMode;
-                
+                BuilderSectionRecord subGroup = new BuilderSectionRecord(parentSubMenuId, groupId, outputMenu);
+                subGroup.separationMode = separationMode;
+                subGroup.positionMode = positionMode;
+                section.subGroups.add(subGroup);
             } else if (contribution instanceof SubMenuContribution) {
+                String subMenuId = ((SubMenuContribution) contribution).getSubMenuId();
+                BuilderSectionRecord subMenu = new BuilderSectionRecord(subMenuId, "", outputMenu);
+                subMenu.separationMode = separationMode;
+                subMenu.positionMode = positionMode;
+                section.items.add(subMenu);
+            } else if (contribution instanceof DirectSubMenuContribution) {
+                MenuItemProvider menuItemProvider = ((DirectSubMenuContribution) contribution).getMenuItemProvider();
+                BuilderActionRecord itemRecord = new BuilderActionRecord();
+                itemRecord.
                 
+            } else if (contribution instanceof ActionMenuContribution) {
+                Action action = ((ActionMenuContribution) contribution).getAction();
+                BuilderActionRecord itemRecord = new BuilderActionRecord();
+                itemRecord.separationMode = separationMode;
+                itemRecord.positionMode = positionMode;
+                itemRecord.afterItems.addAll(afterIds);
             }
 
             // TODO group + submenu section
@@ -306,17 +324,21 @@ public class MenuManager {
             }
         } */
     }
-    
+
     @Nonnull
-    private BuilderSectionRecord getSection(BuilderRecord builderRecord, @Nullable String subMenuId, @Nullable String parentGroupId) {
+    private BuilderSectionRecord createSection(BuilderRecord builderRecord, @Nullable String subMenuId, @Nullable String groupId) {
         BuilderSectionRecord subMenuSection = builderRecord.subMenusMap.get(subMenuId == null ? "" : subMenuId);
-        if (subMenuId == null) {
-            if (parentGroupId == null) {
-                return subMenuSection;
-            }
-            
-            
+        if (groupId == null) {
+            return subMenuSection;
         }
+
+        BuilderSectionRecord section = subMenuSection.groupsMap.get(groupId);
+        if (section == null) {
+            section = new BuilderSectionRecord(subMenuId, groupId, section.outputMenu);
+            subMenuSection.groupsMap.put(groupId, section);
+        }
+
+        return section;
     }
 
     @Nullable
@@ -419,19 +441,19 @@ public class MenuManager {
                         // TODO
 /*                        switch (relativeContributionRule.getNextToMode()) {
                             case BEFORE: {
-                                List<MenuContribution> contributions = subMenu.beforeItem.get(relativeContributionRule.getContributionActionId());
+                                List<MenuContribution> contributions = subMenu.beforeItem.get(relativeContributionRule.getContributionId());
                                 if (contributions == null) {
                                     contributions = new LinkedList<>();
-                                    subMenu.beforeItem.put(relativeContributionRule.getContributionActionId(), contributions);
+                                    subMenu.beforeItem.put(relativeContributionRule.getContributionId(), contributions);
                                 }
                                 contributions.add(contribution);
                                 break;
                             }
                             case AFTER: {
-                                List<MenuContribution> contributions = subMenu.afterItem.get(relativeContributionRule.getContributionActionId());
+                                List<MenuContribution> contributions = subMenu.afterItem.get(relativeContributionRule.getContributionId());
                                 if (contributions == null) {
                                     contributions = new LinkedList<>();
-                                    subMenu.afterItem.put(relativeContributionRule.getContributionActionId(), contributions);
+                                    subMenu.afterItem.put(relativeContributionRule.getContributionId(), contributions);
                                 }
                                 contributions.add(contribution);
                                 break;
@@ -659,7 +681,7 @@ public class MenuManager {
         return false;
     }
 
-/*    @Nullable
+    /*    @Nullable
     private GroupMenuContribution getGroup(String menuId, String groupId) {
         MenuDefinition menuDefinition = menus.get(menuId);
         for (MenuContribution contribution : menuDefinition.getContributions()) {
@@ -746,7 +768,6 @@ public class MenuManager {
         }
         return "";
     } */
-
     public void unregisterMenu(String menuId) {
         MenuDefinition definition = menus.get(menuId);
         if (definition != null) {
@@ -922,15 +943,17 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
-    private static class BuilderSectionRecord {
+    private static class BuilderSectionRecord extends BuilderContributionRecord {
 
         String subMenuId;
         String groupId;
         MenuOutput outputMenu;
-        SeparationMenuContributionRule.SeparationMode separationMode;
-        PositionMenuContributionRule.PositionMode positionMode;
+
+        Map<String, BuilderSectionRecord> groupsMap = new HashMap<>();
+
         List<BuilderSectionRecord> subGroups = new ArrayList<>();
-        List<BuilderItemRecord> items = new ArrayList<>();
+        List<BuilderSectionRecord> groups = new ArrayList<>();
+        List<BuilderContributionRecord> items = new ArrayList<>();
 
         public BuilderSectionRecord(String subMenuId, String groupId, MenuOutput outputMenu) {
             this.subMenuId = subMenuId;
@@ -945,12 +968,17 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
-    private static class BuilderItemRecord {
+    private static class BuilderActionRecord extends BuilderContributionRecord {
 
         String menuItemId;
+    }
+
+    private static class BuilderContributionRecord {
+
         SeparationMenuContributionRule.SeparationMode separationMode;
         PositionMenuContributionRule.PositionMode positionMode;
-        Set<String> afterItems = new HashSet<>();
+        final Set<String> afterItems = new HashSet<>();
+
     }
 
     @ParametersAreNonnullByDefault
