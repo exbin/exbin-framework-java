@@ -16,7 +16,6 @@
 package org.exbin.framework.menu;
 
 import java.awt.event.ActionEvent;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -120,43 +119,118 @@ public class MenuManager {
                 }
             }
 
-            BuilderSectionRecord section = createSection(builderRecord, parentSubMenuId, parentGroupId);
+            
+            BuilderSectionRecord section = createSection(builderRecord, parentSubMenuId, positionMode, parentGroupId);
 
             if (contribution instanceof GroupMenuContribution) {
                 String groupId = ((GroupMenuContribution) contribution).getGroupId();
-                BuilderSectionRecord subGroup = new BuilderSectionRecord(parentSubMenuId, groupId, outputMenu);
+                BuilderSectionRecord subGroup = new BuilderSectionRecord(parentSubMenuId, positionMode, groupId, outputMenu);
                 subGroup.separationMode = separationMode;
-                subGroup.positionMode = positionMode;
+                subGroup.afterItems.addAll(afterIds);
                 section.subGroups.add(subGroup);
-            } else if (contribution instanceof SubMenuContribution) {
-                String subMenuId = ((SubMenuContribution) contribution).getSubMenuId();
-                BuilderSectionRecord subMenu = new BuilderSectionRecord(subMenuId, "", outputMenu);
-                subMenu.separationMode = separationMode;
-                subMenu.positionMode = positionMode;
-                section.items.add(subMenu);
-            } else if (contribution instanceof DirectSubMenuContribution) {
-                MenuItemProvider menuItemProvider = ((DirectSubMenuContribution) contribution).getMenuItemProvider();
-                BuilderActionRecord itemRecord = new BuilderActionRecord();
-                itemRecord.
-                
-            } else if (contribution instanceof ActionMenuContribution) {
-                Action action = ((ActionMenuContribution) contribution).getAction();
-                BuilderActionRecord itemRecord = new BuilderActionRecord();
-                itemRecord.separationMode = separationMode;
-                itemRecord.positionMode = positionMode;
-                itemRecord.afterItems.addAll(afterIds);
+            } else {
+                BuilderContributionRecord contributionRecord;
+                String contributionId = null;
+                if (contribution instanceof SubMenuContribution) {
+                    contributionId = ((SubMenuContribution) contribution).getSubMenuId();
+                    contributionRecord = new BuilderSectionRecord(contributionId, positionMode, "", outputMenu);
+                } else if (contribution instanceof DirectSubMenuContribution) {
+                    MenuItemProvider menuItemProvider = ((DirectSubMenuContribution) contribution).getMenuItemProvider();
+                    contributionRecord = new BuilderDirectSubMenuRecord();
+                } else if (contribution instanceof ActionMenuContribution) {
+                    contributionRecord = new BuilderActionRecord((ActionMenuContribution) contribution);
+                } else {
+                    throw new IllegalStateException("Unsupported contribution type: " + contribution.getClass().getName());
+                }
+
+                if (contributionId != null && section.itemsMap.containsKey(contributionId)) {
+                    throw new IllegalStateException("Contribution with id " + contributionId + " already exists");
+                }
+
+                contributionRecord.separationMode = separationMode;
+                contributionRecord.afterItems.addAll(afterIds);
+
+                // Convert before rules to after rules
+                List<String> defferedAfterIds = section.afterMap.remove(contributionId);
+                if (defferedAfterIds != null) {
+                    contributionRecord.afterItems.addAll(defferedAfterIds);
+                }
+                for (String itemId : beforeIds) {
+                    BuilderContributionRecord itemRecord = section.itemsMap.get(itemId);
+                    if (itemRecord != null) {
+                        itemRecord.afterItems.add(contributionId);
+                    } else {
+                        List<String> itemAfterIds = section.afterMap.get(itemId);
+                        if (itemAfterIds == null) {
+                            itemAfterIds = new ArrayList<>();
+                            itemAfterIds.add(contributionId);
+                            section.afterMap.put(itemId, itemAfterIds);
+                        } else {
+                            itemAfterIds.add(contributionId);
+                        }
+                    }
+                }
+
+                section.items.add(contributionRecord);
+                if (contributionId != null) {
+                    section.itemsMap.put(contributionId, contributionRecord);
+                }
             }
 
             // TODO group + submenu section
         }
 
+        // Generate menu
+        List<BuilderSectionRecord> processing = new ArrayList<>();
+        processing.add(builderRecord.subMenusMap.get(""));
+        while (!processing.isEmpty()) {
+            BuilderSectionRecord section = processing.get(processing.size() - 1);
+
+            boolean sectionIsFinished = false;
+            Map<String, BuilderSectionRecord> groups = section.groupsMap.get(section.positionMode);
+            if (groups == null && groups.isEmpty()) {
+                if (section.positionMode == PositionMenuContributionRule.PositionMode.BOTTOM_LAST) {
+                    sectionIsFinished = true;
+                } else {
+                    section.positionMode = PositionMenuContributionRule.PositionMode.values()[section.positionMode.ordinal() + 1];
+                    continue;
+                }
+            } else {
+                BuilderSectionRecord groupSection = groups.get("");
+                if (groupSection == null || groupSection.items.isEmpty()) {
+                    sectionIsFinished = true;
+                }
+            }
+
+            if (sectionIsFinished) {
+                processing.remove(processing.size() - 1);
+                continue;
+            }
+            BuilderContributionRecord contribution = section.items.get(0);
+            // contribution.afterItems;
+            {
+                if (contribution instanceof BuilderActionRecord) {
+
+                    outputMenu.add(new JMenuItem("Item"));
+                } else if (contribution instanceof BuilderDirectSubMenuRecord) {
+
+                    outputMenu.add(new JMenu("Menu"));
+                } else if (contribution instanceof BuilderSectionRecord) {
+                    BuilderSectionRecord subSection = (BuilderSectionRecord) contribution;
+                    outputMenu.add(new JMenu(subSection.subMenuId + "+" + subSection.groupId));
+                }
+                section.items.remove(0);
+            }
+        }
+
+/*        
         // Sub menus
         for (MenuContribution contribution : menuDef.getContributions()) {
             if (!(contribution instanceof SubMenuContribution)) {
                 continue;
             }
 
-            /* SubMenuContribution subMenuContribution = ((SubMenuContribution) contribution);
+            SubMenuContribution subMenuContribution = ((SubMenuContribution) contribution);
             String subMenuId = ((SubMenuContribution) contribution).getSubMenuId();
             BuilderSubMenuRecord subMenuRecord = subMenus.get(subMenuId);
             if (subMenuRecord == null) {
@@ -170,8 +244,8 @@ public class MenuManager {
                     subMenuRecord.groupsMap.put(mode.name(), menuGroupRecord);
                     subMenuRecord.groupRecords.add(menuGroupRecord);
                 }
-            } */
-        }
+            }
+        } */
         /*
         Map<String, BuilderSubMenuRecord> subMenus = collectSubMenus(outputMenu, menuId);
 
@@ -326,16 +400,31 @@ public class MenuManager {
     }
 
     @Nonnull
-    private BuilderSectionRecord createSection(BuilderRecord builderRecord, @Nullable String subMenuId, @Nullable String groupId) {
-        BuilderSectionRecord subMenuSection = builderRecord.subMenusMap.get(subMenuId == null ? "" : subMenuId);
-        if (groupId == null) {
+    private BuilderSectionRecord createSection(BuilderRecord builderRecord, @Nullable String subMenuId, @Nullable PositionMenuContributionRule.PositionMode positionMode, @Nullable String groupId) {
+        if (subMenuId == null) {
+            subMenuId = "";
+        }
+        if (positionMode == null) {
+            positionMode = PositionMenuContributionRule.PositionMode.DEFAULT;
+        }
+        BuilderSectionRecord subMenuSection = builderRecord.subMenusMap.get(subMenuId);
+        if (subMenuSection == null) {
+            subMenuSection = new BuilderSectionRecord(subMenuId, positionMode, null, builderRecord.menuOutput);
+            builderRecord.subMenusMap.put(subMenuId, subMenuSection);
+        }
+        if (groupId == null && positionMode == PositionMenuContributionRule.PositionMode.DEFAULT) {
             return subMenuSection;
         }
 
-        BuilderSectionRecord section = subMenuSection.groupsMap.get(groupId);
+        Map<String, BuilderSectionRecord> positionGroups = subMenuSection.groupsMap.get(positionMode);
+        if (positionGroups == null) {
+            positionGroups = new HashMap<>();
+            subMenuSection.groupsMap.put(positionMode, positionGroups);
+        }
+        BuilderSectionRecord section = positionGroups.get(groupId);
         if (section == null) {
-            section = new BuilderSectionRecord(subMenuId, groupId, section.outputMenu);
-            subMenuSection.groupsMap.put(groupId, section);
+            section = new BuilderSectionRecord(subMenuId, positionMode, groupId, subMenuSection.outputMenu);
+            positionGroups.put(groupId, section);
         }
 
         return section;
@@ -384,7 +473,7 @@ public class MenuManager {
         }
 
         // Build full tree of groups
-        for (MenuContribution contribution : menuDef.getContributions()) {
+        /* for (MenuContribution contribution : menuDef.getContributions()) {
             if (!(contribution instanceof GroupMenuContribution)) {
                 continue;
             }
@@ -439,7 +528,7 @@ public class MenuManager {
                     RelativeMenuContributionRule relativeContributionRule = getRelativeToRule(menuId, contribution);
                     if (relativeContributionRule != null) {
                         // TODO
-/*                        switch (relativeContributionRule.getNextToMode()) {
+/ *                        switch (relativeContributionRule.getNextToMode()) {
                             case BEFORE: {
                                 List<MenuContribution> contributions = subMenu.beforeItem.get(relativeContributionRule.getContributionId());
                                 if (contributions == null) {
@@ -460,14 +549,14 @@ public class MenuManager {
                             }
                             default:
                                 throw new IllegalStateException();
-                        } */
+                        } * /
                     } else {
                         BuilderGroupRecord menuGroupRecord = subMenu.groupsMap.get(PositionMenuContributionRule.PositionMode.DEFAULT.name());
                         menuGroupRecord.contributions.add(contribution);
                     }
                 }
             }
-        }
+        } */
 
         return subMenus;
     }
@@ -947,22 +1036,28 @@ public class MenuManager {
 
         String subMenuId;
         String groupId;
+        PositionMenuContributionRule.PositionMode positionMode;
         MenuOutput outputMenu;
 
-        Map<String, BuilderSectionRecord> groupsMap = new HashMap<>();
+        Map<PositionMenuContributionRule.PositionMode, Map<String, BuilderSectionRecord>> groupsMap = new HashMap<>();
+        Map<String, BuilderContributionRecord> itemsMap = new HashMap<>();
+        Map<String, List<String>> afterMap = new HashMap<>();
+        Set<String> processedItems = new HashSet<>();
+        PositionMenuContributionRule.PositionMode processingPosition = PositionMenuContributionRule.PositionMode.TOP;
 
         List<BuilderSectionRecord> subGroups = new ArrayList<>();
         List<BuilderSectionRecord> groups = new ArrayList<>();
         List<BuilderContributionRecord> items = new ArrayList<>();
 
-        public BuilderSectionRecord(String subMenuId, String groupId, MenuOutput outputMenu) {
+        public BuilderSectionRecord(String subMenuId, PositionMenuContributionRule.PositionMode positionMode, @Nullable String groupId, MenuOutput outputMenu) {
             this.subMenuId = subMenuId;
+            this.positionMode = positionMode;
             this.groupId = groupId;
             this.outputMenu = outputMenu;
         }
 
-        public BuilderSectionRecord(String subMenuId, String groupId, MenuOutput outputMenu, SeparationMenuContributionRule.SeparationMode separationMode) {
-            this(subMenuId, groupId, outputMenu);
+        public BuilderSectionRecord(String subMenuId, PositionMenuContributionRule.PositionMode positionMode, @Nullable String groupId, MenuOutput outputMenu, SeparationMenuContributionRule.SeparationMode separationMode) {
+            this(subMenuId, positionMode, groupId, outputMenu);
             this.separationMode = separationMode;
         }
     }
@@ -970,13 +1065,24 @@ public class MenuManager {
     @ParametersAreNonnullByDefault
     private static class BuilderActionRecord extends BuilderContributionRecord {
 
+        final ActionMenuContribution contribution;
+        final String contributionId;
+
+        public BuilderActionRecord(ActionMenuContribution contribution) {
+            this.contribution = contribution;
+            contributionId = (String) contribution.getAction().getValue(ActionConsts.ACTION_ID);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private static class BuilderDirectSubMenuRecord extends BuilderContributionRecord {
+
         String menuItemId;
     }
 
     private static class BuilderContributionRecord {
 
         SeparationMenuContributionRule.SeparationMode separationMode;
-        PositionMenuContributionRule.PositionMode positionMode;
         final Set<String> afterItems = new HashSet<>();
 
     }
