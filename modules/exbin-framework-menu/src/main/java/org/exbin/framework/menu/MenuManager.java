@@ -125,10 +125,14 @@ public class MenuManager {
 
             if (contribution instanceof GroupMenuContribution) {
                 String groupId = ((GroupMenuContribution) contribution).getGroupId();
-                BuilderSectionRecord subGroup = new BuilderSectionRecord(parentSubMenuId, positionMode, groupId, outputMenu);
+                BuilderGroup2Record subGroup = section.groupsMap.get(groupId);
+                if (subGroup == null) {
+                    subGroup = new BuilderGroup2Record(groupId);
+                    section.groupsMap.put(groupId, subGroup);
+                    section.groups.add(subGroup);
+                }
                 subGroup.separationMode = separationMode;
                 subGroup.afterItems.addAll(afterIds);
-                section.subGroups.add(subGroup);
             } else {
                 BuilderContributionRecord contributionRecord;
                 String contributionId = null;
@@ -185,14 +189,18 @@ public class MenuManager {
         while (!processing.isEmpty()) {
             BuilderSectionRecord section = processing.get(processing.size() - 1);
 
-            String groupId = ""; // TODO
-            BuilderSectionRecord groupSection;
-            BuilderGroup2Record groups = section.groupsMap.get(groupId);
+            if (section.processingGroup >= section.groups.size()) {
+                processing.remove(processing.size() - 1);
+                continue;
+            }
+            
+            // TODO: Groups ordering / contribution.afterItems;
+            BuilderGroup2Record groups = section.groups.get(section.processingGroup);
 
-            groupSection = groups == null || groups.positions == null ? null : groups.positions.get(groups.processingPosition);
+            BuilderSectionRecord groupSection = groups == null || groups.positions == null ? null : groups.positions.get(groups.processingPosition);
             if (groupSection == null || groupSection.items.isEmpty()) {
                 if (groups.processingPosition == PositionMenuContributionRule.PositionMode.BOTTOM_LAST) {
-                    processing.remove(processing.size() - 1);
+                    section.processingGroup++;
                 } else {
                     groups.processingPosition = PositionMenuContributionRule.PositionMode.values()[groups.processingPosition.ordinal() + 1];
                 }
@@ -200,7 +208,7 @@ public class MenuManager {
             }
 
             BuilderContributionRecord contribution = groupSection.items.get(0);
-            // contribution.afterItems;
+            // TODO: Items ordering / contribution.afterItems;
             {
                 if (contribution instanceof BuilderActionRecord) {
                     Action action = ((BuilderActionRecord) contribution).contribution.getAction();
@@ -424,8 +432,9 @@ public class MenuManager {
 
         BuilderGroup2Record groupRecord = subMenuSection.groupsMap.get(groupId);
         if (groupRecord == null) {
-            groupRecord = new BuilderGroup2Record();
+            groupRecord = new BuilderGroup2Record(groupId);
             subMenuSection.groupsMap.put(groupId, groupRecord);
+            subMenuSection.groups.add(groupRecord);
         }
         BuilderSectionRecord section = groupRecord.positions == null ? null : groupRecord.positions.get(positionMode);
         if (section == null) {
@@ -1056,9 +1065,10 @@ public class MenuManager {
         Map<String, List<String>> afterMap = new HashMap<>();
         Set<String> processedItems = new HashSet<>();
 
-        List<BuilderSectionRecord> subGroups = new ArrayList<>();
-        List<BuilderSectionRecord> groups = new ArrayList<>();
+        List<BuilderGroup2Record> groups = new ArrayList<>();
         List<BuilderContributionRecord> items = new ArrayList<>();
+        
+        int processingGroup = 0;
 
         public BuilderSectionRecord(String subMenuId, PositionMenuContributionRule.PositionMode positionMode, @Nullable String groupId, MenuOutput outputMenu) {
             this.subMenuId = subMenuId;
@@ -1121,9 +1131,18 @@ public class MenuManager {
     }
     
     private static class BuilderGroup2Record {
+        
+        String groupId;
+
+        SeparationMenuContributionRule.SeparationMode separationMode;
+        final Set<String> afterItems = new HashSet<>();
 
         Map<PositionMenuContributionRule.PositionMode, BuilderSectionRecord> positions;
         PositionMenuContributionRule.PositionMode processingPosition = PositionMenuContributionRule.PositionMode.TOP;
+
+        public BuilderGroup2Record(String groupId) {
+            this.groupId = groupId;
+        }
     }
 
     @ParametersAreNonnullByDefault
