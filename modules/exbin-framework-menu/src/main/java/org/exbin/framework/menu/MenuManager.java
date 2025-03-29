@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -210,24 +209,53 @@ public class MenuManager {
             BuilderContributionRecord contribution = groupSection.items.get(0);
             // TODO: Items ordering / contribution.afterItems;
             {
+                if (contribution.separationMode == SeparationMenuContributionRule.SeparationMode.ABOVE || contribution.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
+                    section.separatorQueued = true;
+                }
+                boolean isPopup = outputMenu.isPopup();
                 if (contribution instanceof BuilderActionRecord) {
-                    Action action = ((BuilderActionRecord) contribution).contribution.getAction();
-                    ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                    JMenuItem menuItem = actionModule.actionToMenuItem(action, buttonGroups);
-                    section.outputMenu.add(menuItem);
-                } else if (contribution instanceof BuilderDirectSubMenuRecord) {
-                    section.outputMenu.add(((BuilderDirectSubMenuRecord) contribution).menuItem);
-                } else if (contribution instanceof BuilderMenuRecord) {
-                    BuilderMenuRecord menuRecord = (BuilderMenuRecord) contribution;
-                    BuilderSectionRecord subSection = builderRecord.subMenusMap.get(menuRecord.contributionId);
-                    if (subSection != null) {
-                        JMenu subMenu = UiUtils.createMenu();
-                        Action action = menuRecord.contribution.getAction();
-                        subMenu.setAction(action);
-                        section.outputMenu.add(subMenu);
-                        subSection.outputMenu = new MenuWrapper(subMenu);
-                        processing.add(subSection);
+                    BuilderActionRecord contributionRecord = (BuilderActionRecord) contribution;
+                    if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
+                        JMenuItem menuItem = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
+                        if (section.separatorQueued) {
+                            section.outputMenu.addSeparator();
+                            section.separatorQueued = false;
+                        }
+                        section.outputMenu.add(menuItem);
+                        contributionRecord.finishItem(menuItem, activationUpdateService);
                     }
+                } else if (contribution instanceof BuilderDirectSubMenuRecord) {
+                    BuilderDirectSubMenuRecord contributionRecord = (BuilderDirectSubMenuRecord) contribution;
+                    if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
+                        JMenuItem menuItem = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
+                        if (section.separatorQueued) {
+                            section.outputMenu.addSeparator();
+                            section.separatorQueued = false;
+                        }
+                        section.outputMenu.add(menuItem);
+                        contributionRecord.finishItem(menuItem, activationUpdateService);
+                    }
+                } else if (contribution instanceof BuilderMenuRecord) {
+                    BuilderMenuRecord contributionRecord = (BuilderMenuRecord) contribution;
+                    if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
+                        BuilderSectionRecord subSection = builderRecord.subMenusMap.get(contributionRecord.contributionId);
+                        if (subSection != null) {
+                            JMenu subMenu = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
+                            Action action = contributionRecord.contribution.getAction();
+                            subMenu.setAction(action);
+                            if (section.separatorQueued) {
+                                section.outputMenu.addSeparator();
+                                section.separatorQueued = false;
+                            }
+                            section.outputMenu.add(subMenu);
+                            contributionRecord.finishItem(subMenu, activationUpdateService);
+                            subSection.outputMenu = new MenuWrapper(subMenu);
+                            processing.add(subSection);
+                        }
+                    }
+                }
+                if (contribution.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW || contribution.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
+                    section.separatorQueued = true;
                 }
                 groupSection.items.remove(0);
             }
@@ -448,7 +476,7 @@ public class MenuManager {
         return section;
     }
 
-    @Nullable
+/*    @Nullable
     private Map<String, BuilderSubMenuRecord> collectSubMenus(MenuOutput outputMenu, String menuId) {
         MenuDefinition menuDef = menus.get(menuId);
 
@@ -491,7 +519,7 @@ public class MenuManager {
         }
 
         // Build full tree of groups
-        /* for (MenuContribution contribution : menuDef.getContributions()) {
+        / * for (MenuContribution contribution : menuDef.getContributions()) {
             if (!(contribution instanceof GroupMenuContribution)) {
                 continue;
             }
@@ -574,12 +602,12 @@ public class MenuManager {
                     }
                 }
             }
-        } */
+        } * /
 
         return subMenus;
-    }
+    } */
 
-    @Nonnull
+    /*@Nonnull
     private ContributionHandler createProcessedContribution(MenuOutput output, MenuContribution contribution, String menuId, String subMenuId, BuilderSubMenuRecord subMenu, Map<String, BuilderSubMenuRecord> subMenus, Map<String, ButtonGroup> buttonGroups, ActionContextService activationUpdateService) {
         ContributionHandler processed;
         if (contribution instanceof ActionMenuContribution) {
@@ -740,15 +768,15 @@ public class MenuManager {
         }
 
         return processed;
-    }
+    } */
 
-    private void finishMenuAction(@Nullable Action action, ActionContextService activationUpdateService) {
+    private static void finishMenuAction(@Nullable Action action, ActionContextService activationUpdateService) {
         if (action != null) {
             activationUpdateService.requestUpdate(action);
         }
     }
 
-    private void finishMenuItem(JMenuItem menuItem, ActionContextService activationUpdateService) {
+    private static void finishMenuItem(JMenuItem menuItem, ActionContextService activationUpdateService) {
         if (menuItem instanceof JMenu) {
             finishMenu((JMenu) menuItem, activationUpdateService);
         } else {
@@ -759,7 +787,7 @@ public class MenuManager {
         }
     }
 
-    private void finishMenu(JMenu menu, ActionContextService activationUpdateService) {
+    private static void finishMenu(JMenu menu, ActionContextService activationUpdateService) {
         for (int i = 0; i < menu.getItemCount(); i++) {
             JMenuItem menuItem = menu.getItem(i);
             if (menuItem == null) {
@@ -907,7 +935,7 @@ public class MenuManager {
         return actions;
     }
 
-    @ParametersAreNonnullByDefault
+    /* @ParametersAreNonnullByDefault
     private static class QueuedContribution {
 
         ContributionHandler parent;
@@ -940,7 +968,7 @@ public class MenuManager {
 
     private enum OrderingMode {
         BEFORE, ITEM, AFTER
-    };
+    }; */
 
     public void registerMenu(String menuId, String moduleId) {
         ObjectUtils.requireNonNull(menuId);
@@ -1060,6 +1088,7 @@ public class MenuManager {
         SeparationMenuContributionRule.SeparationMode separationMode;
         final Set<String> afterItems = new HashSet<>();
 
+        boolean separatorQueued = false;
         Map<String, BuilderGroup2Record> groupsMap = new HashMap<>();
         Map<String, BuilderContributionRecord> itemsMap = new HashMap<>();
         Map<String, List<String>> afterMap = new HashMap<>();
@@ -1084,52 +1113,6 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
-    private static class BuilderActionRecord extends BuilderContributionRecord {
-
-        final ActionMenuContribution contribution;
-        final String contributionId;
-
-        public BuilderActionRecord(ActionMenuContribution contribution) {
-            this.contribution = contribution;
-            contributionId = (String) contribution.getAction().getValue(ActionConsts.ACTION_ID);
-        }
-    
-        /* public void process() {
-            Action action = ((ActionMenuContribution) contribution).getAction();
-            actionId = (String) action.getValue(ActionConsts.ACTION_ID);
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            menuItem = actionModule.actionToMenuItem(action, buttonGroups);
-        }
-
-        public boolean shouldCreate() {
-            if (output.isPopup()) {
-                Action action = ((ActionMenuContribution) contribution).getAction();
-                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                if (menuCreation != null) {
-                    return menuCreation.shouldCreate(menuId, subMenuId);
-                }
-            }
-
-            return true;
-        }
-
-        public void finish() {
-            Action action = ((ActionMenuContribution) contribution).getAction();
-            if (output.isPopup()) {
-                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                if (menuCreation != null) {
-                    menuCreation.onCreate(menuItem, menuId, subMenuId);
-                }
-            }
-
-            output.add(menuItem);
-            Action menuItemAction = menuItem.getAction();
-            if (menuItemAction != null) {
-                finishMenuAction(menuItemAction, activationUpdateService);
-            }
-        } */
-    }
-    
     private static class BuilderGroup2Record {
         
         String groupId;
@@ -1146,23 +1129,68 @@ public class MenuManager {
     }
 
     @ParametersAreNonnullByDefault
+    private static class BuilderActionRecord extends BuilderContributionRecord {
+
+        final ActionMenuContribution contribution;
+        final String contributionId;
+
+        public BuilderActionRecord(ActionMenuContribution contribution) {
+            this.contribution = contribution;
+            contributionId = (String) contribution.getAction().getValue(ActionConsts.ACTION_ID);
+        }
+    
+        public boolean shouldCreate(boolean isPopup, String menuId, String subMenuId) {
+            if (isPopup) {
+                Action action = ((ActionMenuContribution) contribution).getAction();
+                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
+                if (menuCreation != null) {
+                    return menuCreation.shouldCreate(menuId, subMenuId);
+                }
+            }
+
+            return true;
+        }
+
+        @Nonnull
+        public JMenuItem createItem(boolean isPopup, String menuId, String subMenuId, Map<String, ButtonGroup> buttonGroups) {
+            Action action = contribution.getAction();
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            JMenuItem menuItem = actionModule.actionToMenuItem(action, buttonGroups);
+
+            if (isPopup) {
+                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
+                if (menuCreation != null) {
+                    menuCreation.onCreate(menuItem, menuId, subMenuId);
+                }
+            }
+
+            return menuItem;
+        }
+        
+        public void finishItem(JMenuItem menuItem, ActionContextService activationUpdateService) {
+            Action menuItemAction = menuItem.getAction();
+            if (menuItemAction != null) {
+                MenuManager.finishMenuAction(menuItemAction, activationUpdateService);
+            }
+        }
+    }
+    
+    @ParametersAreNonnullByDefault
     private static class BuilderDirectSubMenuRecord extends BuilderContributionRecord {
 
         DirectSubMenuContribution contribution;
-        String contributionId = null;
         JMenuItem menuItem;
 
         public BuilderDirectSubMenuRecord(DirectSubMenuContribution contribution) {
             this.contribution = contribution;
-            menuItem = contribution.getMenuItemProvider().createMenuItem();
-            Action action = menuItem.getAction();
-            if (action != null) {
-                contributionId = (String) action.getValue(ActionConsts.ACTION_ID);
-            }
         }
     
-    /*    public boolean shouldCreate() {
-            if (output.isPopup()) {
+        public boolean shouldCreate(boolean isPopup, String menuId, String subMenuId) {
+            if (menuItem == null) {
+                menuItem = contribution.getMenuItemProvider().createMenuItem();
+            }
+
+            if (isPopup) {
                 Action action = menuItem.getAction();
                 if (action != null) {
                     ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
@@ -1175,19 +1203,27 @@ public class MenuManager {
             return true;
         }
 
-        public void finish() {
+        @Nonnull
+        public JMenuItem createItem(boolean isPopup, String menuId, String subMenuId, Map<String, ButtonGroup> buttonGroups) {
+            if (menuItem == null) {
+                menuItem = contribution.getMenuItemProvider().createMenuItem();
+            }
+
             Action action = menuItem.getAction();
-            if (output.isPopup() && action != null) {
+            if (isPopup && action != null) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                 if (menuCreation != null) {
                     menuCreation.onCreate(menuItem, menuId, subMenuId);
                 }
             }
 
-            output.add(menuItem);
-            finishMenuItem(menuItem, activationUpdateService);
-            finishMenuAction(action, activationUpdateService);
-        } */
+            return menuItem;
+        }
+
+        public void finishItem(JMenuItem menuItem, ActionContextService activationUpdateService) {
+            MenuManager.finishMenuItem(menuItem, activationUpdateService);
+            MenuManager.finishMenuAction(menuItem.getAction(), activationUpdateService);
+        }
     }
 
     @ParametersAreNonnullByDefault
@@ -1195,51 +1231,43 @@ public class MenuManager {
 
         SubMenuContribution contribution;
         String contributionId;
-//        JMenuItem menuItem;
 
         public BuilderMenuRecord(SubMenuContribution contribution) {
             this.contribution = contribution;
             this.contributionId = contribution.getSubMenuId();
         }
 
-/*        public void process() {
-            SubMenuContribution subMenuContribution = (SubMenuContribution) contribution;
-            String subMenuId = subMenuContribution.getSubMenuId();
-            BuilderSubMenuRecord subMenuRecord = subMenus.get(subMenuId);
-            menuItem = ((MenuWrapper) subMenuRecord.getOutput()).menu;
-            Action action = subMenuContribution.getAction();
-            actionId = (String) action.getValue(ActionConsts.ACTION_ID);
-            menuItem.setAction(action);
-        }
-
-        @Override
-        public boolean shouldCreate() {
-            if (output.isPopup()) {
-                Action action = menuItem.getAction();
-                if (action != null) {
-                    ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                    if (menuCreation != null) {
-                        return menuCreation.shouldCreate(menuId, subMenuId);
-                    }
-                }
-            }
-
-            return menuItem.getMenuComponentCount() > 0;
-        }
-
-        public void finish() {
-            Action action = menuItem.getAction();
-            if (output.isPopup() && action != null) {
+        public boolean shouldCreate(boolean isPopup, String menuId, String subMenuId) {
+            if (isPopup) {
+                Action action = contribution.getAction();
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                 if (menuCreation != null) {
-                    menuCreation.onCreate(menuItem, menuId, subMenuId);
+                    return menuCreation.shouldCreate(menuId, subMenuId);
                 }
             }
 
-            output.add(menuItem);
-            finishMenu(menuItem, activationUpdateService);
-            finishMenuAction(action, activationUpdateService);
-        } */
+            return true; // TODO menuItem.getMenuComponentCount() > 0;
+        }
+
+        @Nonnull
+        public JMenu createItem(boolean isPopup, String menuId, String subMenuId, Map<String, ButtonGroup> buttonGroups) {
+            JMenu subMenu = UiUtils.createMenu();
+
+            Action action = contribution.getAction();
+            subMenu.setAction(action);
+            if (isPopup) {
+                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
+                if (menuCreation != null) {
+                    menuCreation.onCreate(subMenu, menuId, subMenuId);
+                }
+            }
+            
+            return subMenu;
+        }
+
+        public void finishItem(JMenu menu, ActionContextService activationUpdateService) {
+            MenuManager.finishMenuAction(menu.getAction(), activationUpdateService);
+        }
     }
 
     private static class BuilderContributionRecord {
@@ -1249,7 +1277,7 @@ public class MenuManager {
 
     }
 
-    @ParametersAreNonnullByDefault
+    /* @ParametersAreNonnullByDefault
     private static class BuilderSubMenuRecord {
 
         String subMenuId;
@@ -1276,9 +1304,9 @@ public class MenuManager {
         public MenuOutput getOutput() {
             return menuOutput;
         }
-    }
+    } */
 
-    @ParametersAreNonnullByDefault
+    /* @ParametersAreNonnullByDefault
     private static class BuilderGroupRecord {
 
         String groupId;
@@ -1297,9 +1325,9 @@ public class MenuManager {
             this(groupId, outputMenu);
             this.separationMode = separationMode;
         }
-    }
+    } */
 
-    @ParametersAreNonnullByDefault
+    /* @ParametersAreNonnullByDefault
     private static class BuilderGroupOrder {
 
         List<BuilderGroupRecord> records;
@@ -1310,9 +1338,9 @@ public class MenuManager {
         public BuilderGroupOrder(List<BuilderGroupRecord> records) {
             this.records = records;
         }
-    }
+    } */
 
-    private static abstract class ContributionHandler {
+/*    private static abstract class ContributionHandler {
 
         List<ContributionHandler> before = new LinkedList<>();
         List<ContributionHandler> after = new LinkedList<>();
@@ -1325,7 +1353,7 @@ public class MenuManager {
         abstract boolean shouldCreate();
 
         abstract void finish();
-    }
+    } */
 
     @ParametersAreNonnullByDefault
     private static interface MenuOutput {
