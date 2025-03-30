@@ -119,14 +119,13 @@ public class MenuManager {
                 }
             }
 
-            
             BuilderSectionRecord section = createSection(builderRecord, parentSubMenuId, positionMode, parentGroupId);
-
+            
             if (contribution instanceof GroupMenuContribution) {
                 String groupId = ((GroupMenuContribution) contribution).getGroupId();
-                BuilderGroup2Record subGroup = section.groupsMap.get(groupId);
+                BuilderGroupRecord subGroup = section.groupsMap.get(groupId);
                 if (subGroup == null) {
-                    subGroup = new BuilderGroup2Record(groupId);
+                    subGroup = new BuilderGroupRecord(groupId);
                     section.groupsMap.put(groupId, subGroup);
                     section.groups.add(subGroup);
                 }
@@ -188,13 +187,31 @@ public class MenuManager {
         while (!processing.isEmpty()) {
             BuilderSectionRecord section = processing.get(processing.size() - 1);
 
+            if (section.processingState == SectionProcessingState.START) {
+                if (section.separationMode == SeparationMenuContributionRule.SeparationMode.ABOVE || section.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
+                    section.separatorQueued = true;
+                }
+                section.processingState = SectionProcessingState.ITEMS;
+            }
+            
+            if (section.processingState == SectionProcessingState.ITEMS) {
+                
+            }
+
             if (section.processingGroup >= section.groups.size()) {
+                if (section.processingState == SectionProcessingState.GROUPS) {
+                    if (section.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW || section.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
+                        section.separatorQueued = true;
+                    }
+                    section.processingState = SectionProcessingState.END;
+                }
+
                 processing.remove(processing.size() - 1);
                 continue;
             }
             
             // TODO: Groups ordering / contribution.afterItems;
-            BuilderGroup2Record groups = section.groups.get(section.processingGroup);
+            BuilderGroupRecord groups = section.groups.get(section.processingGroup);
 
             BuilderSectionRecord groupSection = groups == null || groups.positions == null ? null : groups.positions.get(groups.processingPosition);
             if (groupSection == null || groupSection.items.isEmpty()) {
@@ -260,181 +277,6 @@ public class MenuManager {
                 groupSection.items.remove(0);
             }
         }
-
-/*        
-        // Sub menus
-        for (MenuContribution contribution : menuDef.getContributions()) {
-            if (!(contribution instanceof SubMenuContribution)) {
-                continue;
-            }
-
-            SubMenuContribution subMenuContribution = ((SubMenuContribution) contribution);
-            String subMenuId = ((SubMenuContribution) contribution).getSubMenuId();
-            BuilderSubMenuRecord subMenuRecord = subMenus.get(subMenuId);
-            if (subMenuRecord == null) {
-                JMenu subMenu = UiUtils.createMenu();
-                Action action = subMenuContribution.getAction();
-                subMenu.setAction(action);
-                subMenuRecord = new BuilderSubMenuRecord(subMenuId, new MenuWrapper(subMenu, outputMenu.isPopup()));
-                subMenus.put(subMenuId, subMenuRecord);
-                for (PositionMenuContributionRule.PositionMode mode : PositionMenuContributionRule.PositionMode.values()) {
-                    BuilderGroupRecord menuGroupRecord = new BuilderGroupRecord(mode.name(), subMenuRecord.menuOutput);
-                    subMenuRecord.groupsMap.put(mode.name(), menuGroupRecord);
-                    subMenuRecord.groupRecords.add(menuGroupRecord);
-                }
-            }
-        } */
-        /*
-        Map<String, BuilderSubMenuRecord> subMenus = collectSubMenus(outputMenu, menuId);
-
-        if (subMenus == null) {
-            return;
-        }
-
-        Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        builderRecord.add(new BuilderMenuRecord(subMenus.get("")));
-        while (!builderRecord.isEmpty()) {
-            BuilderMenuRecord processingNode = builderRecord.get(builderRecord.size() - 1);
-            BuilderSubMenuRecord subMenu = processingNode.subMenu;
-            String subMenuId = subMenu.subMenuId;
-            MenuOutput output = subMenu.menuOutput;
-
-            if (processingNode.currentGroup == processingNode.groups.size()) {
-                builderRecord.remove(builderRecord.size() - 1);
-                continue;
-            }
-
-            BuilderGroupOrder groupRecordNode = processingNode.groups.get(processingNode.currentGroup);
-
-            if (groupRecordNode.currentGroupRecord == groupRecordNode.records.size()) {
-                processingNode.currentGroup++;
-                continue;
-            }
-
-            BuilderGroupRecord groupRecord = groupRecordNode.records.get(groupRecordNode.currentGroupRecord);
-
-            if (groupRecordNode.currentContribution == groupRecord.contributions.size()) {
-                groupRecordNode.currentContribution = 0;
-                groupRecordNode.currentGroupRecord++;
-                continue;
-            }
-
-                if (groupRecordNode.rootProcessed != null) {
-                    // Perform insertion of all processed menuItem contributions
-                    List<OrderingContribution> orderingPath = new LinkedList<>();
-
-                    orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, groupRecordNode.rootProcessed));
-                    while (!orderingPath.isEmpty()) {
-                        OrderingContribution orderingContribution = orderingPath.get(orderingPath.size() - 1);
-                        switch (orderingContribution.mode) {
-                            case BEFORE: {
-                                if (orderingContribution.handler.before.isEmpty()) {
-                                    orderingContribution.mode = OrderingMode.ITEM;
-                                } else {
-                                    orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, orderingContribution.handler.before.remove(0)));
-                                }
-                                break;
-                            }
-                            case ITEM: {
-                                boolean itemAdded = orderingContribution.handler.shouldCreate();
-                                if (itemAdded) {
-                                    if (processingNode.separatorQueued) {
-                                        output.addSeparator();
-                                        processingNode.separatorQueued = false;
-                                    }
-                                    orderingContribution.handler.finish();
-                                }
-
-                                processingNode.itemsAdded |= itemAdded;
-                                orderingContribution.mode = OrderingMode.AFTER;
-                                break;
-                            }
-                            case AFTER: {
-                                if (orderingContribution.handler.after.isEmpty()) {
-                                    orderingPath.remove(orderingPath.size() - 1);
-                                } else {
-                                    orderingPath.add(new OrderingContribution(OrderingMode.BEFORE, orderingContribution.handler.after.remove(0)));
-                                }
-                                break;
-                            }
-                            default:
-                                throw new IllegalStateException();
-                        }
-                    }
-
-                    if (processingNode.itemsAdded && groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND || groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW) {
-                        processingNode.itemsAdded = false;
-                        processingNode.separatorQueued = true;
-                    }
-
-                    / *                if (!groupRecord.subGroups.isEmpty()) {
-                    ProcessingNode subGroupNode = new ProcessingNode(processingNode.subMenu);
-                    // TODO subGroupNode.records = groupRecord.subGroups;
-                    processingPath.add(subGroupNode);
-                } * /
-                    groupRecordNode.rootProcessed = null;
-                }
-
-            MenuContribution contribution = groupRecord.contributions.get(groupRecordNode.currentContribution);
-            groupRecordNode.currentContribution++;
-
-            if (processingNode.itemsAdded && (groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND)) {
-                processingNode.itemsAdded = false;
-                processingNode.separatorQueued = true;
-            }
-            
-            // Process contribution
-            ContributionHandler handler = createProcessedContribution(output, contribution, menuId, subMenuId, subMenu, subMenus, buttonGroups, activationUpdateService);
-            handler.process();
-            
-            if (contribution instanceof SubMenuContribution) {
-                BuilderSubMenuRecord subMenuRecord = subMenus.get(((SubMenuContribution) contribution).getSubMenuId());
-                builderRecord.add(new BuilderMenuRecord(subMenuRecord));
-            } */
-
-//            // Process all contributions, but don't insert them yet
-/*            List<QueuedContribution> queue = new LinkedList<>();
-            queue.add(new QueuedContribution(null, contribution));
-            while (!queue.isEmpty()) {
-                final QueuedContribution next = queue.remove(0);
-                ContributionHandler handler = createProcessedContribution(output, next.contribution, menuId, subMenuId, subMenu, subMenus, activationUpdateService);
-
-                handler.process();
-
-                if (next.parent == null) {
-                    groupRecordNode.rootProcessed = handler;
-                }
-                String actionId = handler.getActionId();
-                RelativeMenuContributionRule.NextToMode nextToMode = next.nextToMode;
-                if (nextToMode != null) {
-                    switch (nextToMode) {
-                        case BEFORE: {
-                            next.parent.before.add(handler);
-                            break;
-                        }
-                        case AFTER: {
-                            next.parent.after.add(handler);
-                            break;
-                        }
-                    }
-                }
-
-                List<MenuContribution> nextToBefore = subMenu.beforeItem.get(actionId);
-                if (nextToBefore != null) {
-                    nextToBefore.forEach((menuContribution) -> {
-                        queue.add(new QueuedContribution(handler, menuContribution, RelativeMenuContributionRule.NextToMode.BEFORE));
-                    });
-                }
-
-                List<MenuContribution> nextToAfter = subMenu.afterItem.get(actionId);
-                if (nextToAfter != null) {
-                    nextToAfter.forEach((menuContribution) -> {
-                        queue.add(new QueuedContribution(handler, menuContribution, RelativeMenuContributionRule.NextToMode.AFTER));
-                    });
-                }
-
-            }
-        } */
     }
 
     @Nonnull
@@ -458,9 +300,9 @@ public class MenuManager {
             groupId = "";
         }
 
-        BuilderGroup2Record groupRecord = subMenuSection.groupsMap.get(groupId);
+        BuilderGroupRecord groupRecord = subMenuSection.groupsMap.get(groupId);
         if (groupRecord == null) {
-            groupRecord = new BuilderGroup2Record(groupId);
+            groupRecord = new BuilderGroupRecord(groupId);
             subMenuSection.groupsMap.put(groupId, groupRecord);
             subMenuSection.groups.add(groupRecord);
         }
@@ -475,300 +317,6 @@ public class MenuManager {
 
         return section;
     }
-
-/*    @Nullable
-    private Map<String, BuilderSubMenuRecord> collectSubMenus(MenuOutput outputMenu, String menuId) {
-        MenuDefinition menuDef = menus.get(menuId);
-
-        if (menuDef == null) {
-            return null;
-        }
-
-        Map<String, BuilderSubMenuRecord> subMenus = new HashMap<>();
-
-        // Create list of build-in groups
-        BuilderSubMenuRecord rootRecord = new BuilderSubMenuRecord("", outputMenu);
-        for (PositionMenuContributionRule.PositionMode mode : PositionMenuContributionRule.PositionMode.values()) {
-            BuilderGroupRecord menuGroupRecord = new BuilderGroupRecord(mode.name(), outputMenu);
-            rootRecord.groupsMap.put(mode.name(), menuGroupRecord);
-            rootRecord.groupRecords.add(menuGroupRecord);
-        }
-        subMenus.put("", rootRecord);
-
-        // Collect submenus
-        for (MenuContribution contribution : menuDef.getContributions()) {
-            if (!(contribution instanceof SubMenuContribution)) {
-                continue;
-            }
-
-            SubMenuContribution subMenuContribution = ((SubMenuContribution) contribution);
-            String subMenuId = ((SubMenuContribution) contribution).getSubMenuId();
-            BuilderSubMenuRecord subMenuRecord = subMenus.get(subMenuId);
-            if (subMenuRecord == null) {
-                JMenu subMenu = UiUtils.createMenu();
-                Action action = subMenuContribution.getAction();
-                subMenu.setAction(action);
-                subMenuRecord = new BuilderSubMenuRecord(subMenuId, new MenuWrapper(subMenu, outputMenu.isPopup()));
-                subMenus.put(subMenuId, subMenuRecord);
-                for (PositionMenuContributionRule.PositionMode mode : PositionMenuContributionRule.PositionMode.values()) {
-                    BuilderGroupRecord menuGroupRecord = new BuilderGroupRecord(mode.name(), subMenuRecord.menuOutput);
-                    subMenuRecord.groupsMap.put(mode.name(), menuGroupRecord);
-                    subMenuRecord.groupRecords.add(menuGroupRecord);
-                }
-            }
-        }
-
-        // Build full tree of groups
-        / * for (MenuContribution contribution : menuDef.getContributions()) {
-            if (!(contribution instanceof GroupMenuContribution)) {
-                continue;
-            }
-            String groupId = ((GroupMenuContribution) contribution).getGroupId();
-            SeparationMenuContributionRule.SeparationMode separationMode = getSeparationMode(menuId, contribution);
-            String parentGroupId = getParentGroup(menuId, contribution);
-            String subMenuId = getSubMenuId(menuId, contribution);
-            BuilderSubMenuRecord subMenu = subMenus.get(subMenuId);
-            if (parentGroupId != null) {
-                BuilderGroupRecord groupRecord = subMenu.groupsMap.get(parentGroupId);
-                BuilderGroupRecord menuGroupRecord = new BuilderGroupRecord(groupId, subMenu.menuOutput);
-                menuGroupRecord.separationMode = separationMode;
-                groupRecord.subGroups.add(menuGroupRecord);
-                subMenu.groupsMap.put(groupId, menuGroupRecord);
-            } else {
-                PositionMenuContributionRule.PositionMode positionMode = getPositionMode(menuId, contribution);
-                if (positionMode == null) {
-                    positionMode = PositionMenuContributionRule.PositionMode.DEFAULT;
-                }
-                BuilderGroupRecord groupRecord = subMenu.groupsMap.get(positionMode.name());
-                BuilderGroupRecord menuGroupRecord = new BuilderGroupRecord(groupId, subMenu.menuOutput);
-                menuGroupRecord.separationMode = separationMode;
-                groupRecord.subGroups.add(menuGroupRecord);
-                subMenu.groupsMap.put(groupId, menuGroupRecord);
-            }
-        }
-
-        // Go thru all contributions and link them to its target group
-        for (MenuContribution contribution : menuDef.getContributions()) {
-            if ((contribution instanceof GroupMenuContribution)) {
-                continue;
-            }
-            PositionMenuContributionRule.PositionMode positionMode = getPositionMode(menuId, contribution);
-            String parentGroupId = getParentGroup(menuId, contribution);
-            String subMenuId = getSubMenuId(menuId, contribution);
-            BuilderSubMenuRecord subMenu = subMenus.get(subMenuId);
-            if (positionMode != null) {
-                BuilderGroupRecord menuGroupRecord = subMenu.groupsMap.get(positionMode.name());
-                if (menuGroupRecord == null) {
-                    throw new InvalidParameterException("Invalid parent group: " + positionMode.name());
-                }
-                menuGroupRecord.contributions.add(contribution);
-            } else {
-                if (parentGroupId != null) {
-                    BuilderGroupRecord menuGroupRecord = subMenu.groupsMap.get(parentGroupId);
-                    if (menuGroupRecord == null) {
-                        throw new InvalidParameterException("Invalid parent group: " + parentGroupId);
-                    }
-                    menuGroupRecord.contributions.add(contribution);
-                } else {
-                    // TODO Rework for multiple rules and other stuff
-                    RelativeMenuContributionRule relativeContributionRule = getRelativeToRule(menuId, contribution);
-                    if (relativeContributionRule != null) {
-                        // TODO
-/ *                        switch (relativeContributionRule.getNextToMode()) {
-                            case BEFORE: {
-                                List<MenuContribution> contributions = subMenu.beforeItem.get(relativeContributionRule.getContributionId());
-                                if (contributions == null) {
-                                    contributions = new LinkedList<>();
-                                    subMenu.beforeItem.put(relativeContributionRule.getContributionId(), contributions);
-                                }
-                                contributions.add(contribution);
-                                break;
-                            }
-                            case AFTER: {
-                                List<MenuContribution> contributions = subMenu.afterItem.get(relativeContributionRule.getContributionId());
-                                if (contributions == null) {
-                                    contributions = new LinkedList<>();
-                                    subMenu.afterItem.put(relativeContributionRule.getContributionId(), contributions);
-                                }
-                                contributions.add(contribution);
-                                break;
-                            }
-                            default:
-                                throw new IllegalStateException();
-                        } * /
-                    } else {
-                        BuilderGroupRecord menuGroupRecord = subMenu.groupsMap.get(PositionMenuContributionRule.PositionMode.DEFAULT.name());
-                        menuGroupRecord.contributions.add(contribution);
-                    }
-                }
-            }
-        } * /
-
-        return subMenus;
-    } */
-
-    /*@Nonnull
-    private ContributionHandler createProcessedContribution(MenuOutput output, MenuContribution contribution, String menuId, String subMenuId, BuilderSubMenuRecord subMenu, Map<String, BuilderSubMenuRecord> subMenus, Map<String, ButtonGroup> buttonGroups, ActionContextService activationUpdateService) {
-        ContributionHandler processed;
-        if (contribution instanceof ActionMenuContribution) {
-            processed = new ContributionHandler() {
-                JMenuItem menuItem;
-                String actionId;
-
-                @Override
-                public void process() {
-                    Action action = ((ActionMenuContribution) contribution).getAction();
-                    actionId = (String) action.getValue(ActionConsts.ACTION_ID);
-                    ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                    menuItem = actionModule.actionToMenuItem(action, buttonGroups);
-                }
-
-                @Nonnull
-                @Override
-                String getActionId() {
-                    return actionId == null ? "" : actionId;
-                }
-
-                @Override
-                public boolean shouldCreate() {
-                    if (output.isPopup()) {
-                        Action action = ((ActionMenuContribution) contribution).getAction();
-                        ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                        if (menuCreation != null) {
-                            return menuCreation.shouldCreate(menuId, subMenuId);
-                        }
-                    }
-
-                    return true;
-                }
-
-                @Override
-                public void finish() {
-                    Action action = ((ActionMenuContribution) contribution).getAction();
-                    if (output.isPopup()) {
-                        ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                        if (menuCreation != null) {
-                            menuCreation.onCreate(menuItem, menuId, subMenuId);
-                        }
-                    }
-
-                    output.add(menuItem);
-                    Action menuItemAction = menuItem.getAction();
-                    if (menuItemAction != null) {
-                        finishMenuAction(menuItemAction, activationUpdateService);
-                    }
-                }
-            };
-        } else if (contribution instanceof SubMenuContribution) {
-            processed = new ContributionHandler() {
-                JMenu menuItem;
-                String actionId;
-
-                @Override
-                public void process() {
-                    SubMenuContribution subMenuContribution = (SubMenuContribution) contribution;
-                    String subMenuId = subMenuContribution.getSubMenuId();
-                    BuilderSubMenuRecord subMenuRecord = subMenus.get(subMenuId);
-                    menuItem = ((MenuWrapper) subMenuRecord.getOutput()).menu;
-                    Action action = subMenuContribution.getAction();
-                    actionId = (String) action.getValue(ActionConsts.ACTION_ID);
-                    menuItem.setAction(action);
-                }
-
-                @Nonnull
-                @Override
-                String getActionId() {
-                    return actionId == null ? "" : actionId;
-                }
-
-                @Override
-                public boolean shouldCreate() {
-                    if (output.isPopup()) {
-                        Action action = menuItem.getAction();
-                        if (action != null) {
-                            ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                            if (menuCreation != null) {
-                                return menuCreation.shouldCreate(menuId, subMenuId);
-                            }
-                        }
-                    }
-
-                    return menuItem.getMenuComponentCount() > 0;
-                }
-
-                @Override
-                public void finish() {
-                    Action action = menuItem.getAction();
-                    if (output.isPopup() && action != null) {
-                        ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                        if (menuCreation != null) {
-                            menuCreation.onCreate(menuItem, menuId, subMenuId);
-                        }
-                    }
-
-                    output.add(menuItem);
-                    finishMenu(menuItem, activationUpdateService);
-                    finishMenuAction(action, activationUpdateService);
-                }
-            };
-        } else if (contribution instanceof DirectSubMenuContribution) {
-            processed = new ContributionHandler() {
-                DirectSubMenuContribution directMenuContribution;
-                JMenuItem menuItem;
-                String actionId;
-
-                @Override
-                public void process() {
-                    directMenuContribution = (DirectSubMenuContribution) contribution;
-                    menuItem = directMenuContribution.getMenuItemProvider().createMenuItem();
-                    Action action = menuItem.getAction();
-                    if (action != null) {
-                        actionId = (String) action.getValue(ActionConsts.ACTION_ID);
-                    }
-                }
-
-                @Nonnull
-                @Override
-                String getActionId() {
-                    return actionId == null ? "" : actionId;
-                }
-
-                @Override
-                public boolean shouldCreate() {
-                    if (output.isPopup()) {
-                        Action action = menuItem.getAction();
-                        if (action != null) {
-                            ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                            if (menuCreation != null) {
-                                return menuCreation.shouldCreate(menuId, subMenuId);
-                            }
-                        }
-                    }
-
-                    return true;
-                }
-
-                @Override
-                public void finish() {
-                    Action action = menuItem.getAction();
-                    if (output.isPopup() && action != null) {
-                        ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                        if (menuCreation != null) {
-                            menuCreation.onCreate(menuItem, menuId, subMenuId);
-                        }
-                    }
-
-                    output.add(menuItem);
-                    finishMenuItem(menuItem, activationUpdateService);
-                    finishMenuAction(action, activationUpdateService);
-                }
-            };
-        } else {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        return processed;
-    } */
 
     private static void finishMenuAction(@Nullable Action action, ActionContextService activationUpdateService) {
         if (action != null) {
@@ -816,93 +364,6 @@ public class MenuManager {
         return false;
     }
 
-    /*    @Nullable
-    private GroupMenuContribution getGroup(String menuId, String groupId) {
-        MenuDefinition menuDefinition = menus.get(menuId);
-        for (MenuContribution contribution : menuDefinition.getContributions()) {
-            if (contribution instanceof GroupMenuContribution) {
-                if (((GroupMenuContribution) contribution).getGroupId().equals(groupId)) {
-                    return (GroupMenuContribution) contribution;
-                }
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private SeparationMenuContributionRule.SeparationMode getSeparationMode(String menuId, MenuContribution contribution) {
-        MenuDefinition menuDefinition = menus.get(menuId);
-        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
-        if (rules == null) {
-            return null;
-        }
-        for (MenuContributionRule rule : rules) {
-            if (rule instanceof SeparationMenuContributionRule) {
-                return ((SeparationMenuContributionRule) rule).getSeparationMode();
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private PositionMenuContributionRule.PositionMode getPositionMode(String menuId, MenuContribution contribution) {
-        MenuDefinition menuDefinition = menus.get(menuId);
-        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
-        if (rules == null) {
-            return null;
-        }
-        for (MenuContributionRule rule : rules) {
-            if (rule instanceof PositionMenuContributionRule) {
-                return ((PositionMenuContributionRule) rule).getPositionMode();
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private String getParentGroup(String menuId, MenuContribution contribution) {
-        MenuDefinition menuDefinition = menus.get(menuId);
-        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
-        if (rules == null) {
-            return null;
-        }
-        for (MenuContributionRule rule : rules) {
-            if (rule instanceof GroupMenuContributionRule) {
-                return ((GroupMenuContributionRule) rule).getGroupId();
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private RelativeMenuContributionRule getRelativeToRule(String menuId, MenuContribution contribution) {
-        MenuDefinition menuDefinition = menus.get(menuId);
-        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
-        if (rules == null) {
-            return null;
-        }
-        for (MenuContributionRule rule : rules) {
-            if (rule instanceof RelativeMenuContributionRule) {
-                return (RelativeMenuContributionRule) rule;
-            }
-        }
-        return null;
-    }
-
-    @Nonnull
-    private String getSubMenuId(String menuId, MenuContribution contribution) {
-        MenuDefinition menuDefinition = menus.get(menuId);
-        List<MenuContributionRule> rules = menuDefinition.getRules().get(contribution);
-        if (rules == null) {
-            return "";
-        }
-        for (MenuContributionRule rule : rules) {
-            if (rule instanceof SubMenuContributionRule) {
-                return ((SubMenuContributionRule) rule).getSubMenuId();
-            }
-        }
-        return "";
-    } */
     public void unregisterMenu(String menuId) {
         MenuDefinition definition = menus.get(menuId);
         if (definition != null) {
@@ -934,41 +395,6 @@ public class MenuManager {
         }
         return actions;
     }
-
-    /* @ParametersAreNonnullByDefault
-    private static class QueuedContribution {
-
-        ContributionHandler parent;
-        MenuContribution contribution;
-        RelativeMenuContributionRule.NextToMode nextToMode = null;
-
-        public QueuedContribution(@Nullable ContributionHandler parent, MenuContribution contribution) {
-            this.parent = parent;
-            this.contribution = contribution;
-        }
-
-        public QueuedContribution(@Nullable ContributionHandler parent, MenuContribution contribution, RelativeMenuContributionRule.NextToMode nextToMode) {
-            this.parent = parent;
-            this.contribution = contribution;
-            this.nextToMode = nextToMode;
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    private static class OrderingContribution {
-
-        OrderingMode mode;
-        ContributionHandler handler;
-
-        public OrderingContribution(OrderingMode mode, ContributionHandler handler) {
-            this.mode = mode;
-            this.handler = handler;
-        }
-    }
-
-    private enum OrderingMode {
-        BEFORE, ITEM, AFTER
-    }; */
 
     public void registerMenu(String menuId, String moduleId) {
         ObjectUtils.requireNonNull(menuId);
@@ -1088,16 +514,16 @@ public class MenuManager {
         SeparationMenuContributionRule.SeparationMode separationMode;
         final Set<String> afterItems = new HashSet<>();
 
-        boolean separatorQueued = false;
-        Map<String, BuilderGroup2Record> groupsMap = new HashMap<>();
-        Map<String, BuilderContributionRecord> itemsMap = new HashMap<>();
-        Map<String, List<String>> afterMap = new HashMap<>();
-        Set<String> processedItems = new HashSet<>();
-
-        List<BuilderGroup2Record> groups = new ArrayList<>();
+        List<BuilderGroupRecord> groups = new ArrayList<>();
+        Map<String, BuilderGroupRecord> groupsMap = new HashMap<>();
         List<BuilderContributionRecord> items = new ArrayList<>();
-        
-        int processingGroup = 0;
+        Map<String, BuilderContributionRecord> itemsMap = new HashMap<>();
+
+        SectionProcessingState processingState = SectionProcessingState.START;
+        boolean separatorQueued = false;
+        Map<String, List<String>> afterMap = new HashMap<>();
+        Set<String> processedGroups = new HashSet<>();
+        Set<String> processedItems = new HashSet<>();
 
         public BuilderSectionRecord(String subMenuId, PositionMenuContributionRule.PositionMode positionMode, @Nullable String groupId, MenuOutput outputMenu) {
             this.subMenuId = subMenuId;
@@ -1111,9 +537,16 @@ public class MenuManager {
             this.separationMode = separationMode;
         }
     }
+    
+    private enum SectionProcessingState {
+        START,
+        ITEMS,
+        GROUPS,
+        END
+    }
 
     @ParametersAreNonnullByDefault
-    private static class BuilderGroup2Record {
+    private static class BuilderGroupRecord {
         
         String groupId;
 
@@ -1123,7 +556,7 @@ public class MenuManager {
         Map<PositionMenuContributionRule.PositionMode, BuilderSectionRecord> positions;
         PositionMenuContributionRule.PositionMode processingPosition = PositionMenuContributionRule.PositionMode.TOP;
 
-        public BuilderGroup2Record(String groupId) {
+        public BuilderGroupRecord(String groupId) {
             this.groupId = groupId;
         }
     }
@@ -1276,84 +709,6 @@ public class MenuManager {
         final Set<String> afterItems = new HashSet<>();
 
     }
-
-    /* @ParametersAreNonnullByDefault
-    private static class BuilderSubMenuRecord {
-
-        String subMenuId;
-        MenuOutput menuOutput;
-        List<BuilderGroupRecord> groupRecords = new LinkedList<>();
-        Map<String, BuilderGroupRecord> groupsMap = new HashMap<>();
-        List<ContributionHandler> items = new ArrayList<>();
-        // list of contribution assigned to specific action Id
-        Map<String, List<ContributionHandler>> beforeItem = new HashMap<>();
-        // list of contribution assigned to specific action Id
-        Map<String, List<ContributionHandler>> afterItem = new HashMap<>();
-
-        public BuilderSubMenuRecord(String subMenuId, MenuOutput menuOutput) {
-            this.subMenuId = subMenuId;
-            this.menuOutput = menuOutput;
-        }
-
-        @Nonnull
-        public String getSubMenuId() {
-            return subMenuId;
-        }
-
-        @Nonnull
-        public MenuOutput getOutput() {
-            return menuOutput;
-        }
-    } */
-
-    /* @ParametersAreNonnullByDefault
-    private static class BuilderGroupRecord {
-
-        String groupId;
-        MenuOutput outputMenu;
-        SeparationMenuContributionRule.SeparationMode separationMode;
-        PositionMenuContributionRule.PositionMode positionMode;
-        List<BuilderGroupRecord> subGroups = new LinkedList<>();
-        List<MenuContribution> contributions = new LinkedList<>();
-
-        public BuilderGroupRecord(String groupId, MenuOutput outputMenu) {
-            this.groupId = groupId;
-            this.outputMenu = outputMenu;
-        }
-
-        public BuilderGroupRecord(String groupId, MenuOutput outputMenu, SeparationMenuContributionRule.SeparationMode separationMode) {
-            this(groupId, outputMenu);
-            this.separationMode = separationMode;
-        }
-    } */
-
-    /* @ParametersAreNonnullByDefault
-    private static class BuilderGroupOrder {
-
-        List<BuilderGroupRecord> records;
-        int currentGroupRecord = 0;
-        int currentContribution = 0;
-        ContributionHandler rootProcessed = null;
-
-        public BuilderGroupOrder(List<BuilderGroupRecord> records) {
-            this.records = records;
-        }
-    } */
-
-/*    private static abstract class ContributionHandler {
-
-        List<ContributionHandler> before = new LinkedList<>();
-        List<ContributionHandler> after = new LinkedList<>();
-
-        abstract void process();
-
-        @Nonnull
-        abstract String getActionId();
-
-        abstract boolean shouldCreate();
-
-        abstract void finish();
-    } */
 
     @ParametersAreNonnullByDefault
     private static interface MenuOutput {
