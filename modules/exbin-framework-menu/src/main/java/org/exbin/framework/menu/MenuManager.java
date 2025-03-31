@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -195,86 +197,137 @@ public class MenuManager {
             }
             
             if (section.processingState == SectionProcessingState.ITEMS) {
-                
+                if (!section.items.isEmpty()) {
+                    BuilderContributionRecord contribution;
+                    boolean matchFound = false;
+                    int index = 0;
+                    while (index < section.items.size()) {
+                        contribution = section.items.get(index);
+                        if (contribution.afterItems == null || contribution.afterItems.isEmpty() || section.processedItems.containsAll(contribution.afterItems)) {
+                            matchFound = true;
+                            section.items.remove(index);
+
+                            if (contribution.separationMode == SeparationMenuContributionRule.SeparationMode.ABOVE || contribution.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
+                                section.separatorQueued = true;
+                            }
+                            boolean isPopup = outputMenu.isPopup();
+                            if (contribution instanceof BuilderActionRecord) {
+                                BuilderActionRecord contributionRecord = (BuilderActionRecord) contribution;
+                                if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
+                                    JMenuItem menuItem = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
+                                    if (section.separatorQueued) {
+                                        section.outputMenu.addSeparator();
+                                        section.separatorQueued = false;
+                                    }
+                                    section.outputMenu.add(menuItem);
+                                    contributionRecord.finishItem(menuItem, activationUpdateService);
+                                }
+                            } else if (contribution instanceof BuilderDirectSubMenuRecord) {
+                                BuilderDirectSubMenuRecord contributionRecord = (BuilderDirectSubMenuRecord) contribution;
+                                if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
+                                    JMenuItem menuItem = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
+                                    if (section.separatorQueued) {
+                                        section.outputMenu.addSeparator();
+                                        section.separatorQueued = false;
+                                    }
+                                    section.outputMenu.add(menuItem);
+                                    contributionRecord.finishItem(menuItem, activationUpdateService);
+                                }
+                            } else if (contribution instanceof BuilderMenuRecord) {
+                                BuilderMenuRecord contributionRecord = (BuilderMenuRecord) contribution;
+                                if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
+                                    BuilderSectionRecord subSection = builderRecord.subMenusMap.get(contributionRecord.contributionId);
+                                    if (subSection != null) {
+                                        JMenu subMenu = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
+                                        Action action = contributionRecord.contribution.getAction();
+                                        subMenu.setAction(action);
+                                        if (section.separatorQueued) {
+                                            section.outputMenu.addSeparator();
+                                            section.separatorQueued = false;
+                                        }
+                                        section.outputMenu.add(subMenu);
+                                        contributionRecord.finishItem(subMenu, activationUpdateService);
+                                        subSection.outputMenu = new MenuWrapper(subMenu);
+                                        processing.add(subSection);
+                                    }
+                                }
+                            }
+                            if (contribution.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW || contribution.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
+                                section.separatorQueued = true;
+                            }
+
+                            section.processedItems.add(contribution.contributionId);
+                            break;
+                        }
+                        index++;
+                    }
+                    if (!matchFound) {
+                        Logger.getLogger(MenuManager.class.getName()).log(Level.SEVERE, "Skipping items");
+                        section.items.clear();
+                    }
+                    continue;
+                } else {
+                    section.processingState = SectionProcessingState.GROUPS;
+                }
             }
 
-            if (section.processingGroup >= section.groups.size()) {
-                if (section.processingState == SectionProcessingState.GROUPS) {
-                    if (section.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW || section.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
+            if (section.processingState == SectionProcessingState.GROUPS) {
+                if (section.processedGroup != null) {
+                    if (section.processedGroup.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW || section.processedGroup.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
                         section.separatorQueued = true;
                     }
+                    section.processedGroup = null;
+                }
+                if (section.groups == null || section.groups.isEmpty()) {
                     section.processingState = SectionProcessingState.END;
+                    processing.remove(processing.size() - 1);
+                    continue;
                 }
 
-                processing.remove(processing.size() - 1);
-                continue;
+                int index = 0;
+                while (index < section.groups.size()) {
+                    BuilderGroupRecord group = section.groups.get(index);
+                    if (group.afterItems == null || group.afterItems.isEmpty() || section.processedGroups.containsAll(group.afterItems)) {
+                        section.groups.remove(index);
+                        section.processedGroup = group;
+
+                        section.processingState = SectionProcessingState.POSITIONS;
+                        break;
+                    }
+
+                    index++;
+                }
+            
+                if (section.processingState != SectionProcessingState.POSITIONS) {
+                    Logger.getLogger(MenuManager.class.getName()).log(Level.SEVERE, "Skipping groups");
+                    section.groups.clear();
+                }
+            }
+
+            BuilderSectionRecord groupSection = null;
+            if (section.processingState == SectionProcessingState.POSITIONS && section.processedGroup != null && section.processedGroup.positions != null) {
+                do {
+                    groupSection = section.processedGroup.positions.get(section.processedGroup.processingPosition);
+                    if (section.processedGroup.processingPosition != PositionMenuContributionRule.PositionMode.BOTTOM_LAST) {
+                        section.processedGroup.processingPosition = PositionMenuContributionRule.PositionMode.values()[section.processedGroup.processingPosition.ordinal() + 1];
+                    } else {
+                        section.processingState = SectionProcessingState.GROUPS;
+                    }
+                    if (groupSection != null) {
+                        if (groupSection.separationMode == SeparationMenuContributionRule.SeparationMode.ABOVE || groupSection.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
+                            section.separatorQueued = true;
+                        }
+                        groupSection.outputMenu = section.outputMenu;
+                        processing.add(groupSection);
+                        section.processedGroups.add(section.processedGroup.groupId);
+
+                        break;
+                    }
+                } while (section.processedGroup.processingPosition != PositionMenuContributionRule.PositionMode.BOTTOM_LAST);
             }
             
-            // TODO: Groups ordering / contribution.afterItems;
-            BuilderGroupRecord groups = section.groups.get(section.processingGroup);
-
-            BuilderSectionRecord groupSection = groups == null || groups.positions == null ? null : groups.positions.get(groups.processingPosition);
-            if (groupSection == null || groupSection.items.isEmpty()) {
-                if (groups.processingPosition == PositionMenuContributionRule.PositionMode.BOTTOM_LAST) {
-                    section.processingGroup++;
-                } else {
-                    groups.processingPosition = PositionMenuContributionRule.PositionMode.values()[groups.processingPosition.ordinal() + 1];
-                }
-                continue;
-            }
-
-            BuilderContributionRecord contribution = groupSection.items.get(0);
-            // TODO: Items ordering / contribution.afterItems;
-            {
-                if (contribution.separationMode == SeparationMenuContributionRule.SeparationMode.ABOVE || contribution.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
-                    section.separatorQueued = true;
-                }
-                boolean isPopup = outputMenu.isPopup();
-                if (contribution instanceof BuilderActionRecord) {
-                    BuilderActionRecord contributionRecord = (BuilderActionRecord) contribution;
-                    if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
-                        JMenuItem menuItem = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
-                        if (section.separatorQueued) {
-                            section.outputMenu.addSeparator();
-                            section.separatorQueued = false;
-                        }
-                        section.outputMenu.add(menuItem);
-                        contributionRecord.finishItem(menuItem, activationUpdateService);
-                    }
-                } else if (contribution instanceof BuilderDirectSubMenuRecord) {
-                    BuilderDirectSubMenuRecord contributionRecord = (BuilderDirectSubMenuRecord) contribution;
-                    if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
-                        JMenuItem menuItem = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
-                        if (section.separatorQueued) {
-                            section.outputMenu.addSeparator();
-                            section.separatorQueued = false;
-                        }
-                        section.outputMenu.add(menuItem);
-                        contributionRecord.finishItem(menuItem, activationUpdateService);
-                    }
-                } else if (contribution instanceof BuilderMenuRecord) {
-                    BuilderMenuRecord contributionRecord = (BuilderMenuRecord) contribution;
-                    if (contributionRecord.shouldCreate(isPopup, menuId, section.subMenuId)) {
-                        BuilderSectionRecord subSection = builderRecord.subMenusMap.get(contributionRecord.contributionId);
-                        if (subSection != null) {
-                            JMenu subMenu = contributionRecord.createItem(isPopup, menuId, section.subMenuId, buttonGroups);
-                            Action action = contributionRecord.contribution.getAction();
-                            subMenu.setAction(action);
-                            if (section.separatorQueued) {
-                                section.outputMenu.addSeparator();
-                                section.separatorQueued = false;
-                            }
-                            section.outputMenu.add(subMenu);
-                            contributionRecord.finishItem(subMenu, activationUpdateService);
-                            subSection.outputMenu = new MenuWrapper(subMenu);
-                            processing.add(subSection);
-                        }
-                    }
-                }
-                if (contribution.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW || contribution.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
-                    section.separatorQueued = true;
-                }
-                groupSection.items.remove(0);
+            if (groupSection == null) {
+                section.processingState = SectionProcessingState.GROUPS;
             }
         }
     }
@@ -508,11 +561,10 @@ public class MenuManager {
 
         String subMenuId;
         String groupId;
-        PositionMenuContributionRule.PositionMode positionMode;
+//        PositionMenuContributionRule.PositionMode positionMode;
         MenuOutput outputMenu;
 
         SeparationMenuContributionRule.SeparationMode separationMode;
-        final Set<String> afterItems = new HashSet<>();
 
         List<BuilderGroupRecord> groups = new ArrayList<>();
         Map<String, BuilderGroupRecord> groupsMap = new HashMap<>();
@@ -522,12 +574,13 @@ public class MenuManager {
         SectionProcessingState processingState = SectionProcessingState.START;
         boolean separatorQueued = false;
         Map<String, List<String>> afterMap = new HashMap<>();
+        BuilderGroupRecord processedGroup;
         Set<String> processedGroups = new HashSet<>();
         Set<String> processedItems = new HashSet<>();
 
         public BuilderSectionRecord(String subMenuId, PositionMenuContributionRule.PositionMode positionMode, @Nullable String groupId, MenuOutput outputMenu) {
             this.subMenuId = subMenuId;
-            this.positionMode = positionMode;
+            // this.positionMode = positionMode;
             this.groupId = groupId;
             this.outputMenu = outputMenu;
         }
@@ -542,6 +595,7 @@ public class MenuManager {
         START,
         ITEMS,
         GROUPS,
+        POSITIONS,
         END
     }
 
@@ -565,7 +619,6 @@ public class MenuManager {
     private static class BuilderActionRecord extends BuilderContributionRecord {
 
         final ActionMenuContribution contribution;
-        final String contributionId;
 
         public BuilderActionRecord(ActionMenuContribution contribution) {
             this.contribution = contribution;
@@ -621,6 +674,10 @@ public class MenuManager {
         public boolean shouldCreate(boolean isPopup, String menuId, String subMenuId) {
             if (menuItem == null) {
                 menuItem = contribution.getMenuItemProvider().createMenuItem();
+                Action action = menuItem.getAction();
+                if (action != null) {
+                    contributionId = (String) action.getValue(ActionConsts.ACTION_ID);
+                }
             }
 
             if (isPopup) {
@@ -640,6 +697,10 @@ public class MenuManager {
         public JMenuItem createItem(boolean isPopup, String menuId, String subMenuId, Map<String, ButtonGroup> buttonGroups) {
             if (menuItem == null) {
                 menuItem = contribution.getMenuItemProvider().createMenuItem();
+                Action action = menuItem.getAction();
+                if (action != null) {
+                    contributionId = (String) action.getValue(ActionConsts.ACTION_ID);
+                }
             }
 
             Action action = menuItem.getAction();
@@ -663,7 +724,6 @@ public class MenuManager {
     private static class BuilderMenuRecord extends BuilderContributionRecord {
 
         SubMenuContribution contribution;
-        String contributionId;
 
         public BuilderMenuRecord(SubMenuContribution contribution) {
             this.contribution = contribution;
@@ -705,9 +765,10 @@ public class MenuManager {
 
     private static class BuilderContributionRecord {
 
+        String contributionId;
+
         SeparationMenuContributionRule.SeparationMode separationMode;
         final Set<String> afterItems = new HashSet<>();
-
     }
 
     @ParametersAreNonnullByDefault

@@ -103,6 +103,10 @@ public class RecentFilesActions {
     }
 
     private void saveState() {
+        if (recentFiles == null) {
+            return;
+        }
+
         RecentFilesOptions recentFilesParameters = new RecentFilesOptions(preferences);
         for (int i = 0; i < recentFiles.size(); i++) {
             recentFilesParameters.setFilePath(recentFiles.get(i).getFileName(), i + 1);
