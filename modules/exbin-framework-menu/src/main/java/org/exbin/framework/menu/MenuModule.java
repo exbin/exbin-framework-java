@@ -66,6 +66,7 @@ public class MenuModule implements MenuModuleApi {
     }
 
     @Nonnull
+    @Override
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(MenuModule.class);

@@ -50,6 +50,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.menu.popup.handler.EditorPanePopupHandler;
 import org.exbin.framework.menu.popup.handler.ListPopupHandler;
 import org.exbin.framework.menu.popup.handler.TablePopupHandler;
@@ -227,7 +228,8 @@ public class DefaultPopupMenu {
     }
 
     private void initDefaultPopupMenu() {
-        initDefaultPopupMenu(resourceBundle, this.getClass());
+        ResourceBundle menuResourceBundle = App.getModule(MenuModuleApi.class).getResourceBundle();
+        initDefaultPopupMenu(menuResourceBundle, this.getClass());
     }
 
     protected void initDefaultPopupMenu(ResourceBundle resourceBundle, Class<?> resourceClass) {

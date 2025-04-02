@@ -17,6 +17,7 @@ package org.exbin.framework.menu.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.exbin.framework.utils.ClipboardActionsHandler;
@@ -120,6 +121,14 @@ public interface MenuModuleApi extends Module {
      * @param actionContextService action context service
      */
     void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService actionContextService);
+
+    /**
+     * Returns menu module resource bundle.
+     *
+     * @return resource bundle
+     */
+    @Nonnull
+    ResourceBundle getResourceBundle();
 
     /**
      * Returns clipboard/editing actions.

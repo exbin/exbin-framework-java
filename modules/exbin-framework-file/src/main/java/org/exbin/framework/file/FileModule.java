@@ -173,6 +173,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
         MenuContribution contribution = mgmt.registerMenuItem(() -> recentFilesActions.getOpenRecentMenu());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
         mgmt.registerMenuRule(contribution, new RelativeMenuContributionRule(RelativeMenuContributionRule.NextToMode.AFTER, OpenFileAction.ACTION_ID));
     }
 
