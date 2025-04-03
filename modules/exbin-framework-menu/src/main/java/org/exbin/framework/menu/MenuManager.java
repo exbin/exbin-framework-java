@@ -83,8 +83,13 @@ public class MenuManager {
     }
 
     private void buildMenu(MenuOutput outputMenu, String menuId, ActionContextService activationUpdateService) {
-        BuilderRecord builderRecord = new BuilderRecord();
         MenuDefinition menuDef = menus.get(menuId);
+
+        if (menuDef == null) {
+            return;
+        }
+
+        BuilderRecord builderRecord = new BuilderRecord();
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
         BuilderContributionRecord lastContributionRecord = null;
 
@@ -141,7 +146,7 @@ public class MenuManager {
             } else if (contribution instanceof ActionMenuContribution) {
                 contributionRecord = new BuilderActionContributionRecord((ActionMenuContribution) contribution);
             } else {
-                throw new IllegalStateException("Unsupported contribution type: " + contribution.getClass().getName());
+                throw new IllegalStateException("Unsupported contribution type: " + (contribution == null ? "null" : contribution.getClass().getName()));
             }
 
             if (contributionId != null && menuRecord.contributionsMap.containsKey(contributionId)) {
@@ -208,7 +213,6 @@ public class MenuManager {
                     contributionMatch.clear();
                     BuilderContributionRecord contribution;
                     while (contributionMatch.nextMatch == -1) {
-                        System.out.println(menuRecord.subMenuId + ":" + groupRecord.contributionId + ":" + groupRecord.processingPosition.name());
                         int index = 0;
                         while (index < groupRecord.contributions.size()) {
                             contribution = groupRecord.contributions.get(index);
@@ -301,12 +305,11 @@ public class MenuManager {
                                 menuRecord.previousContribution = contributionRecord;
                             }
                         }
+
                         if (contribution.separationMode == SeparationMenuContributionRule.SeparationMode.BELOW || contribution.separationMode == SeparationMenuContributionRule.SeparationMode.AROUND) {
                             menuRecord.separatorQueued = true;
                         }
-
                         menuRecord.processedContributions.add(contribution.contributionId);
-                        System.out.println("Item:" + contribution.contributionId);
                     } else {
                         Logger.getLogger(MenuManager.class.getName()).log(Level.SEVERE, "Skipping items");
                         groupRecord.contributions.clear();
@@ -361,12 +364,18 @@ public class MenuManager {
     }
 
     private static void finishMenuAction(@Nullable Action action, ActionContextService activationUpdateService) {
-        if (action != null) {
-            activationUpdateService.requestUpdate(action);
+        if (action == null) {
+            return;
         }
+
+        activationUpdateService.requestUpdate(action);
     }
 
     private static void finishMenuItem(JMenuItem menuItem, ActionContextService activationUpdateService) {
+        if (menuItem == null) {
+            return;
+        }
+
         if (menuItem instanceof JMenu) {
             finishMenu((JMenu) menuItem, activationUpdateService);
         } else {
@@ -393,7 +402,7 @@ public class MenuManager {
         }
     }
 
-    boolean menuGroupExists(String menuId, String groupId) {
+    public boolean menuGroupExists(String menuId, String groupId) {
         MenuDefinition menuDefs = menus.get(menuId);
         if (menuDefs == null) {
             return false;

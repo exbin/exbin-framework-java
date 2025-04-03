@@ -29,11 +29,11 @@ import javax.annotation.concurrent.Immutable;
 public class RelativeToolBarContributionRule implements ToolBarContributionRule {
 
     private final NextToMode nextToMode;
-    private final String toolbarContributionId;
+    private final String contributionId;
 
-    public RelativeToolBarContributionRule(NextToMode nextToMode, String toolbarContributionId) {
+    public RelativeToolBarContributionRule(NextToMode nextToMode, String contributionId) {
         this.nextToMode = nextToMode;
-        this.toolbarContributionId = toolbarContributionId;
+        this.contributionId = contributionId;
     }
 
     @Nonnull
@@ -42,8 +42,8 @@ public class RelativeToolBarContributionRule implements ToolBarContributionRule 
     }
 
     @Nonnull
-    public String getToolbarContributionId() {
-        return toolbarContributionId;
+    public String getContributionId() {
+        return contributionId;
     }
 
     /**

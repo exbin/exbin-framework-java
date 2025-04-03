@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -50,7 +50,7 @@ import org.exbin.framework.toolbar.api.SeparationToolBarContributionRule;
 import org.exbin.framework.toolbar.api.ToolBarContributionRule;
 import org.exbin.framework.utils.ObjectUtils;
 import org.exbin.framework.action.api.ActionContextService;
-import org.exbin.framework.toolbar.api.PositionToolBarContributionRule.PositionMode;
+import org.exbin.framework.toolbar.api.RelativeToolBarContributionRule;
 
 /**
  * Toolbar manager.
@@ -65,20 +65,9 @@ public class ToolBarManager {
      */
     private Map<String, ToolBarDefinition> toolBars = new HashMap<>();
 
-    /**
-     * Tool bar modified flags.
-     */
-    private Set<String> toolBarModified = new HashSet<>();
-
-    /**
-     * Map of plugins usage per tool bar id.
-     */
-    private Map<String, String> pluginsUsage = new HashMap<>();
-
     public ToolBarManager() {
     }
 
-    // TODO support for multiple frames / toolbars
     public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
         ToolBarDefinition toolBarDef = toolBars.get(toolBarId);
 
@@ -86,113 +75,210 @@ public class ToolBarManager {
             return;
         }
 
-        List<ToolBarGroupRecord> groupRecords = new LinkedList<>();
+        BuilderRecord builderRecord = new BuilderRecord();
+        Map<String, ButtonGroup> buttonGroups = new HashMap<>();
+        BuilderContributionRecord lastContributionRecord = null;
 
-        // Create list of build-in groups
-        Map<String, ToolBarGroupRecord> groupsMap = new HashMap<>();
-        for (PositionToolBarContributionRule.PositionMode mode : PositionToolBarContributionRule.PositionMode.values()) {
-            ToolBarGroupRecord toolBarGroupRecord = new ToolBarGroupRecord(mode.name());
-            groupsMap.put(mode.name(), toolBarGroupRecord);
-            groupRecords.add(toolBarGroupRecord);
-        }
-
-        // Build full tree of groups
+        // Build contributions tree
         for (ToolBarContribution contribution : toolBarDef.getContributions()) {
-            if (!(contribution instanceof GroupToolBarContribution)) {
-                continue;
-            }
-            String groupId = ((GroupToolBarContribution) contribution).getGroupId();
-            SeparationToolBarContributionRule.SeparationMode separationMode = getSeparationMode(toolBarId, contribution);
-            String parentGroupId = getParentGroup(toolBarId, contribution);
-            if (parentGroupId != null) {
-                ToolBarGroupRecord groupRecord = groupsMap.get(parentGroupId);
-                ToolBarGroupRecord menuGroupRecord = new ToolBarGroupRecord(groupId);
-                menuGroupRecord.separationMode = separationMode;
-                groupRecord.subGroups.add(menuGroupRecord);
-                groupsMap.put(groupId, menuGroupRecord);
-            } else {
-                PositionMode positionMode = getPositionMode(toolBarId, contribution);
-                if (positionMode == null) {
-                    positionMode = PositionMode.DEFAULT;
+            String parentGroupId = null;
+            PositionToolBarContributionRule.PositionMode positionHint = null;
+            SeparationToolBarContributionRule.SeparationMode separationMode = null;
+            List<String> afterIds = new ArrayList<>();
+            List<String> beforeIds = new ArrayList<>();
+            List<ToolBarContributionRule> rules = toolBarDef.getRules().get(contribution);
+            for (ToolBarContributionRule rule : rules) {
+                if (rule instanceof PositionToolBarContributionRule) {
+                    positionHint = ((PositionToolBarContributionRule) rule).getPositionMode();
+                } else if (rule instanceof SeparationToolBarContributionRule) {
+                    separationMode = ((SeparationToolBarContributionRule) rule).getSeparationMode();
+                } else if (rule instanceof RelativeToolBarContributionRule) {
+                    RelativeToolBarContributionRule.NextToMode nextToMode = ((RelativeToolBarContributionRule) rule).getNextToMode();
+                    String contributionId = ((RelativeToolBarContributionRule) rule).getContributionId();
+                    switch (nextToMode) {
+                        case AFTER:
+                            afterIds.add(contributionId);
+                            break;
+                        case BEFORE:
+                            beforeIds.add(contributionId);
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
+                } else if (rule instanceof GroupToolBarContributionRule) {
+                    parentGroupId = ((GroupToolBarContributionRule) rule).getGroupId();
                 }
-                ToolBarGroupRecord groupRecord = groupsMap.get(positionMode.name());
-                ToolBarGroupRecord menuGroupRecord = new ToolBarGroupRecord(groupId);
-                menuGroupRecord.separationMode = separationMode;
-                groupRecord.subGroups.add(menuGroupRecord);
-                groupsMap.put(groupId, menuGroupRecord);
             }
-        }
 
-        // Go thru all contributions and link them to its target group
-        for (ToolBarContribution contribution : toolBarDef.getContributions()) {
+            BuilderGroupRecord groupRecord = createGroup(builderRecord, parentGroupId);
+
+            BuilderContributionRecord contributionRecord;
+            String contributionId = null;
             if (contribution instanceof GroupToolBarContribution) {
-                continue;
-            }
-            PositionMode positionMode = getPositionMode(toolBarId, contribution);
-            String parentGroupId = getParentGroup(toolBarId, contribution);
-            if (positionMode != null) {
-                ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(positionMode.name());
-                toolBarGroupRecord.contributions.add(contribution);
+                String groupId = ((GroupToolBarContribution) contribution).getGroupId();
+                contributionRecord = builderRecord.groupsMap.get(groupId);
+                if (contributionRecord == null) {
+                    contributionRecord = new BuilderGroupRecord(groupId);
+                    builderRecord.groupsMap.put(groupId, (BuilderGroupRecord) contributionRecord);
+                }
+//            } else if (contribution instanceof DirectSubMenuContribution) {
+//                contributionRecord = new BuilderDirectSubMenuContributionRecord(((DirectSubMenuContribution) contribution));
+            } else if (contribution instanceof ActionToolBarContribution) {
+                contributionRecord = new BuilderActionContributionRecord((ActionToolBarContribution) contribution);
             } else {
-                if (parentGroupId != null) {
-                    ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(parentGroupId);
-                    toolBarGroupRecord.contributions.add(contribution);
+                throw new IllegalStateException("Unsupported contribution type: " + (contribution == null ? "null" : contribution.getClass().getName()));
+            }
+
+            if (contributionId != null && builderRecord.contributionsMap.containsKey(contributionId)) {
+                throw new IllegalStateException("Contribution with id " + contributionId + " already exists");
+            }
+
+            contributionRecord.separationMode = separationMode;
+            contributionRecord.placeAfter.addAll(afterIds);
+            if (positionHint != null) {
+                contributionRecord.positionHint = positionHint;
+            }
+            contributionRecord.previousHint = lastContributionRecord;
+            lastContributionRecord = contributionRecord;
+
+            // Convert before rules to after rules
+            List<String> defferedAfterIds = builderRecord.afterMap.remove(contributionId);
+            if (defferedAfterIds != null) {
+                contributionRecord.placeAfter.addAll(defferedAfterIds);
+            }
+            for (String itemId : beforeIds) {
+                BuilderContributionRecord itemRecord = builderRecord.contributionsMap.get(itemId);
+                if (itemRecord != null) {
+                    itemRecord.placeAfter.add(contributionId);
                 } else {
-                    ToolBarGroupRecord toolBarGroupRecord = groupsMap.get(PositionMode.DEFAULT.name());
-                    toolBarGroupRecord.contributions.add(contribution);
+                    List<String> itemAfterIds = builderRecord.afterMap.get(itemId);
+                    if (itemAfterIds == null) {
+                        itemAfterIds = new ArrayList<>();
+                        itemAfterIds.add(contributionId);
+                        builderRecord.afterMap.put(itemId, itemAfterIds);
+                    } else {
+                        itemAfterIds.add(contributionId);
+                    }
                 }
+            }
+
+            groupRecord.contributions.add(contributionRecord);
+            if (contributionId != null) {
+                builderRecord.contributionsMap.put(contributionId, contributionRecord);
             }
         }
 
-        processToolBarGroup(groupRecords, targetToolBar, activationUpdateService);
+        // Generate menu
+        List<BuilderGroupRecord> processing = new ArrayList<>();
+        BuilderContributionMatch contributionMatch = new BuilderContributionMatch();
+        BuilderGroupRecord rootRecord = builderRecord.groupsMap.get("");
+        processing.add(rootRecord);
+        while (!processing.isEmpty()) {
+            BuilderGroupRecord processingRecord = processing.get(processing.size() - 1);
+
+            if (processingRecord.processingState == SectionProcessingState.START) {
+                if (processingRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.ABOVE || processingRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND) {
+                    builderRecord.separatorQueued = true;
+                }
+                processingRecord.processingState = SectionProcessingState.CONTRIBUTION;
+            }
+
+            if (processingRecord.processingState == SectionProcessingState.CONTRIBUTION) {
+                if (!processingRecord.contributions.isEmpty()) {
+                    contributionMatch.clear();
+                    BuilderContributionRecord contribution;
+                    while (contributionMatch.nextMatch == -1) {
+                        int index = 0;
+                        while (index < processingRecord.contributions.size()) {
+                            contribution = processingRecord.contributions.get(index);
+                            boolean noAfterItems = contribution.placeAfter == null || contribution.placeAfter.isEmpty();
+                            boolean directPlaceMatch = noAfterItems ? false : builderRecord.processedContributions.containsAll(contribution.placeAfter);
+                            if (noAfterItems || directPlaceMatch) {
+                                if (contributionMatch.fallbackMatch == -1) {
+                                    contributionMatch.fallbackMatch = index;
+                                }
+                                if (contribution.positionHint == processingRecord.processingPosition) {
+                                    if (contributionMatch.positionMatch == -1) {
+                                        contributionMatch.positionMatch = index;
+                                    }
+
+                                    if (contributionMatch.nextMatch == -1 && directPlaceMatch) {
+                                        contributionMatch.nextMatch = index;
+                                    }
+
+                                    if (contributionMatch.nextHintMatch == -1 && contribution.previousHint == builderRecord.previousContribution) {
+                                        contributionMatch.nextHintMatch = index;
+                                    }
+                                }
+                            }
+                            index++;
+                        }
+
+                        if (contributionMatch.positionMatch >= 0 || processingRecord.processingPosition == PositionToolBarContributionRule.PositionMode.BOTTOM_LAST) {
+                            break;
+                        }
+
+                        processingRecord.processingPosition = PositionToolBarContributionRule.PositionMode.values()[processingRecord.processingPosition.ordinal() + 1];
+                    }
+                    if (contributionMatch.hasFoundMatch()) {
+                        int index = contributionMatch.bestMatch();
+                        contribution = processingRecord.contributions.remove(index);
+
+                        if (contribution.separationMode == SeparationToolBarContributionRule.SeparationMode.ABOVE || contribution.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND) {
+                            builderRecord.separatorQueued = true;
+                        }
+                        if (contribution instanceof BuilderGroupRecord) {
+                            processing.add((BuilderGroupRecord) contribution);
+                        } else if (contribution instanceof BuilderActionContributionRecord) {
+                            BuilderActionContributionRecord contributionRecord = (BuilderActionContributionRecord) contribution;
+                            JComponent item = contributionRecord.createItem(toolBarId, buttonGroups);
+                            if (builderRecord.separatorQueued) {
+                                if (targetToolBar.getComponentCount() > 0) {
+                                    targetToolBar.addSeparator();
+                                }
+                                builderRecord.separatorQueued = false;
+                            }
+                            targetToolBar.add(item);
+                            contributionRecord.finishItem(activationUpdateService);
+                            builderRecord.previousContribution = contributionRecord;
+                        }
+
+                        if (contribution.separationMode == SeparationToolBarContributionRule.SeparationMode.BELOW || contribution.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND) {
+                            builderRecord.separatorQueued = true;
+                        }
+                        builderRecord.processedContributions.add(contribution.contributionId);
+                    } else {
+                        Logger.getLogger(ToolBarManager.class.getName()).log(Level.SEVERE, "Skipping items");
+                        processingRecord.contributions.clear();
+                    }
+                    continue;
+                } else {
+                    processingRecord.processingState = SectionProcessingState.END;
+                }
+            }
+
+            if (processingRecord.processingState == SectionProcessingState.END) {
+                if (processingRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.BELOW || processingRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND) {
+                    builderRecord.separatorQueued = true;
+                }
+                processing.remove(processing.size() - 1);
+            }
+        }
     }
-
-    private void processToolBarGroup(List<ToolBarGroupRecord> groups, JToolBar targetToolBar, ActionContextService activationUpdateService) {
-        List<ToolBarGroupRecordPathNode> processingPath = new LinkedList<>();
-        processingPath.add(new ToolBarGroupRecordPathNode(groups));
-
-        boolean separatorQueued = false;
-        boolean itemsAdded = false;
-
-        while (!processingPath.isEmpty()) {
-            ToolBarGroupRecordPathNode pathNode = processingPath.get(processingPath.size() - 1);
-            if (pathNode.childIndex == pathNode.records.size()) {
-                processingPath.remove(processingPath.size() - 1);
-                continue;
-            }
-
-            ToolBarGroupRecord groupRecord = pathNode.records.get(pathNode.childIndex);
-            pathNode.childIndex++;
-
-            if (itemsAdded && (groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND)) {
-                addToolbarSeparator(targetToolBar);
-                separatorQueued = false;
-            }
-
-            for (ToolBarContribution contribution : groupRecord.contributions) {
-                if (separatorQueued) {
-                    addToolbarSeparator(targetToolBar);
-                    separatorQueued = false;
-                }
-
-                if (contribution instanceof ActionToolBarContribution) {
-                    Action action = ((ActionToolBarContribution) contribution).getAction();
-                    JComponent toolBarItem = createToolBarComponent(action);
-                    targetToolBar.add(toolBarItem);
-                    finishToolbarAction(action, activationUpdateService);
-                }
-
-                itemsAdded = true;
-            }
-
-            if (groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.AROUND || groupRecord.separationMode == SeparationToolBarContributionRule.SeparationMode.BELOW) {
-                separatorQueued = true;
-            }
-
-            if (!groupRecord.subGroups.isEmpty()) {
-                processingPath.add(new ToolBarGroupRecordPathNode(groupRecord.subGroups));
-            }
+        
+    @Nonnull
+    private static BuilderGroupRecord createGroup(BuilderRecord builderRecord, @Nullable String groupId) {
+        if (groupId == null) {
+            groupId = "";
         }
+
+        BuilderGroupRecord groupRecord = builderRecord.groupsMap.get(groupId);
+        if (groupRecord == null) {
+            groupRecord = new BuilderGroupRecord(groupId);
+            builderRecord.groupsMap.put(groupId, groupRecord);
+        }
+
+        return groupRecord;
     }
 
     @Nonnull
@@ -264,33 +350,21 @@ public class ToolBarManager {
         return toolBarItem;
     }
 
-    private static void addToolbarSeparator(JToolBar targetToolBar) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            targetToolBar.addSeparator();
-        } else {
-            try {
-                SwingUtilities.invokeAndWait(() -> {
-                    targetToolBar.addSeparator();
-                });
-            } catch (InterruptedException | InvocationTargetException ex) {
-                Logger.getLogger(ToolBarManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
     @Nonnull
     private static JComponent createDefaultToolBarItem(Action action) {
-        JButton newItem = new JButton(action);
-        newItem.setFocusable(false);
-        newItem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newItem.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        return newItem;
+        JButton button = new JButton(action);
+        button.setFocusable(false);
+        button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        button.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        return button;
     }
 
-    public void finishToolbarAction(Action action, ActionContextService activationUpdateService) {
-        if (action != null) {
-            activationUpdateService.requestUpdate(action);
+    private static void finishToolBarAction(Action action, ActionContextService activationUpdateService) {
+        if (action == null) {
+            return;
         }
+
+        activationUpdateService.requestUpdate(action);
     }
 
     public void registerToolBar(String toolBarId, String pluginId) {
@@ -350,64 +424,6 @@ public class ToolBarManager {
         rules.add(rule);
     }
 
-    @Nullable
-    private GroupToolBarContribution getGroup(String toolBarId, String groupId) {
-        ToolBarDefinition toolBarDefinition = toolBars.get(toolBarId);
-        for (ToolBarContribution contribution : toolBarDefinition.getContributions()) {
-            if (contribution instanceof GroupToolBarContribution) {
-                if (((GroupToolBarContribution) contribution).getGroupId().equals(groupId)) {
-                    return (GroupToolBarContribution) contribution;
-                }
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private SeparationToolBarContributionRule.SeparationMode getSeparationMode(String toolBarId, ToolBarContribution contribution) {
-        ToolBarDefinition toolBarDefinition = toolBars.get(toolBarId);
-        List<ToolBarContributionRule> rules = toolBarDefinition.getRules().get(contribution);
-        if (rules == null) {
-            return null;
-        }
-        for (ToolBarContributionRule rule : rules) {
-            if (rule instanceof SeparationToolBarContributionRule) {
-                return ((SeparationToolBarContributionRule) rule).getSeparationMode();
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private PositionMode getPositionMode(String toolBarId, ToolBarContribution contribution) {
-        ToolBarDefinition toolBarDefinition = toolBars.get(toolBarId);
-        List<ToolBarContributionRule> rules = toolBarDefinition.getRules().get(contribution);
-        if (rules == null) {
-            return null;
-        }
-        for (ToolBarContributionRule rule : rules) {
-            if (rule instanceof PositionToolBarContributionRule) {
-                return ((PositionToolBarContributionRule) rule).getPositionMode();
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private String getParentGroup(String toolBarId, ToolBarContribution contribution) {
-        ToolBarDefinition menuDefinition = toolBars.get(toolBarId);
-        List<ToolBarContributionRule> rules = menuDefinition.getRules().get(contribution);
-        if (rules == null) {
-            return null;
-        }
-        for (ToolBarContributionRule rule : rules) {
-            if (rule instanceof GroupToolBarContributionRule) {
-                return ((GroupToolBarContributionRule) rule).getGroupId();
-            }
-        }
-        return null;
-    }
-
     @Nonnull
     public List<Action> getAllManagedActions() {
         List<Action> actions = new ArrayList<>();
@@ -421,32 +437,107 @@ public class ToolBarManager {
         return actions;
     }
 
-    @ParametersAreNonnullByDefault
-    private class ToolBarGroupRecord {
+    private static class BuilderRecord {
 
-        String groupId;
-        SeparationToolBarContributionRule.SeparationMode separationMode;
-        List<ToolBarGroupRecord> subGroups = new LinkedList<>();
-        List<ToolBarContribution> contributions = new LinkedList<>();
+        Map<String, BuilderGroupRecord> groupsMap = new HashMap<>();
+        Map<String, BuilderContributionRecord> contributionsMap = new HashMap<>();
 
-        public ToolBarGroupRecord(String groupId) {
-            this.groupId = groupId;
-        }
-
-        public ToolBarGroupRecord(String groupId, SeparationToolBarContributionRule.SeparationMode separationMode) {
-            this(groupId);
-            this.separationMode = separationMode;
-        }
+        boolean separatorQueued = false;
+        BuilderContributionRecord previousContribution = null;
+        Map<String, List<String>> afterMap = new HashMap<>();
+        Set<String> processedContributions = new HashSet<>();
     }
 
     @ParametersAreNonnullByDefault
-    private class ToolBarGroupRecordPathNode {
+    private static class BuilderGroupRecord extends BuilderContributionRecord {
 
-        List<ToolBarGroupRecord> records;
-        int childIndex;
+        SectionProcessingState processingState = SectionProcessingState.START;
+        PositionToolBarContributionRule.PositionMode processingPosition = PositionToolBarContributionRule.PositionMode.TOP;
+        List<BuilderContributionRecord> contributions = new ArrayList<>();
 
-        public ToolBarGroupRecordPathNode(List<ToolBarGroupRecord> records) {
-            this.records = records;
+        public BuilderGroupRecord(String groupId) {
+            contributionId = groupId;
+        }
+    }
+
+    private enum SectionProcessingState {
+        START,
+        CONTRIBUTION,
+        END
+    }
+
+    @ParametersAreNonnullByDefault
+    private static class BuilderActionContributionRecord extends BuilderContributionRecord {
+
+        final ActionToolBarContribution contribution;
+
+        public BuilderActionContributionRecord(ActionToolBarContribution contribution) {
+            this.contribution = contribution;
+            contributionId = (String) contribution.getAction().getValue(ActionConsts.ACTION_ID);
+        }
+
+        @Nonnull
+        public JComponent createItem(String toolBarId, Map<String, ButtonGroup> buttonGroups) {
+            Action action = contribution.getAction();
+            JComponent component = ToolBarManager.createToolBarComponent(action);
+
+            /* if (isPopup) {
+                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
+                if (menuCreation != null) {
+                    menuCreation.onCreate(menuItem, menuId, subMenuId);
+                }
+            } */
+
+            return component;
+        }
+
+        public void finishItem(ActionContextService activationUpdateService) {
+            Action action = contribution.getAction();
+            ToolBarManager.finishToolBarAction(action, activationUpdateService);
+        }
+    }
+
+    private static class BuilderContributionRecord {
+
+        String contributionId;
+
+        SeparationToolBarContributionRule.SeparationMode separationMode;
+        PositionToolBarContributionRule.PositionMode positionHint = PositionToolBarContributionRule.PositionMode.DEFAULT;
+        BuilderContributionRecord previousHint = null;
+        final Set<String> placeAfter = new HashSet<>();
+    }
+
+
+    private static class BuilderContributionMatch {
+
+        int fallbackMatch = -1;
+        int positionMatch = -1;
+        int nextMatch = -1;
+        int nextHintMatch = -1;
+
+        void clear() {
+            fallbackMatch = -1;
+            positionMatch = -1;
+            nextMatch = -1;
+            nextHintMatch = -1;
+        }
+
+        boolean hasFoundMatch() {
+            return fallbackMatch >= 0 || positionMatch >= 0 || nextMatch >= 0 || nextHintMatch >= 0;
+        }
+
+        int bestMatch() {
+            if (nextMatch >= 0) {
+                return nextMatch;
+            }
+            if (nextHintMatch >= 0) {
+                return nextHintMatch;
+            }
+            if (positionMatch >= 0) {
+                return positionMatch;
+            }
+
+            return fallbackMatch;
         }
     }
 }
