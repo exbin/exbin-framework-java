@@ -63,7 +63,7 @@ public class ToolBarManager {
     /**
      * Tool bar records: tool bar id -> tool bar definition.
      */
-    private Map<String, ToolBarDefinition> toolBars = new HashMap<>();
+    private final Map<String, ToolBarDefinition> toolBars = new HashMap<>();
 
     public ToolBarManager() {
     }
@@ -265,7 +265,7 @@ public class ToolBarManager {
             }
         }
     }
-        
+
     @Nonnull
     private static BuilderGroupRecord createGroup(BuilderRecord builderRecord, @Nullable String groupId) {
         if (groupId == null) {
@@ -481,13 +481,6 @@ public class ToolBarManager {
             Action action = contribution.getAction();
             JComponent component = ToolBarManager.createToolBarComponent(action);
 
-            /* if (isPopup) {
-                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                if (menuCreation != null) {
-                    menuCreation.onCreate(menuItem, menuId, subMenuId);
-                }
-            } */
-
             return component;
         }
 
@@ -506,7 +499,6 @@ public class ToolBarManager {
         BuilderContributionRecord previousHint = null;
         final Set<String> placeAfter = new HashSet<>();
     }
-
 
     private static class BuilderContributionMatch {
 

@@ -29,11 +29,11 @@ import javax.annotation.concurrent.Immutable;
 public class RelativeSideBarContributionRule implements SideBarContributionRule {
 
     private final NextToMode nextToMode;
-    private final String sideBarContributionId;
+    private final String contributionId;
 
-    public RelativeSideBarContributionRule(NextToMode nextToMode, String sideBarContributionId) {
+    public RelativeSideBarContributionRule(NextToMode nextToMode, String contributionId) {
         this.nextToMode = nextToMode;
-        this.sideBarContributionId = sideBarContributionId;
+        this.contributionId = contributionId;
     }
 
     @Nonnull
@@ -42,8 +42,8 @@ public class RelativeSideBarContributionRule implements SideBarContributionRule 
     }
 
     @Nonnull
-    public String getSideBarContributionId() {
-        return sideBarContributionId;
+    public String getContributionId() {
+        return contributionId;
     }
 
     /**
