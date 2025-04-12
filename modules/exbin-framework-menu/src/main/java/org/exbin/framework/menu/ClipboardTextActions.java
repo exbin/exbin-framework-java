@@ -216,13 +216,6 @@ public class ClipboardTextActions implements ClipboardActionsApi {
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-//            if (activePanel instanceof ActivePanelActionHandling) {
-//                ActivePanelActionHandling childHandling = (ActivePanelActionHandling) activePanel;
-//                if (childHandling.performAction((String) parentAction.getValue(Action.NAME), actionEvent)) {
-//                    return;
-//                }
-//            }
-
             parentAction.actionPerformed(actionEvent);
         }
     }
@@ -251,16 +244,6 @@ public class ClipboardTextActions implements ClipboardActionsApi {
         }
 
         lastFocusOwner = newOwner;
-
-//        if (activePanel instanceof ActivePanelActionHandling) {
-//            if (((ActivePanelActionHandling) activePanel).updateActionStatus(newOwner)) {
-//                return;
-//            }
-//        }
-//        if (newOwner instanceof JTextComponent) {
-//            isValidClipboardFlavor = getClipboard().isDataFlavorAvailable(DataFlavor.stringFlavor);
-//            updateTextActions((JTextComponent) newOwner);
-//        }
     }
 
     private final class KeyboardFocusPCL implements PropertyChangeListener {

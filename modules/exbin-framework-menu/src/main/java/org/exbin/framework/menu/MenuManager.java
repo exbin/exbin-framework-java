@@ -408,10 +408,12 @@ public class MenuManager {
             return false;
         }
 
-        if (menuDefs.getContributions().stream().anyMatch((contribution) -> (contribution instanceof GroupMenuContribution && ((GroupMenuContribution) contribution).getGroupId().equals(groupId)))) {
-            return true;
+        for (MenuContribution contribution : menuDefs.getContributions()) {
+            if (contribution instanceof GroupMenuContribution && ((GroupMenuContribution) contribution).getGroupId().equals(groupId)) {
+                return true;
+            }
         }
-
+                
         return false;
     }
 

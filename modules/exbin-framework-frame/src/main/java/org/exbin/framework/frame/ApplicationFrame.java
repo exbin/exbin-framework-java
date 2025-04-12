@@ -291,6 +291,8 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
                 frameActionContextService.requestUpdate(action);
             }
         });
+        menuBar.revalidate();
+        menuBar.repaint();
     }
 
     @Override

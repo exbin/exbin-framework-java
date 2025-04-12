@@ -257,13 +257,14 @@ public class MenuModule implements MenuModuleApi {
         return customClipboardActions;
     }
      */
+    @ParametersAreNonnullByDefault
     public void registerClipboardFlavorListener(ActionContextChangeManager activationManager) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
 
             private final ClipboardFlavorState clipboardFlavorState = new ClipboardFlavorState();
 
             @Override
-            public void flavorsChanged(@Nonnull FlavorEvent fe) {
+            public void flavorsChanged(FlavorEvent fe) {
                 activationManager.updateActionsForComponent(ClipboardFlavorState.class, clipboardFlavorState);
             }
         });
