@@ -31,13 +31,13 @@ import javax.swing.JMenuItem;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionManager;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.utils.ClipboardActionsHandler;
 
 /**
  * Implementation of action module.

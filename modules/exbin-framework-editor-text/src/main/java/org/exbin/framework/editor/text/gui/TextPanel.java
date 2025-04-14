@@ -40,6 +40,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter.Highlight;
+import javax.swing.text.JTextComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
 import org.exbin.framework.utils.ClipboardActionsHandler;
@@ -252,6 +253,11 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
     @Override
     public boolean isSelection() {
         return textArea.getSelectionEnd() > textArea.getSelectionStart();
+    }
+    
+    @Nonnull
+    public JTextComponent getTextComponent() {
+        return textArea;
     }
 
     public void printFile() {

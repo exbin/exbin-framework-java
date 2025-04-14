@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.menu.action;
+package org.exbin.framework.action.clipboard;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -26,36 +26,35 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.menu.ClipboardFlavorState;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 
 /**
- * Clipboard paste action.
+ * Clipboard copy action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class PasteAction extends AbstractAction implements ActionContextChange {
+public class CopyAction extends AbstractAction implements ActionContextChange {
 
-    public static final String PASTE_ACTION_ID = "popupPasteAction";
+    public static final String COPY_ACTION_ID = "popupCopyAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 
-    public PasteAction() {
+    public CopyAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, PASTE_ACTION_ID);
-        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
+        actionModule.initAction(this, resourceBundle, COPY_ACTION_ID);
+        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (clipboardActionsHandler != null) {
-            clipboardActionsHandler.performPaste();
+            clipboardActionsHandler.performCopy();
         }
     }
 
@@ -63,9 +62,6 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
     public void register(ActionContextChangeManager manager) {
         manager.registerUpdateListener(ClipboardActionsHandler.class, instance -> {
             clipboardActionsHandler = instance;
-            update();
-        });
-        manager.registerUpdateListener(ClipboardFlavorState.class, instance -> {
             update();
         });
     }
@@ -76,7 +72,7 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
     }
 
     public void update() {
-        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
+        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
     }
 
 }

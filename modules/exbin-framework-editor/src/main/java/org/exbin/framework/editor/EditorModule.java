@@ -192,7 +192,7 @@ public class EditorModule implements EditorModuleApi {
         for (EditorProviderChangeListener listener : changeListeners) {
             listener.providerChanged(editorProvider);
         }
-        
+
         if (editorProvider instanceof DefaultMultiEditorProvider) {
             notifyEditorComponentCreated(editorProvider.getEditorComponent());
         }

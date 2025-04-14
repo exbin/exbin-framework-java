@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.menu;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+package org.exbin.framework.editor.text;
 
 /**
- * Clipboard flavor state.
+ * Mode for calculation of the go-to position in binary document.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class ClipboardFlavorState {
-    
+public enum RelativePositionMode {
+    /**
+     * Count from start of the document.
+     */
+    FROM_START,
+    /**
+     * Count from end of the document.
+     */
+    FROM_END,
+    /**
+     * Count from current position of the cursor in the document.
+     */
+    FROM_CURSOR
 }

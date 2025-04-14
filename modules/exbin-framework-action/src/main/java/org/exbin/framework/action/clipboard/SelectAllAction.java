@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.menu.action;
+package org.exbin.framework.action.clipboard;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -30,31 +30,31 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 
 /**
- * Clipboard copy action.
+ * Clipboard select all action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CopyAction extends AbstractAction implements ActionContextChange {
+public class SelectAllAction extends AbstractAction implements ActionContextChange {
 
-    public static final String COPY_ACTION_ID = "popupCopyAction";
+    public static final String SELECT_ALL_ACTION_ID = "popupSelectAllAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 
-    public CopyAction() {
+    public SelectAllAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, COPY_ACTION_ID);
-        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
+        actionModule.initAction(this, resourceBundle, SELECT_ALL_ACTION_ID);
+        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (clipboardActionsHandler != null) {
-            clipboardActionsHandler.performCopy();
+            clipboardActionsHandler.performSelectAll();
         }
     }
 
@@ -72,7 +72,7 @@ public class CopyAction extends AbstractAction implements ActionContextChange {
     }
 
     public void update() {
-        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
+        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
     }
 
 }

@@ -69,16 +69,16 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            OperationUndoModule guiUndoModule = new OperationUndoModule();
-            testApplication.addModule(OperationUndoModule.MODULE_ID, guiUndoModule);
-            ActionModule guiActionModule = new ActionModule();
-            testApplication.addModule(ActionModule.MODULE_ID, guiActionModule);
+            OperationUndoModule operationUndoModule = new OperationUndoModule();
+            testApplication.addModule(OperationUndoModule.MODULE_ID, operationUndoModule);
+            ActionModule actionModule = new ActionModule();
+            testApplication.addModule(ActionModule.MODULE_ID, actionModule);
 
             ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
             UndoRedoState undoRedoHandler = new EmptyUndoRedo();
-            toolBarEditorPanel.setUndoHandler(undoRedoHandler, guiUndoModule.createUndoActions());
+            toolBarEditorPanel.setUndoHandler(undoRedoHandler, operationUndoModule.createUndoActions());
             ClipboardActionsHandler clipboardActionsHandler = new ClipboardActionsHandlerEmpty();
-            toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, guiActionModule.getClipboardActions());
+            toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, actionModule.getClipboardActions());
             WindowUtils.invokeWindow(toolBarEditorPanel);
         });
     }

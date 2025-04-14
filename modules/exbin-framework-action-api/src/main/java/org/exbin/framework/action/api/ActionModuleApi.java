@@ -19,14 +19,14 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.exbin.framework.utils.ClipboardActionsHandler;
-import org.exbin.framework.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenuItem;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.utils.ClipboardActionsHandler;
 
 /**
  * Interface for action support module.

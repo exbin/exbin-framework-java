@@ -35,9 +35,11 @@ import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.App;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.gui.TextStatusPanel;
 import org.exbin.framework.editor.api.EditorProvider;
+import org.exbin.framework.editor.text.action.EditSelectionAction;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
@@ -271,10 +273,11 @@ public class EditorTextModule implements Module {
     }
 
     public void registerTextPopupMenu() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         menuModule.registerMenu(TEXT_POPUP_MENU_ID, MODULE_ID);
         MenuManagement mgmt = menuModule.getMenuManagement(TEXT_POPUP_MENU_ID, MODULE_ID);
-        ClipboardActionsApi clipboardActions = menuModule.getClipboardActions();
+        ClipboardActionsApi clipboardActions = actionModule.getClipboardActions();
 
         MenuContribution contribution = mgmt.registerMenuGroup(TEXT_POPUP_VIEW_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
@@ -303,8 +306,8 @@ public class EditorTextModule implements Module {
 
         contribution = mgmt.registerMenuItem(clipboardActions.createSelectAllAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
-        /* contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, createEditSelectionAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID)); */
+        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, createEditSelectionAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
 
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
@@ -312,9 +315,6 @@ public class EditorTextModule implements Module {
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
         contribution = mgmt.registerMenuItem(createGoToLineAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
-
-        /* contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, getOptionsAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_TOOLS_GROUP_ID)); */
     }
 
     public TextStatusPanel getTextStatusPanel() {
@@ -384,6 +384,14 @@ public class EditorTextModule implements Module {
         GoToLineAction goToLineAction = new GoToLineAction();
         goToLineAction.setup(resourceBundle);
         return goToLineAction;
+    }
+
+    @Nonnull
+    private EditSelectionAction createEditSelectionAction() {
+        ensureSetup();
+        EditSelectionAction editSelectionAction = new EditSelectionAction();
+        editSelectionAction.setup(resourceBundle);
+        return editSelectionAction;
     }
 
     @Nonnull

@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -131,22 +130,6 @@ public interface MenuModuleApi extends Module {
     ResourceBundle getResourceBundle();
 
     /**
-     * Returns clipboard/editing actions.
-     *
-     * @return clipboard editing actions
-     */
-    @Nonnull
-    ClipboardActionsApi getClipboardActions();
-
-    /**
-     * Returns clipboard/editing text actions.
-     *
-     * @return clipboard/editing text actions.
-     */
-    @Nonnull
-    ClipboardActionsApi getClipboardTextActions();
-
-    /**
      * Registers menu clipboard actions.
      */
     void registerMenuClipboardActions();
@@ -171,13 +154,6 @@ public interface MenuModuleApi extends Module {
      * @param separationMode separation mode
      */
     void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, @Nullable String subMenuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode);
-
-    /**
-     * Registers clipboard handler for main clipboard actions.
-     *
-     * @param clipboardHandler clipboard handler
-     */
-    void registerClipboardHandler(ClipboardActionsHandler clipboardHandler);
 
     /**
      * Returns list of action managed by menu managers.
