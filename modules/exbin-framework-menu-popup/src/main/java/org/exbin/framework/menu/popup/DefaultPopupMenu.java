@@ -59,6 +59,7 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.menu.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.utils.UiUtils;
 
 /**
@@ -228,8 +229,7 @@ public class DefaultPopupMenu {
     }
 
     private void initDefaultPopupMenu() {
-        ResourceBundle menuResourceBundle = App.getModule(MenuModuleApi.class).getResourceBundle();
-        initDefaultPopupMenu(menuResourceBundle, this.getClass());
+        initDefaultPopupMenu(resourceBundle, this.getClass());
     }
 
     protected void initDefaultPopupMenu(ResourceBundle resourceBundle, Class<?> resourceClass) {

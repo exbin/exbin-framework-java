@@ -36,7 +36,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class DeleteAction extends AbstractAction implements ActionContextChange {
 
-    public static final String DELETE_ACTION_ID = "popupDeleteAction";
+    public static final String DELETE_ACTION_ID = "deleteAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 

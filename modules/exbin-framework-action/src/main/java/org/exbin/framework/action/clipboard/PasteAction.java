@@ -38,7 +38,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class PasteAction extends AbstractAction implements ActionContextChange {
 
-    public static final String PASTE_ACTION_ID = "popupPasteAction";
+    public static final String PASTE_ACTION_ID = "pasteAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 

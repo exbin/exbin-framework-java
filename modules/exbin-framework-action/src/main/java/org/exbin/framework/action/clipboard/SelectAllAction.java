@@ -37,7 +37,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class SelectAllAction extends AbstractAction implements ActionContextChange {
 
-    public static final String SELECT_ALL_ACTION_ID = "popupSelectAllAction";
+    public static final String SELECT_ALL_ACTION_ID = "selectAllAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 

@@ -272,6 +272,13 @@ public class EditorTextModule implements Module {
         mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
     }
 
+    public void registerEditSelection() {
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
+        MenuContribution contribution = mgmt.registerMenuItem(createEditSelectionAction());
+        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(MenuModuleApi.CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+    }
+
     public void registerTextPopupMenu() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
@@ -306,7 +313,7 @@ public class EditorTextModule implements Module {
 
         contribution = mgmt.registerMenuItem(clipboardActions.createSelectAllAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
-        contribution = mgmt.registerMenuItem(TEXT_POPUP_MENU_ID, createEditSelectionAction());
+        contribution = mgmt.registerMenuItem(createEditSelectionAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
 
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAction());

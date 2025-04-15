@@ -37,7 +37,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class CutAction extends AbstractAction implements ActionContextChange {
 
-    public static final String CUT_ACTION_ID = "popupCutAction";
+    public static final String CUT_ACTION_ID = "cutAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 

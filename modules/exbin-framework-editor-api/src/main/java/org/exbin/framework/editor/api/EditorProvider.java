@@ -65,19 +65,4 @@ public interface EditorProvider extends FileOperations, UsedDirectoryApi {
      * @param fileType file type
      */
     void openFile(URI fileUri, FileType fileType);
-
-    /**
-     * Sets modification listener.
-     *
-     * @param editorModificationListener editor modification listener
-     */
-    void setModificationListener(EditorModificationListener editorModificationListener);
-
-    /**
-     * Interface for editor modifications listener.
-     */
-    public static interface EditorModificationListener {
-
-        void modified();
-    }
 }

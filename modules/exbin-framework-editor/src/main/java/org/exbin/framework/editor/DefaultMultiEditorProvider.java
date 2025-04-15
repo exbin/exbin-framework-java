@@ -71,7 +71,6 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     protected int lastIndex = 0;
     protected int lastNewFileIndex = 0;
     protected final Map<Integer, Integer> newFilesMap = new HashMap<>();
-    protected EditorModificationListener editorModificationListener;
 
     @Nullable
     protected FileHandler activeFile = null;
@@ -373,11 +372,6 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         }
 
         return parentTitle;
-    }
-
-    @Override
-    public void setModificationListener(EditorModificationListener editorModificationListener) {
-        this.editorModificationListener = editorModificationListener;
     }
 
     @Override

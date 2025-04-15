@@ -37,7 +37,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class CopyAction extends AbstractAction implements ActionContextChange {
 
-    public static final String COPY_ACTION_ID = "popupCopyAction";
+    public static final String COPY_ACTION_ID = "copyAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 

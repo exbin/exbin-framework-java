@@ -49,15 +49,15 @@ public class EditSelectionPanel extends javax.swing.JPanel {
     public EditSelectionPanel() {
         initComponents();
 
-        ((SpinnerNumberModel) startPositionBaseSwitchableSpinner.getModel()).setMinimum(0L);
+        ((SpinnerNumberModel) startPositionBaseSwitchableSpinner.getModel()).setMinimum(0);
         startPositionBaseSwitchableSpinner.addChangeListener((javax.swing.event.ChangeEvent evt) -> {
             if (!activeUpdate) {
                 try {
                     activeUpdate = true;
-                    long startPosition = getStartPositionValue();
-                    long maxLength = maxPosition - startPosition;
+                    int startPosition = getStartPositionValue();
+                    int maxLength = maxPosition - startPosition;
                     ((SpinnerNumberModel) lengthBaseSwitchableSpinner.getModel()).setMaximum(maxLength);
-                    long length = getEndPositionValue() - startPosition;
+                    int length = getEndPositionValue() - startPosition;
                     lengthBaseSwitchableSpinner.setValue(length);
                 } finally {
                     activeUpdate = false;
@@ -67,13 +67,13 @@ public class EditSelectionPanel extends javax.swing.JPanel {
             updateStartTargetPosition();
             updateEndTargetPosition();
         });
-        ((SpinnerNumberModel) endPositionBaseSwitchableSpinner.getModel()).setMinimum(0L);
+        ((SpinnerNumberModel) endPositionBaseSwitchableSpinner.getModel()).setMinimum(0);
         endPositionBaseSwitchableSpinner.addChangeListener((javax.swing.event.ChangeEvent evt) -> {
             if (!activeUpdate) {
                 try {
                     activeUpdate = true;
-                    long startPosition = getStartPositionValue();
-                    long length = getEndPositionValue() - startPosition;
+                    int startPosition = getStartPositionValue();
+                    int length = getEndPositionValue() - startPosition;
                     lengthBaseSwitchableSpinner.setValue(length);
                 } finally {
                     activeUpdate = false;
@@ -83,12 +83,12 @@ public class EditSelectionPanel extends javax.swing.JPanel {
             updateStartTargetPosition();
             updateEndTargetPosition();
         });
-        ((SpinnerNumberModel) lengthBaseSwitchableSpinner.getModel()).setMinimum(0L);
+        ((SpinnerNumberModel) lengthBaseSwitchableSpinner.getModel()).setMinimum(0);
         lengthBaseSwitchableSpinner.addChangeListener((javax.swing.event.ChangeEvent evt) -> {
             if (!activeUpdate) {
                 try {
                     activeUpdate = true;
-                    long endPosition = getStartPositionValue() + getSelectionLengthValue();
+                    int endPosition = getStartPositionValue() + getSelectionLengthValue();
                     endPositionBaseSwitchableSpinner.setValue(endPosition);
                 } finally {
                     activeUpdate = false;
@@ -443,7 +443,7 @@ public class EditSelectionPanel extends javax.swing.JPanel {
         return absolutePosition;
     }
 
-    public void setStartTargetPosition(long absolutePosition) {
+    public void setStartTargetPosition(int absolutePosition) {
         if (absolutePosition < 0) {
             absolutePosition = 0;
         } else if (absolutePosition > maxPosition) {
@@ -527,20 +527,20 @@ public class EditSelectionPanel extends javax.swing.JPanel {
             return;
         }
 
-        long absolutePosition = getStartTargetPosition();
+        int absolutePosition = getStartTargetPosition();
         this.startPosMode = positionMode;
         switch (positionMode) {
             case FROM_START:
             case FROM_END: {
-                setStartPositionValue(0L);
+                setStartPositionValue(0);
                 SpinnerNumberModel model = (SpinnerNumberModel) startPositionBaseSwitchableSpinner.getModel();
-                model.setMinimum(0L);
+                model.setMinimum(0);
                 model.setMaximum(maxPosition);
                 startPositionBaseSwitchableSpinner.revalidate();
                 break;
             }
             case FROM_CURSOR: {
-                setStartPositionValue(0L);
+                setStartPositionValue(0);
                 SpinnerNumberModel model = (SpinnerNumberModel) startPositionBaseSwitchableSpinner.getModel();
                 model.setMinimum(-cursorPosition);
                 model.setMaximum(maxPosition - cursorPosition);
@@ -563,15 +563,15 @@ public class EditSelectionPanel extends javax.swing.JPanel {
         switch (positionMode) {
             case FROM_START:
             case FROM_END: {
-                setEndPositionValue(0L);
+                setEndPositionValue(0);
                 SpinnerNumberModel model = (SpinnerNumberModel) startPositionBaseSwitchableSpinner.getModel();
-                model.setMinimum(0L);
+                model.setMinimum(0);
                 model.setMaximum(maxPosition);
                 startPositionBaseSwitchableSpinner.revalidate();
                 break;
             }
             case FROM_CURSOR: {
-                setEndPositionValue(0L);
+                setEndPositionValue(0);
                 SpinnerNumberModel model = (SpinnerNumberModel) startPositionBaseSwitchableSpinner.getModel();
                 model.setMinimum(-cursorPosition);
                 model.setMaximum(maxPosition - cursorPosition);
@@ -596,13 +596,13 @@ public class EditSelectionPanel extends javax.swing.JPanel {
         return (Integer) lengthBaseSwitchableSpinner.getValue();
     }
 
-    private void setStartPositionValue(long value) {
+    private void setStartPositionValue(int value) {
         startPositionBaseSwitchableSpinner.setValue(value);
         lengthBaseSwitchableSpinner.setValue(getEndPositionValue() - value);
         updateStartTargetPosition();
     }
 
-    private void setEndPositionValue(long value) {
+    private void setEndPositionValue(int value) {
         endPositionBaseSwitchableSpinner.setValue(value);
         lengthBaseSwitchableSpinner.setValue(value - getStartPositionValue());
         updateEndTargetPosition();

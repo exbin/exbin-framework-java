@@ -74,7 +74,6 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
     private CharsetChangeListener charsetChangeListener = null;
     private TextStatusPanel textStatus = null;
     private ClipboardActionsUpdateListener clipboardActionsUpdateListener;
-    private EditorProvider.EditorModificationListener editorModificationListener;
 
     public TextPanel() {
         initComponents();
@@ -284,14 +283,6 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         foundTextBackgroundColor = color;
     }
 
-    public EditorProvider.EditorModificationListener getEditorModificationListener() {
-        return editorModificationListener;
-    }
-
-    public void setEditorModificationListener(EditorProvider.EditorModificationListener editorModificationListener) {
-        this.editorModificationListener = editorModificationListener;
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -339,9 +330,6 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         }
         boolean oldValue = this.modified;
         this.modified = modified;
-        if (editorModificationListener != null) {
-            editorModificationListener.modified();
-        }
         firePropertyChange("modified", oldValue, this.modified);
     }
 
