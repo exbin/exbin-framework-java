@@ -38,7 +38,6 @@ import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.gui.TextStatusPanel;
-import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.text.action.EditSelectionAction;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
@@ -112,22 +111,9 @@ public class EditorTextModule implements Module {
     }
 
     private void ensureSetup() {
-        if (editorProvider == null) {
-            getEditorProvider();
-        }
-
         if (resourceBundle == null) {
             getResourceBundle();
         }
-    }
-
-    @Nonnull
-    public EditorProvider getEditorProvider() {
-        if (editorProvider == null) {
-            editorProvider = new TextEditorProvider();
-        }
-
-        return editorProvider;
     }
 
     @Nonnull
@@ -154,7 +140,7 @@ public class EditorTextModule implements Module {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
         frameModule.switchStatusBar(TEXT_STATUS_BAR_ID);
-        ((TextPanel) getEditorProvider().getEditorComponent()).registerTextStatus(textStatusPanel);
+        editorProvider.getEditorComponent().registerTextStatus(textStatusPanel);
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(textStatusPanel);
         }
@@ -186,18 +172,18 @@ public class EditorTextModule implements Module {
             @Nonnull
             @Override
             public Color[] getCurrentTextColors() {
-                return ((TextPanel) getEditorProvider().getEditorComponent()).getCurrentColors();
+                return editorProvider.getEditorComponent().getCurrentColors();
             }
 
             @Nonnull
             @Override
             public Color[] getDefaultTextColors() {
-                return ((TextPanel) getEditorProvider().getEditorComponent()).getDefaultColors();
+                return editorProvider.getEditorComponent().getDefaultColors();
             }
 
             @Override
             public void setCurrentTextColors(Color[] colors) {
-                ((TextPanel) getEditorProvider().getEditorComponent()).setCurrentColors(colors);
+                editorProvider.getEditorComponent().setCurrentColors(colors);
             }
         });
         optionsPageManagement.registerPage(textColorsOptionsPage);
@@ -211,18 +197,18 @@ public class EditorTextModule implements Module {
             @Nonnull
             @Override
             public Font getCurrentFont() {
-                return ((TextPanel) getEditorProvider().getEditorComponent()).getCurrentFont();
+                return editorProvider.getEditorComponent().getCurrentFont();
             }
 
             @Nonnull
             @Override
             public Font getDefaultFont() {
-                return ((TextPanel) getEditorProvider().getEditorComponent()).getDefaultFont();
+                return editorProvider.getEditorComponent().getDefaultFont();
             }
 
             @Override
             public void setCurrentFont(Font font) {
-                ((TextPanel) getEditorProvider().getEditorComponent()).setCurrentFont(font);
+                editorProvider.getEditorComponent().setCurrentFont(font);
             }
         });
         optionsPageManagement.registerPage(textFontOptionsPage);
@@ -232,12 +218,12 @@ public class EditorTextModule implements Module {
         textAppearanceOptionsPage.setTextAppearanceService(new TextAppearanceService() {
             @Override
             public boolean getWordWrapMode() {
-                return ((TextPanel) getEditorProvider().getEditorComponent()).getWordWrapMode();
+                return editorProvider.getEditorComponent().getWordWrapMode();
             }
 
             @Override
             public void setWordWrapMode(boolean mode) {
-                ((TextPanel) getEditorProvider().getEditorComponent()).setWordWrapMode(mode);
+                editorProvider.getEditorComponent().setWordWrapMode(mode);
             }
         });
         optionsPageManagement.registerPage(textAppearanceOptionsPage);
@@ -365,7 +351,7 @@ public class EditorTextModule implements Module {
 
                 @Override
                 public void selectedEncodingChanged() {
-                    ((TextPanel) getEditorProvider().getEditorComponent()).setCharset(Charset.forName(encodingsHandler.getSelectedEncoding()));
+                    editorProvider.getEditorComponent().setCharset(Charset.forName(encodingsHandler.getSelectedEncoding()));
                 }
             });
             if (textStatusPanel != null) {

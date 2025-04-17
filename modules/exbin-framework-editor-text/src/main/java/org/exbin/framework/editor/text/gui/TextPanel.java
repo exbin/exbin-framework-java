@@ -48,7 +48,6 @@ import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
-import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.utils.ClipboardUtils;
@@ -253,7 +252,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
     public boolean isSelection() {
         return textArea.getSelectionEnd() > textArea.getSelectionStart();
     }
-    
+
     @Nonnull
     public JTextComponent getTextComponent() {
         return textArea;
@@ -275,6 +274,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         return textArea.getFont();
     }
 
+    @Nonnull
     public Color getFoundTextBackgroundColor() {
         return foundTextBackgroundColor;
     }
@@ -330,6 +330,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         }
         boolean oldValue = this.modified;
         this.modified = modified;
+        undoManagement.notifyModified();
         firePropertyChange("modified", oldValue, this.modified);
     }
 
@@ -446,5 +447,10 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
     public interface CharsetChangeListener {
 
         public void charsetChanged();
+    }
+
+    public interface TextChangeListener {
+
+        public void textChanged();
     }
 }

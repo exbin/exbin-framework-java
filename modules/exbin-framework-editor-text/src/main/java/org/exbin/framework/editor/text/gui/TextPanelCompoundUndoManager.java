@@ -78,9 +78,7 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
             lastEditType = editType;
             lastOffset = offset;
         }
-        if (undoRedoChangeListener != null) {
-            undoRedoChangeListener.undoChanged();
-        }
+        notifyModified();
     }
 
     public void createCompoundEdit() {
@@ -104,9 +102,7 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
 
         lastOffset = -1;
         lastEditType = null;
-        if (undoRedoChangeListener != null) {
-            undoRedoChangeListener.undoChanged();
-        }
+        notifyModified();
     }
 
     @Override
@@ -120,9 +116,7 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
 
         lastOffset = -1;
         lastEditType = null;
-        if (undoRedoChangeListener != null) {
-            undoRedoChangeListener.undoChanged();
-        }
+        notifyModified();
     }
 
     @Override
@@ -137,6 +131,12 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
     
     public void setUndoRedoChangeListener(UndoRedoChangeListener undoRedoChangeListener) {
         this.undoRedoChangeListener = undoRedoChangeListener;
+    }
+
+    public void notifyModified() {
+        if (undoRedoChangeListener != null) {
+            undoRedoChangeListener.undoChanged();
+        }
     }
 
     class MyCompoundEdit extends CompoundEdit {
