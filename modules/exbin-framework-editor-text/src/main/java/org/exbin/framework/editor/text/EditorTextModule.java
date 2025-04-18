@@ -26,16 +26,20 @@ import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.App;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.gui.TextStatusPanel;
 import org.exbin.framework.editor.text.action.EditSelectionAction;
@@ -57,6 +61,7 @@ import org.exbin.framework.toolbar.api.ToolBarContribution;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.editor.text.options.TextAppearanceOptionsPage;
 import org.exbin.framework.editor.text.options.TextColorOptionsPage;
+import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.api.GroupOptionsPageRule;
@@ -100,7 +105,7 @@ public class EditorTextModule implements Module {
 
     public static final String TEXT_STATUS_BAR_ID = "textStatusBar";
 
-    private TextEditorProvider editorProvider;
+    private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
     private TextStatusPanel textStatusPanel;
 
@@ -117,7 +122,7 @@ public class EditorTextModule implements Module {
     }
 
     @Nonnull
-    public void setEditorProvider(TextEditorProvider editorProvider) {
+    public void setEditorProvider(EditorProvider editorProvider) {
         this.editorProvider = editorProvider;
     }
 
@@ -140,7 +145,10 @@ public class EditorTextModule implements Module {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
         frameModule.switchStatusBar(TEXT_STATUS_BAR_ID);
-        editorProvider.getEditorComponent().registerTextStatus(textStatusPanel);
+        JComponent editorComponent = editorProvider.getEditorComponent();
+        if (editorComponent instanceof TextPanel) {
+            ((TextPanel) editorComponent).registerTextStatus(textStatusPanel);
+        }
         if (encodingsHandler != null) {
             encodingsHandler.setTextEncodingStatus(textStatusPanel);
         }
@@ -172,18 +180,45 @@ public class EditorTextModule implements Module {
             @Nonnull
             @Override
             public Color[] getCurrentTextColors() {
-                return editorProvider.getEditorComponent().getCurrentColors();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                FileHandler fileHandler = activeFile.orElse(null);
+                if (fileHandler instanceof TextFileHandler) {
+                    return ((TextFileHandler) fileHandler).getComponent().getCurrentColors();
+                }
+
+                return createDefaultColors();
             }
 
             @Nonnull
             @Override
             public Color[] getDefaultTextColors() {
-                return editorProvider.getEditorComponent().getDefaultColors();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                FileHandler fileHandler = activeFile.orElse(null);
+                if (fileHandler instanceof TextFileHandler) {
+                    return ((TextFileHandler) fileHandler).getComponent().getDefaultColors();
+                }
+
+                return createDefaultColors();
             }
 
             @Override
             public void setCurrentTextColors(Color[] colors) {
-                editorProvider.getEditorComponent().setCurrentColors(colors);
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                FileHandler fileHandler = activeFile.orElse(null);
+                if (fileHandler instanceof TextFileHandler) {
+                    ((TextFileHandler) fileHandler).getComponent().setCurrentColors(colors);
+                }
+            }
+            
+            @Nonnull
+            private Color[] createDefaultColors() {
+                Color[] result = new Color[5];
+                result[0] = Color.BLACK;
+                result[1] = Color.BLACK;
+                result[2] = Color.BLACK;
+                result[3] = Color.BLACK;
+                result[4] = Color.BLACK;
+                return result;
             }
         });
         optionsPageManagement.registerPage(textColorsOptionsPage);
@@ -197,18 +232,34 @@ public class EditorTextModule implements Module {
             @Nonnull
             @Override
             public Font getCurrentFont() {
-                return editorProvider.getEditorComponent().getCurrentFont();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                FileHandler fileHandler = activeFile.orElse(null);
+                if (fileHandler instanceof TextFileHandler) {
+                    return ((TextFileHandler) fileHandler).getComponent().getCurrentFont();
+                }
+
+                return new JLabel().getFont();
             }
 
             @Nonnull
             @Override
             public Font getDefaultFont() {
-                return editorProvider.getEditorComponent().getDefaultFont();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                FileHandler fileHandler = activeFile.orElse(null);
+                if (fileHandler instanceof TextFileHandler) {
+                    return ((TextFileHandler) fileHandler).getComponent().getDefaultFont();
+                }
+
+                return new JLabel().getFont();
             }
 
             @Override
             public void setCurrentFont(Font font) {
-                editorProvider.getEditorComponent().setCurrentFont(font);
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                FileHandler fileHandler = activeFile.orElse(null);
+                if (fileHandler instanceof TextFileHandler) {
+                    ((TextFileHandler) fileHandler).getComponent().setCurrentFont(font);
+                }
             }
         });
         optionsPageManagement.registerPage(textFontOptionsPage);
@@ -218,12 +269,22 @@ public class EditorTextModule implements Module {
         textAppearanceOptionsPage.setTextAppearanceService(new TextAppearanceService() {
             @Override
             public boolean getWordWrapMode() {
-                return editorProvider.getEditorComponent().getWordWrapMode();
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                FileHandler fileHandler = activeFile.orElse(null);
+                if (fileHandler instanceof TextFileHandler) {
+                    return ((TextFileHandler) fileHandler).getComponent().getWordWrapMode();
+                }
+
+                return false;
             }
 
             @Override
             public void setWordWrapMode(boolean mode) {
-                editorProvider.getEditorComponent().setWordWrapMode(mode);
+                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
+                FileHandler fileHandler = activeFile.orElse(null);
+                if (fileHandler instanceof TextFileHandler) {
+                    ((TextFileHandler) fileHandler).getComponent().setWordWrapMode(mode);
+                }
             }
         });
         optionsPageManagement.registerPage(textAppearanceOptionsPage);
@@ -240,7 +301,7 @@ public class EditorTextModule implements Module {
     }
 
     public void registerUndoHandler() {
-        editorProvider.registerUndoHandler();
+        ((TextEditorProvider) editorProvider).registerUndoHandler();
     }
 
     public void registerWordWrapping() {
@@ -351,7 +412,9 @@ public class EditorTextModule implements Module {
 
                 @Override
                 public void selectedEncodingChanged() {
-                    editorProvider.getEditorComponent().setCharset(Charset.forName(encodingsHandler.getSelectedEncoding()));
+                    if (editorProvider instanceof TextEditorProvider) {
+                        ((TextEditorProvider) editorProvider).getEditorComponent().setCharset(Charset.forName(encodingsHandler.getSelectedEncoding()));
+                    }
                 }
             });
             if (textStatusPanel != null) {

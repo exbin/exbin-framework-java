@@ -173,6 +173,7 @@ public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHan
         return colors;
     }
 
+    @Nonnull
     public Color[] getDefaultColors() {
         return defaultColors;
     }
