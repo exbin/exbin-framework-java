@@ -48,15 +48,12 @@ public class TextColorAction extends AbstractAction {
 
     public static final String ACTION_ID = "toolsSetColorAction";
 
-    private ResourceBundle resourceBundle;
     private FileHandler fileHandler;
 
     public TextColorAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
