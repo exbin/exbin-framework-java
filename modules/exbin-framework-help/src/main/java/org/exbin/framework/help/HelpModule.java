@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.help;
 
+import java.awt.Insets;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -57,7 +58,8 @@ public class HelpModule implements HelpModuleApi {
         // TODO Change button shape to rounded
         getResourceBundle();
         JButton helpButton = new JButton();
-        helpButton.setEnabled(false);
+        helpButton.setMargin(new Insets(2, 2, 2, 2));
+        helpButton.setEnabled(hasOpeningHandler());
         helpButton.setIcon(new ImageIcon(getClass().getResource(resourceBundle.getString("helpAction.smallIcon"))));
         helpButton.setToolTipText(resourceBundle.getString("helpAction.toolTipText"));
         return helpButton;
@@ -71,11 +73,18 @@ public class HelpModule implements HelpModuleApi {
     }
 
     @Nonnull
+    @Override
     public Optional<HelpOpeningHandler> getHelpOpeningHandler() {
         return Optional.ofNullable(helpOpeningHandler);
     }
 
+    @Override
     public void setHelpOpeningHandler(@Nullable HelpOpeningHandler helpOpeningHandler) {
         this.helpOpeningHandler = helpOpeningHandler;
+    }
+
+    @Override
+    public boolean hasOpeningHandler() {
+        return helpOpeningHandler != null;
     }
 }

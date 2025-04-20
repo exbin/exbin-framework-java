@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.help.gui;
+package org.exbin.framework.window.api.gui;
 
 import java.awt.event.ActionEvent;
 import java.util.Optional;
@@ -21,45 +21,44 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.App;
-import org.exbin.framework.help.HelpModule;
 import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpLinkable;
 import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.OkCancelListener;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.window.api.handler.OptionsControlHandler;
+import org.exbin.framework.window.api.handler.MultiStepControlHandler;
 
 /**
- * Default control panel for options dialogs.
+ * Multi-step control panel for options dialogs.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OptionsHelpControlPanel extends javax.swing.JPanel implements OptionsControlHandler.OptionsControlService, HelpLinkable {
+public class MultiStepHelpControlPanel extends javax.swing.JPanel implements MultiStepControlHandler.MultiStepControlService, HelpLinkable {
 
     private final java.util.ResourceBundle resourceBundle;
-    private OptionsControlHandler handler;
+    private MultiStepControlHandler handler;
     private OkCancelListener okCancelListener;
     private HelpLink helpLink;
 
-    public OptionsHelpControlPanel() {
-        this(App.getModule(LanguageModuleApi.class).getBundle(OptionsHelpControlPanel.class));
+    public MultiStepHelpControlPanel() {
+        this(App.getModule(LanguageModuleApi.class).getBundle(MultiStepHelpControlPanel.class));
     }
 
-    public OptionsHelpControlPanel(java.util.ResourceBundle resourceBundle) {
+    public MultiStepHelpControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
 
         okCancelListener = new OkCancelListener() {
             @Override
             public void okEvent() {
-                performClick(OptionsControlHandler.ControlActionType.SAVE);
+                performClick(MultiStepControlHandler.ControlActionType.FINISH);
             }
 
             @Override
             public void cancelEvent() {
-                performClick(OptionsControlHandler.ControlActionType.CANCEL);
+                performClick(MultiStepControlHandler.ControlActionType.CANCEL);
             }
         };
         helpButton.addActionListener((ActionEvent e) -> {
@@ -70,14 +69,13 @@ public class OptionsHelpControlPanel extends javax.swing.JPanel implements Optio
         });
     }
 
-    public void setHandler(OptionsControlHandler handler) {
+    public void setHandler(MultiStepControlHandler handler) {
         this.handler = handler;
     }
 
     @Override
     public void setHelpLink(HelpLink helpLink) {
         this.helpLink = helpLink;
-        helpButton.setEnabled(true);
     }
 
     /**
@@ -89,29 +87,39 @@ public class OptionsHelpControlPanel extends javax.swing.JPanel implements Optio
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        helpButton = App.getModule(HelpModule.class).createHelpButton();
+        helpButton = App.getModule(HelpModuleApi.class).createHelpButton();
+        finishButton = new javax.swing.JButton();
+        nextButton = new javax.swing.JButton();
+        previousButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        saveButton = new javax.swing.JButton();
-        applyOnceButton = new javax.swing.JButton();
+
+        finishButton.setText(resourceBundle.getString("finishButton.text")); // NOI18N
+        finishButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finishButtonActionPerformed(evt);
+            }
+        });
+
+        nextButton.setText(resourceBundle.getString("nextButton.text")); // NOI18N
+        nextButton.setEnabled(false);
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
+
+        previousButton.setText(resourceBundle.getString("previousButton.text")); // NOI18N
+        previousButton.setEnabled(false);
+        previousButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText(resourceBundle.getString("cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
-            }
-        });
-
-        saveButton.setText(resourceBundle.getString("saveButton.text")); // NOI18N
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-
-        applyOnceButton.setText(resourceBundle.getString("applyOnceButton.text")); // NOI18N
-        applyOnceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                applyOnceButtonActionPerformed(evt);
             }
         });
 
@@ -122,10 +130,12 @@ public class OptionsHelpControlPanel extends javax.swing.JPanel implements Optio
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(helpButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(applyOnceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(saveButton)
+                .addComponent(previousButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nextButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(finishButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
                 .addContainerGap())
@@ -136,51 +146,63 @@ public class OptionsHelpControlPanel extends javax.swing.JPanel implements Optio
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
-                    .addComponent(applyOnceButton)
-                    .addComponent(saveButton)
+                    .addComponent(finishButton)
+                    .addComponent(nextButton)
+                    .addComponent(previousButton)
                     .addComponent(helpButton))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
+        if (handler != null) {
+            handler.controlActionPerformed(MultiStepControlHandler.ControlActionType.FINISH);
+        }
+    }//GEN-LAST:event_finishButtonActionPerformed
+
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        if (handler != null) {
+            handler.controlActionPerformed(MultiStepControlHandler.ControlActionType.NEXT);
+        }
+    }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+        if (handler != null) {
+            handler.controlActionPerformed(MultiStepControlHandler.ControlActionType.PREVIOUS);
+        }
+    }//GEN-LAST:event_previousButtonActionPerformed
+
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         if (handler != null) {
-            handler.controlActionPerformed(OptionsControlHandler.ControlActionType.CANCEL);
+            handler.controlActionPerformed(MultiStepControlHandler.ControlActionType.CANCEL);
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void applyOnceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyOnceButtonActionPerformed
-        if (handler != null) {
-            handler.controlActionPerformed(OptionsControlHandler.ControlActionType.APPLY_ONCE);
-        }
-    }//GEN-LAST:event_applyOnceButtonActionPerformed
-
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if (handler != null) {
-            handler.controlActionPerformed(OptionsControlHandler.ControlActionType.SAVE);
-        }
-    }//GEN-LAST:event_saveButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton applyOnceButton;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton finishButton;
     private javax.swing.JButton helpButton;
-    private javax.swing.JButton saveButton;
+    private javax.swing.JButton nextButton;
+    private javax.swing.JButton previousButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void performClick(OptionsControlHandler.ControlActionType actionType) {
+    public void performClick(MultiStepControlHandler.ControlActionType actionType) {
         switch (actionType) {
-            case SAVE: {
-                UiUtils.doButtonClick(saveButton);
-                break;
-            }
-            case APPLY_ONCE: {
-                UiUtils.doButtonClick(applyOnceButton);
+            case FINISH: {
+                UiUtils.doButtonClick(finishButton);
                 break;
             }
             case CANCEL: {
                 UiUtils.doButtonClick(cancelButton);
+                break;
+            }
+            case NEXT: {
+                UiUtils.doButtonClick(nextButton);
+                break;
+            }
+            case PREVIOUS: {
+                UiUtils.doButtonClick(previousButton);
                 break;
             }
             default:
@@ -191,7 +213,7 @@ public class OptionsHelpControlPanel extends javax.swing.JPanel implements Optio
     @Nonnull
     @Override
     public Optional<JButton> getDefaultButton() {
-        return Optional.of(saveButton);
+        return Optional.of(finishButton);
     }
 
     @Nonnull
@@ -202,19 +224,23 @@ public class OptionsHelpControlPanel extends javax.swing.JPanel implements Optio
 
     @Nonnull
     @Override
-    public OptionsControlHandler.OptionsControlEnablementListener createEnablementListener() {
-        return (OptionsControlHandler.ControlActionType actionType, boolean enablement) -> {
+    public MultiStepControlHandler.MultiStepControlEnablementListener createEnablementListener() {
+        return (MultiStepControlHandler.ControlActionType actionType, boolean enablement) -> {
             switch (actionType) {
-                case APPLY_ONCE: {
-                    applyOnceButton.setEnabled(enablement);
+                case FINISH: {
+                    finishButton.setEnabled(enablement);
                     break;
                 }
                 case CANCEL: {
                     cancelButton.setEnabled(enablement);
                     break;
                 }
-                case SAVE: {
-                    saveButton.setEnabled(enablement);
+                case NEXT: {
+                    nextButton.setEnabled(enablement);
+                    break;
+                }
+                case PREVIOUS: {
+                    previousButton.setEnabled(enablement);
                     break;
                 }
                 default:

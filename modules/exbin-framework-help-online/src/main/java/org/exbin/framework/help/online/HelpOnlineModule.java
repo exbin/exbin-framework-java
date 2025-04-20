@@ -15,16 +15,22 @@
  */
 package org.exbin.framework.help.online;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.online.action.OnlineHelpAction;
 import org.exbin.framework.help.online.api.HelpOnlineModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.menu.api.PositionMenuContributionRule;
+import org.exbin.framework.utils.DesktopUtils;
 
 /**
  * Implementation of the online help support module.
@@ -58,5 +64,18 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
     @Override
     public void setOnlineHelpUrl(URL helpUrl) {
         this.helpUrl = helpUrl;
+    }
+
+    @Override
+    public void openHelpLink(@Nullable HelpLink helpLink) {
+        URL targetUrl = helpUrl;
+        if (helpLink != null) {
+            try {
+                targetUrl = new URL(helpUrl, "#" + helpLink.getHelpId());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(HelpOnlineModule.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        DesktopUtils.openDesktopURL(targetUrl.toExternalForm());
     }
 }

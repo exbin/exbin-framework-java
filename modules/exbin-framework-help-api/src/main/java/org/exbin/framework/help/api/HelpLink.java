@@ -17,6 +17,7 @@ package org.exbin.framework.help.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Link to help page.
@@ -24,10 +25,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
+@Immutable
 public class HelpLink {
 
-    private String module;
-    private String helpId;
+    private final String module;
+    private final String helpId;
 
     public HelpLink(String module, String helpId) {
         this.module = module;

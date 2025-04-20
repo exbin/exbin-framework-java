@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.help.api;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.Module;
@@ -45,4 +47,26 @@ public interface HelpModuleApi extends Module {
      */
     @Nonnull
     JButton createHelpButton();
+
+    /**
+     * Returns true if opening handler is available.
+     *
+     * @return true if available
+     */
+    boolean hasOpeningHandler();
+
+    /**
+     * Returns help opening handler.
+     *
+     * @return help opening handler
+     */
+    @Nonnull
+    Optional<HelpOpeningHandler> getHelpOpeningHandler();
+
+    /**
+     * Sets help opening handler.
+     *
+     * @param helpOpeningHandler help opening handler
+     */
+    void setHelpOpeningHandler(@Nullable HelpOpeningHandler helpOpeningHandler);
 }

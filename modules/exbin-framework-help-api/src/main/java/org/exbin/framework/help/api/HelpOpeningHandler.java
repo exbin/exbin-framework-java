@@ -15,15 +15,19 @@
  */
 package org.exbin.framework.help.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nullable;
 
 /**
  * Link to help page.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface HelpOpeningHandler {
 
-    void openHelpLink(HelpLink helpLink);
+    /**
+     * Opens help page for specific help link or default help for empty link.
+     *
+     * @param helpLink help link
+     */
+    void openHelpLink(@Nullable HelpLink helpLink);
 }

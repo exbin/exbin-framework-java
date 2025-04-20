@@ -17,10 +17,12 @@ package org.exbin.framework.help.online.api;
 
 import java.net.URL;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.help.api.HelpLink;
 
 /**
  * Interface for framework online help support module.
@@ -51,4 +53,11 @@ public interface HelpOnlineModuleApi extends Module {
      * @param onlineHelpUrl url
      */
     void setOnlineHelpUrl(URL onlineHelpUrl);
+
+    /**
+     * Opens help link.
+     *
+     * @param helpLink help link
+     */
+    void openHelpLink(@Nullable HelpLink helpLink);
 }

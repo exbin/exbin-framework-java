@@ -26,6 +26,8 @@ import javax.swing.JPanel;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.help.api.HelpLink;
+import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
@@ -36,7 +38,9 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.handler.DefaultControlHandler;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.gui.DefaultHelpControlPanel;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
+import org.exbin.framework.window.api.gui.OptionsHelpControlPanel;
 import org.exbin.framework.window.api.handler.OptionsControlHandler;
 
 /**
@@ -47,7 +51,8 @@ import org.exbin.framework.window.api.handler.OptionsControlHandler;
 @ParametersAreNonnullByDefault
 public class ManageEncodingsAction extends AbstractAction {
 
-    public static final String MANAGE_ENCODINGS_ACTION_ID = "manageEncodingsAction"; //NOI18N
+    public static final String ACTION_ID = "manageEncodingsAction"; //NOI18N
+    public static final String HELP_ID = "encoding"; //NOI18N
 
     private TextEncodingService textEncodingService;
     private EncodingsHandler encodingsHandler;
@@ -60,7 +65,7 @@ public class ManageEncodingsAction extends AbstractAction {
         this.resourceBundle = resourceBundle;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, MANAGE_ENCODINGS_ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
     }
 
@@ -74,11 +79,14 @@ public class ManageEncodingsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextEncodingListPanel textEncodingPanel = new TextEncodingListPanel();
         textEncodingPanel.setPreferredSize(new Dimension(536, 358));
         textEncodingPanel.setEncodingList(textEncodingService.getEncodings());
-        final OptionsControlPanel optionsControlPanel = new OptionsControlPanel();
+        HelpLink helpLink = new HelpLink(HELP_ID);
+        final OptionsHelpControlPanel optionsControlPanel = new OptionsHelpControlPanel();
+        optionsControlPanel.setHelpLink(helpLink);
         JPanel dialogPanel = windowModule.createDialogPanel(textEncodingPanel, optionsControlPanel);
         final WindowHandler dialog = windowModule.createDialog(dialogPanel, optionsControlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), textEncodingPanel.getClass(), textEncodingPanel.getResourceBundle());
@@ -101,7 +109,8 @@ public class ManageEncodingsAction extends AbstractAction {
             final TextEncodingPanel addEncodingPanel = new TextEncodingPanel();
             ResourceBundle addEncodingResourceBundle = addEncodingPanel.getResourceBundle();
             addEncodingPanel.setUsedEncodings(usedEncodings);
-            DefaultControlPanel encodingsControlPanel = new DefaultControlPanel(addEncodingResourceBundle);
+            DefaultHelpControlPanel encodingsControlPanel = new DefaultHelpControlPanel(addEncodingResourceBundle);
+            encodingsControlPanel.setHelpLink(helpLink);
             final WindowHandler addEncodingDialog = windowModule.createDialog(addEncodingPanel, encodingsControlPanel);
             windowModule.addHeaderPanel(addEncodingDialog.getWindow(), addEncodingPanel.getClass(), addEncodingResourceBundle);
             windowModule.setWindowTitle(addEncodingDialog, addEncodingResourceBundle);

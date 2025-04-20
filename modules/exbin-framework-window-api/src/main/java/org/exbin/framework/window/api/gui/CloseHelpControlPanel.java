@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.help.gui;
+package org.exbin.framework.window.api.gui;
 
 import java.awt.event.ActionEvent;
 import java.util.Optional;
@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.App;
-import org.exbin.framework.help.HelpModule;
 import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpLinkable;
 import org.exbin.framework.help.api.HelpModuleApi;
@@ -77,7 +76,6 @@ public class CloseHelpControlPanel extends javax.swing.JPanel implements CloseCo
     @Override
     public void setHelpLink(HelpLink helpLink) {
         this.helpLink = helpLink;
-        helpButton.setEnabled(true);
     }
 
     /**
@@ -89,7 +87,7 @@ public class CloseHelpControlPanel extends javax.swing.JPanel implements CloseCo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        helpButton = App.getModule(HelpModule.class).createHelpButton();
+        helpButton = App.getModule(HelpModuleApi.class).createHelpButton();
         closeButton = new javax.swing.JButton();
 
         closeButton.setText(resourceBundle.getString("closeButton.text")); // NOI18N

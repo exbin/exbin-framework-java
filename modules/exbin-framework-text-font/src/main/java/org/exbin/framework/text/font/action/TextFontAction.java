@@ -28,11 +28,12 @@ import org.exbin.framework.text.font.options.TextFontOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.handler.OptionsControlHandler;
-import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.text.font.TextFontHandler;
+import org.exbin.framework.window.api.gui.OptionsHelpControlPanel;
 
 /**
  * Text font action.
@@ -43,6 +44,7 @@ import org.exbin.framework.text.font.TextFontHandler;
 public class TextFontAction extends AbstractAction {
 
     public static final String ACTION_ID = "textFontAction";
+    public static final String HELP_ID = "choose-font";
 
     private TextFontHandler textFontHandler;
     private Component component;
@@ -70,7 +72,8 @@ public class TextFontAction extends AbstractAction {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();
         fontPanel.setStoredFont(textFontHandler.getCurrentFont());
-        OptionsControlPanel controlPanel = new OptionsControlPanel();
+        OptionsHelpControlPanel controlPanel = new OptionsHelpControlPanel();
+        controlPanel.setHelpLink(new HelpLink(HELP_ID));
         final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
