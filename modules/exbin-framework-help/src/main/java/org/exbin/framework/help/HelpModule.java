@@ -39,6 +39,7 @@ public class HelpModule implements HelpModuleApi {
 
     private ResourceBundle resourceBundle;
     private HelpOpeningHandler helpOpeningHandler = null;
+    private HelpOpeningHandler fallbackOpeningHandler = null;
 
     public HelpModule() {
     }
@@ -69,6 +70,8 @@ public class HelpModule implements HelpModuleApi {
     public void openHelp(HelpLink helpLink) {
         if (helpOpeningHandler != null) {
             helpOpeningHandler.openHelpLink(helpLink);
+        } else if (fallbackOpeningHandler != null) {
+            fallbackOpeningHandler.openHelpLink(helpLink);
         }
     }
 
@@ -83,8 +86,19 @@ public class HelpModule implements HelpModuleApi {
         this.helpOpeningHandler = helpOpeningHandler;
     }
 
+    @Nonnull
+    @Override
+    public Optional<HelpOpeningHandler> getFallbackOpeningHandler() {
+        return Optional.ofNullable(fallbackOpeningHandler);
+    }
+
+    @Override
+    public void setFallbackOpeningHandler(@Nullable HelpOpeningHandler fallbackOpeningHandler) {
+        this.fallbackOpeningHandler = fallbackOpeningHandler;
+    }
+
     @Override
     public boolean hasOpeningHandler() {
-        return helpOpeningHandler != null;
+        return helpOpeningHandler != null || fallbackOpeningHandler != null;
     }
 }

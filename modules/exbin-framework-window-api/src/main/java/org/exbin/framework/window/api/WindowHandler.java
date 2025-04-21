@@ -20,31 +20,61 @@ import java.awt.Container;
 import java.awt.Window;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Wrapper for window with extra controls.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface WindowHandler {
 
+    /**
+     * Shows window.
+     */
     void show();
 
-    void showCentered(@Nullable Component window);
+    /**
+     * Shows window with position related to given component.
+     *
+     * @param component component
+     */
+    void showCentered(@Nullable Component component);
 
+    /**
+     * Closes window.
+     */
     void close();
 
+    /**
+     * Disposes of the window.
+     */
     void dispose();
 
+    /**
+     * Returns window instance.
+     *
+     * @return window instance
+     */
     @Nonnull
     Window getWindow();
 
+    /**
+     * Returns parent container.
+     *
+     * @return parent container
+     */
     @Nonnull
     Container getParent();
 
-    void center(@Nullable Component window);
+    /**
+     * Centers window position relative to component.
+     *
+     * @param component component
+     */
+    void center(@Nullable Component component);
 
+    /**
+     * Centers window position relative to screen.
+     */
     void center();
 }

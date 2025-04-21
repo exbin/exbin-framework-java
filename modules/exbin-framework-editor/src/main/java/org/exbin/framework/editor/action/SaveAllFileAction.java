@@ -38,7 +38,6 @@ public class SaveAllFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileSaveAllAction";
 
-    private ResourceBundle resourceBundle;
     private EditorProvider editorProvider;
     private FileHandler fileHandler;
 
@@ -46,8 +45,6 @@ public class SaveAllFileAction extends AbstractAction {
     }
 
     public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {

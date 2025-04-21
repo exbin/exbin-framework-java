@@ -60,4 +60,9 @@ public interface HelpOnlineModuleApi extends Module {
      * @param helpLink help link
      */
     void openHelpLink(@Nullable HelpLink helpLink);
+
+    /**
+     * Registers help opening handler.
+     */
+    void registerOpeningHandler();
 }

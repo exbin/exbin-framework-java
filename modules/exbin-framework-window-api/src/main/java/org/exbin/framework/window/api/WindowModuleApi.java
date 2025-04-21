@@ -125,5 +125,11 @@ public interface WindowModuleApi extends Module {
     @Nonnull
     JPanel createDialogPanel(JComponent mainComponent, JPanel controlPanel);
 
+    /**
+     * Sets window title.
+     *
+     * @param windowHandler window handler
+     * @param resourceBundle resource bundle
+     */
     void setWindowTitle(WindowHandler windowHandler, ResourceBundle resourceBundle);
 }

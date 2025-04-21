@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.help.api.HelpLink;
+import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.help.online.action.OnlineHelpAction;
 import org.exbin.framework.help.online.api.HelpOnlineModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
@@ -77,5 +78,11 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
             }
         }
         DesktopUtils.openDesktopURL(targetUrl.toExternalForm());
+    }
+
+    @Override
+    public void registerOpeningHandler() {
+        HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
+        helpModule.setFallbackOpeningHandler(this::openHelpLink);
     }
 }

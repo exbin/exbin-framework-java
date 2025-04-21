@@ -37,7 +37,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class SelectAllAction extends AbstractAction implements ActionContextChange {
 
-    public static final String SELECT_ALL_ACTION_ID = "selectAllAction";
+    public static final String ACTION_ID = "selectAllAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 
@@ -46,7 +46,7 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, SELECT_ALL_ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }

@@ -37,7 +37,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class CopyAction extends AbstractAction implements ActionContextChange {
 
-    public static final String COPY_ACTION_ID = "copyAction";
+    public static final String ACTION_ID = "copyAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 
@@ -46,7 +46,7 @@ public class CopyAction extends AbstractAction implements ActionContextChange {
 
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, COPY_ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }

@@ -37,7 +37,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class CutAction extends AbstractAction implements ActionContextChange {
 
-    public static final String CUT_ACTION_ID = "cutAction";
+    public static final String ACTION_ID = "cutAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 
@@ -46,7 +46,7 @@ public class CutAction extends AbstractAction implements ActionContextChange {
 
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, CUT_ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }

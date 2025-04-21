@@ -45,10 +45,6 @@ import org.exbin.framework.window.api.WindowHandler;
 @ParametersAreNonnullByDefault
 public class FindReplaceActions {
 
-    public static final String EDIT_FIND_ACTION_ID = "editFindAction";
-    public static final String EDIT_FIND_AGAIN_ACTION_ID = "editFindAgainAction";
-    public static final String EDIT_REPLACE_ACTION_ID = "editReplaceAction";
-
     private ResourceBundle resourceBundle;
 
     public FindReplaceActions() {
@@ -86,28 +82,37 @@ public class FindReplaceActions {
     }
 
     @Nonnull
-    public Action createEditFindAction() {
-        return new EditFindAction();
+    public EditFindAction createEditFindAction() {
+        EditFindAction editFindAction = new EditFindAction();
+        editFindAction.setup(resourceBundle);
+        return editFindAction;
     }
 
     @Nonnull
-    public Action createEditFindAgainAction() {
-        return new EditFindAgainAction();
+    public EditFindAgainAction createEditFindAgainAction() {
+        EditFindAgainAction editFindAgainAction = new EditFindAgainAction();
+        editFindAgainAction.setup(resourceBundle);
+        return editFindAgainAction;
     }
 
     @Nonnull
-    public Action createEditReplaceAction() {
+    public EditReplaceAction createEditReplaceAction() {
         return new EditReplaceAction();
     }
 
     @ParametersAreNonnullByDefault
     public class EditFindAction extends AbstractAction {
 
+        public static final String ACTION_ID = "editFindAction";
+
         private Component component;
 
         public EditFindAction() {
+        }
+
+        public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, EDIT_FIND_ACTION_ID);
+            actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
             putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
@@ -130,11 +135,16 @@ public class FindReplaceActions {
     @ParametersAreNonnullByDefault
     public class EditFindAgainAction extends AbstractAction {
 
+        public static final String ACTION_ID = "editFindAgainAction";
+
         private Component component;
 
         public EditFindAgainAction() {
+        }
+
+        public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, EDIT_FIND_AGAIN_ACTION_ID);
+            actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
                 @Override
@@ -156,11 +166,16 @@ public class FindReplaceActions {
     @ParametersAreNonnullByDefault
     public class EditReplaceAction extends AbstractAction {
 
+        public static final String ACTION_ID = "editReplaceAction";
+
         private Component component;
 
         public EditReplaceAction() {
+        }
+
+        public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, EDIT_REPLACE_ACTION_ID);
+            actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
             putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
@@ -179,7 +194,7 @@ public class FindReplaceActions {
             showFindDialog((TextPanel) component, FindDialogMode.REPLACE);
         }
     }
-    
+
     public enum FindDialogMode {
         FIND,
         REPLACE

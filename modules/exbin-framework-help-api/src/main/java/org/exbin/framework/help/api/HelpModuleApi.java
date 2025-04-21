@@ -69,4 +69,19 @@ public interface HelpModuleApi extends Module {
      * @param helpOpeningHandler help opening handler
      */
     void setHelpOpeningHandler(@Nullable HelpOpeningHandler helpOpeningHandler);
+
+    /**
+     * Returns help fallback opening handler.
+     *
+     * @return help opening handler
+     */
+    @Nonnull
+    Optional<HelpOpeningHandler> getFallbackOpeningHandler();
+
+    /**
+     * Sets help fallback opening handler.
+     *
+     * @param fallbackOpeningHandler help opening handler
+     */
+    void setFallbackOpeningHandler(@Nullable HelpOpeningHandler fallbackOpeningHandler);
 }

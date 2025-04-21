@@ -27,7 +27,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.help.api.HelpLink;
-import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
@@ -36,10 +35,8 @@ import org.exbin.framework.text.encoding.service.TextEncodingService;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.handler.DefaultControlHandler;
-import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.DefaultHelpControlPanel;
-import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.window.api.gui.OptionsHelpControlPanel;
 import org.exbin.framework.window.api.handler.OptionsControlHandler;
 
@@ -56,14 +53,11 @@ public class ManageEncodingsAction extends AbstractAction {
 
     private TextEncodingService textEncodingService;
     private EncodingsHandler encodingsHandler;
-    private ResourceBundle resourceBundle;
 
     public ManageEncodingsAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
@@ -79,7 +73,6 @@ public class ManageEncodingsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextEncodingListPanel textEncodingPanel = new TextEncodingListPanel();
         textEncodingPanel.setPreferredSize(new Dimension(536, 358));

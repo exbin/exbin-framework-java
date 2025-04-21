@@ -36,7 +36,7 @@ import org.exbin.framework.utils.ClipboardActionsHandler;
 @ParametersAreNonnullByDefault
 public class DeleteAction extends AbstractAction implements ActionContextChange {
 
-    public static final String DELETE_ACTION_ID = "deleteAction";
+    public static final String ACTION_ID = "deleteAction";
 
     private ClipboardActionsHandler clipboardActionsHandler;
 
@@ -45,7 +45,7 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
 
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, DELETE_ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }

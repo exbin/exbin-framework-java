@@ -37,15 +37,12 @@ public class CloseAllFilesAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileCloseAllAction";
 
-    private ResourceBundle resourceBundle;
     private EditorProvider editorProvider;
 
     public CloseAllFilesAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {

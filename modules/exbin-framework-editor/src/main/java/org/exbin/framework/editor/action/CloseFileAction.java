@@ -40,7 +40,6 @@ public class CloseFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileCloseAction";
 
-    private ResourceBundle resourceBundle;
     private EditorProvider editorProvider;
     private FileHandler fileHandler;
 
@@ -48,8 +47,6 @@ public class CloseFileAction extends AbstractAction {
     }
 
     public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
