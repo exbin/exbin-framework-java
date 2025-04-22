@@ -60,11 +60,4 @@ public interface EditItemActionsHandler {
      * @return true if item can be edited
      */
     boolean canEditItem();
-
-    /**
-     * Set listener for actions related updates.
-     *
-     * @param updateListener update listener
-     */
-    void setUpdateListener(EditItemActionsUpdateListener updateListener);
 }

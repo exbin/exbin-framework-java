@@ -15,14 +15,11 @@
  */
 package org.exbin.framework.component.api.toolbar;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
- * Interface for clipboard handler for visual component / context menu.
+ * Interface item movement action set.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface MoveItemActionsHandler {
 
     /**
@@ -58,11 +55,4 @@ public interface MoveItemActionsHandler {
      * @return true if component is editable
      */
     boolean isEditable();
-
-    /**
-     * Set listener for actions related updates.
-     *
-     * @param updateListener update listener
-     */
-    void setUpdateListener(MoveItemActionsUpdateListener updateListener);
 }

@@ -44,16 +44,8 @@ public class ComponentModule implements ComponentModuleApi {
 
     @Nonnull
     @Override
-    public JPanel getTableEditPanel() {
-        // return new TableEditPanel();
-        return null;
-    }
-
-    @Nonnull
-    @Override
     public EditItemActions createEditItemActions(EditItemActionsHandler editItemActionsHandler) {
         DefaultEditItemActions editActions = new DefaultEditItemActions();
-        editActions.setEditItemActionsHandler(editItemActionsHandler);
         return editActions;
     }
 
@@ -61,7 +53,6 @@ public class ComponentModule implements ComponentModuleApi {
     @Override
     public MoveItemActions createMoveItemActions(MoveItemActionsHandler moveItemActionsHandler) {
         DefaultMoveItemActions moveActions = new DefaultMoveItemActions();
-        moveActions.setMoveItemActionsHandler(moveItemActionsHandler);
         return moveActions;
     }
 

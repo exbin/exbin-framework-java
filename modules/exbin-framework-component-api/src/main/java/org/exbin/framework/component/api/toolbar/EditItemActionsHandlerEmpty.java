@@ -15,15 +15,12 @@
  */
 package org.exbin.framework.component.api.toolbar;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Empty implementation for clipboard handler for visual component / context
  * menu.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public class EditItemActionsHandlerEmpty implements EditItemActionsHandler {
 
     @Override
@@ -51,9 +48,5 @@ public class EditItemActionsHandlerEmpty implements EditItemActionsHandler {
     @Override
     public boolean canDeleteItem() {
         return false;
-    }
-
-    @Override
-    public void setUpdateListener(EditItemActionsUpdateListener updateListener) {
     }
 }

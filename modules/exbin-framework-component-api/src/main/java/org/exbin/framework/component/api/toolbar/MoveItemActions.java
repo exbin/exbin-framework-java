@@ -16,7 +16,6 @@
 package org.exbin.framework.component.api.toolbar;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.component.api.ActionsProvider;
 
@@ -25,15 +24,7 @@ import org.exbin.framework.component.api.ActionsProvider;
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface MoveItemActions extends ActionsProvider {
-
-    /**
-     * Sets move action handler.
-     *
-     * @param actionsHandler actions handler
-     */
-    void setMoveItemActionsHandler(MoveItemActionsHandler actionsHandler);
 
     /**
      * Returns move up action.
@@ -41,7 +32,7 @@ public interface MoveItemActions extends ActionsProvider {
      * @return move up action
      */
     @Nonnull
-    Action getMoveUpAction();
+    Action createMoveUpAction();
 
     /**
      * Returns move down action.
@@ -49,7 +40,7 @@ public interface MoveItemActions extends ActionsProvider {
      * @return move down action
      */
     @Nonnull
-    Action getMoveDownAction();
+    Action createMoveDownAction();
 
     /**
      * Returns move top action.
@@ -57,7 +48,7 @@ public interface MoveItemActions extends ActionsProvider {
      * @return move top action
      */
     @Nonnull
-    Action getMoveTopAction();
+    Action createMoveTopAction();
 
     /**
      * Returns move bottom action.
@@ -65,10 +56,5 @@ public interface MoveItemActions extends ActionsProvider {
      * @return move bottom action
      */
     @Nonnull
-    Action getMoveBottomAction();
-
-    /**
-     * Updates state of these actions according to handler.
-     */
-    void updateMoveItemActions();
+    Action createMoveBottomAction();
 }

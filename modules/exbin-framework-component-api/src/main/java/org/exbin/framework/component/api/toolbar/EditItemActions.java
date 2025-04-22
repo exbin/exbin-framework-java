@@ -16,7 +16,6 @@
 package org.exbin.framework.component.api.toolbar;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.component.api.ActionsProvider;
 
@@ -25,15 +24,7 @@ import org.exbin.framework.component.api.ActionsProvider;
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface EditItemActions extends ActionsProvider {
-
-    /**
-     * Sets edit action handler.
-     *
-     * @param actionsHandler actions handler
-     */
-    void setEditItemActionsHandler(EditItemActionsHandler actionsHandler);
 
     /**
      * Returns add item action.
@@ -41,7 +32,7 @@ public interface EditItemActions extends ActionsProvider {
      * @return add item action
      */
     @Nonnull
-    Action getAddItemAction();
+    Action createAddItemAction();
 
     /**
      * Returns edit item action.
@@ -49,7 +40,7 @@ public interface EditItemActions extends ActionsProvider {
      * @return edit item action
      */
     @Nonnull
-    Action getEditItemAction();
+    Action createEditItemAction();
 
     /**
      * Returns delete item action.
@@ -57,10 +48,5 @@ public interface EditItemActions extends ActionsProvider {
      * @return delete item action
      */
     @Nonnull
-    Action getDeleteItemAction();
-
-    /**
-     * Updates state of these actions according to handler.
-     */
-    void updateEditItemActions();
+    Action createDeleteItemAction();
 }

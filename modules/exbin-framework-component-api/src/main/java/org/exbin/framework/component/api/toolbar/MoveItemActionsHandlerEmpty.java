@@ -50,8 +50,4 @@ public class MoveItemActionsHandlerEmpty implements MoveItemActionsHandler {
     public boolean isEditable() {
         return false;
     }
-
-    @Override
-    public void setUpdateListener(MoveItemActionsUpdateListener updateListener) {
-    }
 }

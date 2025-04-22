@@ -35,9 +35,6 @@ public interface ComponentModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ComponentModuleApi.class);
 
-    @Nonnull
-    JPanel getTableEditPanel();
-
     /**
      * Creates new instance of the edit item actions set.
      *
