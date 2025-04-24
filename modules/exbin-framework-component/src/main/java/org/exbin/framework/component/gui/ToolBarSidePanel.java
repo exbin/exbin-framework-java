@@ -90,6 +90,7 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
 
     @Nonnull
     public JToolBar getToolBar() {
+        initToolBar();
         return toolBar;
     }
 

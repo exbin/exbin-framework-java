@@ -85,26 +85,28 @@ public class SideBarManager {
             List<String> afterIds = new ArrayList<>();
             List<String> beforeIds = new ArrayList<>();
             List<SideBarContributionRule> rules = sideBarDef.getRules().get(contribution);
-            for (SideBarContributionRule rule : rules) {
-                if (rule instanceof PositionSideBarContributionRule) {
-                    positionHint = ((PositionSideBarContributionRule) rule).getPositionMode();
-                } else if (rule instanceof SeparationSideBarContributionRule) {
-                    separationMode = ((SeparationSideBarContributionRule) rule).getSeparationMode();
-                } else if (rule instanceof RelativeSideBarContributionRule) {
-                    RelativeSideBarContributionRule.NextToMode nextToMode = ((RelativeSideBarContributionRule) rule).getNextToMode();
-                    String contributionId = ((RelativeSideBarContributionRule) rule).getContributionId();
-                    switch (nextToMode) {
-                        case AFTER:
-                            afterIds.add(contributionId);
-                            break;
-                        case BEFORE:
-                            beforeIds.add(contributionId);
-                            break;
-                        default:
-                            throw new AssertionError();
+            if (rules != null) {
+                for (SideBarContributionRule rule : rules) {
+                    if (rule instanceof PositionSideBarContributionRule) {
+                        positionHint = ((PositionSideBarContributionRule) rule).getPositionMode();
+                    } else if (rule instanceof SeparationSideBarContributionRule) {
+                        separationMode = ((SeparationSideBarContributionRule) rule).getSeparationMode();
+                    } else if (rule instanceof RelativeSideBarContributionRule) {
+                        RelativeSideBarContributionRule.NextToMode nextToMode = ((RelativeSideBarContributionRule) rule).getNextToMode();
+                        String contributionId = ((RelativeSideBarContributionRule) rule).getContributionId();
+                        switch (nextToMode) {
+                            case AFTER:
+                                afterIds.add(contributionId);
+                                break;
+                            case BEFORE:
+                                beforeIds.add(contributionId);
+                                break;
+                            default:
+                                throw new AssertionError();
+                        }
+                    } else if (rule instanceof GroupSideBarContributionRule) {
+                        parentGroupId = ((GroupSideBarContributionRule) rule).getGroupId();
                     }
-                } else if (rule instanceof GroupSideBarContributionRule) {
-                    parentGroupId = ((GroupSideBarContributionRule) rule).getGroupId();
                 }
             }
 

@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -69,6 +70,16 @@ public class ToolBarManager {
     }
 
     public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
+        buildToolBar(new ToolBarWrapper(targetToolBar), toolBarId, activationUpdateService);
+        activationUpdateService.requestUpdate();
+    }
+
+    public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
+        buildToolBar(new IconToolBarWrapper(targetToolBar), toolBarId, activationUpdateService);
+        activationUpdateService.requestUpdate();
+    }
+
+    private void buildToolBar(ToolBarOutput targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
         ToolBarDefinition toolBarDef = toolBars.get(toolBarId);
 
         if (toolBarDef == null) {
@@ -87,26 +98,28 @@ public class ToolBarManager {
             List<String> afterIds = new ArrayList<>();
             List<String> beforeIds = new ArrayList<>();
             List<ToolBarContributionRule> rules = toolBarDef.getRules().get(contribution);
-            for (ToolBarContributionRule rule : rules) {
-                if (rule instanceof PositionToolBarContributionRule) {
-                    positionHint = ((PositionToolBarContributionRule) rule).getPositionMode();
-                } else if (rule instanceof SeparationToolBarContributionRule) {
-                    separationMode = ((SeparationToolBarContributionRule) rule).getSeparationMode();
-                } else if (rule instanceof RelativeToolBarContributionRule) {
-                    RelativeToolBarContributionRule.NextToMode nextToMode = ((RelativeToolBarContributionRule) rule).getNextToMode();
-                    String contributionId = ((RelativeToolBarContributionRule) rule).getContributionId();
-                    switch (nextToMode) {
-                        case AFTER:
-                            afterIds.add(contributionId);
-                            break;
-                        case BEFORE:
-                            beforeIds.add(contributionId);
-                            break;
-                        default:
-                            throw new AssertionError();
+            if (rules != null) {
+                for (ToolBarContributionRule rule : rules) {
+                    if (rule instanceof PositionToolBarContributionRule) {
+                        positionHint = ((PositionToolBarContributionRule) rule).getPositionMode();
+                    } else if (rule instanceof SeparationToolBarContributionRule) {
+                        separationMode = ((SeparationToolBarContributionRule) rule).getSeparationMode();
+                    } else if (rule instanceof RelativeToolBarContributionRule) {
+                        RelativeToolBarContributionRule.NextToMode nextToMode = ((RelativeToolBarContributionRule) rule).getNextToMode();
+                        String contributionId = ((RelativeToolBarContributionRule) rule).getContributionId();
+                        switch (nextToMode) {
+                            case AFTER:
+                                afterIds.add(contributionId);
+                                break;
+                            case BEFORE:
+                                beforeIds.add(contributionId);
+                                break;
+                            default:
+                                throw new AssertionError();
+                        }
+                    } else if (rule instanceof GroupToolBarContributionRule) {
+                        parentGroupId = ((GroupToolBarContributionRule) rule).getGroupId();
                     }
-                } else if (rule instanceof GroupToolBarContributionRule) {
-                    parentGroupId = ((GroupToolBarContributionRule) rule).getGroupId();
                 }
             }
 
@@ -233,7 +246,7 @@ public class ToolBarManager {
                             BuilderActionContributionRecord contributionRecord = (BuilderActionContributionRecord) contribution;
                             JComponent item = contributionRecord.createItem(toolBarId, buttonGroups);
                             if (builderRecord.separatorQueued) {
-                                if (targetToolBar.getComponentCount() > 0) {
+                                if (!targetToolBar.isEmpty()) {
                                     targetToolBar.addSeparator();
                                 }
                                 builderRecord.separatorQueued = false;
@@ -500,6 +513,20 @@ public class ToolBarManager {
         final Set<String> placeAfter = new HashSet<>();
     }
 
+    @ParametersAreNonnullByDefault
+    private static interface ToolBarOutput {
+
+        void add(Action action);
+
+        void add(JComponent component);
+
+        void addSeparator();
+
+        boolean isPopup();
+
+        boolean isEmpty();
+    }
+
     private static class BuilderContributionMatch {
 
         int fallbackMatch = -1;
@@ -530,6 +557,77 @@ public class ToolBarManager {
             }
 
             return fallbackMatch;
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private static class ToolBarWrapper implements ToolBarOutput {
+
+        private final JToolBar toolBar;
+
+        public ToolBarWrapper(JToolBar menuBar) {
+            this.toolBar = menuBar;
+        }
+
+        @Override
+        public void add(Action action) {
+            toolBar.add(action);
+        }
+
+        @Override
+        public void add(JComponent component) {
+            toolBar.add(component);
+        }
+
+        @Override
+        public void addSeparator() {
+        }
+
+        @Override
+        public boolean isPopup() {
+            return false;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return toolBar.getComponentCount() == 0;
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private static class IconToolBarWrapper implements ToolBarOutput {
+
+        private final JToolBar toolBar;
+
+        public IconToolBarWrapper(JToolBar menuBar) {
+            this.toolBar = menuBar;
+        }
+
+        @Override
+        public void add(Action action) {
+            toolBar.add(action);
+        }
+
+        @Override
+        public void add(JComponent component) {
+            if (component instanceof AbstractButton) {
+                ((AbstractButton) component).setText("");
+            }
+            toolBar.add(component);
+        }
+
+        @Override
+        public void addSeparator() {
+        }
+
+        @Override
+        public boolean isPopup() {
+            return false;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return toolBar.getComponentCount() == 0;
         }
     }
 }

@@ -102,28 +102,30 @@ public class MenuManager {
             List<String> afterIds = new ArrayList<>();
             List<String> beforeIds = new ArrayList<>();
             List<MenuContributionRule> rules = menuDef.getRules().get(contribution);
-            for (MenuContributionRule rule : rules) {
-                if (rule instanceof PositionMenuContributionRule) {
-                    positionHint = ((PositionMenuContributionRule) rule).getPositionMode();
-                } else if (rule instanceof SeparationMenuContributionRule) {
-                    separationMode = ((SeparationMenuContributionRule) rule).getSeparationMode();
-                } else if (rule instanceof RelativeMenuContributionRule) {
-                    RelativeMenuContributionRule.NextToMode nextToMode = ((RelativeMenuContributionRule) rule).getNextToMode();
-                    String contributionId = ((RelativeMenuContributionRule) rule).getContributionId();
-                    switch (nextToMode) {
-                        case AFTER:
-                            afterIds.add(contributionId);
-                            break;
-                        case BEFORE:
-                            beforeIds.add(contributionId);
-                            break;
-                        default:
-                            throw new AssertionError();
+            if (rules != null) {
+                for (MenuContributionRule rule : rules) {
+                    if (rule instanceof PositionMenuContributionRule) {
+                        positionHint = ((PositionMenuContributionRule) rule).getPositionMode();
+                    } else if (rule instanceof SeparationMenuContributionRule) {
+                        separationMode = ((SeparationMenuContributionRule) rule).getSeparationMode();
+                    } else if (rule instanceof RelativeMenuContributionRule) {
+                        RelativeMenuContributionRule.NextToMode nextToMode = ((RelativeMenuContributionRule) rule).getNextToMode();
+                        String contributionId = ((RelativeMenuContributionRule) rule).getContributionId();
+                        switch (nextToMode) {
+                            case AFTER:
+                                afterIds.add(contributionId);
+                                break;
+                            case BEFORE:
+                                beforeIds.add(contributionId);
+                                break;
+                            default:
+                                throw new AssertionError();
+                        }
+                    } else if (rule instanceof GroupMenuContributionRule) {
+                        parentGroupId = ((GroupMenuContributionRule) rule).getGroupId();
+                    } else if (rule instanceof SubMenuContributionRule) {
+                        parentSubMenuId = ((SubMenuContributionRule) rule).getSubMenuId();
                     }
-                } else if (rule instanceof GroupMenuContributionRule) {
-                    parentGroupId = ((GroupMenuContributionRule) rule).getGroupId();
-                } else if (rule instanceof SubMenuContributionRule) {
-                    parentSubMenuId = ((SubMenuContributionRule) rule).getSubMenuId();
                 }
             }
 
@@ -413,7 +415,7 @@ public class MenuManager {
                 return true;
             }
         }
-                
+
         return false;
     }
 
