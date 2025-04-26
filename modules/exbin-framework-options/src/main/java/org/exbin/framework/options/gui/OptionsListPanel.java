@@ -57,7 +57,8 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
 
     private OptionsStorage preferences = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsListPanel.class);
-    private final Map<String, PageRecord> optionPages = new HashMap<>();
+    private final List<PageRecord> optionPages = new ArrayList<>();
+    private final Map<String, Integer> optionPageKeys = new HashMap<>();
     private PageRecord currentOptionsPanel = null;
     private OptionsModifiedListener optionsModifiedListener;
     private final List<LazyComponentListener> listeners = new ArrayList<>();
@@ -200,7 +201,6 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
 
     @Override
     public void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path, @Nullable VisualOptionsPageParams visualParams) {
-        ((DefaultListModel<String>) categoriesList.getModel()).addElement(path == null ? resourceBundle.getString("optionsAreaTitleLabel.text") : path.get(path.size() - 1).getName());
         String panelKey;
         if (path == null) {
             panelKey = OPTIONS_PANEL_KEY;
@@ -208,18 +208,21 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
             panelKey = path.get(path.size() - 1).getGroupId();
         }
 
-        PageRecord pageRecord = optionPages.get(panelKey);
-        if (pageRecord != null) {
+        Integer pageRecordIndex = optionPageKeys.get(panelKey);
+        if (pageRecordIndex != null) {
+            PageRecord pageRecord = optionPages.get(pageRecordIndex);
             pageRecord.addOptionsPage(optionPage, optionsModifiedListener, visualParams);
         } else {
-            pageRecord = new PageRecord(optionPage, visualParams);
-            optionPages.put(panelKey, pageRecord);
+            PageRecord pageRecord = new PageRecord(optionPage, visualParams);
+            optionPages.add(pageRecord);
+            optionPageKeys.put(panelKey, optionPages.size() - 1);
             pageRecord.setOptionsModifiedListener(optionsModifiedListener);
+            ((DefaultListModel<String>) categoriesList.getModel()).addElement(path == null ? resourceBundle.getString("optionsAreaTitleLabel.text") : path.get(path.size() - 1).getName());
         }
     }
 
     public void loadAllFromPreferences() {
-        optionPages.values().forEach((pageRecord) -> {
+        optionPages.forEach((pageRecord) -> {
             try {
                 pageRecord.loadFromPreferences(preferences);
             } catch (Exception ex) {
@@ -229,7 +232,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     }
 
     public void saveAndApplyAll() {
-        optionPages.values().forEach((pageRecord) -> {
+        optionPages.forEach((pageRecord) -> {
             try {
                 pageRecord.saveAndApply(preferences);
             } catch (Exception ex) {
@@ -242,7 +245,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     }
 
     public void applyPreferencesChanges() {
-        optionPages.values().forEach((pageRecord) -> {
+        optionPages.forEach((pageRecord) -> {
             try {
                 pageRecord.applyPreferencesChanges(preferences);
             } catch (Exception ex) {
@@ -261,7 +264,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     @Override
     public void addChildComponentListener(LazyComponentListener listener) {
         listeners.add(listener);
-        for (PageRecord pageRecord : optionPages.values()) {
+        for (PageRecord pageRecord : optionPages) {
             listener.componentCreated(pageRecord.getPanel());
         }
     }
