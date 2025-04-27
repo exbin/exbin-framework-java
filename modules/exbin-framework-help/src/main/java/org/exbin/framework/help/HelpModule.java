@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.help;
 
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -58,11 +59,15 @@ public class HelpModule implements HelpModuleApi {
     public JButton createHelpButton() {
         // TODO Change button shape to rounded
         getResourceBundle();
-        JButton helpButton = new JButton();
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("helpAction.smallIcon")));
+        JButton helpButton = new JButton(imageIcon);
         helpButton.setMargin(new Insets(2, 2, 2, 2));
         helpButton.setEnabled(hasOpeningHandler());
-        helpButton.setIcon(new ImageIcon(getClass().getResource(resourceBundle.getString("helpAction.smallIcon"))));
         helpButton.setToolTipText(resourceBundle.getString("helpAction.toolTipText"));
+        int imageHeight = helpButton.getMaximumSize().height;
+        helpButton.setMinimumSize(new Dimension(imageHeight, imageHeight));
+        helpButton.setMaximumSize(new Dimension(imageHeight, imageHeight));
+        helpButton.setPreferredSize(new Dimension(imageHeight, imageHeight));
         return helpButton;
     }
 
