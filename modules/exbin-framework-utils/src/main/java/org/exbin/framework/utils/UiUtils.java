@@ -50,7 +50,97 @@ public class UiUtils {
     }
 
     /**
-     * Detects dar mode.
+     * Invokes code in UI thread.
+     *
+     * @param runnable runnable code
+     */
+    public static void runInUiThread(Runnable runnable) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+            return;
+        }
+
+        try {
+            SwingUtilities.invokeAndWait(runnable);
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Shedules code to run in UI thread unless it's executed via UI thread.
+     *
+     * @param runnable runnable code
+     */
+    public static void invokeInUiThread(Runnable runnable) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+            return;
+        }
+
+        SwingUtilities.invokeLater(runnable);
+    }
+
+    /**
+     * Creates new instance of given class using UI thread.
+     *
+     * @param <T> class type
+     * @param clazz class type
+     * @return class instance
+     */
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public static <T> T createInUiThread(Class<T> clazz) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            try {
+                return (T) clazz.newInstance();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        try {
+            final Object[] result = new Object[1];
+            SwingUtilities.invokeAndWait(() -> {
+                try {
+                    result[0] = (T) clazz.newInstance();
+                } catch (InstantiationException | IllegalAccessException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            return (T) result[0];
+        } catch (InterruptedException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Creates new instance of given class using UI thread.
+     *
+     * @param <T> class type
+     * @param instanceCreator instance creator
+     * @return class instance
+     */
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public static <T> T createInUiThread(InstanceCreator<T> instanceCreator) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            return instanceCreator.createInstance();
+        }
+
+        try {
+            final Object[] result = new Object[1];
+            SwingUtilities.invokeAndWait(() -> {
+                result[0] = (T) instanceCreator.createInstance();
+            });
+            return (T) result[0];
+        } catch (InterruptedException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Detects dark mode.
      *
      * @return true if dark mode assumed
      */
@@ -75,19 +165,7 @@ public class UiUtils {
             return menuBuilder.buildMenu();
         }
 
-        if (SwingUtilities.isEventDispatchThread()) {
-            return new JMenu();
-        }
-
-        final JMenu[] result = new JMenu[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = new JMenu();
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result[0];
+        return new JMenu();
     }
 
     /**
@@ -101,19 +179,7 @@ public class UiUtils {
             return menuBuilder.buildPopupMenu();
         }
 
-        if (SwingUtilities.isEventDispatchThread()) {
-            return new JPopupMenu();
-        }
-
-        final JPopupMenu[] result = new JPopupMenu[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = new JPopupMenu();
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result[0];
+        return new JPopupMenu();
     }
 
     /**
@@ -128,29 +194,12 @@ public class UiUtils {
             return menuBuilder.buildPopupMenu();
         }
 
-        if (SwingUtilities.isEventDispatchThread()) {
-            return new JPopupMenu() {
-                @Override
-                public void show(Component invoker, int x, int y) {
-                    showMethod.show(invoker, x, y);
-                }
-            };
-        }
-
-        final JPopupMenu[] result = new JPopupMenu[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = new JPopupMenu() {
-                    @Override
-                    public void show(Component invoker, int x, int y) {
-                        showMethod.show(invoker, x, y);
-                    }
-                };
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result[0];
+        return new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                showMethod.show(invoker, x, y);
+            }
+        };
     }
 
     /**
@@ -164,19 +213,7 @@ public class UiUtils {
             return menuBuilder.buildMenuItem();
         }
 
-        if (SwingUtilities.isEventDispatchThread()) {
-            return new JMenuItem();
-        }
-
-        final JMenuItem[] result = new JMenuItem[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = new JMenuItem();
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result[0];
+        return new JMenuItem();
     }
 
     /**
@@ -190,19 +227,7 @@ public class UiUtils {
             return menuBuilder.buildCheckBoxMenuItem();
         }
 
-        if (SwingUtilities.isEventDispatchThread()) {
-            return new JCheckBoxMenuItem();
-        }
-
-        final JCheckBoxMenuItem[] result = new JCheckBoxMenuItem[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = new JCheckBoxMenuItem();
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result[0];
+        return new JCheckBoxMenuItem();
     }
 
     /**
@@ -216,19 +241,7 @@ public class UiUtils {
             return menuBuilder.buildRadioButtonMenuItem();
         }
 
-        if (SwingUtilities.isEventDispatchThread()) {
-            return new JRadioButtonMenuItem();
-        }
-
-        final JRadioButtonMenuItem[] result = new JRadioButtonMenuItem[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = new JRadioButtonMenuItem();
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result[0];
+        return new JRadioButtonMenuItem();
     }
 
     /**
@@ -298,5 +311,11 @@ public class UiUtils {
 
         @Nonnull
         JRadioButtonMenuItem buildRadioButtonMenuItem();
+    }
+
+    public interface InstanceCreator<U> {
+
+        @Nonnull
+        U createInstance();
     }
 }

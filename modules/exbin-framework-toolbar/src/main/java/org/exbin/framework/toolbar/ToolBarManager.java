@@ -16,7 +16,6 @@
 package org.exbin.framework.toolbar;
 
 import java.beans.PropertyChangeEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +37,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import org.exbin.auxiliary.dropdownbutton.DropDownButton;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.toolbar.api.ActionToolBarContribution;
@@ -296,23 +294,6 @@ public class ToolBarManager {
 
     @Nonnull
     private static JComponent createToolBarComponent(Action action) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            return createToolBarComponentInt(action);
-        }
-
-        final JComponent[] result = new JComponent[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = createToolBarComponentInt(action);
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(ToolBarManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result[0];
-    }
-
-    @Nonnull
-    private static JComponent createToolBarComponentInt(Action action) {
         ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
         JComponent toolBarItem;
         if (actionType != null) {

@@ -24,6 +24,8 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.frame.ApplicationFrame;
@@ -36,16 +38,7 @@ import org.exbin.framework.frame.ApplicationFrame;
 @ParametersAreNonnullByDefault
 public class FrameActions {
 
-    public static final String VIEW_TOOL_BAR_ACTION_ID = "viewToolBarAction";
-    public static final String VIEW_TOOL_BAR_CAPTIONS_ACTION_ID = "viewToolBarCaptionsAction";
-    public static final String VIEW_STATUS_BAR_ACTION_ID = "viewStatusBarAction";
-
     private ResourceBundle resourceBundle;
-    private ApplicationFrame frame;
-
-    private AbstractAction viewToolBarAction;
-    private AbstractAction viewStatusBarAction;
-    private AbstractAction viewToolBarCaptionsAction;
 
     public FrameActions() {
     }
@@ -54,79 +47,123 @@ public class FrameActions {
         this.resourceBundle = resourceBundle;
     }
 
-    public void setApplicationFrame(ApplicationFrame frame) {
-        this.frame = frame;
-    }
-
-    public void notifyFrameUpdated() {
-        if (viewToolBarAction != null) {
-            viewToolBarAction.putValue(Action.SELECTED_KEY, frame.isToolBarVisible());
-        }
-        if (viewToolBarCaptionsAction != null) {
-            viewToolBarCaptionsAction.putValue(Action.SELECTED_KEY, frame.isToolBarCaptionsVisible());
-        }
-        if (viewStatusBarAction != null) {
-            viewStatusBarAction.putValue(Action.SELECTED_KEY, frame.isStatusBarVisible());
-        }
-    }
-
     @Nonnull
-    public Action getViewToolBarAction() {
-        if (viewToolBarAction == null) {
-            viewToolBarAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Object source = e.getSource();
-                    if (source instanceof JMenuItem) {
-                        frame.setToolBarVisible(((JMenuItem) source).isSelected());
-                    }
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(viewToolBarAction, resourceBundle, VIEW_TOOL_BAR_ACTION_ID);
-            viewToolBarAction.putValue(Action.SELECTED_KEY, true);
-            viewToolBarAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-        }
+    public ViewToolBarAction createViewToolBarAction() {
+        ViewToolBarAction viewToolBarAction = new ViewToolBarAction();
+        viewToolBarAction.setup(resourceBundle);
         return viewToolBarAction;
     }
 
     @Nonnull
-    public Action getViewToolBarCaptionsAction() {
-        if (viewToolBarCaptionsAction == null) {
-            viewToolBarCaptionsAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Object source = e.getSource();
-                    if (source instanceof JMenuItem) {
-                        frame.setToolBarCaptionsVisible(((JMenuItem) source).isSelected());
-                    }
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(viewToolBarCaptionsAction, resourceBundle, VIEW_TOOL_BAR_CAPTIONS_ACTION_ID);
-            viewToolBarCaptionsAction.putValue(Action.SELECTED_KEY, true);
-            viewToolBarCaptionsAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-        }
+    public ViewToolBarCaptionsAction createViewToolBarCaptionsAction() {
+        ViewToolBarCaptionsAction viewToolBarCaptionsAction = new ViewToolBarCaptionsAction();
+        viewToolBarCaptionsAction.setup(resourceBundle);
         return viewToolBarCaptionsAction;
     }
 
     @Nonnull
-    public Action getViewStatusBarAction() {
-        if (viewStatusBarAction == null) {
-            viewStatusBarAction = new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Object source = e.getSource();
-                    if (source instanceof JMenuItem) {
-                        frame.setStatusBarVisible(((JMenuItem) source).isSelected());
-                    }
-                }
-            };
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(viewStatusBarAction, resourceBundle, VIEW_STATUS_BAR_ACTION_ID);
-            viewStatusBarAction.putValue(Action.SELECTED_KEY, true);
-            viewStatusBarAction.putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-        }
+    public ViewStatusBarAction createViewStatusBarAction() {
+        ViewStatusBarAction viewStatusBarAction = new ViewStatusBarAction();
+        viewStatusBarAction.setup(resourceBundle);
         return viewStatusBarAction;
+    }
+
+    @ParametersAreNonnullByDefault
+    public class ViewToolBarAction extends AbstractAction {
+
+        public static final String ACTION_ID = "viewToolBarAction";
+
+        private ApplicationFrame frame;
+
+        public void setup(ResourceBundle resourceBundle) {
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.initAction(this, resourceBundle, ACTION_ID);
+            putValue(Action.SELECTED_KEY, true);
+            putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+                manager.registerUpdateListener(ApplicationFrame.class, (instance) -> {
+                    frame = instance;
+                    setEnabled(frame != null);
+                    if (frame != null) {
+                        putValue(Action.SELECTED_KEY, frame.isToolBarVisible());
+                    }
+                });
+            });
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Object source = e.getSource();
+            if (source instanceof JMenuItem) {
+                frame.setToolBarVisible(((JMenuItem) source).isSelected());
+            }
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    public class ViewToolBarCaptionsAction extends AbstractAction {
+
+        public static final String ACTION_ID = "viewToolBarCaptionsAction";
+
+        private ApplicationFrame frame;
+
+        public void setup(ResourceBundle resourceBundle) {
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.initAction(this, resourceBundle, ACTION_ID);
+            putValue(Action.SELECTED_KEY, true);
+            putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+                manager.registerUpdateListener(ApplicationFrame.class, (instance) -> {
+                    frame = instance;
+                    setEnabled(frame != null);
+                    if (frame != null) {
+                        putValue(Action.SELECTED_KEY, frame.isToolBarCaptionsVisible());
+                    }
+                });
+            });
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Object source = e.getSource();
+            if (source instanceof JMenuItem) {
+                frame.setToolBarCaptionsVisible(((JMenuItem) source).isSelected());
+            }
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    public class ViewStatusBarAction extends AbstractAction {
+
+        public static final String ACTION_ID = "viewStatusBarAction";
+
+        private ApplicationFrame frame;
+
+        public void setup(ResourceBundle resourceBundle) {
+            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+            actionModule.initAction(this, resourceBundle, ACTION_ID);
+            putValue(Action.SELECTED_KEY, true);
+            putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+                manager.registerUpdateListener(ApplicationFrame.class, (instance) -> {
+                    frame = instance;
+                    setEnabled(frame != null);
+                    if (frame != null) {
+                        putValue(Action.SELECTED_KEY, frame.isStatusBarVisible());
+                    }
+                });
+            });
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Object source = e.getSource();
+            if (source instanceof JMenuItem) {
+                frame.setStatusBarVisible(((JMenuItem) source).isSelected());
+            }
+        }
     }
 }

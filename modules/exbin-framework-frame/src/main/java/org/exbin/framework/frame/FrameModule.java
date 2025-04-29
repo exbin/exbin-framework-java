@@ -37,6 +37,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.menu.api.GroupMenuContributionRule;
 import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
@@ -133,9 +134,9 @@ public class FrameModule implements FrameModuleApi {
 
     @Override
     public void notifyFrameUpdated() {
-        if (frameActions != null) {
-            frameActions.notifyFrameUpdated();
-        }
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ComponentActivationListener componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
+        componentActivationListener.updated(ApplicationFrame.class, applicationFrame);
     }
 
     @Override
@@ -258,9 +259,9 @@ public class FrameModule implements FrameModuleApi {
             applicationFrame.setApplicationExitHandler(exitHandler);
             appIcon = applicationFrame.getIconImage();
 
-            if (frameActions != null) {
-                frameActions.setApplicationFrame(applicationFrame);
-            }
+            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+            ComponentActivationListener componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
+            componentActivationListener.updated(ApplicationFrame.class, applicationFrame);
         }
 
         return applicationFrame;
@@ -314,9 +315,6 @@ public class FrameModule implements FrameModuleApi {
             frameActions = new FrameActions();
             ensureSetup();
             frameActions.setup(resourceBundle);
-            if (applicationFrame != null) {
-                frameActions.setApplicationFrame(applicationFrame);
-            }
         }
 
         return frameActions;
@@ -334,9 +332,9 @@ public class FrameModule implements FrameModuleApi {
         getFrameActions();
         createViewBarsMenuGroup();
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(frameActions.getViewToolBarAction());
+        MenuContribution contribution = mgmt.registerMenuItem(frameActions.createViewToolBarAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
-        contribution = mgmt.registerMenuItem(frameActions.getViewToolBarCaptionsAction());
+        contribution = mgmt.registerMenuItem(frameActions.createViewToolBarCaptionsAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
     }
 
@@ -346,7 +344,7 @@ public class FrameModule implements FrameModuleApi {
         getFrameActions();
         createViewBarsMenuGroup();
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(frameActions.getViewStatusBarAction());
+        MenuContribution contribution = mgmt.registerMenuItem(frameActions.createViewStatusBarAction());
         mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(VIEW_BARS_GROUP_ID));
     }
 

@@ -57,11 +57,11 @@ public class DefaultActionManager extends DefaultActionContextService implements
     @SuppressWarnings("unchecked")
     @Override
     public void initAction(Action action) {
-        ActionContextChange ActionContextChange = (ActionContextChange) action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
-        if (ActionContextChange != null) {
+        ActionContextChange actionContextChange = (ActionContextChange) action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
+        if (actionContextChange != null) {
             String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
             ActionRecord actionRecord = actions.get(actionId);
-            ActionContextChange.register(new ActivationManager(actionRecord));
+            actionContextChange.register(new ActivationManager(actionRecord));
             for (Map.Entry<Class<?>, ActionContextChangeListener<?>> entry : actionRecord.updateComponents.entrySet()) {
                 Class<?> updateComponent = entry.getKey();
                 Object updateValue = activeComponentState.get(updateComponent);

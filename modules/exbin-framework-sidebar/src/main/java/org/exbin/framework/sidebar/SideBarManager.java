@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.sidebar;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,7 +35,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
 import org.exbin.framework.sidebar.api.SideBarContribution;
@@ -283,23 +281,6 @@ public class SideBarManager {
 
     @Nonnull
     private static JComponent createSideBarComponent(Action action) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            return createSideBarComponentInt(action);
-        }
-
-        final JComponent[] result = new JComponent[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                result[0] = createSideBarComponentInt(action);
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(SideBarManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result[0];
-    }
-
-    @Nonnull
-    private static JComponent createSideBarComponentInt(Action action) {
         ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
         JComponent sideBarItem;
         if (actionType != null) {
@@ -352,17 +333,7 @@ public class SideBarManager {
     }
 
     private static void addSideBarSeparator(JToolBar targetSideBar) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            targetSideBar.addSeparator();
-        } else {
-            try {
-                SwingUtilities.invokeAndWait(() -> {
-                    targetSideBar.addSeparator();
-                });
-            } catch (InterruptedException | InvocationTargetException ex) {
-                Logger.getLogger(SideBarManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        targetSideBar.addSeparator();
     }
 
     @Nonnull

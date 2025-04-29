@@ -97,7 +97,9 @@ public class FindReplaceActions {
 
     @Nonnull
     public EditReplaceAction createEditReplaceAction() {
-        return new EditReplaceAction();
+        EditReplaceAction editReplaceAction = new EditReplaceAction();
+        editReplaceAction.setup(resourceBundle);
+        return editReplaceAction;
     }
 
     @ParametersAreNonnullByDefault
