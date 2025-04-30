@@ -16,7 +16,6 @@
 package org.exbin.framework.utils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
@@ -24,7 +23,6 @@ import javax.swing.Action;
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface ClipboardActionsApi {
 
     @Nonnull

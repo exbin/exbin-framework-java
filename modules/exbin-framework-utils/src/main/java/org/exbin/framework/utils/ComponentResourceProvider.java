@@ -17,14 +17,12 @@ package org.exbin.framework.utils;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for components exposing their resource bundle.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface ComponentResourceProvider {
 
     @Nonnull
