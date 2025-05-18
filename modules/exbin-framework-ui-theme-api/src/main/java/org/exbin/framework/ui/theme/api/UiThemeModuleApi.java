@@ -32,7 +32,7 @@ public interface UiThemeModuleApi extends Module {
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(UiThemeModuleApi.class);
 
     /**
-     * Register look and feel provider.
+     * Registers look and feel provider.
      *
      * @param lafProvider look and feel provider
      */
@@ -47,7 +47,7 @@ public interface UiThemeModuleApi extends Module {
     List<LafProvider> getLafProviders();
 
     /**
-     * Initialize UI. Should be called before any GUI is created.
+     * Initializes UI. Should be called before any GUI is created.
      */
     void registerThemeInit();
 

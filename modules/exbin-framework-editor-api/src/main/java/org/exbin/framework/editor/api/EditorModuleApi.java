@@ -80,7 +80,7 @@ public interface EditorModuleApi extends Module {
     AbstractAction createCloseOtherFilesAction();
 
     /**
-     * Return editor actions.
+     * Returns editor actions.
      *
      * @return editor actions
      */

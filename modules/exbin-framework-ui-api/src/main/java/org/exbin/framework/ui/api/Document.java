@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.theme.api;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+package org.exbin.framework.ui.api;
 
 /**
- * Look&feel provider with support for additional options.
+ * Interface for document.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface ConfigurableLafProvider extends LafProvider {
+public interface Document {
 
-    /**
-     * Returns look and feel options handler.
-     *
-     * @return options handler
-     */
-    @Nonnull
-    LafOptionsHandler getOptionsHandler();
 }

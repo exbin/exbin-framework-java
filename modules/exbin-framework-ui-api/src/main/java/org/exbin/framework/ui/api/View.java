@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.theme.api;
+package org.exbin.framework.ui.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 
 /**
- * Look&feel provider with support for additional options.
+ * Interface for view.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ConfigurableLafProvider extends LafProvider {
+public interface View {
 
     /**
-     * Returns look and feel options handler.
+     * Returns view component.
      *
-     * @return options handler
+     * @return component
      */
     @Nonnull
-    LafOptionsHandler getOptionsHandler();
+    JComponent getComponent();
 }

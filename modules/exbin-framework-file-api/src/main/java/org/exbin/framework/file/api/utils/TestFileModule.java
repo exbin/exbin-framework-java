@@ -17,7 +17,6 @@ package org.exbin.framework.file.api.utils;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import org.exbin.framework.file.api.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +24,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import org.exbin.framework.file.api.FileActionsApi;
+import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.file.api.FileOperations;
+import org.exbin.framework.file.api.FileType;
+import org.exbin.framework.file.api.FileTypes;
+import org.exbin.framework.file.api.LoadableFileHandler;
+import org.exbin.framework.file.api.UsedDirectoryApi;
 
 /**
  * Test implementation of file module.
