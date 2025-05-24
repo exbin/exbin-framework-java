@@ -94,6 +94,6 @@ public class TextEncodingModule implements Module {
     }
 
     public void loadFromPreferences(OptionsStorage preferences) {
-        getEncodingsHandler().loadFromPreferences(new TextEncodingOptions(preferences));
+        getEncodingsHandler().loadFromOptions(new TextEncodingOptions(preferences));
     }
 }

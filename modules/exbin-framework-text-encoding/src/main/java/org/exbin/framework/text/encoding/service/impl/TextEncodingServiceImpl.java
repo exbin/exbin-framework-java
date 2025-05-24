@@ -77,7 +77,7 @@ public class TextEncodingServiceImpl implements TextEncodingService {
     }
 
     @Override
-    public void loadFromPreferences(TextEncodingOptions preferences) {
+    public void loadFromOptions(TextEncodingOptions preferences) {
         selectedEncoding = preferences.getSelectedEncoding();
         encodings.clear();
         encodings.addAll(preferences.getEncodings());

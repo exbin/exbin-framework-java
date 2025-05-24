@@ -153,8 +153,8 @@ public class EncodingsHandler {
         item.setSelected(true);
     }
 
-    public void loadFromPreferences(TextEncodingOptions preferences) {
-        textEncodingService.loadFromPreferences(preferences);
+    public void loadFromOptions(TextEncodingOptions options) {
+        textEncodingService.loadFromOptions(options);
         rebuildEncodings();
     }
 

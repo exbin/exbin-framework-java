@@ -61,7 +61,7 @@ public interface TextEncodingService {
 
     void setTextEncodingStatus(TextEncodingStatusApi textEncodingStatus);
 
-    void loadFromPreferences(TextEncodingOptions preferences);
+    void loadFromOptions(TextEncodingOptions preferences);
 
     void setEncodingChangeListener(EncodingChangeListener listener);
 

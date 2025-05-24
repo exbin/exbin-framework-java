@@ -470,7 +470,7 @@ public class MenuManager {
     }
 
     @Nonnull
-    public MenuContribution registerMenuItem(String menuId, String pluginId, Action action) {
+    public MenuContribution registerMenuItem(String menuId, String moduleId, Action action) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             menuDef = new MenuDefinition(null);
@@ -483,17 +483,17 @@ public class MenuManager {
     }
 
     @Nonnull
-    public MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, String subMenuName) {
+    public MenuContribution registerMenuItem(String menuId, String moduleId, String subMenuId, String subMenuName) {
         Action subMenuAction = new AbstractAction(subMenuName) {
             @Override
             public void actionPerformed(ActionEvent e) {
             }
         };
-        return registerMenuItem(menuId, pluginId, subMenuId, subMenuAction);
+        return registerMenuItem(menuId, moduleId, subMenuId, subMenuAction);
     }
 
     @Nonnull
-    public MenuContribution registerMenuItem(String menuId, String pluginId, String subMenuId, Action subMenuAction) {
+    public MenuContribution registerMenuItem(String menuId, String moduleId, String subMenuId, Action subMenuAction) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             menuDef = new MenuDefinition(null);
@@ -506,7 +506,7 @@ public class MenuManager {
     }
 
     @Nonnull
-    public MenuContribution registerMenuItem(String menuId, String pluginId, MenuItemProvider menuProvider) {
+    public MenuContribution registerMenuItem(String menuId, String moduleId, MenuItemProvider menuProvider) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             menuDef = new MenuDefinition(null);
@@ -519,7 +519,7 @@ public class MenuManager {
     }
 
     @Nonnull
-    public MenuContribution registerMenuGroup(String menuId, String pluginId, String groupId) {
+    public MenuContribution registerMenuGroup(String menuId, String moduleId, String groupId) {
         MenuDefinition menuDef = menus.get(menuId);
         if (menuDef == null) {
             menuDef = new MenuDefinition(null);
