@@ -179,11 +179,15 @@ public class ToolBarManager {
             }
         }
 
-        // Generate menu
-        List<BuilderGroupRecord> processing = new ArrayList<>();
-        BuilderContributionMatch contributionMatch = new BuilderContributionMatch();
         BuilderGroupRecord rootRecord = builderRecord.groupsMap.get("");
+        if (rootRecord == null) {
+            return;
+        }
+
+        // Generate toolbar
+        List<BuilderGroupRecord> processing = new ArrayList<>();
         processing.add(rootRecord);
+        BuilderContributionMatch contributionMatch = new BuilderContributionMatch();
         while (!processing.isEmpty()) {
             BuilderGroupRecord processingRecord = processing.get(processing.size() - 1);
 
