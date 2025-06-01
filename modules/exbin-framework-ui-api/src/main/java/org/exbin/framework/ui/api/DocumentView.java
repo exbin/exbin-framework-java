@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.ui.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -24,6 +25,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 @ParametersAreNonnullByDefault
 public interface DocumentView extends View {
+
+    /**
+     * Returns document.
+     *
+     * @return document
+     */
+    @Nonnull
+    Document getDocument();
 
     /**
      * Sets document.
