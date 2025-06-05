@@ -4,7 +4,7 @@
   <name>Side Bar Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
-  <description>Support for action handling</description>
+  <description>Support for side bar</description>
   <dependency>
   </dependency>
 </module>

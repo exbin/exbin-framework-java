@@ -4,7 +4,7 @@
   <name>Side Bar Support</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
-  <description>Support for tool bar</description>
+  <description>Support for side bar</description>
   <dependency>
     <module id="org.exbin.framework.window.api.WindowModuleApi" />
     <module id="org.exbin.framework.frame.api.FrameModuleApi" />

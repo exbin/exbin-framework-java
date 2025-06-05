@@ -22,5 +22,8 @@ package org.exbin.framework.options.api;
  */
 public interface OptionsModifiedListener {
 
+    /**
+     * Notifies that options were modified.
+     */
     void wasModified();
 }

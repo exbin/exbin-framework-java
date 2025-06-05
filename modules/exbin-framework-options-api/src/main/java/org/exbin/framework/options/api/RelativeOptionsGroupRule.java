@@ -44,6 +44,9 @@ public class RelativeOptionsGroupRule implements OptionsGroupRule {
         return groupId;
     }
 
+    /**
+     * Enumeration of menu next to modes.
+     */
     public enum NextToMode {
 
         BEFORE,

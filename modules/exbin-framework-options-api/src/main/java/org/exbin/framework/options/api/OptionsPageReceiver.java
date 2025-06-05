@@ -27,5 +27,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface OptionsPageReceiver {
 
+    /**
+     * Adds options page.
+     *
+     * @param optionPage options page
+     * @param path optional path
+     * @param visualParams optional visual parameters
+     */
     void addOptionsPage(OptionsPage<?> optionPage, @Nullable List<OptionsPathItem> path, @Nullable VisualOptionsPageParams visualParams);
 }

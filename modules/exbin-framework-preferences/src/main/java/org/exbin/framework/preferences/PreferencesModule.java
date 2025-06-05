@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.preferences;
 
-import java.util.prefs.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;

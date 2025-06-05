@@ -61,7 +61,7 @@ public class DefaultOptionsStorage implements OptionsStorage {
     }
 
     @Nonnull
-    private static String valueAsString(Object value) {
+    private static String valueAsString(@Nonnull Object value) {
         if (value instanceof String) {
             return (String) value;
         }

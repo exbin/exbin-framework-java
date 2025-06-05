@@ -26,9 +26,19 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface OptionsGroup {
 
+    /**
+     * Returns group id.
+     *
+     * @return group id
+     */
     @Nonnull
     String getGroupId();
 
+    /**
+     * Returns group name.
+     *
+     * @return name
+     */
     @Nonnull
     String getName();
 }
