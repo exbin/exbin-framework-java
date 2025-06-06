@@ -25,18 +25,43 @@ import javax.swing.Action;
  */
 public interface ClipboardActionsApi {
 
+    /**
+     * Creates cut to clipboard action.
+     *
+     * @return action
+     */
     @Nonnull
     Action createCutAction();
 
+    /**
+     * Creates copy to clipboard action.
+     *
+     * @return action
+     */
     @Nonnull
     Action createCopyAction();
 
+    /**
+     * Creates paste from clipboard action.
+     *
+     * @return action
+     */
     @Nonnull
     Action createPasteAction();
 
+    /**
+     * Creates delete selection action.
+     *
+     * @return action
+     */
     @Nonnull
     Action createDeleteAction();
 
+    /**
+     * Creates select all action.
+     *
+     * @return action
+     */
     @Nonnull
     Action createSelectAllAction();
 }

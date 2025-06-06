@@ -25,6 +25,11 @@ import javax.annotation.Nonnull;
  */
 public interface ComponentResourceProvider {
 
+    /**
+     * Returns resource bundle for this component.
+     *
+     * @return resource bundle
+     */
     @Nonnull
     ResourceBundle getResourceBundle();
 }
