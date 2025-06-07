@@ -22,7 +22,6 @@ import javax.swing.JButton;
 import org.exbin.framework.App;
 import org.exbin.framework.operation.manager.handler.UndoManagerControlHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.OkCancelListener;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
@@ -38,7 +37,6 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
 
     private final java.util.ResourceBundle resourceBundle;
     private UndoManagerControlHandler handler;
-    private OkCancelListener okCancelListener;
 
     public UndoManagerControlPanel() {
         this(App.getModule(LanguageModuleApi.class).getBundle(UndoManagerControlPanel.class));
@@ -53,17 +51,6 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
     }
 
     private void init() {
-        okCancelListener = new OkCancelListener() {
-            @Override
-            public void okEvent() {
-                performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
-            }
-
-            @Override
-            public void cancelEvent() {
-                performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
-            }
-        };
     }
 
     public void setHandler(UndoManagerControlHandler handler) {
@@ -150,10 +137,14 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
         return Optional.of(closeButton);
     }
 
-    @Nonnull
     @Override
-    public OkCancelListener getOkCancelListener() {
-        return okCancelListener;
+    public void invokeOkEvent() {
+        performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
+    }
+
+    @Override
+    public void invokeCancelEvent() {
+        performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
     }
 
     /**

@@ -72,6 +72,18 @@ public class RecentFilesOptions implements OptionsData {
 
     @Override
     public void copyTo(OptionsData options) {
-        
+        RecentFilesOptions with = (RecentFilesOptions) options;
+        int index = 0;
+        do {
+            Optional<String> filePath = getFilePath(index);
+            if (!filePath.isPresent()) {
+                break;
+            }
+            with.setFilePath(filePath.get(), index);
+            with.setFileMode(getFileMode(index).orElse(null), index);
+            with.setModuleName(getModuleName(index).orElse(null), index);
+
+            index++;
+        } while (index < 15);
     }
 }

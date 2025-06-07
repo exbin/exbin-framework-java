@@ -38,15 +38,12 @@ public class OpenFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "openFileAction";
 
-    private ResourceBundle resourceBundle;
     private FileOperations fileOperations;
 
     public OpenFileAction() {
     }
 
     public void init(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);

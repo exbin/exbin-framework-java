@@ -38,15 +38,12 @@ public class NewFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "newFileAction";
 
-    private ResourceBundle resourceBundle;
     private FileOperations fileOperations;
 
     public NewFileAction() {
     }
 
     public void init(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, ActionUtils.getMetaMask()));

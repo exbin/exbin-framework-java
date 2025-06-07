@@ -32,8 +32,9 @@ import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.help.api.HelpLink;
+import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.text.font.TextFontHandler;
-import org.exbin.framework.window.api.gui.OptionsHelpControlPanel;
+import org.exbin.framework.window.api.gui.OptionsControlPanel;
 
 /**
  * Text font action.
@@ -72,8 +73,9 @@ public class TextFontAction extends AbstractAction {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextFontPanel fontPanel = new TextFontPanel();
         fontPanel.setStoredFont(textFontHandler.getCurrentFont());
-        OptionsHelpControlPanel controlPanel = new OptionsHelpControlPanel();
-        controlPanel.setHelpLink(new HelpLink(HELP_ID));
+        OptionsControlPanel controlPanel = new OptionsControlPanel();
+        HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
+        helpModule.addLinkToControlPanel(controlPanel, new HelpLink(HELP_ID));
         final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());

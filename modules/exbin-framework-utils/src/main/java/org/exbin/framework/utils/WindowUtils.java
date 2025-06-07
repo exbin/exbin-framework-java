@@ -146,12 +146,12 @@ public class WindowUtils {
     public static void assignGlobalKeyListener(Component component, final JButton okButton, final JButton cancelButton) {
         assignGlobalKeyListener(component, new OkCancelListener() {
             @Override
-            public void okEvent() {
+            public void invokeOkEvent() {
                 UiUtils.doButtonClick(okButton);
             }
 
             @Override
-            public void cancelEvent() {
+            public void invokeCancelEvent() {
                 UiUtils.doButtonClick(cancelButton);
             }
         });
@@ -187,7 +187,7 @@ public class WindowUtils {
                 }
 
                 if (performCancelAction) {
-                    listener.cancelEvent();
+                    listener.invokeCancelEvent();
                 }
             }
         });
@@ -211,7 +211,7 @@ public class WindowUtils {
                 }
 
                 if (performOkAction) {
-                    listener.okEvent();
+                    listener.invokeOkEvent();
                 }
             }
         });

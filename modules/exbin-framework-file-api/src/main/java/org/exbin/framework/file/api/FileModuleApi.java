@@ -44,6 +44,11 @@ public interface FileModuleApi extends Module {
      */
     void addFileType(FileType fileType);
 
+    /**
+     * Returns file types.
+     *
+     * @return file types
+     */
     @Nonnull
     Collection<FileType> getFileTypes();
 
@@ -104,6 +109,6 @@ public interface FileModuleApi extends Module {
     FileActionsApi getFileActions();
 
     void updateRecentFilesList(URI fileUri, @Nullable FileType fileType);
-    
+
     void registerOptionsPanels();
 }

@@ -45,6 +45,7 @@ public class TestFileModule implements FileModuleApi {
     public void addFileType(FileType fileType) {
     }
 
+    @Nonnull
     @Override
     public Collection<FileType> getFileTypes() {
         return new ArrayList<>();

@@ -86,13 +86,13 @@ public class RecentFilesActions {
     }
 
     private void loadState(JMenu fileOpenRecentMenu) {
-        RecentFilesOptions recentFilesParameters = new RecentFilesOptions(preferences);
+        RecentFilesOptions recentFilesOptions = new RecentFilesOptions(preferences);
         recentFiles.clear();
         int recent = 1;
         while (recent < 14) {
-            String filePath = recentFilesParameters.getFilePath(recent).orElse(null);
-            String moduleName = recentFilesParameters.getModuleName(recent).orElse(null);
-            String fileMode = recentFilesParameters.getFileMode(recent).orElse(null);
+            String filePath = recentFilesOptions.getFilePath(recent).orElse(null);
+            String moduleName = recentFilesOptions.getModuleName(recent).orElse(null);
+            String fileMode = recentFilesOptions.getFileMode(recent).orElse(null);
             if (filePath == null) {
                 break;
             }

@@ -24,6 +24,11 @@ import javax.annotation.Nullable;
  */
 public interface FileOperationsProvider {
 
+    /**
+     * Returns file operations.
+     *
+     * @return file operations
+     */
     @Nullable
     FileOperations getFileOperations();
 }

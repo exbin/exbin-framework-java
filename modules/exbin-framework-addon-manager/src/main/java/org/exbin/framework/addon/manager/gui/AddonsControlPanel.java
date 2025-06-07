@@ -29,7 +29,6 @@ import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.OkCancelListener;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.window.api.handler.CloseControlHandler;
 import org.exbin.framework.window.api.handler.CloseControlHandler.CloseControlEnablementListener;
@@ -45,7 +44,6 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     private final java.util.ResourceBundle resourceBundle;
     private CloseControlHandler handler;
     private Controller controller;
-    private OkCancelListener okCancelListener;
     private int availableUpdates = 0;
     private int selectedForOperation = 0;
 
@@ -56,18 +54,6 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     public AddonsControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
-
-        okCancelListener = new OkCancelListener() {
-            @Override
-            public void okEvent() {
-                performCloseClick();
-            }
-
-            @Override
-            public void cancelEvent() {
-                performCloseClick();
-            }
-        };
     }
 
     public void showLegacyWarning() {
@@ -294,10 +280,14 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         return Optional.of(closeButton);
     }
 
-    @Nonnull
     @Override
-    public OkCancelListener getOkCancelListener() {
-        return okCancelListener;
+    public void invokeOkEvent() {
+        performCloseClick();
+    }
+
+    @Override
+    public void invokeCancelEvent() {
+        performCloseClick();
     }
 
     @Nonnull

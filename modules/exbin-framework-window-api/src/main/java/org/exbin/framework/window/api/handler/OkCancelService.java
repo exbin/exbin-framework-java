@@ -25,7 +25,7 @@ import org.exbin.framework.utils.OkCancelListener;
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface OkCancelService {
+public interface OkCancelService extends OkCancelListener {
 
     /**
      * Returns default button.
@@ -34,12 +34,4 @@ public interface OkCancelService {
      */
     @Nonnull
     Optional<JButton> getDefaultButton();
-
-    /**
-     * Returns OK / cancel listener
-     *
-     * @return OK / cancel listener
-     */
-    @Nonnull
-    OkCancelListener getOkCancelListener();
 }

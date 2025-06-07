@@ -145,7 +145,7 @@ public class WindowModule implements WindowModuleApi {
         dialog.pack();
         dialog.setTitle(dialogTitle);
         if (component instanceof OkCancelService) {
-            WindowUtils.assignGlobalKeyListener(dialog, ((OkCancelService) component).getOkCancelListener());
+            WindowUtils.assignGlobalKeyListener(dialog, (OkCancelService) component);
         }
         return new WindowHandler() {
             @Override
@@ -206,7 +206,7 @@ public class WindowModule implements WindowModuleApi {
         dialog.getContentPane().setPreferredSize(new Dimension(size.width, size.height));
         dialog.pack();
         if (component instanceof OkCancelService) {
-            WindowUtils.assignGlobalKeyListener(dialog, ((OkCancelService) component).getOkCancelListener());
+            WindowUtils.assignGlobalKeyListener(dialog, (OkCancelService) component);
         }
         return dialog;
     }
@@ -320,10 +320,14 @@ public class WindowModule implements WindowModuleApi {
             return Optional.empty();
         }
 
-        @Nonnull
         @Override
-        public OkCancelListener getOkCancelListener() {
-            return okCancelService.getOkCancelListener();
+        public void invokeOkEvent() {
+            okCancelService.invokeOkEvent();
+        }
+
+        @Override
+        public void invokeCancelEvent() {
+            okCancelService.invokeCancelEvent();
         }
     }
 }

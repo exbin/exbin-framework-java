@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.window.api.gui.FooterControlPanel;
 
 /**
  * Interface for help module.
@@ -47,6 +48,14 @@ public interface HelpModuleApi extends Module {
      */
     @Nonnull
     JButton createHelpButton();
+
+    /**
+     * Adds link button to dialog footer control panel.
+     *
+     * @param controlPanel control panel
+     * @param helpLink help link
+     */
+    void addLinkToControlPanel(FooterControlPanel controlPanel, HelpLink helpLink);
 
     /**
      * Returns true if opening handler is available.

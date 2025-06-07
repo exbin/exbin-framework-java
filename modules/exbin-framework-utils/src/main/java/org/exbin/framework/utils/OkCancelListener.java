@@ -22,7 +22,13 @@ package org.exbin.framework.utils;
  */
 public interface OkCancelListener {
 
-    void okEvent();
+    /**
+     * Invokes OK event.
+     */
+    void invokeOkEvent();
 
-    void cancelEvent();
+    /**
+     * Invokes cancel event.
+     */
+    void invokeCancelEvent();
 }

@@ -25,5 +25,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface HelpLinkable {
 
+    /**
+     * Sets help link.
+     *
+     * @param helpLink help link
+     */
     void setHelpLink(HelpLink helpLink);
 }

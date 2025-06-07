@@ -17,6 +17,7 @@ package org.exbin.framework.help;
 
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -29,6 +30,7 @@ import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.help.api.HelpOpeningHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.window.api.gui.FooterControlPanel;
 
 /**
  * Framework help module.
@@ -69,6 +71,18 @@ public class HelpModule implements HelpModuleApi {
         helpButton.setMaximumSize(new Dimension(imageHeight, imageHeight));
         helpButton.setPreferredSize(new Dimension(imageHeight, imageHeight));
         return helpButton;
+    }
+
+    @Override
+    public void addLinkToControlPanel(FooterControlPanel controlPanel, HelpLink helpLink) {
+        JButton helpButton = createHelpButton();
+        helpButton.addActionListener((ActionEvent e) -> {
+            if (helpLink != null) {
+                HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
+                helpModule.openHelp(helpLink);
+            }
+        });
+        controlPanel.addButton(helpButton, FooterControlPanel.ButtonPosition.FIRST_LEFT);
     }
 
     @Override
