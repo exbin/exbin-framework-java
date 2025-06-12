@@ -5,6 +5,7 @@ if (rootProject.path == ':') {
     include ':modules:exbin-framework-action-api'
     include ':modules:exbin-framework-menu-popup-api'
     include ':modules:exbin-framework-window-api'
+    include ':modules:exbin-framework-language-api'
     include ':modules:exbin-framework-utils'
 }
 
