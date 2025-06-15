@@ -132,11 +132,17 @@ public class AddonManager {
 
         availableModuleUpdates.addChangeListener(availableModulesChangeListener);
         availableModuleUpdates.notifyChanged();
-        try {
-            LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-            ResourceBundle appBundle = languageModule.getAppBundle();
-            String releaseString = appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE);
-            serviceStatus = addonCatalogService.checkStatus(releaseString);
+
+        Thread thread = new Thread(() -> {
+            try {
+                LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+                ResourceBundle appBundle = languageModule.getAppBundle();
+                String releaseString = appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE);
+                serviceStatus = addonCatalogService.checkStatus(releaseString);
+            } catch (AddonCatalogServiceException ex) {
+                Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);
+                serviceStatus = -1;
+            }
             // TODO
             // controlPanel.showLegacyWarning();
             if (serviceStatus == -1) {
@@ -144,17 +150,13 @@ public class AddonManager {
             } else {
                 if (serviceStatus > availableModuleUpdates.getStatus()) {
                     UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
-                    Thread thread = new Thread(() -> {
-                        availabilityOperation.run();
-                        availableModuleUpdates.setLatestVersion(serviceStatus, availabilityOperation.getLatestVersions());
-                        availableModuleUpdates.writeConfigFile();
-                    });
-                    thread.start();
+                    availabilityOperation.run();
+                    availableModuleUpdates.setLatestVersion(serviceStatus, availabilityOperation.getLatestVersions());
+                    availableModuleUpdates.writeConfigFile();
                 }
             }
-        } catch (AddonCatalogServiceException ex) {
-            Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);
-        }
+        });
+        thread.start();
     }
 
     public boolean isAlreadyInstalled(String moduleId) {

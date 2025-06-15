@@ -27,9 +27,19 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface AddonManagerTab {
 
+    /**
+     * Returns tab title.
+     *
+     * @return title
+     */
     @Nonnull
     String getTitle();
 
+    /**
+     * Returns tab component.
+     *
+     * @return component
+     */
     @Nonnull
     Component getComponent();
 }

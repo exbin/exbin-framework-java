@@ -91,6 +91,12 @@ public interface AddonCatalogService {
     @Nonnull
     String getModuleDetails(String id) throws AddonCatalogServiceException;
 
+    /**
+     * Creates download operation.
+     *
+     * @param records download records
+     * @return operation handler
+     */
     @Nonnull
     DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records);
 
