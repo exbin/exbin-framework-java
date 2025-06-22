@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.AddonManagerModule;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -39,6 +40,7 @@ public class AddonsPanel extends javax.swing.JPanel {
     private FilterListPanel filterListPanel = new FilterListPanel();
     private ItemRecord activeRecord;
     private AddonDetailsPanel addonDetailsPanel = new AddonDetailsPanel();
+    private Controller controller;
 
     public AddonsPanel() {
         initComponents();
@@ -51,6 +53,7 @@ public class AddonsPanel extends javax.swing.JPanel {
     }
 
     public void setController(Controller controller) {
+        this.controller = controller;
         filterListPanel.setController(new FilterListPanel.Controller() {
             @Override
             public int getItemsCount() {
@@ -86,14 +89,6 @@ public class AddonsPanel extends javax.swing.JPanel {
                         addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
                     }
                     activeRecord = itemRecord;
-                }
-            }
-        });
-        controller.addItemChangedListener(new ItemChangedListener() {
-            @Override
-            public void itemChanged() {
-                if (activeRecord != null) {
-                    addonDetailsPanel.setRecord(activeRecord, controller.isItemSelectedForOperation(activeRecord));
                 }
             }
         });
@@ -140,6 +135,12 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
         });
     }
+    
+    public void notifyItemChanged() {
+        if (activeRecord != null) {
+            addonDetailsPanel.setRecord(activeRecord, controller.isItemSelectedForOperation(activeRecord));
+        }
+    }
 
     public void notifyItemsChanged() {
         filterListPanel.notifyItemsChanged();
@@ -183,6 +184,7 @@ public class AddonsPanel extends javax.swing.JPanel {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
+            testApplication.addModule(AddonManagerModule.MODULE_ID, new AddonManagerModule());
             WindowUtils.invokeWindow(new AddonsPanel());
         });
     }
@@ -217,14 +219,7 @@ public class AddonsPanel extends javax.swing.JPanel {
 
         boolean isItemSelectedForOperation(ItemRecord item);
 
-        void addItemChangedListener(ItemChangedListener listener);
-
         @Nonnull
         String getModuleDetails(ItemRecord itemRecord);
-    }
-
-    public interface ItemChangedListener {
-
-        void itemChanged();
     }
 }

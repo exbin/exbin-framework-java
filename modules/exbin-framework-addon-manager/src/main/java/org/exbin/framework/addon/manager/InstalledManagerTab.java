@@ -37,7 +37,7 @@ public class InstalledManagerTab implements AddonManagerTab {
 
     private AddonsPanel installedPanel = new AddonsPanel();
     private Set<String> toUpdate = new HashSet<>();
-    private List<AddonsPanel.ItemChangedListener> itemChangedListeners = new ArrayList<>();
+    private List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
 
     private AddonManager addonManager;
     private List<Integer> filterItems = null;
@@ -124,17 +124,13 @@ public class InstalledManagerTab implements AddonManagerTab {
                 return toUpdate.contains(item.getId());
             }
 
-            @Override
-            public void addItemChangedListener(AddonsPanel.ItemChangedListener listener) {
-                itemChangedListeners.add(listener);
-            }
-
             @Nonnull
             @Override
             public String getModuleDetails(ItemRecord itemRecord) {
                 return addonManager.getModuleDetails(itemRecord);
             }
         });
+        itemChangedListeners.add(installedPanel::notifyItemChanged);
     }
 
     private int getItemsCount() {
@@ -181,7 +177,7 @@ public class InstalledManagerTab implements AddonManagerTab {
     }
 
     private void notifyItemsChanged() {
-        for (AddonsPanel.ItemChangedListener itemChangedListener : itemChangedListeners) {
+        for (ItemChangedListener itemChangedListener : itemChangedListeners) {
             itemChangedListener.itemChanged();
         }
         installedPanel.notifyItemsChanged();
@@ -200,5 +196,9 @@ public class InstalledManagerTab implements AddonManagerTab {
 
     public int getToUpdateCount() {
         return toUpdate.size();
+    }
+
+    public interface ItemChangedListener {
+        void itemChanged();
     }
 }
