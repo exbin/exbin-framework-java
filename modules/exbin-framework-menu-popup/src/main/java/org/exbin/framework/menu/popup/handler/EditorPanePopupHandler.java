@@ -49,9 +49,9 @@ import org.exbin.framework.menu.popup.PositionImageActionsHandler;
 import org.exbin.framework.menu.popup.PositionLinkActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.ClipboardUtils;
+import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Popup handler for JEditorPane.
@@ -59,7 +59,7 @@ import org.exbin.framework.utils.ClipboardUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorPanePopupHandler implements ClipboardActionsHandler, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
+public class EditorPanePopupHandler implements ClipboardActionsController, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
 
     private static final String MAP_PROPERTY = "__MAP__";
     private static final String IMAGE_CACHE_PROPERTY = "imageCache";

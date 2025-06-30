@@ -43,7 +43,6 @@ import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
@@ -52,6 +51,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Text editor panel.
@@ -59,7 +59,7 @@ import org.exbin.framework.utils.TestApplication;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextPanel extends javax.swing.JPanel implements ClipboardActionsHandler {
+public class TextPanel extends javax.swing.JPanel implements ClipboardActionsController {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextPanel.class);
 

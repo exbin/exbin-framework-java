@@ -18,14 +18,14 @@ package org.exbin.framework.window.api.handler;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.swing.JButton;
-import org.exbin.framework.utils.OkCancelListener;
+import org.exbin.framework.utils.OkCancelControl;
 
 /**
  * Service for ok cancel provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface OkCancelService extends OkCancelListener {
+public interface OkCancelService extends OkCancelControl {
 
     /**
      * Returns default button.

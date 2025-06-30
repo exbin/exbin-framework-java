@@ -20,9 +20,9 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JList;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.ClipboardUtils;
+import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Popup handler for JList.
@@ -30,7 +30,7 @@ import org.exbin.framework.utils.ClipboardUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ListPopupHandler implements ClipboardActionsHandler {
+public class ListPopupHandler implements ClipboardActionsController {
 
     private final JList<?> listComp;
 

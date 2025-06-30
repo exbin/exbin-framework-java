@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsHandler;
+import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Clipboard copy action.
@@ -39,7 +39,7 @@ public class CopyAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "copyAction";
 
-    private ClipboardActionsHandler clipboardActionsHandler;
+    private ClipboardActionsController clipboardActionsHandler;
 
     public CopyAction() {
     }
@@ -60,13 +60,13 @@ public class CopyAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardActionsHandler.class, instance -> {
+        manager.registerUpdateListener(ClipboardActionsController.class, instance -> {
             clipboardActionsHandler = instance;
             update();
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable ClipboardActionsHandler clipboardActionsHandler) {
+    public void setClipboardActionsHandler(@Nullable ClipboardActionsController clipboardActionsHandler) {
         this.clipboardActionsHandler = clipboardActionsHandler;
         update();
     }

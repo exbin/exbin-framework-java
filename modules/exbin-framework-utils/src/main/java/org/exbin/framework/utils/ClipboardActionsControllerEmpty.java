@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ClipboardActionsHandlerEmpty implements ClipboardActionsHandler {
+public class ClipboardActionsControllerEmpty implements ClipboardActionsController {
 
     @Override
     public void performCut() {

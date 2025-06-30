@@ -34,7 +34,6 @@ import org.exbin.framework.editor.api.EditorProviderComponentListener;
 import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.menu.api.PositionMenuContributionRule;
 import org.exbin.framework.editor.action.CloseAllFilesAction;
@@ -47,6 +46,7 @@ import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
+import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Framework editor module.
@@ -87,52 +87,52 @@ public class EditorModule implements EditorModuleApi {
     private void setEditorProvider(EditorProvider editorProvider) {
         if (this.editorProvider == null) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.registerClipboardHandler(new ClipboardActionsHandler() {
+            actionModule.registerClipboardHandler(new ClipboardActionsController() {
                 @Override
                 public void performCut() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) fileHandler).performCut();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        ((ClipboardActionsController) fileHandler).performCut();
                     }
                 }
 
                 @Override
                 public void performCopy() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) fileHandler).performCopy();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        ((ClipboardActionsController) fileHandler).performCopy();
                     }
                 }
 
                 @Override
                 public void performPaste() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) fileHandler).performPaste();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        ((ClipboardActionsController) fileHandler).performPaste();
                     }
                 }
 
                 @Override
                 public void performDelete() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) fileHandler).performDelete();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        ((ClipboardActionsController) fileHandler).performDelete();
                     }
                 }
 
                 @Override
                 public void performSelectAll() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        ((ClipboardActionsHandler) fileHandler).performSelectAll();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        ((ClipboardActionsController) fileHandler).performSelectAll();
                     }
                 }
 
                 @Override
                 public boolean isSelection() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) fileHandler).isSelection();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        return ((ClipboardActionsController) fileHandler).isSelection();
                     }
 
                     return false;
@@ -141,8 +141,8 @@ public class EditorModule implements EditorModuleApi {
                 @Override
                 public boolean isEditable() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) fileHandler).isEditable();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        return ((ClipboardActionsController) fileHandler).isEditable();
                     }
 
                     return false;
@@ -151,8 +151,8 @@ public class EditorModule implements EditorModuleApi {
                 @Override
                 public boolean canSelectAll() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) fileHandler).canSelectAll();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        return ((ClipboardActionsController) fileHandler).canSelectAll();
                     }
 
                     return false;
@@ -166,8 +166,8 @@ public class EditorModule implements EditorModuleApi {
                 @Override
                 public boolean canPaste() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) fileHandler).canPaste();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        return ((ClipboardActionsController) fileHandler).canPaste();
                     }
 
                     return true;
@@ -176,8 +176,8 @@ public class EditorModule implements EditorModuleApi {
                 @Override
                 public boolean canDelete() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof ClipboardActionsHandler) {
-                        return ((ClipboardActionsHandler) fileHandler).canDelete();
+                    if (fileHandler instanceof ClipboardActionsController) {
+                        return ((ClipboardActionsController) fileHandler).canDelete();
                     }
 
                     return isEditable();
@@ -210,8 +210,8 @@ public class EditorModule implements EditorModuleApi {
 
     @Override
     public void registerEditor(String pluginId, final EditorProvider editorProvider) {
-        if (editorProvider instanceof ClipboardActionsHandler) {
-            ((ClipboardActionsHandler) editorProvider).setUpdateListener(() -> {
+        if (editorProvider instanceof ClipboardActionsController) {
+            ((ClipboardActionsController) editorProvider).setUpdateListener(() -> {
                 if (this.editorProvider == editorProvider) {
                     if (clipboardActionsUpdateListener != null) {
                         clipboardActionsUpdateListener.stateChanged();

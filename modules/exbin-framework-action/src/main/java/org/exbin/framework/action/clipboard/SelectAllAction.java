@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsHandler;
+import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Clipboard select all action.
@@ -39,7 +39,7 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     public static final String ACTION_ID = "selectAllAction";
 
-    private ClipboardActionsHandler clipboardActionsHandler;
+    private ClipboardActionsController clipboardActionsHandler;
 
     public SelectAllAction() {
     }
@@ -60,13 +60,13 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardActionsHandler.class, instance -> {
+        manager.registerUpdateListener(ClipboardActionsController.class, instance -> {
             clipboardActionsHandler = instance;
             update();
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable ClipboardActionsHandler clipboardActionsHandler) {
+    public void setClipboardActionsHandler(@Nullable ClipboardActionsController clipboardActionsHandler) {
         this.clipboardActionsHandler = clipboardActionsHandler;
         update();
     }

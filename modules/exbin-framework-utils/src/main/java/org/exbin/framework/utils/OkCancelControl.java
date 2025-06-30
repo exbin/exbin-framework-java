@@ -16,11 +16,11 @@
 package org.exbin.framework.utils;
 
 /**
- * Simple interface for ok and cancel event.
+ * Simple interface for ok and cancel event invocation.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface OkCancelListener {
+public interface OkCancelControl {
 
     /**
      * Invokes OK event.

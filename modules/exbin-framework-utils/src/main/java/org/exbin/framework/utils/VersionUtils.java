@@ -24,6 +24,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 @ParametersAreNonnullByDefault
 public class VersionUtils {
+    
+    public static final String SNAPSHOT_VERSION_SUFFIX = "-SNAPSHOT";
 
     private VersionUtils() {
     }
@@ -55,14 +57,14 @@ public class VersionUtils {
             String segment = version.substring(versionSegment, versionSplit);
             String thanSegment = thanVersion.substring(thanVersionSegment, thanVersionSplit);
 
-            if (thanSegment.endsWith("-SNAPSHOT")) {
+            if (thanSegment.endsWith(SNAPSHOT_VERSION_SUFFIX)) {
                 thanSegment = thanSegment.substring(0, thanSegment.length() - 9);
                 if (thanSegment.equals(segment)) {
                     return true;
                 }
             }
 
-            if (segment.endsWith("-SNAPSHOT")) {
+            if (segment.endsWith(SNAPSHOT_VERSION_SUFFIX)) {
                 segment = segment.substring(0, segment.length() - 9);
             }
 

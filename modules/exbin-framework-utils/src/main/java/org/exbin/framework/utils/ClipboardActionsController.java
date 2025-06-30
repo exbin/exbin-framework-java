@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ClipboardActionsHandler {
+public interface ClipboardActionsController {
 
     /**
      * Performs cut to clipboard operation.

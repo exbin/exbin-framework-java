@@ -19,9 +19,9 @@ import java.awt.datatransfer.StringSelection;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.ClipboardUtils;
+import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Popup handler for table.
@@ -29,7 +29,7 @@ import org.exbin.framework.utils.ClipboardUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TablePopupHandler implements ClipboardActionsHandler {
+public class TablePopupHandler implements ClipboardActionsController {
 
     private final JTable tableComp;
 

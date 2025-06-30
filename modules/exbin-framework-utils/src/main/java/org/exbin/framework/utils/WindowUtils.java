@@ -144,7 +144,7 @@ public class WindowUtils {
      * @param cancelButton button which will be used for closing operation
      */
     public static void assignGlobalKeyListener(Component component, final JButton okButton, final JButton cancelButton) {
-        assignGlobalKeyListener(component, new OkCancelListener() {
+        assignGlobalKeyListener(component, new OkCancelControl() {
             @Override
             public void invokeOkEvent() {
                 UiUtils.doButtonClick(okButton);
@@ -163,7 +163,7 @@ public class WindowUtils {
      * @param component target component
      * @param listener ok and cancel event listener
      */
-    public static void assignGlobalKeyListener(Component component, @Nullable final OkCancelListener listener) {
+    public static void assignGlobalKeyListener(Component component, @Nullable final OkCancelControl listener) {
         JRootPane rootPane = SwingUtilities.getRootPane(component);
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESC_CANCEL_KEY);
         rootPane.getActionMap().put(ESC_CANCEL_KEY, new AbstractAction() {

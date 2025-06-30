@@ -20,8 +20,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsHandler;
 import org.exbin.framework.utils.ClipboardActionsUpdateListener;
+import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Popup handler for text component.
@@ -29,7 +29,7 @@ import org.exbin.framework.utils.ClipboardActionsUpdateListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextComponentPopupHandler implements ClipboardActionsHandler {
+public class TextComponentPopupHandler implements ClipboardActionsController {
 
     private final JTextComponent txtComp;
 
