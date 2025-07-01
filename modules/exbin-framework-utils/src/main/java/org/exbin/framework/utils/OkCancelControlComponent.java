@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.window.api.handler;
+package org.exbin.framework.utils;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.swing.JButton;
-import org.exbin.framework.utils.OkCancelControl;
 
 /**
- * Service for ok cancel provider.
+ * Simple interface for ok and cancel event invocation.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface OkCancelService extends OkCancelControl {
+public interface OkCancelControlComponent {
+
+    /**
+     * Invokes OK event.
+     */
+    void invokeOkEvent();
+
+    /**
+     * Invokes cancel event.
+     */
+    void invokeCancelEvent();
 
     /**
      * Returns default button.

@@ -25,6 +25,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -144,7 +145,7 @@ public class WindowUtils {
      * @param cancelButton button which will be used for closing operation
      */
     public static void assignGlobalKeyListener(Component component, final JButton okButton, final JButton cancelButton) {
-        assignGlobalKeyListener(component, new OkCancelControl() {
+        assignGlobalKeyListener(component, new OkCancelControlComponent() {
             @Override
             public void invokeOkEvent() {
                 UiUtils.doButtonClick(okButton);
@@ -154,6 +155,12 @@ public class WindowUtils {
             public void invokeCancelEvent() {
                 UiUtils.doButtonClick(cancelButton);
             }
+
+            @Nonnull
+            @Override
+            public Optional<JButton> getDefaultButton() {
+                return Optional.empty();
+            }
         });
     }
 
@@ -161,15 +168,15 @@ public class WindowUtils {
      * Assign ESCAPE/ENTER key for all focusable components recursively.
      *
      * @param component target component
-     * @param listener ok and cancel event listener
+     * @param controlComponent ok and cancel control component
      */
-    public static void assignGlobalKeyListener(Component component, @Nullable final OkCancelControl listener) {
+    public static void assignGlobalKeyListener(Component component, @Nullable final OkCancelControlComponent controlComponent) {
         JRootPane rootPane = SwingUtilities.getRootPane(component);
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESC_CANCEL_KEY);
         rootPane.getActionMap().put(ESC_CANCEL_KEY, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                if (listener == null) {
+                if (controlComponent == null) {
                     return;
                 }
 
@@ -187,7 +194,7 @@ public class WindowUtils {
                 }
 
                 if (performCancelAction) {
-                    listener.invokeCancelEvent();
+                    controlComponent.invokeCancelEvent();
                 }
             }
         });
@@ -196,7 +203,7 @@ public class WindowUtils {
         rootPane.getActionMap().put(ENTER_OK_KEY, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                if (listener == null) {
+                if (controlComponent == null) {
                     return;
                 }
 
@@ -211,7 +218,7 @@ public class WindowUtils {
                 }
 
                 if (performOkAction) {
-                    listener.invokeOkEvent();
+                    controlComponent.invokeOkEvent();
                 }
             }
         });

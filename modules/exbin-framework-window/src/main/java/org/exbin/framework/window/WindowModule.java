@@ -41,11 +41,11 @@ import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.utils.OkCancelControlComponent;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
-import org.exbin.framework.window.api.handler.OkCancelService;
 
 /**
  * Module window handling.
@@ -143,8 +143,8 @@ public class WindowModule implements WindowModuleApi {
         dialog.getContentPane().setPreferredSize(new Dimension(size.width, size.height));
         dialog.pack();
         dialog.setTitle(dialogTitle);
-        if (component instanceof OkCancelService) {
-            WindowUtils.assignGlobalKeyListener(dialog, (OkCancelService) component);
+        if (component instanceof OkCancelControlComponent) {
+            WindowUtils.assignGlobalKeyListener(dialog, (OkCancelControlComponent) component);
         }
         return new WindowHandler() {
             @Override
@@ -204,8 +204,8 @@ public class WindowModule implements WindowModuleApi {
         dialog.add(component);
         dialog.getContentPane().setPreferredSize(new Dimension(size.width, size.height));
         dialog.pack();
-        if (component instanceof OkCancelService) {
-            WindowUtils.assignGlobalKeyListener(dialog, (OkCancelService) component);
+        if (component instanceof OkCancelControlComponent) {
+            WindowUtils.assignGlobalKeyListener(dialog, (OkCancelControlComponent) component);
         }
         return dialog;
     }
@@ -254,8 +254,8 @@ public class WindowModule implements WindowModuleApi {
         if (applicationIcon.isPresent()) {
             ((JDialog) dialog.getWindow()).setIconImage(applicationIcon.get());
         }
-        if (controlPanel instanceof OkCancelService) {
-            Optional<JButton> defaultButton = ((OkCancelService) controlPanel).getDefaultButton();
+        if (controlPanel instanceof OkCancelControlComponent) {
+            Optional<JButton> defaultButton = ((OkCancelControlComponent) controlPanel).getDefaultButton();
             if (defaultButton.isPresent()) {
                 JRootPane rootPane = SwingUtilities.getRootPane(dialog.getWindow());
                 if (rootPane != null) {
@@ -277,7 +277,6 @@ public class WindowModule implements WindowModuleApi {
 //     * @param windowHeaderDecorationProvider window header decoration provider
 //     */
 //    void setWindowHeaderDecorationProvider(WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider);
-
     /**
      * Creates panel for given main and control panel.
      *
@@ -289,8 +288,8 @@ public class WindowModule implements WindowModuleApi {
     @Override
     public JPanel createDialogPanel(JComponent mainComponent, JPanel controlPanel) {
         JPanel dialogPanel;
-        if (controlPanel instanceof OkCancelService) {
-            dialogPanel = new DialogPanel((OkCancelService) controlPanel);
+        if (controlPanel instanceof OkCancelControlComponent) {
+            dialogPanel = new DialogPanel((OkCancelControlComponent) controlPanel);
         } else {
             dialogPanel = new JPanel(new BorderLayout());
         }
@@ -304,13 +303,13 @@ public class WindowModule implements WindowModuleApi {
     }
 
     @ParametersAreNonnullByDefault
-    private static final class DialogPanel extends JPanel implements OkCancelService {
+    private static final class DialogPanel extends JPanel implements OkCancelControlComponent {
 
-        private final OkCancelService okCancelService;
+        private final OkCancelControlComponent okCancelControlComponent;
 
-        public DialogPanel(OkCancelService okCancelService) {
+        public DialogPanel(OkCancelControlComponent okCancelControlComponent) {
             super(new BorderLayout());
-            this.okCancelService = okCancelService;
+            this.okCancelControlComponent = okCancelControlComponent;
         }
 
         @Nonnull
@@ -321,12 +320,12 @@ public class WindowModule implements WindowModuleApi {
 
         @Override
         public void invokeOkEvent() {
-            okCancelService.invokeOkEvent();
+            okCancelControlComponent.invokeOkEvent();
         }
 
         @Override
         public void invokeCancelEvent() {
-            okCancelService.invokeCancelEvent();
+            okCancelControlComponent.invokeCancelEvent();
         }
     }
 }

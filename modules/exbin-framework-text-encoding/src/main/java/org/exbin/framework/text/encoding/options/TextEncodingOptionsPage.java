@@ -31,7 +31,7 @@ import org.exbin.framework.preferences.api.OptionsStorage;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.controller.DefaultControlController;
 
 /**
  * Text encoding options page.
@@ -66,8 +66,8 @@ public class TextEncodingOptionsPage implements DefaultOptionsPage<TextEncodingO
             addEncodingPanel.setUsedEncodings(usedEncodings);
             DefaultControlPanel controlPanel = new DefaultControlPanel(addEncodingPanel.getResourceBundle());
             final WindowHandler dialog = windowModule.createDialog(addEncodingPanel, controlPanel);
-            controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+            controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
+                if (actionType == DefaultControlController.ControlActionType.OK) {
                     encodingsUpdate.update(addEncodingPanel.getEncodings());
                 }
 

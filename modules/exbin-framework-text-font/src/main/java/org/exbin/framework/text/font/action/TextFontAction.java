@@ -27,7 +27,6 @@ import org.exbin.framework.text.font.gui.TextFontPanel;
 import org.exbin.framework.text.font.options.TextFontOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.window.api.handler.OptionsControlHandler;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
@@ -35,6 +34,7 @@ import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.text.font.TextFontHandler;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
+import org.exbin.framework.window.api.controller.OptionsControlController;
 
 /**
  * Text font action.
@@ -79,9 +79,9 @@ public class TextFontAction extends AbstractAction {
         final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
-        controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-            if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+        controlPanel.setController((OptionsControlController.ControlActionType actionType) -> {
+            if (actionType != OptionsControlController.ControlActionType.CANCEL) {
+                if (actionType == OptionsControlController.ControlActionType.SAVE) {
                     PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
                     TextFontOptions parameters = new TextFontOptions(preferencesModule.getAppPreferences());
                     parameters.setUseDefaultFont(false);

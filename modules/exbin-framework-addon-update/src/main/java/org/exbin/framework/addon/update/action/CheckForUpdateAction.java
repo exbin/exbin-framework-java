@@ -74,7 +74,7 @@ public class CheckForUpdateAction extends AbstractAction {
         final WindowHandler dialog = windowModule.createDialog(checkForUpdatePanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, checkForUpdatePanel.getResourceBundle());
-        controlPanel.setHandler(dialog::close);
+        controlPanel.setController(dialog::close);
         checkForUpdatePanel.setCheckForUpdateService(getCheckForUpdateService());
         checkForUpdatePanel.performCheckForUpdate();
         dialog.showCentered((Component) e.getSource());
@@ -145,7 +145,7 @@ public class CheckForUpdateAction extends AbstractAction {
             final WindowHandler dialog = windowModule.createDialog(checkForUpdatePanel, controlPanel);
             windowModule.addHeaderPanel(dialog.getWindow(), checkForUpdatePanel.getClass(), checkForUpdatePanel.getResourceBundle());
             windowModule.setWindowTitle(dialog, checkForUpdatePanel.getResourceBundle());
-            controlPanel.setHandler(dialog::close);
+            controlPanel.setController(dialog::close);
             checkForUpdatePanel.setCheckForUpdateService(checkForUpdateService);
             checkForUpdatePanel.setCheckUpdatesResult(checkForUpdateResult);
             dialog.showCentered(frame);

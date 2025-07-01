@@ -35,11 +35,11 @@ import org.exbin.framework.text.encoding.options.TextEncodingOptions;
 import org.exbin.framework.text.encoding.service.TextEncodingService;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
-import org.exbin.framework.window.api.handler.OptionsControlHandler;
+import org.exbin.framework.window.api.controller.DefaultControlController;
+import org.exbin.framework.window.api.controller.OptionsControlController;
 
 /**
  * Find/replace actions.
@@ -86,11 +86,11 @@ public class ManageEncodingsAction extends AbstractAction {
         final WindowHandler dialog = windowModule.createDialog(dialogPanel, optionsControlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), textEncodingPanel.getClass(), textEncodingPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, textEncodingPanel.getResourceBundle());
-        optionsControlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-            if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
+        optionsControlPanel.setController((OptionsControlController.ControlActionType actionType) -> {
+            if (actionType != OptionsControlController.ControlActionType.CANCEL) {
                 textEncodingService.setEncodings(textEncodingPanel.getEncodingList());
                 encodingsHandler.rebuildEncodings();
-                if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+                if (actionType == OptionsControlController.ControlActionType.SAVE) {
                     PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
                     TextEncodingOptions textEncodingPreferences = new TextEncodingOptions(preferencesModule.getAppPreferences());
                     textEncodingPreferences.setEncodings(textEncodingPanel.getEncodingList());
@@ -110,8 +110,8 @@ public class ManageEncodingsAction extends AbstractAction {
             windowModule.addHeaderPanel(addEncodingDialog.getWindow(), addEncodingPanel.getClass(), addEncodingResourceBundle);
             windowModule.setWindowTitle(addEncodingDialog, addEncodingResourceBundle);
 
-            encodingsControlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-                if (actionType == DefaultControlHandler.ControlActionType.OK) {
+            encodingsControlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
+                if (actionType == DefaultControlController.ControlActionType.OK) {
                     encodingsUpdate.update(addEncodingPanel.getEncodings());
                 }
 

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.controller.DefaultControlController;
 
 /**
  * Basic default control panel.
@@ -29,9 +29,9 @@ import org.exbin.framework.window.api.handler.DefaultControlHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultControlPanel extends FooterControlPanel implements DefaultControlHandler.DefaultControlService {
+public class DefaultControlPanel extends FooterControlPanel implements DefaultControlController.DefaultControlService {
 
-    private DefaultControlHandler handler;
+    private DefaultControlController controller;
     private javax.swing.JButton okButton;
     private javax.swing.JButton cancelButton;
 
@@ -50,8 +50,8 @@ public class DefaultControlPanel extends FooterControlPanel implements DefaultCo
 
         okButton.setText(resourceBundle.getString("okButton.text"));
         okButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(DefaultControlHandler.ControlActionType.OK);
+            if (controller != null) {
+                controller.controlActionPerformed(DefaultControlController.ControlActionType.OK);
             }
         });
         addButton(okButton, ButtonPosition.LAST_RIGHT);
@@ -59,30 +59,30 @@ public class DefaultControlPanel extends FooterControlPanel implements DefaultCo
         cancelButton = new javax.swing.JButton();
         cancelButton.setText(resourceBundle.getString("cancelButton.text"));
         cancelButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(DefaultControlHandler.ControlActionType.CANCEL);
+            if (controller != null) {
+                controller.controlActionPerformed(DefaultControlController.ControlActionType.CANCEL);
             }
         });
         addButton(cancelButton, ButtonPosition.LAST_RIGHT);
     }
 
-    public void setHandler(DefaultControlHandler handler) {
-        this.handler = handler;
+    public void setController(DefaultControlController controller) {
+        this.controller = controller;
     }
 
     @Override
-    public void performClick(DefaultControlHandler.ControlActionType actionType) {
-        UiUtils.doButtonClick(actionType == DefaultControlHandler.ControlActionType.OK ? okButton : cancelButton);
+    public void performClick(DefaultControlController.ControlActionType actionType) {
+        UiUtils.doButtonClick(actionType == DefaultControlController.ControlActionType.OK ? okButton : cancelButton);
     }
 
     @Override
     public void invokeOkEvent() {
-        performClick(DefaultControlHandler.ControlActionType.OK);
+        performClick(DefaultControlController.ControlActionType.OK);
     }
 
     @Override
     public void invokeCancelEvent() {
-        performClick(DefaultControlHandler.ControlActionType.CANCEL);
+        performClick(DefaultControlController.ControlActionType.CANCEL);
     }
 
     @Nonnull
@@ -91,22 +91,19 @@ public class DefaultControlPanel extends FooterControlPanel implements DefaultCo
         return Optional.of(okButton);
     }
 
-    @Nonnull
     @Override
-    public DefaultControlHandler.DefaultControlEnablementListener createEnablementListener() {
-        return (DefaultControlHandler.ControlActionType actionType, boolean enablement) -> {
-            switch (actionType) {
-                case OK: {
-                    okButton.setEnabled(enablement);
-                    break;
-                }
-                case CANCEL: {
-                    cancelButton.setEnabled(enablement);
-                    break;
-                }
-                default:
-                    throw new IllegalStateException("Illegal action type " + actionType.name());
+    public void setActionEnabled(DefaultControlController.ControlActionType actionType, boolean enablement) {
+        switch (actionType) {
+            case OK: {
+                okButton.setEnabled(enablement);
+                break;
             }
-        };
+            case CANCEL: {
+                cancelButton.setEnabled(enablement);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Illegal action type " + actionType.name());
+        }
     }
 }

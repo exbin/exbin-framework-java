@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.utils;
+package org.exbin.framework.operation.manager.controller;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
- * Simple interface for ok and cancel event invocation.
+ * Controller for undo manager control panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface OkCancelControl {
+@ParametersAreNonnullByDefault
+public interface UndoManagerControlController {
 
-    /**
-     * Invokes OK event.
-     */
-    void invokeOkEvent();
+    void controlActionPerformed(ControlActionType actionType);
 
-    /**
-     * Invokes cancel event.
-     */
-    void invokeCancelEvent();
+    @ParametersAreNonnullByDefault
+    public interface UndoManagerControlComponent extends OkCancelControlComponent {
+
+        void performClick(ControlActionType actionType);
+    }
+
+    public static enum ControlActionType {
+        REVERT_TO, CANCEL
+    }
 }

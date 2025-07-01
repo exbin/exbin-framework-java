@@ -13,37 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.window.api.handler;
+package org.exbin.framework.window.api.controller;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
- * Handler for multi-step control panel.
+ * Handler for options control panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface MultiStepControlHandler {
+public interface OptionsControlController {
 
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface MultiStepControlService extends OkCancelService {
+    public interface OptionsControlService extends OkCancelControlComponent {
 
         void performClick(ControlActionType actionType);
 
-        @Nonnull
-        MultiStepControlEnablementListener createEnablementListener();
-    }
-
-    @ParametersAreNonnullByDefault
-    public interface MultiStepControlEnablementListener {
-
-        void actionEnabled(ControlActionType actionType, boolean enablement);
+        void setActionEnabled(ControlActionType actionType, boolean enablement);
     }
 
     public static enum ControlActionType {
-        FINISH, CANCEL, PREVIOUS, NEXT
+        SAVE, APPLY_ONCE, CANCEL
     }
 }

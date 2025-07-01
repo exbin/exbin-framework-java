@@ -112,16 +112,48 @@ public interface WindowModuleApi extends Module {
     @Nonnull
     JPanel addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon);
 
+    /**
+     * Sets mode to hide header all panels.
+     *
+     * @param hide hide mode
+     */
     void setHideHeaderPanels(boolean hide);
 
+    /**
+     * Creates window around given component.
+     *
+     * @param component window component
+     * @param parent parent component
+     * @param dialogTitle dialog title
+     * @param modalityType modality type
+     * @return window handler
+     */
     @Nonnull
     WindowHandler createWindow(final JComponent component, Component parent, String dialogTitle, Dialog.ModalityType modalityType);
 
+    /**
+     * Creates dialog window around given component.
+     *
+     * @param component window component
+     * @return dialog window
+     */
     @Nonnull
     JDialog createWindow(final JComponent component);
 
+    /**
+     * Creates and shows window around given component.
+     *
+     * @param component window component
+     */
     void invokeWindow(final JComponent component);
 
+    /**
+     * Creates panel component for given component and control panel.
+     *
+     * @param mainComponent main component
+     * @param controlPanel control panel
+     * @return panel component
+     */
     @Nonnull
     JPanel createDialogPanel(JComponent mainComponent, JPanel controlPanel);
 

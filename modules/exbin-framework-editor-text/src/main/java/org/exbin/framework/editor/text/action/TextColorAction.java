@@ -28,7 +28,6 @@ import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.options.TextColorOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.preferences.api.PreferencesModuleApi;
-import org.exbin.framework.window.api.handler.OptionsControlHandler;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.file.api.FileHandler;
@@ -37,6 +36,7 @@ import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.options.api.DefaultOptionsStorage;
+import org.exbin.framework.window.api.controller.OptionsControlController;
 
 /**
  * Text color action.
@@ -104,9 +104,9 @@ public class TextColorAction extends AbstractAction {
 
         windowModule.addHeaderPanel(dialog.getWindow(), colorPanel.getClass(), colorPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, colorPanel.getResourceBundle());
-        controlPanel.setHandler((OptionsControlHandler.ControlActionType actionType) -> {
-            if (actionType != OptionsControlHandler.ControlActionType.CANCEL) {
-                if (actionType == OptionsControlHandler.ControlActionType.SAVE) {
+        controlPanel.setController((OptionsControlController.ControlActionType actionType) -> {
+            if (actionType != OptionsControlController.ControlActionType.CANCEL) {
+                if (actionType == OptionsControlController.ControlActionType.SAVE) {
                     PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
                     TextColorOptions options = new TextColorOptions(new DefaultOptionsStorage());
                     colorPanel.saveToOptions(options);

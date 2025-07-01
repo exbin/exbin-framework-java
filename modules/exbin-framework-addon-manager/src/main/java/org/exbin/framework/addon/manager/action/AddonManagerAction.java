@@ -89,6 +89,7 @@ public class AddonManagerAction extends AbstractAction {
         installedManagerTab.setAddonManager(addonManager);
         addonManagerPanel.addManagerTab(installedManagerTab);
 
+        final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         controlPanel.setController(new AddonsControlPanel.Controller() {
             @Override
             public void performOperation() {
@@ -101,12 +102,15 @@ public class AddonManagerAction extends AbstractAction {
                     throw new IllegalStateException();
                 }
             }
+
+            @Override
+            public void controlActionPerformed() {
+                dialog.close();
+            }
         });
 
-        final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, addonManagerPanel.getResourceBundle());
-        controlPanel.setHandler(dialog::close);
         dialog.showCentered((Component) e.getSource());
         dialog.dispose();
     }

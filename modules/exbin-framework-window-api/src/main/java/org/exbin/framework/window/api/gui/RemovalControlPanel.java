@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.window.api.handler.RemovalControlHandler;
+import org.exbin.framework.window.api.controller.RemovalControlController;
 
 /**
  * Basic control panel with support for removal.
@@ -29,9 +29,9 @@ import org.exbin.framework.window.api.handler.RemovalControlHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class RemovalControlPanel extends FooterControlPanel implements RemovalControlHandler.RemovalControlService {
+public class RemovalControlPanel extends FooterControlPanel implements RemovalControlController.RemovalControlService {
 
-    private RemovalControlHandler handler;
+    private RemovalControlController controller;
     private javax.swing.JButton okButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton removeButton;
@@ -51,8 +51,8 @@ public class RemovalControlPanel extends FooterControlPanel implements RemovalCo
 
         okButton.setText(resourceBundle.getString("okButton.text"));
         okButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(RemovalControlHandler.ControlActionType.OK);
+            if (controller != null) {
+                controller.controlActionPerformed(RemovalControlController.ControlActionType.OK);
             }
         });
         addButton(okButton, ButtonPosition.LAST_RIGHT);
@@ -60,8 +60,8 @@ public class RemovalControlPanel extends FooterControlPanel implements RemovalCo
         cancelButton = new javax.swing.JButton();
         cancelButton.setText(resourceBundle.getString("cancelButton.text"));
         cancelButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(RemovalControlHandler.ControlActionType.CANCEL);
+            if (controller != null) {
+                controller.controlActionPerformed(RemovalControlController.ControlActionType.CANCEL);
             }
         });
         addButton(cancelButton, ButtonPosition.LAST_RIGHT);
@@ -69,19 +69,19 @@ public class RemovalControlPanel extends FooterControlPanel implements RemovalCo
         removeButton = new javax.swing.JButton();
         removeButton.setText(resourceBundle.getString("removeButton.text"));
         removeButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(RemovalControlHandler.ControlActionType.REMOVE);
+            if (controller != null) {
+                controller.controlActionPerformed(RemovalControlController.ControlActionType.REMOVE);
             }
         });
         addButton(removeButton, ButtonPosition.LAST_LEFT);
     }
 
-    public void setHandler(RemovalControlHandler handler) {
-        this.handler = handler;
+    public void setController(RemovalControlController controller) {
+        this.controller = controller;
     }
 
     @Override
-    public void performClick(RemovalControlHandler.ControlActionType actionType) {
+    public void performClick(RemovalControlController.ControlActionType actionType) {
         switch (actionType) {
             case OK: {
                 UiUtils.doButtonClick(okButton);
@@ -102,12 +102,12 @@ public class RemovalControlPanel extends FooterControlPanel implements RemovalCo
 
     @Override
     public void invokeOkEvent() {
-        performClick(RemovalControlHandler.ControlActionType.OK);
+        performClick(RemovalControlController.ControlActionType.OK);
     }
 
     @Override
     public void invokeCancelEvent() {
-        performClick(RemovalControlHandler.ControlActionType.CANCEL);
+        performClick(RemovalControlController.ControlActionType.CANCEL);
     }
 
     @Nonnull
@@ -116,26 +116,23 @@ public class RemovalControlPanel extends FooterControlPanel implements RemovalCo
         return Optional.of(okButton);
     }
 
-    @Nonnull
     @Override
-    public RemovalControlHandler.RemovalControlEnablementListener createEnablementListener() {
-        return (RemovalControlHandler.ControlActionType actionType, boolean enablement) -> {
-            switch (actionType) {
-                case OK: {
-                    okButton.setEnabled(enablement);
-                    break;
-                }
-                case CANCEL: {
-                    cancelButton.setEnabled(enablement);
-                    break;
-                }
-                case REMOVE: {
-                    removeButton.setEnabled(enablement);
-                    break;
-                }
-                default:
-                    throw new IllegalStateException("Illegal action type " + actionType.name());
+    public void setActionEnabled(RemovalControlController.ControlActionType actionType, boolean enablement) {
+        switch (actionType) {
+            case OK: {
+                okButton.setEnabled(enablement);
+                break;
             }
-        };
+            case CANCEL: {
+                cancelButton.setEnabled(enablement);
+                break;
+            }
+            case REMOVE: {
+                removeButton.setEnabled(enablement);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Illegal action type " + actionType.name());
+        }
     }
 }

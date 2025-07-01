@@ -34,7 +34,7 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.controller.DefaultControlController;
 
 /**
  * New project action.
@@ -74,8 +74,8 @@ public class NewProjectAction extends AbstractAction {
 
         ProjectTreeModel projectTreeModel = new ProjectTreeModel(projectModule.getProjectCategories());
         newProjectPanel.setCategoryModel(projectTreeModel);
-        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+        controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
+            if (actionType == DefaultControlController.ControlActionType.OK) {
                 // projectModule.createNewProject(projectTreeModel.getSelectedType());
                 throw new UnsupportedOperationException("Not supported yet.");
             }

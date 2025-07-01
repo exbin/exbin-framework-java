@@ -13,37 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.window.api.handler;
+package org.exbin.framework.window.api.controller;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
- * Handler for default control panel.
+ * Close control controller.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DefaultControlHandler {
+public interface CloseControlController {
 
-    void controlActionPerformed(ControlActionType actionType);
+    void controlActionPerformed();
 
-    @ParametersAreNonnullByDefault
-    public interface DefaultControlService extends OkCancelService {
+    public interface CloseControlComponent extends OkCancelControlComponent {
 
-        void performClick(ControlActionType actionType);
+        void performCloseClick();
 
-        @Nonnull
-        DefaultControlEnablementListener createEnablementListener();
-    }
-
-    @ParametersAreNonnullByDefault
-    public interface DefaultControlEnablementListener {
-
-        void actionEnabled(ControlActionType actionType, boolean enablement);
-    }
-
-    public static enum ControlActionType {
-        OK, CANCEL
+        void setCloseActionEnabled(boolean enablement);
     }
 }

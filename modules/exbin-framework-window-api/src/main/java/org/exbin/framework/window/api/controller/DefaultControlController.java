@@ -13,28 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.manager.handler;
+package org.exbin.framework.window.api.controller;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.window.api.handler.OkCancelService;
+import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
- * Handler for undo manager control panel.
+ * Handler for default control panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UndoManagerControlHandler {
+public interface DefaultControlController {
 
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface UndoManagerControlService extends OkCancelService {
+    public interface DefaultControlService extends OkCancelControlComponent {
 
         void performClick(ControlActionType actionType);
+
+        void setActionEnabled(ControlActionType actionType, boolean enablement);
     }
 
     public static enum ControlActionType {
-        REVERT_TO, CANCEL
+        OK, CANCEL
     }
 }

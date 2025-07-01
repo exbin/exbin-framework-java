@@ -62,7 +62,7 @@ public class AboutAction extends AbstractAction {
         CloseControlPanel controlPanel = new CloseControlPanel();
         final WindowHandler aboutDialog = windowModule.createDialog(aboutPanel, controlPanel);
         ((JDialog) aboutDialog.getWindow()).setTitle(resourceBundle.getString("aboutAction.dialogTitle"));
-        controlPanel.setHandler(aboutDialog::close);
+        controlPanel.setController(aboutDialog::close);
         aboutDialog.showCentered((Component) e.getSource());
         aboutDialog.dispose();
     }

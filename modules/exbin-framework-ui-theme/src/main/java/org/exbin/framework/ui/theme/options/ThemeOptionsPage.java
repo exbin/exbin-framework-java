@@ -216,7 +216,7 @@ public class ThemeOptionsPage implements DefaultOptionsPage<ThemeOptions> {
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, optionsHandler.createOptionsComponent(), controlPanel);
             ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString("theme.optionsWindow.title"));
-            controlPanel.setHandler((actionType) -> {
+            controlPanel.setController((actionType) -> {
                 switch (actionType) {
                     case OK: {
                         themeOptionsHandlers.put(lafProvider.getLafId(), finalOptionsHandler);

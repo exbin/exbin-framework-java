@@ -30,8 +30,7 @@ import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.window.api.handler.CloseControlHandler;
-import org.exbin.framework.window.api.handler.CloseControlHandler.CloseControlEnablementListener;
+import org.exbin.framework.window.api.controller.CloseControlController;
 
 /**
  * Control panel for addons manager.
@@ -39,10 +38,9 @@ import org.exbin.framework.window.api.handler.CloseControlHandler.CloseControlEn
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonsControlPanel extends javax.swing.JPanel implements CloseControlHandler.CloseControlService {
+public class AddonsControlPanel extends javax.swing.JPanel implements CloseControlController.CloseControlComponent {
 
     private final java.util.ResourceBundle resourceBundle;
-    private CloseControlHandler handler;
     private Controller controller;
     private int availableUpdates = 0;
     private int selectedForOperation = 0;
@@ -128,10 +126,6 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                 operationLabel.setText(null);
             }
         }
-    }
-
-    public void setHandler(CloseControlHandler handler) {
-        this.handler = handler;
     }
 
     public void setController(Controller controller) {
@@ -247,8 +241,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        if (handler != null) {
-            handler.controlActionPerformed();
+        if (controller != null) {
+            controller.controlActionPerformed();
         }
     }//GEN-LAST:event_closeButtonActionPerformed
 
@@ -290,15 +284,12 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         performCloseClick();
     }
 
-    @Nonnull
     @Override
-    public CloseControlEnablementListener createEnablementListener() {
-        return (boolean enablement) -> {
-            closeButton.setEnabled(enablement);
-        };
+    public void setCloseActionEnabled(boolean enablement) {
+        closeButton.setEnabled(enablement);
     }
 
-    public interface Controller {
+    public interface Controller extends CloseControlController {
 
         void performOperation();
     }

@@ -26,13 +26,13 @@ import org.exbin.framework.operation.manager.OperationManagerModule;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.operation.manager.gui.UndoManagerControlPanel;
 import org.exbin.framework.operation.manager.gui.UndoManagerPanel;
-import org.exbin.framework.operation.manager.handler.UndoManagerControlHandler;
 import org.exbin.framework.operation.undo.api.UndoRedo;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.operation.manager.controller.UndoManagerControlController;
 
 /**
  * Undo manager action.
@@ -59,7 +59,7 @@ public class UndoManagerAction extends AbstractAction implements ActionContextCh
         UndoManagerControlPanel undoManagerControlPanel = new UndoManagerControlPanel();
         final WindowHandler windowHandler = windowModule.createDialog(undoManagerPanel, undoManagerControlPanel);
         windowModule.setWindowTitle(windowHandler, undoManagerPanel.getResourceBundle());
-        undoManagerControlPanel.setHandler((UndoManagerControlHandler.ControlActionType actionType) -> {
+        undoManagerControlPanel.setController((UndoManagerControlController.ControlActionType actionType) -> {
             windowHandler.close();
             windowHandler.dispose();
         });

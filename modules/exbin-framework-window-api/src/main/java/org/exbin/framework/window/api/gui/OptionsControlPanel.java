@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.window.api.handler.OptionsControlHandler;
+import org.exbin.framework.window.api.controller.OptionsControlController;
 
 /**
  * Default control panel for options dialogs.
@@ -29,9 +29,9 @@ import org.exbin.framework.window.api.handler.OptionsControlHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OptionsControlPanel extends FooterControlPanel implements OptionsControlHandler.OptionsControlService {
+public class OptionsControlPanel extends FooterControlPanel implements OptionsControlController.OptionsControlService {
 
-    private OptionsControlHandler handler;
+    private OptionsControlController controller;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton applyOnceButton;
@@ -51,8 +51,8 @@ public class OptionsControlPanel extends FooterControlPanel implements OptionsCo
 
         saveButton.setText(resourceBundle.getString("saveButton.text"));
         saveButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(OptionsControlHandler.ControlActionType.SAVE);
+            if (controller != null) {
+                controller.controlActionPerformed(OptionsControlController.ControlActionType.SAVE);
             }
         });
         addButton(saveButton, ButtonPosition.LAST_RIGHT);
@@ -60,8 +60,8 @@ public class OptionsControlPanel extends FooterControlPanel implements OptionsCo
         cancelButton = new javax.swing.JButton();
         cancelButton.setText(resourceBundle.getString("cancelButton.text"));
         cancelButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(OptionsControlHandler.ControlActionType.CANCEL);
+            if (controller != null) {
+                controller.controlActionPerformed(OptionsControlController.ControlActionType.CANCEL);
             }
         });
         addButton(cancelButton, ButtonPosition.LAST_RIGHT);
@@ -69,19 +69,19 @@ public class OptionsControlPanel extends FooterControlPanel implements OptionsCo
         applyOnceButton = new javax.swing.JButton();
         applyOnceButton.setText(resourceBundle.getString("applyOnceButton.text"));
         applyOnceButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(OptionsControlHandler.ControlActionType.APPLY_ONCE);
+            if (controller != null) {
+                controller.controlActionPerformed(OptionsControlController.ControlActionType.APPLY_ONCE);
             }
         });
         addButton(applyOnceButton, ButtonPosition.LAST_LEFT);
     }
 
-    public void setHandler(OptionsControlHandler handler) {
-        this.handler = handler;
+    public void setController(OptionsControlController controller) {
+        this.controller = controller;
     }
 
     @Override
-    public void performClick(OptionsControlHandler.ControlActionType actionType) {
+    public void performClick(OptionsControlController.ControlActionType actionType) {
         switch (actionType) {
             case SAVE: {
                 UiUtils.doButtonClick(saveButton);
@@ -102,12 +102,12 @@ public class OptionsControlPanel extends FooterControlPanel implements OptionsCo
 
     @Override
     public void invokeOkEvent() {
-        performClick(OptionsControlHandler.ControlActionType.SAVE);
+        performClick(OptionsControlController.ControlActionType.SAVE);
     }
 
     @Override
     public void invokeCancelEvent() {
-        performClick(OptionsControlHandler.ControlActionType.CANCEL);
+        performClick(OptionsControlController.ControlActionType.CANCEL);
     }
 
     @Nonnull
@@ -116,26 +116,23 @@ public class OptionsControlPanel extends FooterControlPanel implements OptionsCo
         return Optional.of(saveButton);
     }
 
-    @Nonnull
     @Override
-    public OptionsControlHandler.OptionsControlEnablementListener createEnablementListener() {
-        return (OptionsControlHandler.ControlActionType actionType, boolean enablement) -> {
-            switch (actionType) {
-                case SAVE: {
-                    saveButton.setEnabled(enablement);
-                    break;
-                }
-                case CANCEL: {
-                    cancelButton.setEnabled(enablement);
-                    break;
-                }
-                case APPLY_ONCE: {
-                    applyOnceButton.setEnabled(enablement);
-                    break;
-                }
-                default:
-                    throw new IllegalStateException("Illegal action type " + actionType.name());
+    public void setActionEnabled(OptionsControlController.ControlActionType actionType, boolean enablement) {
+        switch (actionType) {
+            case SAVE: {
+                saveButton.setEnabled(enablement);
+                break;
             }
-        };
+            case CANCEL: {
+                cancelButton.setEnabled(enablement);
+                break;
+            }
+            case APPLY_ONCE: {
+                applyOnceButton.setEnabled(enablement);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Illegal action type " + actionType.name());
+        }
     }
 }

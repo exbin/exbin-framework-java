@@ -78,7 +78,7 @@ public class OptionsAction extends AbstractAction {
                 dialog = windowModule.createDialog(optionsListPanel, controlPanel);
                 dialog.getWindow().setSize(780, 500);
                 windowModule.setWindowTitle(dialog, optionsListPanel.getResourceBundle());
-                controlPanel.setHandler((actionType) -> {
+                controlPanel.setController((actionType) -> {
                     switch (actionType) {
                         case SAVE: {
                             optionsListPanel.saveAndApplyAll();
@@ -106,7 +106,7 @@ public class OptionsAction extends AbstractAction {
                 dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
                 dialog.getWindow().setSize(780, 500);
                 windowModule.setWindowTitle(dialog, optionsTreePanel.getResourceBundle());
-                controlPanel.setHandler((actionType) -> {
+                controlPanel.setController((actionType) -> {
                     switch (actionType) {
                         case SAVE: {
                             optionsTreePanel.saveAndApplyAll();

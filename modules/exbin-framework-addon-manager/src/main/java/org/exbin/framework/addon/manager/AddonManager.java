@@ -54,7 +54,7 @@ import org.exbin.framework.basic.ModuleFileLocation;
 import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.window.api.gui.MultiStepControlPanel;
-import org.exbin.framework.window.api.handler.MultiStepControlHandler;
+import org.exbin.framework.window.api.controller.MultiStepControlController;
 
 /**
  * Addon manager.
@@ -306,14 +306,13 @@ public class AddonManager {
         final WindowHandler dialog = windowModule.createDialog(operationPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), operationPanel.getClass(), operationPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
-        MultiStepControlHandler.MultiStepControlEnablementListener enablementListener = controlPanel.createEnablementListener();
-        controlPanel.setHandler(new MultiStepControlHandler() {
+        controlPanel.setController(new MultiStepControlController() {
 
             private AddonOperationPanel.Step step = AddonOperationPanel.Step.OVERVIEW;
             private DownloadOperation downloadOperation = null;
 
             @Override
-            public void controlActionPerformed(MultiStepControlHandler.ControlActionType actionType) {
+            public void controlActionPerformed(MultiStepControlController.ControlActionType actionType) {
                 switch (actionType) {
                     case CANCEL:
                         if (downloadOperation != null) {
@@ -332,11 +331,11 @@ public class AddonManager {
                                     panel.setController(new AddonOperationLicensePanel.Controller() {
                                         @Override
                                         public void approvalStateChanged(int toApprove) {
-                                            enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, toApprove == 0);
+                                            controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, toApprove == 0);
                                         }
                                     });
                                     panel.setLicenseRecords(licenseRecords);
-                                    enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
+                                    controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
                                     break;
                                 } // no break
                             case LICENSE:
@@ -348,9 +347,9 @@ public class AddonManager {
                             case DOWNLOAD:
                                 step = AddonOperationPanel.Step.SUCCESS;
                                 operationPanel.goToStep(step);
-                                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
-                                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.CANCEL, false);
-                                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.FINISH, true);
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.CANCEL, false);
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.FINISH, true);
                                 break;
                             default:
                                 throw new AssertionError();
@@ -398,16 +397,16 @@ public class AddonManager {
                     }
 
                 });
-                enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, false);
+                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
                 Thread thread = new Thread(() -> {
                     downloadOperation.run();
-                    enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);
+                    controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, true);
                 });
                 thread.start();
             }
         });
-        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.NEXT, true);
-        enablementListener.actionEnabled(MultiStepControlHandler.ControlActionType.FINISH, false);
+        controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, true);
+        controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.FINISH, false);
         dialog.showCentered(parentComponent);
         dialog.dispose();
     }

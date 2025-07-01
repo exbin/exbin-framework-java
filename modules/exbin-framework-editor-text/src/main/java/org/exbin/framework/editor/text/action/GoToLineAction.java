@@ -30,9 +30,9 @@ import org.exbin.framework.editor.text.gui.TextGoToPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.controller.DefaultControlController;
 
 /**
  * Go to line action.
@@ -81,8 +81,8 @@ public class GoToLineAction extends AbstractAction {
         final WindowHandler dialog = windowModule.createDialog(goToPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), goToPanel.getClass(), goToPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, goToPanel.getResourceBundle());
-        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+        controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
+            if (actionType == DefaultControlController.ControlActionType.OK) {
                 textPanel.gotoLine(goToPanel.getLine());
                 textPanel.gotoRelative(goToPanel.getCharPos());
             }

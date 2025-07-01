@@ -32,11 +32,11 @@ import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.editor.text.SelectionRange;
 import org.exbin.framework.editor.text.gui.EditSelectionPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
-import org.exbin.framework.window.api.handler.DefaultControlHandler.ControlActionType;
+import org.exbin.framework.window.api.controller.DefaultControlController.ControlActionType;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.window.api.controller.DefaultControlController;
 
 /**
  * Edit selection action.
@@ -85,7 +85,7 @@ public class EditSelectionAction extends AbstractAction {
         final WindowHandler dialog = windowModule.createDialog(component, Dialog.ModalityType.APPLICATION_MODAL, editSelectionPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), editSelectionPanel.getClass(), editSelectionPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, editSelectionPanel.getResourceBundle());
-        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
+        controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
             if (actionType == ControlActionType.OK) {
                 editSelectionPanel.acceptInput();
                 Optional<SelectionRange> selectionRange = editSelectionPanel.getSelectionRange();

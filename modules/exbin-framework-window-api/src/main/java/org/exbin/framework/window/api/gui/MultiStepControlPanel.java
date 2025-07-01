@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.window.api.handler.MultiStepControlHandler;
+import org.exbin.framework.window.api.controller.MultiStepControlController;
 
 /**
  * Multi-step control panel for options dialogs.
@@ -29,9 +29,9 @@ import org.exbin.framework.window.api.handler.MultiStepControlHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MultiStepControlPanel extends FooterControlPanel implements MultiStepControlHandler.MultiStepControlService {
+public class MultiStepControlPanel extends FooterControlPanel implements MultiStepControlController.MultiStepControlService {
 
-    private MultiStepControlHandler handler;
+    private MultiStepControlController controller;
     private javax.swing.JButton finishButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton nextButton;
@@ -52,8 +52,8 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
 
         finishButton.setText(resourceBundle.getString("finishButton.text"));
         finishButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(MultiStepControlHandler.ControlActionType.FINISH);
+            if (controller != null) {
+                controller.controlActionPerformed(MultiStepControlController.ControlActionType.FINISH);
             }
         });
         addButton(finishButton, ButtonPosition.LAST_RIGHT);
@@ -61,8 +61,8 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
         cancelButton = new javax.swing.JButton();
         cancelButton.setText(resourceBundle.getString("cancelButton.text"));
         cancelButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(MultiStepControlHandler.ControlActionType.CANCEL);
+            if (controller != null) {
+                controller.controlActionPerformed(MultiStepControlController.ControlActionType.CANCEL);
             }
         });
         addButton(cancelButton, ButtonPosition.LAST_RIGHT);
@@ -70,8 +70,8 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
         previousButton = new javax.swing.JButton();
         previousButton.setText(resourceBundle.getString("previousButton.text"));
         previousButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(MultiStepControlHandler.ControlActionType.PREVIOUS);
+            if (controller != null) {
+                controller.controlActionPerformed(MultiStepControlController.ControlActionType.PREVIOUS);
             }
         });
         addButton(nextButton, ButtonPosition.FIRST_RIGHT);
@@ -79,20 +79,20 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
         nextButton = new javax.swing.JButton();
         nextButton.setText(resourceBundle.getString("applyOnceButton.text"));
         nextButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed(MultiStepControlHandler.ControlActionType.NEXT);
+            if (controller != null) {
+                controller.controlActionPerformed(MultiStepControlController.ControlActionType.NEXT);
             }
         });
         addButton(nextButton, ButtonPosition.FIRST_RIGHT);
 
     }
 
-    public void setHandler(MultiStepControlHandler handler) {
-        this.handler = handler;
+    public void setController(MultiStepControlController controller) {
+        this.controller = controller;
     }
 
     @Override
-    public void performClick(MultiStepControlHandler.ControlActionType actionType) {
+    public void performClick(MultiStepControlController.ControlActionType actionType) {
         switch (actionType) {
             case FINISH: {
                 UiUtils.doButtonClick(finishButton);
@@ -117,12 +117,12 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
 
     @Override
     public void invokeOkEvent() {
-        performClick(MultiStepControlHandler.ControlActionType.FINISH);
+        performClick(MultiStepControlController.ControlActionType.FINISH);
     }
 
     @Override
     public void invokeCancelEvent() {
-        performClick(MultiStepControlHandler.ControlActionType.CANCEL);
+        performClick(MultiStepControlController.ControlActionType.CANCEL);
     }
 
     @Nonnull
@@ -131,30 +131,27 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
         return Optional.of(finishButton);
     }
 
-    @Nonnull
     @Override
-    public MultiStepControlHandler.MultiStepControlEnablementListener createEnablementListener() {
-        return (MultiStepControlHandler.ControlActionType actionType, boolean enablement) -> {
-            switch (actionType) {
-                case FINISH: {
-                    finishButton.setEnabled(enablement);
-                    break;
-                }
-                case CANCEL: {
-                    cancelButton.setEnabled(enablement);
-                    break;
-                }
-                case NEXT: {
-                    nextButton.setEnabled(enablement);
-                    break;
-                }
-                case PREVIOUS: {
-                    previousButton.setEnabled(enablement);
-                    break;
-                }
-                default:
-                    throw new IllegalStateException("Illegal action type " + actionType.name());
+    public void setActionEnabled(MultiStepControlController.ControlActionType actionType, boolean enablement) {
+        switch (actionType) {
+            case FINISH: {
+                finishButton.setEnabled(enablement);
+                break;
             }
-        };
+            case CANCEL: {
+                cancelButton.setEnabled(enablement);
+                break;
+            }
+            case NEXT: {
+                nextButton.setEnabled(enablement);
+                break;
+            }
+            case PREVIOUS: {
+                previousButton.setEnabled(enablement);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Illegal action type " + actionType.name());
+        }
     }
 }

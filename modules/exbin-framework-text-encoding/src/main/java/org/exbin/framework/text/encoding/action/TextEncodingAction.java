@@ -32,7 +32,7 @@ import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.text.encoding.TextEncodingHandler;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
+import org.exbin.framework.window.api.controller.DefaultControlController;
 
 /**
  * Text encoding action.
@@ -74,8 +74,8 @@ public class TextEncodingAction extends AbstractAction {
         final WindowHandler dialog = windowModule.createDialog(encodingPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), encodingPanel.getClass(), encodingPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, encodingPanel.getResourceBundle());
-        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-            if (actionType != DefaultControlHandler.ControlActionType.CANCEL) {
+        controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
+            if (actionType != DefaultControlController.ControlActionType.CANCEL) {
                 Optional<String> encoding = encodingPanel.getCurrentEncoding();
                 if (encoding.isPresent()) {
                     textEncodingHandler.setCharset(Charset.forName(encoding.get()));

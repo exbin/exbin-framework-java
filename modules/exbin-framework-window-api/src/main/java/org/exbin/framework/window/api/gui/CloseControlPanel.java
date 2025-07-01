@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.window.api.handler.CloseControlHandler;
+import org.exbin.framework.window.api.controller.CloseControlController;
 
 /**
  * Basic close control panel.
@@ -29,9 +29,9 @@ import org.exbin.framework.window.api.handler.CloseControlHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseControlPanel extends FooterControlPanel implements CloseControlHandler.CloseControlService {
+public class CloseControlPanel extends FooterControlPanel implements CloseControlController.CloseControlComponent {
 
-    private CloseControlHandler handler;
+    private CloseControlController controller;
     private javax.swing.JButton closeButton;
 
     public CloseControlPanel() {
@@ -49,15 +49,15 @@ public class CloseControlPanel extends FooterControlPanel implements CloseContro
 
         closeButton.setText(resourceBundle.getString("closeButton.text"));
         closeButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (handler != null) {
-                handler.controlActionPerformed();
+            if (controller != null) {
+                controller.controlActionPerformed();
             }
         });
         addButton(closeButton, ButtonPosition.LAST_RIGHT);
     }
 
-    public void setHandler(CloseControlHandler handler) {
-        this.handler = handler;
+    public void setController(CloseControlController controller) {
+        this.controller = controller;
     }
 
     @Override
@@ -81,9 +81,8 @@ public class CloseControlPanel extends FooterControlPanel implements CloseContro
         return Optional.of(closeButton);
     }
 
-    @Nonnull
     @Override
-    public CloseControlHandler.CloseControlEnablementListener createEnablementListener() {
-        return closeButton::setEnabled;
+    public void setCloseActionEnabled(boolean enablement) {
+        closeButton.setEnabled(enablement);
     }
 }

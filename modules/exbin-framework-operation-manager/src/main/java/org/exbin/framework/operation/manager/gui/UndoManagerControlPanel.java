@@ -20,12 +20,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
 import org.exbin.framework.App;
-import org.exbin.framework.operation.manager.handler.UndoManagerControlHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.utils.UtilsModule;
+import org.exbin.framework.operation.manager.controller.UndoManagerControlController;
 
 /**
  * Undo management control panel.
@@ -33,10 +33,10 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoManagerControlHandler.UndoManagerControlService {
+public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoManagerControlController.UndoManagerControlComponent {
 
     private final java.util.ResourceBundle resourceBundle;
-    private UndoManagerControlHandler handler;
+    private UndoManagerControlController controller;
 
     public UndoManagerControlPanel() {
         this(App.getModule(LanguageModuleApi.class).getBundle(UndoManagerControlPanel.class));
@@ -53,8 +53,8 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
     private void init() {
     }
 
-    public void setHandler(UndoManagerControlHandler handler) {
-        this.handler = handler;
+    public void setController(UndoManagerControlController controller) {
+        this.controller = controller;
     }
 
     /**
@@ -107,19 +107,19 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
     }// </editor-fold>//GEN-END:initComponents
 
     private void revertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revertButtonActionPerformed
-        if (handler != null) {
-            handler.controlActionPerformed(UndoManagerControlHandler.ControlActionType.REVERT_TO);
+        if (controller != null) {
+            controller.controlActionPerformed(UndoManagerControlController.ControlActionType.REVERT_TO);
         }
     }//GEN-LAST:event_revertButtonActionPerformed
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        if (handler != null) {
-            handler.controlActionPerformed(UndoManagerControlHandler.ControlActionType.CANCEL);
+        if (controller != null) {
+            controller.controlActionPerformed(UndoManagerControlController.ControlActionType.CANCEL);
         }
     }//GEN-LAST:event_closeButtonActionPerformed
 
     @Override
-    public void performClick(UndoManagerControlHandler.ControlActionType actionType) {
+    public void performClick(UndoManagerControlController.ControlActionType actionType) {
         switch (actionType) {
             case REVERT_TO: {
                 UiUtils.doButtonClick(revertButton);
@@ -139,12 +139,12 @@ public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoM
 
     @Override
     public void invokeOkEvent() {
-        performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
+        performClick(UndoManagerControlController.ControlActionType.CANCEL);
     }
 
     @Override
     public void invokeCancelEvent() {
-        performClick(UndoManagerControlHandler.ControlActionType.CANCEL);
+        performClick(UndoManagerControlController.ControlActionType.CANCEL);
     }
 
     /**

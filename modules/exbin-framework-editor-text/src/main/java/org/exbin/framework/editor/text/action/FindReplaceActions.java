@@ -31,11 +31,11 @@ import org.exbin.framework.editor.text.gui.FindTextPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.window.api.handler.DefaultControlHandler;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.controller.DefaultControlController;
 
 /**
  * Find/replace actions.
@@ -62,8 +62,8 @@ public class FindReplaceActions {
         findPanel.setSelected();
         DefaultControlPanel controlPanel = new DefaultControlPanel(findPanel.getResourceBundle());
         final WindowHandler dialog = windowModule.createDialog(findPanel, controlPanel);
-        controlPanel.setHandler((DefaultControlHandler.ControlActionType actionType) -> {
-            if (actionType == DefaultControlHandler.ControlActionType.OK) {
+        controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
+            if (actionType == DefaultControlController.ControlActionType.OK) {
                 TextSearchService.FindTextParameters findTextParameters = new TextSearchService.FindTextParameters();
                 findTextParameters.setFindText(findPanel.getFindText());
                 findTextParameters.setSearchFromStart(findPanel.isSearchFromStart());
