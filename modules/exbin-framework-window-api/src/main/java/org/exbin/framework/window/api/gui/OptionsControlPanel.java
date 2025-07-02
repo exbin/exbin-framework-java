@@ -29,7 +29,7 @@ import org.exbin.framework.window.api.controller.OptionsControlController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OptionsControlPanel extends FooterControlPanel implements OptionsControlController.OptionsControlService {
+public class OptionsControlPanel extends FooterControlPanel implements OptionsControlController.OptionsControlComponent {
 
     private OptionsControlController controller;
     private javax.swing.JButton saveButton;

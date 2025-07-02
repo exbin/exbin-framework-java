@@ -29,7 +29,7 @@ import org.exbin.framework.window.api.controller.MultiStepControlController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MultiStepControlPanel extends FooterControlPanel implements MultiStepControlController.MultiStepControlService {
+public class MultiStepControlPanel extends FooterControlPanel implements MultiStepControlController.MultiStepControlComponent {
 
     private MultiStepControlController controller;
     private javax.swing.JButton finishButton;

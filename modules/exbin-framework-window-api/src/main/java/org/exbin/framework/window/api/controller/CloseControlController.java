@@ -19,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
- * Close control controller.
+ * Controller for close control panel.
  *
  * @author ExBin Project (https://exbin.org)
  */

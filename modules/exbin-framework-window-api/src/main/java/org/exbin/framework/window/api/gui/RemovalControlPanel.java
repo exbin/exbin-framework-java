@@ -29,7 +29,7 @@ import org.exbin.framework.window.api.controller.RemovalControlController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class RemovalControlPanel extends FooterControlPanel implements RemovalControlController.RemovalControlService {
+public class RemovalControlPanel extends FooterControlPanel implements RemovalControlController.RemovalControlComponent {
 
     private RemovalControlController controller;
     private javax.swing.JButton okButton;

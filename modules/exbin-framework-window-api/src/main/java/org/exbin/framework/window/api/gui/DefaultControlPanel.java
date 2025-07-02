@@ -29,7 +29,7 @@ import org.exbin.framework.window.api.controller.DefaultControlController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultControlPanel extends FooterControlPanel implements DefaultControlController.DefaultControlService {
+public class DefaultControlPanel extends FooterControlPanel implements DefaultControlController.DefaultControlComponent {
 
     private DefaultControlController controller;
     private javax.swing.JButton okButton;

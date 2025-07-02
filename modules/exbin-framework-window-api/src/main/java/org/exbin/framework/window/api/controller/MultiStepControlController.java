@@ -19,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
- * Handler for multi-step control panel.
+ * Controller for multi-step control panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -29,7 +29,7 @@ public interface MultiStepControlController {
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface MultiStepControlService extends OkCancelControlComponent {
+    public interface MultiStepControlComponent extends OkCancelControlComponent {
 
         void performClick(ControlActionType actionType);
 

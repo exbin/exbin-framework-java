@@ -19,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
- * Handler for control panel with support for remove action.
+ * Controller for control panel with support for remove action.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -29,7 +29,7 @@ public interface RemovalControlController {
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface RemovalControlService extends OkCancelControlComponent {
+    public interface RemovalControlComponent extends OkCancelControlComponent {
 
         void performClick(ControlActionType actionType);
 

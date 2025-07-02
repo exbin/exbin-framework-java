@@ -19,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
- * Handler for options control panel.
+ * Controller for options control panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -29,7 +29,7 @@ public interface OptionsControlController {
     void controlActionPerformed(ControlActionType actionType);
 
     @ParametersAreNonnullByDefault
-    public interface OptionsControlService extends OkCancelControlComponent {
+    public interface OptionsControlComponent extends OkCancelControlComponent {
 
         void performClick(ControlActionType actionType);
 
