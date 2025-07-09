@@ -78,7 +78,7 @@ import org.exbin.framework.text.font.action.TextFontAction;
 import org.exbin.framework.text.font.options.TextFontOptionsPage;
 import org.exbin.framework.text.font.service.TextFontService;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
-import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.framework.utils.UiUtils;
 
 /**

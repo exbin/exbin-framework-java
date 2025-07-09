@@ -20,8 +20,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsUpdateListener;
-import org.exbin.framework.utils.ClipboardActionsController;
+import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
+import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
 
 /**
  * Popup handler for text component.
@@ -29,7 +29,7 @@ import org.exbin.framework.utils.ClipboardActionsController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextComponentPopupHandler implements ClipboardActionsController {
+public class TextComponentPopupHandler implements TextClipboardSupported {
 
     private final JTextComponent txtComp;
 
@@ -70,8 +70,13 @@ public class TextComponentPopupHandler implements ClipboardActionsController {
     }
 
     @Override
-    public boolean isSelection() {
+    public boolean hasSelection() {
         return txtComp.isEnabled() && txtComp.getSelectionStart() != txtComp.getSelectionEnd();
+    }
+
+    @Override
+    public boolean hasDataToCopy() {
+        return hasSelection();
     }
 
     @Override
@@ -85,7 +90,7 @@ public class TextComponentPopupHandler implements ClipboardActionsController {
     }
 
     @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+    public void setUpdateListener(ClipboardStateListener updateListener) {
         // Ignore
     }
 

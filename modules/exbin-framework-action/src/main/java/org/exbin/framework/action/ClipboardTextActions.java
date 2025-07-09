@@ -40,7 +40,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.TextAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.ClipboardUtils;
 

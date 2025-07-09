@@ -26,11 +26,12 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.SelectionSupported;
+import org.exbin.framework.action.api.clipboard.ClipboardSupported;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
- * Clipboard select all action.
+ * Select all action.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -39,7 +40,7 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     public static final String ACTION_ID = "selectAllAction";
 
-    private ClipboardActionsController clipboardActionsHandler;
+    private SelectionSupported selectionSupport;
 
     public SelectAllAction() {
     }
@@ -53,26 +54,25 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (clipboardActionsHandler != null) {
-            clipboardActionsHandler.performSelectAll();
+        if (selectionSupport != null) {
+            selectionSupport.performSelectAll();
         }
     }
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardActionsController.class, instance -> {
-            clipboardActionsHandler = instance;
+        manager.registerUpdateListener(ClipboardSupported.class, instance -> {
+            selectionSupport = instance instanceof SelectionSupported ? (SelectionSupported) instance : null;
             update();
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable ClipboardActionsController clipboardActionsHandler) {
-        this.clipboardActionsHandler = clipboardActionsHandler;
+    public void setClipboardActionsHandler(@Nullable SelectionSupported selectionSupport) {
+        this.selectionSupport = selectionSupport;
         update();
     }
 
     public void update() {
-        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canSelectAll());
+        setEnabled(selectionSupport != null && selectionSupport.canSelectAll());
     }
-
 }

@@ -26,8 +26,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.clipboard.ClipboardSupported;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Clipboard cut action.
@@ -39,7 +39,7 @@ public class CutAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "cutAction";
 
-    private ClipboardActionsController clipboardActionsHandler;
+    private ClipboardSupported clipboardSupport;
 
     public CutAction() {
     }
@@ -53,26 +53,25 @@ public class CutAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (clipboardActionsHandler != null) {
-            clipboardActionsHandler.performCut();
+        if (clipboardSupport != null) {
+            clipboardSupport.performCut();
         }
     }
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardActionsController.class, instance -> {
-            clipboardActionsHandler = instance;
+        manager.registerUpdateListener(ClipboardSupported.class, instance -> {
+            clipboardSupport = instance;
             update();
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable ClipboardActionsController clipboardActionsHandler) {
-        this.clipboardActionsHandler = clipboardActionsHandler;
+    public void setClipboardSupport(@Nullable ClipboardSupported clipboardSupport) {
+        this.clipboardSupport = clipboardSupport;
         update();
     }
 
     public void update() {
-        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.isSelection());
+        setEnabled(clipboardSupport != null && clipboardSupport.hasDataToCopy());
     }
-
 }

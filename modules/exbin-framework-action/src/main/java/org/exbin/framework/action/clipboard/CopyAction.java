@@ -26,8 +26,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.clipboard.ClipboardSupported;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Clipboard copy action.
@@ -39,7 +39,7 @@ public class CopyAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "copyAction";
 
-    private ClipboardActionsController clipboardActionsHandler;
+    private ClipboardSupported clipboardSupport;
 
     public CopyAction() {
     }
@@ -53,26 +53,25 @@ public class CopyAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (clipboardActionsHandler != null) {
-            clipboardActionsHandler.performCopy();
+        if (clipboardSupport != null) {
+            clipboardSupport.performCopy();
         }
     }
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardActionsController.class, instance -> {
-            clipboardActionsHandler = instance;
+        manager.registerUpdateListener(ClipboardSupported.class, instance -> {
+            clipboardSupport = instance;
             update();
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable ClipboardActionsController clipboardActionsHandler) {
-        this.clipboardActionsHandler = clipboardActionsHandler;
+    public void setClipboardActionsHandler(@Nullable ClipboardSupported clipboardSupport) {
+        this.clipboardSupport = clipboardSupport;
         update();
     }
 
     public void update() {
-        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isSelection());
+        setEnabled(clipboardSupport != null && clipboardSupport.hasDataToCopy());
     }
-
 }

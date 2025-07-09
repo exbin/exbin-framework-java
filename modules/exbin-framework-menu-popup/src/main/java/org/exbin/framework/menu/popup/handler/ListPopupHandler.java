@@ -20,9 +20,9 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JList;
-import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.ClipboardUtils;
-import org.exbin.framework.utils.ClipboardActionsController;
+import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
+import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
 
 /**
  * Popup handler for JList.
@@ -30,7 +30,7 @@ import org.exbin.framework.utils.ClipboardActionsController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ListPopupHandler implements ClipboardActionsController {
+public class ListPopupHandler implements TextClipboardSupported {
 
     private final JList<?> listComp;
 
@@ -77,8 +77,13 @@ public class ListPopupHandler implements ClipboardActionsController {
     }
 
     @Override
-    public boolean isSelection() {
+    public boolean hasSelection() {
         return listComp.isEnabled() && !listComp.isSelectionEmpty();
+    }
+
+    @Override
+    public boolean hasDataToCopy() {
+        return hasSelection();
     }
 
     @Override
@@ -92,7 +97,7 @@ public class ListPopupHandler implements ClipboardActionsController {
     }
 
     @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+    public void setUpdateListener(ClipboardStateListener updateListener) {
         // Ignore
     }
 

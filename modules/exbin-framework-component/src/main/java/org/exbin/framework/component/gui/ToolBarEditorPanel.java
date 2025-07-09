@@ -19,16 +19,16 @@ import java.awt.BorderLayout;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JToolBar;
 import org.exbin.framework.action.ActionModule;
-import org.exbin.framework.utils.ClipboardActionsControllerEmpty;
+import org.exbin.framework.action.api.clipboard.EmptyTextClipboardSupport;
 import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
 import org.exbin.framework.operation.undo.api.EmptyUndoRedo;
-import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
-import org.exbin.framework.utils.ClipboardActionsController;
+import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
 
 /**
  * Panel with edit toolbar.
@@ -39,7 +39,7 @@ import org.exbin.framework.utils.ClipboardActionsController;
 public class ToolBarEditorPanel extends javax.swing.JPanel {
 
     private UndoRedoState undoHandler = null;
-    private ClipboardActionsController clipboardHandler = null;
+    private TextClipboardSupported clipboardHandler = null;
     private JToolBar toolBar = null;
 
     public ToolBarEditorPanel() {
@@ -77,7 +77,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
             ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
             UndoRedoState undoRedoHandler = new EmptyUndoRedo();
             toolBarEditorPanel.setUndoHandler(undoRedoHandler, operationUndoModule.createUndoActions());
-            ClipboardActionsController clipboardActionsHandler = new ClipboardActionsControllerEmpty();
+            TextClipboardSupported clipboardActionsHandler = new EmptyTextClipboardSupport();
             toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, actionModule.getClipboardActions());
             WindowUtils.invokeWindow(toolBarEditorPanel);
         });
@@ -91,7 +91,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
         // TODO undoActions.updateUndoActions();
     }
 
-    public void setClipboardHandler(ClipboardActionsController clipboardHandler, ClipboardActionsApi clipboardActions) {
+    public void setClipboardHandler(TextClipboardSupported clipboardHandler, ClipboardActionsApi clipboardActions) {
         this.clipboardHandler = clipboardHandler;
         initToolBar();
         if (undoHandler != null) {

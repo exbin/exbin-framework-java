@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;

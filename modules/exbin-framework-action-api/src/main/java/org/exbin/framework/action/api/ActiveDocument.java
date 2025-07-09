@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.utils;
+package org.exbin.framework.action.api;
 
 /**
- * Clipboard actions update listener.
+ * Interface for currently active document.
+ * <p>
+ * Should report active document per window / frame with separate menubar /
+ * toolbars.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ClipboardActionsUpdateListener {
+public interface ActiveDocument {
 
-    /**
-     * Notify about change in undo state.
-     */
-    void stateChanged();
 }

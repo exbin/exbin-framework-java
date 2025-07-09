@@ -26,10 +26,11 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.utils.ClipboardActionsController;
+import org.exbin.framework.action.api.DeletionSupported;
+import org.exbin.framework.action.api.clipboard.ClipboardSupported;
 
 /**
- * Clipboard delete action.
+ * Delete in document action.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -38,7 +39,7 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
 
     public static final String ACTION_ID = "deleteAction";
 
-    private ClipboardActionsController clipboardActionsHandler;
+    private DeletionSupported deletionSupport;
 
     public DeleteAction() {
     }
@@ -52,26 +53,25 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (clipboardActionsHandler != null) {
-            clipboardActionsHandler.performDelete();
+        if (deletionSupport != null) {
+            deletionSupport.performDelete();
         }
     }
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardActionsController.class, instance -> {
-            clipboardActionsHandler = instance;
+        manager.registerUpdateListener(ClipboardSupported.class, instance -> {
+            deletionSupport = instance instanceof DeletionSupported ? (DeletionSupported) instance : null;
             update();
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable ClipboardActionsController clipboardActionsHandler) {
-        this.clipboardActionsHandler = clipboardActionsHandler;
+    public void setClipboardSupport(@Nullable DeletionSupported deletionSupport) {
+        this.deletionSupport = deletionSupport;
         update();
     }
 
     public void update() {
-        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.canDelete() && clipboardActionsHandler.isSelection());
+        setEnabled(deletionSupport != null && deletionSupport.canDelete());
     }
-
 }

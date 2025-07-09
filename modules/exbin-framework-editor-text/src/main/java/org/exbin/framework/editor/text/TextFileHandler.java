@@ -43,7 +43,7 @@ import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.text.encoding.TextEncodingHandler;
 import org.exbin.framework.text.font.TextFontHandler;
-import org.exbin.framework.utils.ClipboardActionsController;
+import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
 
 /**
  * Text file handler.
@@ -98,7 +98,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     private void init() {
         textPanel.setUpdateListener(() -> {
             if (componentActivationListener != null) {
-                componentActivationListener.updated(ClipboardActionsController.class, textPanel);
+                componentActivationListener.updated(TextClipboardSupported.class, textPanel);
             }
         });
     }
@@ -255,7 +255,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         componentActivationListener.updated(TextFontHandler.class, textFontHandler);
         componentActivationListener.updated(TextEncodingHandler.class, textEncodingHandler);
         componentActivationListener.updated(UndoRedoState.class, undoRedoControl);
-        componentActivationListener.updated(ClipboardActionsController.class, textPanel);
+        componentActivationListener.updated(TextClipboardSupported.class, textPanel);
     }
 
     @Override
@@ -265,7 +265,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         componentActivationListener.updated(TextFontHandler.class, null);
         componentActivationListener.updated(TextEncodingHandler.class, null);
         componentActivationListener.updated(UndoRedoState.class, null);
-        componentActivationListener.updated(ClipboardActionsController.class, null);
+        componentActivationListener.updated(TextClipboardSupported.class, null);
     }
 
     public void notifyUndoChanged() {

@@ -32,7 +32,7 @@ import org.exbin.framework.toolbar.api.GroupToolBarContributionRule;
 import org.exbin.framework.toolbar.api.PositionToolBarContributionRule;
 import org.exbin.framework.toolbar.api.PositionToolBarContributionRule.PositionMode;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
-import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 
 /**
  * Implementation of tool bar module.

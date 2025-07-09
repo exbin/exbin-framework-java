@@ -49,9 +49,9 @@ import org.exbin.framework.menu.popup.PositionImageActionsHandler;
 import org.exbin.framework.menu.popup.PositionLinkActionsHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.ClipboardUtils;
-import org.exbin.framework.utils.ClipboardActionsController;
+import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
+import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
 
 /**
  * Popup handler for JEditorPane.
@@ -59,7 +59,7 @@ import org.exbin.framework.utils.ClipboardActionsController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorPanePopupHandler implements ClipboardActionsController, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
+public class EditorPanePopupHandler implements TextClipboardSupported, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
 
     private static final String MAP_PROPERTY = "__MAP__";
     private static final String IMAGE_CACHE_PROPERTY = "imageCache";
@@ -97,8 +97,13 @@ public class EditorPanePopupHandler implements ClipboardActionsController, LinkA
     }
 
     @Override
-    public boolean isSelection() {
+    public boolean hasSelection() {
         return editorPane.isEnabled() && editorPane.getSelectionStart() != editorPane.getSelectionEnd();
+    }
+
+    @Override
+    public boolean hasDataToCopy() {
+        return hasSelection();
     }
 
     @Override
@@ -112,7 +117,7 @@ public class EditorPanePopupHandler implements ClipboardActionsController, LinkA
     }
 
     @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+    public void setUpdateListener(ClipboardStateListener updateListener) {
         // Ignore
     }
 

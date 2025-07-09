@@ -27,8 +27,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.clipboard.ClipboardSupported;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.utils.ClipboardActionsController;
 
 /**
  * Clipboard paste action.
@@ -40,7 +40,7 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "pasteAction";
 
-    private ClipboardActionsController clipboardActionsHandler;
+    private ClipboardSupported clipboardSupport;
 
     public PasteAction() {
     }
@@ -54,15 +54,15 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (clipboardActionsHandler != null) {
-            clipboardActionsHandler.performPaste();
+        if (clipboardSupport != null) {
+            clipboardSupport.performPaste();
         }
     }
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardActionsController.class, instance -> {
-            clipboardActionsHandler = instance;
+        manager.registerUpdateListener(ClipboardSupported.class, instance -> {
+            clipboardSupport = instance;
             update();
         });
         manager.registerUpdateListener(ClipboardFlavorState.class, instance -> {
@@ -70,13 +70,12 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable ClipboardActionsController clipboardActionsHandler) {
-        this.clipboardActionsHandler = clipboardActionsHandler;
+    public void setClipboardActionsHandler(@Nullable ClipboardSupported clipboardSupport) {
+        this.clipboardSupport = clipboardSupport;
         update();
     }
 
     public void update() {
-        setEnabled(clipboardActionsHandler != null && clipboardActionsHandler.isEditable() && clipboardActionsHandler.canPaste());
+        setEnabled(clipboardSupport != null && clipboardSupport.canPaste());
     }
-
 }

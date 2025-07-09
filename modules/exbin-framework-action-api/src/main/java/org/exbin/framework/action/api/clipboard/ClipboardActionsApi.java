@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.utils;
+package org.exbin.framework.action.api.clipboard;
 
 import javax.annotation.Nonnull;
 import javax.swing.Action;

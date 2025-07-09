@@ -19,9 +19,9 @@ import java.awt.datatransfer.StringSelection;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import org.exbin.framework.utils.ClipboardActionsUpdateListener;
 import org.exbin.framework.utils.ClipboardUtils;
-import org.exbin.framework.utils.ClipboardActionsController;
+import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
+import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
 
 /**
  * Popup handler for table.
@@ -29,7 +29,7 @@ import org.exbin.framework.utils.ClipboardActionsController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TablePopupHandler implements ClipboardActionsController {
+public class TablePopupHandler implements TextClipboardSupported {
 
     private final JTable tableComp;
 
@@ -98,8 +98,13 @@ public class TablePopupHandler implements ClipboardActionsController {
     }
 
     @Override
-    public boolean isSelection() {
+    public boolean hasSelection() {
         return tableComp.isEnabled() && (tableComp.getSelectedColumn() >= 0 || tableComp.getSelectedRow() >= 0);
+    }
+
+    @Override
+    public boolean hasDataToCopy() {
+        return hasSelection();
     }
 
     @Override
@@ -113,7 +118,7 @@ public class TablePopupHandler implements ClipboardActionsController {
     }
 
     @Override
-    public void setUpdateListener(ClipboardActionsUpdateListener updateListener) {
+    public void setUpdateListener(ClipboardStateListener updateListener) {
         // Ignore
     }
 

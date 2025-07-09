@@ -29,7 +29,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.menu.api.GroupMenuContributionRule;
 import org.exbin.framework.menu.api.MenuContribution;

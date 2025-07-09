@@ -24,7 +24,7 @@ import org.exbin.framework.action.clipboard.CutAction;
 import org.exbin.framework.action.clipboard.DeleteAction;
 import org.exbin.framework.action.clipboard.PasteAction;
 import org.exbin.framework.action.clipboard.SelectAllAction;
-import org.exbin.framework.utils.ClipboardActionsApi;
+import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 
 /**
  * Clipboard actions.
