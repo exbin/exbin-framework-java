@@ -66,6 +66,17 @@ public class MenuPopupModule implements MenuPopupModuleApi {
     /**
      * Registers popup menu show for various supported components accross all
      * AWT popup menu events.
+     */
+    @Nonnull
+    @Override
+    public void registerDefaultClipboardPopupMenuWithIcons() {
+        DefaultPopupMenu.register();
+        DefaultPopupMenu.getInstance().inheritClipboardActionsIcons();
+    }
+
+    /**
+     * Registers popup menu show for various supported components accross all
+     * AWT popup menu events.
      *
      * @param resourceBundle resource bundle
      * @param resourceClass resource class

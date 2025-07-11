@@ -40,6 +40,13 @@ public interface MenuPopupModuleApi extends Module {
 
     /**
      * Registers popup menu show for various supported components accross all
+     * AWT popup menu events with additional icons from default clipboard
+     * actions.
+     */
+    void registerDefaultClipboardPopupMenuWithIcons();
+
+    /**
+     * Registers popup menu show for various supported components accross all
      * AWT popup menu events.
      *
      * @param resourceBundle resource bundle

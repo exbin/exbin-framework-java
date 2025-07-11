@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
@@ -99,6 +100,15 @@ public interface ActionModuleApi extends Module {
      */
     @Nonnull
     ClipboardActionsApi getClipboardTextActions();
+
+    /**
+     * Returns clipboard action icon.
+     *
+     * @param actionId action ID
+     * @return image icon
+     */
+    @Nonnull
+    ImageIcon getClipboardActionIcon(String actionId);
 
     /**
      * Registers clipboard handler for main clipboard actions.

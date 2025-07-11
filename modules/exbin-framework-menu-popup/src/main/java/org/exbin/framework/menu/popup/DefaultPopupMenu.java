@@ -50,7 +50,6 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.menu.popup.handler.EditorPanePopupHandler;
 import org.exbin.framework.menu.popup.handler.ListPopupHandler;
 import org.exbin.framework.menu.popup.handler.TablePopupHandler;
@@ -58,7 +57,6 @@ import org.exbin.framework.menu.popup.handler.TextComponentPopupHandler;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.menu.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
 
@@ -413,6 +411,25 @@ public class DefaultPopupMenu {
             }
         };
         actionModule.initAction(copyImageAction, resourceBundle, resourceClass, POPUP_COPY_IMAGE_ACTION_ID);
+    }
+
+    public void inheritClipboardActionsIcons() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        if (defaultCutAction.getValue(Action.SMALL_ICON) == null) {
+            defaultCutAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("cutAction"));
+        }
+        if (defaultCopyAction.getValue(Action.SMALL_ICON) == null) {
+            defaultCopyAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("copyAction"));
+        }
+        if (defaultPasteAction.getValue(Action.SMALL_ICON) == null) {
+            defaultPasteAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("pasteAction"));
+        }
+        if (defaultDeleteAction.getValue(Action.SMALL_ICON) == null) {
+            defaultDeleteAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("deleteAction"));
+        }
+        if (defaultSelectAllAction.getValue(Action.SMALL_ICON) == null) {
+            defaultSelectAllAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("selectAllAction"));
+        }
     }
 
     public void fillDefaultPopupMenu(JPopupMenu popupMenu, int position) {

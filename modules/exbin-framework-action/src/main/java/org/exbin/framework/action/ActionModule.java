@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
@@ -202,6 +203,16 @@ public class ActionModule implements ActionModuleApi {
     @Override
     public void registerClipboardHandler(TextClipboardSupported clipboardHandler) {
 //        getClipboardActions().setClipboardActionsHandler(clipboardHandler);
+    }
+
+    @Nonnull
+    @Override
+    public ImageIcon getClipboardActionIcon(String actionId) {
+        try {
+            return new javax.swing.ImageIcon(getClass().getResource(getResourceBundle().getString(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX)));
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("Icon loading failed for " + actionId, ex);
+        }
     }
 
     /*
