@@ -77,8 +77,9 @@ public class OptionsModule implements OptionsModuleApi {
     public OptionsAction createOptionsAction() {
         ensureSetup();
         OptionsAction optionsAction = new OptionsAction();
+        getOptionsPageManager();
         optionsAction.setup(resourceBundle, (OptionsPageReceiver optionsTreePanel) -> {
-            getOptionsPageManager().passOptionsPages(optionsTreePanel);
+            optionsPageManager.passOptionsPages(optionsTreePanel);
         });
 
         return optionsAction;
