@@ -26,9 +26,9 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.SelectionSupported;
-import org.exbin.framework.action.api.clipboard.ClipboardSupported;
+import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.action.api.SelectionController;
 
 /**
  * Select all action.
@@ -40,7 +40,7 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     public static final String ACTION_ID = "selectAllAction";
 
-    private SelectionSupported selectionSupport;
+    private SelectionController selectionSupport;
 
     public SelectAllAction() {
     }
@@ -61,13 +61,13 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardSupported.class, instance -> {
-            selectionSupport = instance instanceof SelectionSupported ? (SelectionSupported) instance : null;
+        manager.registerUpdateListener(ActiveComponent.class, component -> {
+            selectionSupport = component instanceof SelectionController ? (SelectionController) component : null;
             update();
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable SelectionSupported selectionSupport) {
+    public void setClipboardActionsHandler(@Nullable SelectionController selectionSupport) {
         this.selectionSupport = selectionSupport;
         update();
     }

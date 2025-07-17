@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.editor.text.action;
 
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
@@ -29,9 +28,10 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.editor.text.SelectionRange;
+import org.exbin.framework.editor.text.EditorTextPanelComponent;
 import org.exbin.framework.editor.text.gui.EditSelectionPanel;
-import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController.ControlActionType;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
@@ -60,12 +60,12 @@ public class EditSelectionAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ActionContextChangeManager manager) {
-                manager.registerUpdateListener(Component.class, (instance) -> {
+                manager.registerUpdateListener(ActiveComponent.class, (instance) -> {
                     if (instance instanceof JTextComponent) {
                         component = (JTextComponent) instance;
                         setEnabled(true);
-                    } else if (instance instanceof TextPanel) {
-                        component = ((TextPanel) instance).getTextComponent();
+                    } else if (instance instanceof EditorTextPanelComponent) {
+                        component = ((EditorTextPanelComponent) instance).getTextPanel().getTextComponent();
                     } else {
                         setEnabled(false);
                     }

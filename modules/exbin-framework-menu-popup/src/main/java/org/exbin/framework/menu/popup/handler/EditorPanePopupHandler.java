@@ -51,7 +51,7 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Popup handler for JEditorPane.
@@ -59,7 +59,7 @@ import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorPanePopupHandler implements TextClipboardSupported, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
+public class EditorPanePopupHandler implements TextClipboardController, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {
 
     private static final String MAP_PROPERTY = "__MAP__";
     private static final String IMAGE_CACHE_PROPERTY = "imageCache";

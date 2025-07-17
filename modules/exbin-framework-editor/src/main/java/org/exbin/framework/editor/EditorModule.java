@@ -46,7 +46,7 @@ import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Framework editor module.
@@ -87,52 +87,52 @@ public class EditorModule implements EditorModuleApi {
     private void setEditorProvider(EditorProvider editorProvider) {
         if (this.editorProvider == null) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.registerClipboardHandler(new TextClipboardSupported() {
+            actionModule.registerClipboardHandler(new TextClipboardController() {
                 @Override
                 public void performCut() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        ((TextClipboardSupported) fileHandler).performCut();
+                    if (fileHandler instanceof TextClipboardController) {
+                        ((TextClipboardController) fileHandler).performCut();
                     }
                 }
 
                 @Override
                 public void performCopy() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        ((TextClipboardSupported) fileHandler).performCopy();
+                    if (fileHandler instanceof TextClipboardController) {
+                        ((TextClipboardController) fileHandler).performCopy();
                     }
                 }
 
                 @Override
                 public void performPaste() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        ((TextClipboardSupported) fileHandler).performPaste();
+                    if (fileHandler instanceof TextClipboardController) {
+                        ((TextClipboardController) fileHandler).performPaste();
                     }
                 }
 
                 @Override
                 public void performDelete() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        ((TextClipboardSupported) fileHandler).performDelete();
+                    if (fileHandler instanceof TextClipboardController) {
+                        ((TextClipboardController) fileHandler).performDelete();
                     }
                 }
 
                 @Override
                 public void performSelectAll() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        ((TextClipboardSupported) fileHandler).performSelectAll();
+                    if (fileHandler instanceof TextClipboardController) {
+                        ((TextClipboardController) fileHandler).performSelectAll();
                     }
                 }
 
                 @Override
                 public boolean hasSelection() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        return ((TextClipboardSupported) fileHandler).hasSelection();
+                    if (fileHandler instanceof TextClipboardController) {
+                        return ((TextClipboardController) fileHandler).hasSelection();
                     }
 
                     return false;
@@ -141,8 +141,8 @@ public class EditorModule implements EditorModuleApi {
                 @Override
                 public boolean isEditable() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        return ((TextClipboardSupported) fileHandler).isEditable();
+                    if (fileHandler instanceof TextClipboardController) {
+                        return ((TextClipboardController) fileHandler).isEditable();
                     }
 
                     return false;
@@ -151,8 +151,8 @@ public class EditorModule implements EditorModuleApi {
                 @Override
                 public boolean canSelectAll() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        return ((TextClipboardSupported) fileHandler).canSelectAll();
+                    if (fileHandler instanceof TextClipboardController) {
+                        return ((TextClipboardController) fileHandler).canSelectAll();
                     }
 
                     return false;
@@ -166,8 +166,8 @@ public class EditorModule implements EditorModuleApi {
                 @Override
                 public boolean canPaste() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        return ((TextClipboardSupported) fileHandler).canPaste();
+                    if (fileHandler instanceof TextClipboardController) {
+                        return ((TextClipboardController) fileHandler).canPaste();
                     }
 
                     return true;
@@ -176,8 +176,8 @@ public class EditorModule implements EditorModuleApi {
                 @Override
                 public boolean canDelete() {
                     FileHandler fileHandler = editorProvider.getActiveFile().orElse(null);
-                    if (fileHandler instanceof TextClipboardSupported) {
-                        return ((TextClipboardSupported) fileHandler).canDelete();
+                    if (fileHandler instanceof TextClipboardController) {
+                        return ((TextClipboardController) fileHandler).canDelete();
                     }
 
                     return isEditable();
@@ -215,8 +215,8 @@ public class EditorModule implements EditorModuleApi {
 
     @Override
     public void registerEditor(String pluginId, final EditorProvider editorProvider) {
-        if (editorProvider instanceof TextClipboardSupported) {
-            ((TextClipboardSupported) editorProvider).setUpdateListener(() -> {
+        if (editorProvider instanceof TextClipboardController) {
+            ((TextClipboardController) editorProvider).setUpdateListener(() -> {
                 if (this.editorProvider == editorProvider) {
                     if (clipboardActionsUpdateListener != null) {
                         clipboardActionsUpdateListener.stateChanged();

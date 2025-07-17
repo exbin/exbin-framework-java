@@ -16,21 +16,28 @@
 package org.exbin.framework.action.api;
 
 /**
- * Interface for active document deletion support.
+ * Interface for active document selection controller.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface DeletionSupported {
+public interface SelectionController {
 
     /**
-     * Performs delete selection operation.
+     * Performs select all operation. (should include focus request)
      */
-    void performDelete();
+    void performSelectAll();
 
     /**
-     * Returns whether it is possible to perform delete.
+     * Returns if selection for clipboard operation is available.
      *
-     * @return true, if delete operation is allowed.
+     * @return true if selection is available
      */
-    boolean canDelete();
+    boolean hasSelection();
+
+    /**
+     * Returns whether it is possible to execute select all operation.
+     *
+     * @return true if can perform select all
+     */
+    boolean canSelectAll();
 }

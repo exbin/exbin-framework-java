@@ -27,8 +27,9 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.clipboard.ClipboardSupported;
+import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.action.api.clipboard.ClipboardController;
 
 /**
  * Clipboard paste action.
@@ -40,7 +41,7 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "pasteAction";
 
-    private ClipboardSupported clipboardSupport;
+    private ClipboardController clipboardSupport;
 
     public PasteAction() {
     }
@@ -61,8 +62,8 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardSupported.class, instance -> {
-            clipboardSupport = instance;
+        manager.registerUpdateListener(ActiveComponent.class, component -> {
+            clipboardSupport = component instanceof ClipboardController ? (ClipboardController) component : null;
             update();
         });
         manager.registerUpdateListener(ClipboardFlavorState.class, instance -> {
@@ -70,7 +71,7 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
         });
     }
 
-    public void setClipboardActionsHandler(@Nullable ClipboardSupported clipboardSupport) {
+    public void setClipboardActionsHandler(@Nullable ClipboardController clipboardSupport) {
         this.clipboardSupport = clipboardSupport;
         update();
     }

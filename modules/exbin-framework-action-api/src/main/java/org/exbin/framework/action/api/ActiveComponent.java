@@ -13,30 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.encoding;
-
-import java.nio.charset.Charset;
-import javax.annotation.Nonnull;
+package org.exbin.framework.action.api;
 
 /**
- * Text encoding handler interface.
+ * Interface for currently active component.
+ * <p>
+ * Should report active component per window / frame with separate menubar /
+ * toolbars.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface TextEncodingHandler {
+public interface ActiveComponent {
 
-    /**
-     * Returns encoding.
-     *
-     * @return charset
-     */
-    @Nonnull
-    Charset getCharset();
-
-    /**
-     * Sets encoding.
-     *
-     * @param charset charset
-     */
-    void setCharset(Charset charset);
 }

@@ -27,7 +27,7 @@ import javax.swing.JMenuItem;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Interface for action support module.
@@ -115,5 +115,5 @@ public interface ActionModuleApi extends Module {
      *
      * @param clipboardHandler clipboard handler
      */
-    void registerClipboardHandler(TextClipboardSupported clipboardHandler);
+    void registerClipboardHandler(TextClipboardController clipboardHandler);
 }

@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EmptyTextClipboardSupport implements TextClipboardSupported {
+public class EmptyTextClipboardSupport implements TextClipboardController {
 
     @Override
     public void performCut() {

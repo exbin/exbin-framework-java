@@ -15,8 +15,6 @@
  */
 package org.exbin.framework.editor.text;
 
-import java.awt.Component;
-import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,13 +24,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
@@ -41,9 +39,8 @@ import org.exbin.framework.operation.undo.api.UndoRedoControl;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.editor.api.EditorFileHandler;
-import org.exbin.framework.text.encoding.TextEncodingHandler;
-import org.exbin.framework.text.font.TextFontHandler;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.text.encoding.TextEncodingController;
+import org.exbin.framework.text.font.TextFontController;
 
 /**
  * Text file handler.
@@ -60,45 +57,16 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     protected FileType fileType = null;
     protected ComponentActivationListener componentActivationListener;
     protected UndoRedoControl undoRedoControl = null;
-    private final TextFontHandler textFontHandler = new TextFontHandler() {
-        @Nonnull
-        @Override
-        public Font getCurrentFont() {
-            return textPanel.getCurrentFont();
-        }
-
-        @Nonnull
-        @Override
-        public Font getDefaultFont() {
-            return textPanel.getDefaultFont();
-        }
-
-        @Override
-        public void setCurrentFont(Font font) {
-            textPanel.setCurrentFont(font);
-        }
-    };
-    private final TextEncodingHandler textEncodingHandler = new TextEncodingHandler() {
-        @Nonnull
-        @Override
-        public Charset getCharset() {
-            return textPanel.getCharset();
-        }
-
-        @Override
-        public void setCharset(Charset charset) {
-            textPanel.setCharset(charset);
-        }
-    };
-
+    protected EditorTextPanelComponent textPanelComponent;
     public TextFileHandler() {
         init();
     }
 
     private void init() {
+        textPanelComponent = new EditorTextPanelComponent(textPanel);
         textPanel.setUpdateListener(() -> {
             if (componentActivationListener != null) {
-                componentActivationListener.updated(TextClipboardSupported.class, textPanel);
+                componentActivationListener.updated(ActiveComponent.class, textPanelComponent);
             }
         });
     }
@@ -169,7 +137,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
 
     @Override
     public boolean canSave() {
-        return textPanel.isEditable();
+        return textPanelComponent.isEditable();
     }
 
     @Override
@@ -251,21 +219,19 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     @Override
     public void componentActivated(ComponentActivationListener componentActivationListener) {
         this.componentActivationListener = componentActivationListener;
-        componentActivationListener.updated(Component.class, textPanel);
-        componentActivationListener.updated(TextFontHandler.class, textFontHandler);
-        componentActivationListener.updated(TextEncodingHandler.class, textEncodingHandler);
+        componentActivationListener.updated(ActiveComponent.class, textPanelComponent);
+        componentActivationListener.updated(TextFontController.class, textPanelComponent);
+        componentActivationListener.updated(TextEncodingController.class, textPanelComponent);
         componentActivationListener.updated(UndoRedoState.class, undoRedoControl);
-        componentActivationListener.updated(TextClipboardSupported.class, textPanel);
     }
 
     @Override
     public void componentDeactivated(ComponentActivationListener componentActivationListener) {
         this.componentActivationListener = null;
-        componentActivationListener.updated(Component.class, null);
-        componentActivationListener.updated(TextFontHandler.class, null);
-        componentActivationListener.updated(TextEncodingHandler.class, null);
+        componentActivationListener.updated(ActiveComponent.class, null);
+        componentActivationListener.updated(TextFontController.class, null);
+        componentActivationListener.updated(TextEncodingController.class, null);
         componentActivationListener.updated(UndoRedoState.class, null);
-        componentActivationListener.updated(TextClipboardSupported.class, null);
     }
 
     public void notifyUndoChanged() {

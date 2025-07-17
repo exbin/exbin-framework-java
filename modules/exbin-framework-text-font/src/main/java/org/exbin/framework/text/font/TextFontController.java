@@ -13,33 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api.clipboard;
+package org.exbin.framework.text.font;
 
+import java.awt.Font;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.DeletionSupported;
-import org.exbin.framework.action.api.SelectionSupported;
 
 /**
- * Interface for clipboard handler for visual component or document usable for
- * context menu.
+ * Text font panel controller interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextClipboardSupported extends ClipboardSupported, SelectionSupported, DeletionSupported {
+public interface TextFontController {
 
     /**
-     * Returns whether it is possible to change components data using clipboard
-     * operations.
+     * Returns current font used in application frame.
      *
-     * @return true if component is editable
+     * @return font font value
      */
-    boolean isEditable();
+    @Nonnull
+    Font getCurrentFont();
 
     /**
-     * Sets listener for clipboard actions related updates.
+     * Returns default colors used in application frame.
      *
-     * @param updateListener update listener
+     * @return font font value
      */
-    void setUpdateListener(ClipboardStateListener updateListener);
+    @Nonnull
+    Font getDefaultFont();
+
+    /**
+     * Sets current colors used in application frame.
+     *
+     * @param font font to set
+     */
+    void setCurrentFont(Font font);
 }

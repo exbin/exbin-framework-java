@@ -26,6 +26,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ActiveComponent;
+import org.exbin.framework.editor.text.EditorTextPanelComponent;
 import org.exbin.framework.editor.text.gui.TextGoToPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -44,7 +46,7 @@ public class GoToLineAction extends AbstractAction {
 
     public static final String ACTION_ID = "goToLineAction";
 
-    private Component component;
+    private EditorTextPanelComponent textPanelComponent;
 
     public GoToLineAction() {
     }
@@ -57,9 +59,9 @@ public class GoToLineAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ActionContextChangeManager manager) {
-                manager.registerUpdateListener(Component.class, (instance) -> {
-                    component = instance;
-                    setEnabled(component instanceof TextPanel);
+                manager.registerUpdateListener(ActiveComponent.class, (instance) -> {
+                    textPanelComponent = instance instanceof EditorTextPanelComponent ? (EditorTextPanelComponent) instance : null;
+                    setEnabled(textPanelComponent != null);
                 });
             }
         });
@@ -67,11 +69,11 @@ public class GoToLineAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!(component instanceof TextPanel)) {
+        if (textPanelComponent == null) {
             return;
         }
 
-        final TextPanel textPanel = (TextPanel) component;
+        final TextPanel textPanel = textPanelComponent.getTextPanel();
         final TextGoToPanel goToPanel = new TextGoToPanel();
         goToPanel.initFocus();
         goToPanel.setMaxLine(textPanel.getLineCount());

@@ -16,11 +16,11 @@
 package org.exbin.framework.action.api.clipboard;
 
 /**
- * Interface for document supporting clipboard actions.
+ * Interface for document clipboard actions controller.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ClipboardSupported {
+public interface ClipboardController {
 
     /**
      * Performs cut to clipboard operation.

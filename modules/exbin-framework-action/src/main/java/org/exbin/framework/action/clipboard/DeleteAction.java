@@ -26,8 +26,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.DeletionSupported;
-import org.exbin.framework.action.api.clipboard.ClipboardSupported;
+import org.exbin.framework.action.api.ActiveComponent;
+import org.exbin.framework.action.api.DeletionController;
 
 /**
  * Delete in document action.
@@ -39,7 +39,7 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
 
     public static final String ACTION_ID = "deleteAction";
 
-    private DeletionSupported deletionSupport;
+    private DeletionController deletionSupport;
 
     public DeleteAction() {
     }
@@ -60,13 +60,13 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
 
     @Override
     public void register(ActionContextChangeManager manager) {
-        manager.registerUpdateListener(ClipboardSupported.class, instance -> {
-            deletionSupport = instance instanceof DeletionSupported ? (DeletionSupported) instance : null;
+        manager.registerUpdateListener(ActiveComponent.class, component -> {
+            deletionSupport = component instanceof DeletionController ? (DeletionController) component : null;
             update();
         });
     }
 
-    public void setClipboardSupport(@Nullable DeletionSupported deletionSupport) {
+    public void setClipboardSupport(@Nullable DeletionController deletionSupport) {
         this.deletionSupport = deletionSupport;
         update();
     }

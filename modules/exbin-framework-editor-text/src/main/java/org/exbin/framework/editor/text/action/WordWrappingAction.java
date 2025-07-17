@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.editor.text.action;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -27,6 +26,8 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
+import org.exbin.framework.action.api.ActiveComponent;
+import org.exbin.framework.editor.text.EditorTextPanelComponent;
 import org.exbin.framework.editor.text.gui.TextPanel;
 
 /**
@@ -39,7 +40,7 @@ public class WordWrappingAction extends AbstractAction {
 
     public static final String ACTION_ID = "viewWordWrappingAction";
 
-    private Component component;
+    private TextPanel textPanel;
 
     public WordWrappingAction() {
     }
@@ -51,9 +52,9 @@ public class WordWrappingAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ActionContextChangeManager manager) {
-                manager.registerUpdateListener(Component.class, (instance) -> {
-                    component = instance;
-                    setEnabled(component instanceof TextPanel);
+                manager.registerUpdateListener(ActiveComponent.class, (instance) -> {
+                    textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
+                    setEnabled(textPanel != null);
                 });
             }
         });
@@ -61,11 +62,10 @@ public class WordWrappingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!(component instanceof TextPanel)) {
+        if (!(textPanel instanceof TextPanel)) {
             return;
         }
 
-        TextPanel textPanel = (TextPanel) component;
         boolean lineWraping = textPanel.changeLineWrap();
         putValue(Action.SELECTED_KEY, lineWraping);
     }

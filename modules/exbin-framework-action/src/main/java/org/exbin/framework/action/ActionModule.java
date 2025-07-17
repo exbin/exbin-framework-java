@@ -38,7 +38,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextChangeManager;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Implementation of action module.
@@ -201,7 +201,7 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public void registerClipboardHandler(TextClipboardSupported clipboardHandler) {
+    public void registerClipboardHandler(TextClipboardController clipboardHandler) {
 //        getClipboardActions().setClipboardActionsHandler(clipboardHandler);
     }
 
@@ -218,7 +218,7 @@ public class ActionModule implements ActionModuleApi {
     /*
     @Nonnull
     @Override
-    public ClipboardActionsApi createClipboardActions(TextClipboardSupported clipboardActionsHandler) {
+    public ClipboardActionsApi createClipboardActions(TextClipboardController clipboardActionsHandler) {
         ClipboardActions customClipboardActions = new ClipboardActions();
         customClipboardActions.setup(resourceBundle);
         customClipboardActions.setClipboardActionsHandler(clipboardActionsHandler);

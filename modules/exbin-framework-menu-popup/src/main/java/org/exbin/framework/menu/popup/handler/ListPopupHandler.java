@@ -22,7 +22,7 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JList;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Popup handler for JList.
@@ -30,7 +30,7 @@ import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ListPopupHandler implements TextClipboardSupported {
+public class ListPopupHandler implements TextClipboardController {
 
     private final JList<?> listComp;
 

@@ -21,7 +21,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Popup handler for text component.
@@ -29,7 +29,7 @@ import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextComponentPopupHandler implements TextClipboardSupported {
+public class TextComponentPopupHandler implements TextClipboardController {
 
     private final JTextComponent txtComp;
 

@@ -21,7 +21,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Popup handler for table.
@@ -29,7 +29,7 @@ import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TablePopupHandler implements TextClipboardSupported {
+public class TablePopupHandler implements TextClipboardController {
 
     private final JTable tableComp;
 

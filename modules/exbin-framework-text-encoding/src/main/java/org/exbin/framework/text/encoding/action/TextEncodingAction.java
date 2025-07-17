@@ -29,10 +29,11 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
-import org.exbin.framework.text.encoding.TextEncodingHandler;
+import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController;
+import org.exbin.framework.text.encoding.TextEncodingController;
 
 /**
  * Text encoding action.
@@ -44,7 +45,7 @@ public class TextEncodingAction extends AbstractAction {
 
     public static final String ACTION_ID = "textEncodingAction";
 
-    private TextEncodingHandler textEncodingHandler;
+    private TextEncodingController textEncodingSupported;
     private Component component;
 
     public TextEncodingAction() {
@@ -55,12 +56,9 @@ public class TextEncodingAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
-            manager.registerUpdateListener(TextEncodingHandler.class, (instance) -> {
-                textEncodingHandler = instance;
-                setEnabled(textEncodingHandler != null);
-            });
-            manager.registerUpdateListener(Component.class, (instance) -> {
-                component = instance;
+            manager.registerUpdateListener(TextEncodingController.class, (instance) -> {
+                textEncodingSupported = instance;
+                setEnabled(textEncodingSupported != null);
             });
         });
     }
@@ -69,7 +67,7 @@ public class TextEncodingAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextEncodingPanel encodingPanel = new TextEncodingPanel();
-        encodingPanel.setCurrentEncoding(textEncodingHandler.getCharset().name());
+        encodingPanel.setCurrentEncoding(textEncodingSupported.getCharset().name());
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         final WindowHandler dialog = windowModule.createDialog(encodingPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), encodingPanel.getClass(), encodingPanel.getResourceBundle());
@@ -78,7 +76,7 @@ public class TextEncodingAction extends AbstractAction {
             if (actionType != DefaultControlController.ControlActionType.CANCEL) {
                 Optional<String> encoding = encodingPanel.getCurrentEncoding();
                 if (encoding.isPresent()) {
-                    textEncodingHandler.setCharset(Charset.forName(encoding.get()));
+                    textEncodingSupported.setCharset(Charset.forName(encoding.get()));
                 }
             }
 

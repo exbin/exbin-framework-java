@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -51,7 +52,7 @@ import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
-import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
+import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Text editor panel.
@@ -59,7 +60,7 @@ import org.exbin.framework.action.api.clipboard.TextClipboardSupported;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextPanel extends javax.swing.JPanel implements TextClipboardSupported {
+public class TextPanel extends javax.swing.JPanel {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextPanel.class);
 
@@ -224,39 +225,9 @@ public class TextPanel extends javax.swing.JPanel implements TextClipboardSuppor
         textArea.setCaretPosition(textArea.getCaretPosition() + charPos - 1);
     }
 
-    @Override
-    public void performCopy() {
-        textArea.copy();
-    }
-
-    @Override
-    public void performCut() {
-        textArea.cut();
-    }
-
-    @Override
-    public void performDelete() {
-        textArea.getInputContext().dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, 0, 0, KeyEvent.VK_DELETE, KeyEvent.CHAR_UNDEFINED));
-    }
-
-    @Override
-    public void performPaste() {
-        textArea.paste();
-    }
-
-    @Override
-    public void performSelectAll() {
-        textArea.selectAll();
-    }
-
-    @Override
-    public boolean hasSelection() {
-        return textArea.getSelectionEnd() > textArea.getSelectionStart();
-    }
-
-    @Override
-    public boolean hasDataToCopy() {
-        return hasSelection();
+    @Nonnull
+    public JTextArea getTextArea() {
+        return textArea;
     }
 
     @Nonnull
@@ -408,30 +379,8 @@ public class TextPanel extends javax.swing.JPanel implements TextClipboardSuppor
         });
     }
 
-    @Override
     public void setUpdateListener(ClipboardStateListener updateListener) {
         clipboardActionsUpdateListener = updateListener;
-    }
-
-    @Override
-    public boolean isEditable() {
-        return textArea.isEditable();
-    }
-
-    @Override
-    public boolean canSelectAll() {
-        return true;
-    }
-
-    @Override
-    public boolean canPaste() {
-        Clipboard clipboard = ClipboardUtils.getClipboard();
-        return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
-    }
-
-    @Override
-    public boolean canDelete() {
-        return textArea.isEditable();
     }
 
     public void addTextAreaFocusListener(FocusListener focusListener) {
