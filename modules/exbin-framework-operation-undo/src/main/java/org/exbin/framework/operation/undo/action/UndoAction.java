@@ -24,10 +24,10 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
-import org.exbin.framework.operation.undo.api.UndoRedoControl;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.operation.undo.api.UndoRedoController;
 
 /**
  * Undo action.
@@ -56,8 +56,8 @@ public class UndoAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (undoRedo instanceof UndoRedoControl) {
-            ((UndoRedoControl) undoRedo).performUndo();
+        if (undoRedo instanceof UndoRedoController) {
+            ((UndoRedoController) undoRedo).performUndo();
         }
     }
 

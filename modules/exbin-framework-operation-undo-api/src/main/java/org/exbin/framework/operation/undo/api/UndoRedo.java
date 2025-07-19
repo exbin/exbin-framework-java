@@ -28,7 +28,7 @@ import org.exbin.framework.operation.api.ModifiedState;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UndoRedo extends UndoRedoControl, ModifiedState {
+public interface UndoRedo extends UndoRedoController, ModifiedState {
 
     /**
      * Executes given command and adds it at the end of the sequence replacing

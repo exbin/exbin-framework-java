@@ -49,7 +49,7 @@ import org.exbin.framework.utils.UiUtils;
 public class RecentFilesActions {
 
     private ResourceBundle resourceBundle;
-    private FilesControl filesControl;
+    private FilesController filesController;
     private OptionsStorage preferences;
 
     private List<RecentItem> recentFiles = null;
@@ -57,8 +57,8 @@ public class RecentFilesActions {
     public RecentFilesActions() {
     }
 
-    public void init(ResourceBundle resourceBundle, FilesControl filesControl) {
-        this.filesControl = filesControl;
+    public void init(ResourceBundle resourceBundle, FilesController filesController) {
+        this.filesController = filesController;
         this.resourceBundle = resourceBundle;
 
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
@@ -145,7 +145,7 @@ public class RecentFilesActions {
                         if (sourceMenuItem.equals(fileOpenRecentMenu.getItem(itemIndex))) {
                             RecentItem recentItem = recentFiles.get(itemIndex);
                             FileType fileType = null;
-                            List<FileType> registeredFileTypes = filesControl.getRegisteredFileTypes();
+                            List<FileType> registeredFileTypes = filesController.getRegisteredFileTypes();
                             for (FileType regFileType : registeredFileTypes) {
                                 if (regFileType.getFileTypeId().equals(recentItem.getFileMode())) {
                                     fileType = regFileType;
@@ -156,7 +156,7 @@ public class RecentFilesActions {
                             URI fileUri;
                             try {
                                 fileUri = new URI(recentItem.getFileName());
-                                filesControl.loadFromFile(fileUri, fileType);
+                                filesController.loadFromFile(fileUri, fileType);
 
                                 if (itemIndex > 0) {
                                     // Move recent item on top
@@ -249,7 +249,7 @@ public class RecentFilesActions {
     }
 
     @ParametersAreNonnullByDefault
-    public interface FilesControl {
+    public interface FilesController {
 
         void loadFromFile(URI fileUri, @Nullable FileType fileType);
 

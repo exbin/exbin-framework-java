@@ -217,7 +217,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public RecentFilesActions getRecentFilesActions() {
         if (recentFilesActions == null) {
             recentFilesActions = new RecentFilesActions();
-            recentFilesActions.init(resourceBundle, new RecentFilesActions.FilesControl() {
+            recentFilesActions.init(resourceBundle, new RecentFilesActions.FilesController() {
                 @Override
                 public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
                     fileOperations.loadFromFile(fileUri, fileType);

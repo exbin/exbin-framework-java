@@ -16,11 +16,11 @@
 package org.exbin.framework.operation.undo.api;
 
 /**
- * Interface for undo control.
+ * Interface for undo controller.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface UndoRedoControl extends UndoRedoState {
+public interface UndoRedoController extends UndoRedoState {
 
     /**
      * Performs redo.

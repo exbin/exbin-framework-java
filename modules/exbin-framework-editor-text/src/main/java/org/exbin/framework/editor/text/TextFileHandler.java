@@ -35,12 +35,12 @@ import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
-import org.exbin.framework.operation.undo.api.UndoRedoControl;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.text.font.TextFontController;
+import org.exbin.framework.operation.undo.api.UndoRedoController;
 
 /**
  * Text file handler.
@@ -56,7 +56,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     protected String title;
     protected FileType fileType = null;
     protected ComponentActivationListener componentActivationListener;
-    protected UndoRedoControl undoRedoControl = null;
+    protected UndoRedoController undoRedoControl = null;
     protected EditorTextPanelComponent textPanelComponent;
     public TextFileHandler() {
         init();
@@ -73,7 +73,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
 
     public void registerUndoHandler() {
         TextPanelCompoundUndoManager undoHandler = textPanel.getUndo();
-        undoRedoControl = new UndoRedoControl() {
+        undoRedoControl = new UndoRedoController() {
             @Override
             public boolean canUndo() {
                 return undoHandler.canUndo();
