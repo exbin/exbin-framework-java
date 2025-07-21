@@ -264,7 +264,7 @@ public class AddonManager {
             try {
                 return addonCatalogService.getModuleDetails(itemRecord.getId());
             } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(InstalledManagerTab.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

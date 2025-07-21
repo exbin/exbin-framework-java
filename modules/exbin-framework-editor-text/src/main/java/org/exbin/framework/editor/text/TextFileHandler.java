@@ -128,7 +128,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
             textPanel.setText(data.toString());
             this.fileUri = fileUri;
         } catch (IOException ex) {
-            Logger.getLogger(TextEditorProvider.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TextFileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         textPanel.setModified(false);
@@ -163,7 +163,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(TextEditorProvider.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TextFileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         textPanel.setModified(false);
