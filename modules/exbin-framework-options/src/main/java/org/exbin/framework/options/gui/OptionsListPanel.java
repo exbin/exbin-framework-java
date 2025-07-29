@@ -62,6 +62,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
     private PageRecord currentOptionsPanel = null;
     private OptionsModifiedListener optionsModifiedListener;
     private final List<LazyComponentListener> listeners = new ArrayList<>();
+    private String rootCaption;
 
     private boolean modified;
 
@@ -108,6 +109,7 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
                 optionsAreaScrollPane.setViewportView(null);
             }
         });
+        rootCaption = resourceBundle.getString("options.root.caption");
     }
 
     @Nonnull
@@ -117,6 +119,16 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
 
     public void pagesFinished() {
         categoriesList.setSelectedIndex(0);
+    }
+
+    public void setRootCaption(String rootCaption) {
+        this.rootCaption = rootCaption;
+        DefaultListModel<String> model = ((DefaultListModel<String>) categoriesList.getModel());
+        if (!model.isEmpty()) {
+            model.remove(0);
+            model.add(0, rootCaption);
+            categoriesList.setSelectedIndex(0);
+        }
     }
 
     /**
@@ -214,10 +226,16 @@ public class OptionsListPanel extends javax.swing.JPanel implements OptionsPageR
             pageRecord.addOptionsPage(optionPage, optionsModifiedListener, visualParams);
         } else {
             PageRecord pageRecord = new PageRecord(optionPage, visualParams);
-            optionPages.add(pageRecord);
-            optionPageKeys.put(panelKey, optionPages.size() - 1);
+            if (path == null) {
+                optionPages.add(0, pageRecord);
+                ((DefaultListModel<String>) categoriesList.getModel()).insertElementAt(rootCaption, 0);
+                optionPageKeys.put(panelKey, 0);
+            } else {
+                optionPages.add(pageRecord);
+                ((DefaultListModel<String>) categoriesList.getModel()).addElement(path.get(path.size() - 1).getName());
+                optionPageKeys.put(panelKey, optionPages.size() - 1);
+            }
             pageRecord.setOptionsModifiedListener(optionsModifiedListener);
-            ((DefaultListModel<String>) categoriesList.getModel()).addElement(path == null ? resourceBundle.getString("optionsAreaTitleLabel.text") : path.get(path.size() - 1).getName());
         }
     }
 

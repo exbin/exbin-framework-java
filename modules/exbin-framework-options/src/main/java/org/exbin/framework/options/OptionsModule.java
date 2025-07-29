@@ -16,8 +16,10 @@
 package org.exbin.framework.options;
 
 import com.formdev.flatlaf.extras.FlatDesktop;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.options.api.OptionsModuleApi;
@@ -53,6 +55,7 @@ public class OptionsModule implements OptionsModuleApi {
 
     private OptionsPanelType optionsPanelType = OptionsPanelType.TREE;
     private OptionsPageManager optionsPageManager;
+    private String optionsRootCaption = null;
 
     public OptionsModule() {
     }
@@ -78,8 +81,8 @@ public class OptionsModule implements OptionsModuleApi {
         ensureSetup();
         OptionsAction optionsAction = new OptionsAction();
         getOptionsPageManager();
-        optionsAction.setup(resourceBundle, (OptionsPageReceiver optionsTreePanel) -> {
-            optionsPageManager.passOptionsPages(optionsTreePanel);
+        optionsAction.setup(resourceBundle, (OptionsPageReceiver optionsPageReceiver) -> {
+            optionsPageManager.passOptionsPages(optionsPageReceiver);
         });
 
         return optionsAction;
@@ -191,5 +194,16 @@ public class OptionsModule implements OptionsModuleApi {
     @Override
     public void setOptionsPanelType(OptionsPanelType optionsPanelType) {
         this.optionsPanelType = optionsPanelType;
+    }
+
+    @Nonnull
+    @Override
+    public Optional<String> getOptionsRootCaption() {
+        return Optional.ofNullable(optionsRootCaption);
+    }
+
+    @Override
+    public void setOptionsRootCaption(@Nullable String optionsRootCaption) {
+        this.optionsRootCaption = optionsRootCaption;
     }
 }

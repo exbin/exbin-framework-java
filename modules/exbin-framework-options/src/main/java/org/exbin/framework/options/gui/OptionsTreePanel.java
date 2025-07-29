@@ -133,6 +133,11 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
         expandJTree(optionsTree, -1);
     }
 
+    public void setRootCaption(String rootCaption) {
+        top = new OptionsMutableTreeNode(rootCaption, OPTIONS_PANEL_KEY);
+        optionsTree.setModel(new DefaultTreeModel(top, true));
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

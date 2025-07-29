@@ -66,6 +66,7 @@ public class OptionsAction extends AbstractAction {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         OptionsPanelType optionsPanelType = optionsModule.getOptionsPanelType();
         OptionsControlPanel controlPanel = new OptionsControlPanel();
+        String optionsRootCaption = optionsModule.getOptionsRootCaption().orElse(null);
         WindowHandler dialog;
         switch (optionsPanelType) {
             case LIST:
@@ -74,6 +75,9 @@ public class OptionsAction extends AbstractAction {
                 optionsListPanel.setPreferences(preferencesModule.getAppPreferences());
                 optionsListPanel.pagesFinished();
                 optionsListPanel.loadAllFromPreferences();
+                if (optionsRootCaption != null) {
+                    optionsListPanel.setRootCaption(optionsRootCaption);
+                }
 
                 dialog = windowModule.createDialog(optionsListPanel, controlPanel);
                 dialog.getWindow().setSize(780, 500);
@@ -102,6 +106,9 @@ public class OptionsAction extends AbstractAction {
                 optionsTreePanel.setPreferences(preferencesModule.getAppPreferences());
                 optionsTreePanel.pagesFinished();
                 optionsTreePanel.loadAllFromPreferences();
+                if (optionsRootCaption != null) {
+                    optionsTreePanel.setRootCaption(optionsRootCaption);
+                }
 
                 dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
                 dialog.getWindow().setSize(780, 500);
