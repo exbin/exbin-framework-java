@@ -159,6 +159,11 @@ public class AddonManager {
         thread.start();
     }
 
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     public boolean isAlreadyInstalled(String moduleId) {
         return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
     }

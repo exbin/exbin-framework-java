@@ -146,8 +146,9 @@ public class AddonsManagerTab implements AddonManagerTab {
                 searchResult = addonManager.searchForAddons();
             } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonsManagerTab.class.getName()).log(Level.SEVERE, null, ex);
-                ResourceBundle resourceBundle = addonsPanel.getResourceBundle();
+                ResourceBundle resourceBundle = addonManager.getResourceBundle();
                 JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
+                return 0;
             }
         }
         return searchResult.size();
