@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Look&feel provider.
+ * Look&amp;feel provider.
  *
  * @author ExBin Project (https://exbin.org)
  */

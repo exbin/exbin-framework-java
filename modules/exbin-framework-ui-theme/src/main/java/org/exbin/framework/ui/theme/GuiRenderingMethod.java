@@ -24,13 +24,15 @@ import org.exbin.framework.utils.DesktopUtils;
 
 /**
  * Enumeration of rendering methods.
- *
- * @see
+ * <p>
+ * See
  * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/2d/flags.html">JavaSE
  * 8 2D Technology</a>
- * @see Wayland + Vulkan:
+ * <p>
+ * See Wayland + Vulkan:
  * <a href="https://openjdk.org/projects/wakefield/">Project WakeField</a>
- * @see MacOS Metal framework:
+ * <p>
+ * See MacOS Metal framework:
  * <a href="https://openjdk.org/projects/lanai/">Project Lanai</a>
  *
  * @author ExBin Project (https://exbin.org)

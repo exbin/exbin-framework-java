@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.theme.api;
+package org.exbin.framework.action.api;
 
+import java.awt.Component;
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Look&amp;feel provider with support for additional options.
+ * Interface for dialog parent component.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface ConfigurableLafProvider extends LafProvider {
+public interface DialogParentComponent {
 
     /**
-     * Returns look and feel options handler.
+     * Returns component to center / show dialog relative to.
      *
-     * @return options handler
+     * @return component
      */
     @Nonnull
-    LafOptionsHandler getOptionsHandler();
+    Component getComponent();
 }

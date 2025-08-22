@@ -46,13 +46,13 @@ public class ActionConsts {
     /**
      * Menu creation handler.
      *
-     * Value is {@link ActionMenuCreation}.
+     * Value is {@link org.exbin.framework.menu.api.ActionMenuCreation}.
      */
     public static final String ACTION_MENU_CREATION = "menuCreation";
     /**
      * Menu activation bus / message registration.
      *
-     * Value is {@link ActionMenuActivation}.
+     * Value is ActionMenuActivation
      */
     public static final String ACTION_MENU_ACTIVATION = "menuActivation";
     /**

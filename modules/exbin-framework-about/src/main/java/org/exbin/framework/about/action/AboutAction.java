@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.about.action;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -24,7 +23,10 @@ import javax.swing.JDialog;
 import org.exbin.framework.App;
 import org.exbin.framework.about.gui.AboutPanel;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
@@ -42,6 +44,7 @@ public class AboutAction extends AbstractAction {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AboutAction.class);
     private JComponent sideComponent = null;
+    private DialogParentComponent dialogParentComponent;
 
     public AboutAction() {
         init();
@@ -51,6 +54,11 @@ public class AboutAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+            manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                dialogParentComponent = instance;
+            });
+        });
     }
 
     @Override
@@ -63,7 +71,7 @@ public class AboutAction extends AbstractAction {
         final WindowHandler aboutDialog = windowModule.createDialog(aboutPanel, controlPanel);
         ((JDialog) aboutDialog.getWindow()).setTitle(resourceBundle.getString("aboutAction.dialogTitle"));
         controlPanel.setController(aboutDialog::close);
-        aboutDialog.showCentered((Component) e.getSource());
+        aboutDialog.showCentered(dialogParentComponent.getComponent());
         aboutDialog.dispose();
     }
 

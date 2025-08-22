@@ -15,14 +15,16 @@
  */
 package org.exbin.framework.addon.manager.action;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.AddonManagerModule;
 import org.exbin.framework.addon.manager.AddonsManagerTab;
@@ -46,6 +48,7 @@ public class AddonManagerAction extends AbstractAction {
     public static final String ACTION_ID = "addonManagerAction";
 
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerAction.class);
+    private DialogParentComponent dialogParentComponent;
 
     public AddonManagerAction() {
         init();
@@ -55,6 +58,11 @@ public class AddonManagerAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+            manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                dialogParentComponent = instance;
+            });
+        });
     }
 
     @Override
@@ -111,7 +119,7 @@ public class AddonManagerAction extends AbstractAction {
 
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, addonManagerPanel.getResourceBundle());
-        dialog.showCentered((Component) e.getSource());
+        dialog.showCentered(dialogParentComponent.getComponent());
         dialog.dispose();
     }
 }

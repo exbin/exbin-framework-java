@@ -21,7 +21,7 @@ import javax.swing.JComponent;
 import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Look&feel provider with options handler.
+ * Look&amp;feel provider with options handler.
  *
  * @author ExBin Project (https://exbin.org)
  */

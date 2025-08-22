@@ -16,7 +16,6 @@
 package org.exbin.framework.addon.update.action;
 
 import org.exbin.framework.addon.update.api.VersionNumbers;
-import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.net.URL;
@@ -27,7 +26,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.update.gui.CheckForUpdatePanel;
 import org.exbin.framework.addon.update.options.CheckForUpdateOptions;
@@ -53,6 +55,7 @@ public class CheckForUpdateAction extends AbstractAction {
     private URL checkUpdateUrl;
     private VersionNumbers updateVersion;
     private URL downloadUrl;
+    private DialogParentComponent dialogParentComponent;
 
     private CheckForUpdateService checkForUpdateService;
 
@@ -64,6 +67,11 @@ public class CheckForUpdateAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+            manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                dialogParentComponent = instance;
+            });
+        });
     }
 
     @Override
@@ -77,7 +85,7 @@ public class CheckForUpdateAction extends AbstractAction {
         controlPanel.setController(dialog::close);
         checkForUpdatePanel.setCheckForUpdateService(getCheckForUpdateService());
         checkForUpdatePanel.performCheckForUpdate();
-        dialog.showCentered((Component) e.getSource());
+        dialog.showCentered(dialogParentComponent.getComponent());
         dialog.dispose();
     }
 
