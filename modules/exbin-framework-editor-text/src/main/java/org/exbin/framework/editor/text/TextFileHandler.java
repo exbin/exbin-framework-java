@@ -37,6 +37,7 @@ import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.text.font.TextFontController;
@@ -56,6 +57,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     protected String title;
     protected FileType fileType = null;
     protected ComponentActivationListener componentActivationListener;
+    protected DialogParentComponent dialogParentComponent;
     protected UndoRedoController undoRedoControl = null;
     protected EditorTextPanelComponent textPanelComponent;
     public TextFileHandler() {
@@ -223,6 +225,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         componentActivationListener.updated(TextFontController.class, textPanelComponent);
         componentActivationListener.updated(TextEncodingController.class, textPanelComponent);
         componentActivationListener.updated(UndoRedoState.class, undoRedoControl);
+        componentActivationListener.updated(DialogParentComponent.class, (DialogParentComponent) () -> textPanel);
     }
 
     @Override
@@ -232,6 +235,12 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         componentActivationListener.updated(TextFontController.class, null);
         componentActivationListener.updated(TextEncodingController.class, null);
         componentActivationListener.updated(UndoRedoState.class, null);
+        componentActivationListener.updated(DialogParentComponent.class, dialogParentComponent);
+    }
+
+    @Override
+    public void setDialogParentComponent(DialogParentComponent dialogParentComponent) {
+        this.dialogParentComponent = dialogParentComponent;
     }
 
     public void notifyUndoChanged() {

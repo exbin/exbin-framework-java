@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.framework.action.api.DialogParentComponent;
 
 /**
  * Interface for file handling.
@@ -75,4 +76,11 @@ public interface FileHandler extends LoadableFileHandler {
      * @param fileType file type
      */
     void setFileType(@Nullable FileType fileType);
+
+    /**
+     * Sets dialog parent component.
+     *
+     * @param dialogParentComponent dialog parent component
+     */
+    void setDialogParentComponent(DialogParentComponent dialogParentComponent);
 }

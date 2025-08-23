@@ -31,10 +31,10 @@ import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.options.api.DefaultOptionsStorage;
 import org.exbin.framework.window.api.controller.OptionsControlController;
 
@@ -49,6 +49,7 @@ public class TextColorAction extends AbstractAction {
     public static final String ACTION_ID = "toolsSetColorAction";
 
     private FileHandler fileHandler;
+    private DialogParentComponent dialogParentComponent;
 
     public TextColorAction() {
     }
@@ -64,6 +65,9 @@ public class TextColorAction extends AbstractAction {
                     fileHandler = instance;
                     setEnabled(fileHandler != null && (fileHandler.getComponent() instanceof TextPanel));
                 });
+                manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                    dialogParentComponent = instance;
+                });
             }
         });
     }
@@ -77,7 +81,6 @@ public class TextColorAction extends AbstractAction {
         TextPanel textPanel = (TextPanel) fileHandler.getComponent();
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final TextColorService textColorService = new TextColorService() {
             @Override
             public Color[] getCurrentTextColors() {
@@ -118,6 +121,6 @@ public class TextColorAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
-        dialog.showCentered(frameModule.getFrame());
+        dialog.showCentered(dialogParentComponent.getComponent());
     }
 }

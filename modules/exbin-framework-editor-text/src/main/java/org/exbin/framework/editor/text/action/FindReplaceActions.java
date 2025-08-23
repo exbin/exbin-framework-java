@@ -27,6 +27,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActiveComponent;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.editor.text.EditorTextPanelComponent;
 import org.exbin.framework.editor.text.gui.FindTextPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
@@ -34,7 +35,6 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.controller.DefaultControlController;
 
@@ -55,9 +55,8 @@ public class FindReplaceActions {
         this.resourceBundle = resourceBundle;
     }
 
-    public void showFindDialog(TextPanel textPanel, FindDialogMode findDialogMode) {
+    public void showFindDialog(DialogParentComponent dialogParentComponent, TextPanel textPanel, FindDialogMode findDialogMode) {
         final WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         final FindTextPanel findPanel = new FindTextPanel();
         findPanel.setShallReplace(findDialogMode == FindDialogMode.REPLACE);
         findPanel.setSelected();
@@ -79,7 +78,7 @@ public class FindReplaceActions {
         });
         windowModule.addHeaderPanel(dialog.getWindow(), findPanel.getClass(), findPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, findPanel.getResourceBundle());
-        dialog.showCentered(frameModule.getFrame());
+        dialog.showCentered(dialogParentComponent.getComponent());
     }
 
     @Nonnull
@@ -108,6 +107,7 @@ public class FindReplaceActions {
 
         public static final String ACTION_ID = "editFindAction";
 
+        private DialogParentComponent dialogParentComponent;
         private TextPanel textPanel;
 
         public EditFindAction() {
@@ -123,7 +123,11 @@ public class FindReplaceActions {
                 public void register(ActionContextChangeManager manager) {
                     manager.registerUpdateListener(ActiveComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
-                        setEnabled(instance != null);
+                        setEnabled(textPanel != null && dialogParentComponent != null);
+                    });
+                    manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                        dialogParentComponent = instance;
+                        setEnabled(textPanel != null && dialogParentComponent != null);
                     });
                 }
             });
@@ -131,7 +135,7 @@ public class FindReplaceActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            showFindDialog((TextPanel) textPanel, FindDialogMode.FIND);
+            showFindDialog(dialogParentComponent, textPanel, FindDialogMode.FIND);
         }
     }
 
@@ -140,6 +144,7 @@ public class FindReplaceActions {
 
         public static final String ACTION_ID = "editFindAgainAction";
 
+        private DialogParentComponent dialogParentComponent;
         private TextPanel textPanel;
 
         public EditFindAgainAction() {
@@ -154,7 +159,11 @@ public class FindReplaceActions {
                 public void register(ActionContextChangeManager manager) {
                     manager.registerUpdateListener(ActiveComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
-                        setEnabled(instance != null);
+                        setEnabled(textPanel != null && dialogParentComponent != null);
+                    });
+                    manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                        dialogParentComponent = instance;
+                        setEnabled(textPanel != null && dialogParentComponent != null);
                     });
                 }
             });
@@ -162,7 +171,7 @@ public class FindReplaceActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            showFindDialog(textPanel, FindDialogMode.FIND);
+            showFindDialog(dialogParentComponent, textPanel, FindDialogMode.FIND);
         }
     }
 
@@ -171,6 +180,7 @@ public class FindReplaceActions {
 
         public static final String ACTION_ID = "editReplaceAction";
 
+        private DialogParentComponent dialogParentComponent;
         private TextPanel textPanel;
 
         public EditReplaceAction() {
@@ -186,7 +196,11 @@ public class FindReplaceActions {
                 public void register(ActionContextChangeManager manager) {
                     manager.registerUpdateListener(ActiveComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
-                        setEnabled(instance != null);
+                        setEnabled(textPanel != null && dialogParentComponent != null);
+                    });
+                    manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                        dialogParentComponent = instance;
+                        setEnabled(textPanel != null && dialogParentComponent != null);
                     });
                 }
             });
@@ -194,7 +208,7 @@ public class FindReplaceActions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            showFindDialog(textPanel, FindDialogMode.REPLACE);
+            showFindDialog(dialogParentComponent, textPanel, FindDialogMode.REPLACE);
         }
     }
 

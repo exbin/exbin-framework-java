@@ -21,8 +21,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPanelType;
@@ -45,6 +47,7 @@ public class OptionsAction extends AbstractAction {
 
     private ResourceBundle resourceBundle;
     private OptionsPagesProvider optionsPagesProvider;
+    private DialogParentComponent dialogParentComponent;
 
     public OptionsAction() {
     }
@@ -56,13 +59,19 @@ public class OptionsAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+            manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                dialogParentComponent = instance;
+                setEnabled(instance != null);
+            });
+        });
+        setEnabled(false);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         OptionsPanelType optionsPanelType = optionsModule.getOptionsPanelType();
         OptionsControlPanel controlPanel = new OptionsControlPanel();
@@ -98,7 +107,7 @@ public class OptionsAction extends AbstractAction {
                     }
                     dialog.close();
                 });
-                dialog.showCentered(frameModule.getFrame());
+                dialog.showCentered(dialogParentComponent.getComponent());
                 break;
             case TREE:
                 OptionsTreePanel optionsTreePanel = new OptionsTreePanel();
@@ -129,7 +138,7 @@ public class OptionsAction extends AbstractAction {
                     }
                     dialog.close();
                 });
-                dialog.showCentered(frameModule.getFrame());
+                dialog.showCentered(dialogParentComponent.getComponent());
                 break;
             default:
                 throw new IllegalStateException("Illegal options panel type " + optionsPanelType.name());

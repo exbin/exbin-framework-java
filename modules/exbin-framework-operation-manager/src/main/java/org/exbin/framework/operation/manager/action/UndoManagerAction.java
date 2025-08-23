@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.operation.manager.OperationManagerModule;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.operation.manager.gui.UndoManagerControlPanel;
@@ -32,6 +31,7 @@ import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.operation.manager.controller.UndoManagerControlController;
 
 /**
@@ -47,11 +47,11 @@ public class UndoManagerAction extends AbstractAction implements ActionContextCh
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OperationManagerModule.class);
 
     private UndoRedoState undoHandler = null;
+    private DialogParentComponent dialogParentComponent;
 
     @Override
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         UndoManagerPanel undoManagerPanel = new UndoManagerPanel();
         if (undoHandler instanceof UndoRedo) {
             undoManagerPanel.setCommandSequence((UndoRedo) undoHandler);
@@ -64,7 +64,7 @@ public class UndoManagerAction extends AbstractAction implements ActionContextCh
             windowHandler.dispose();
         });
         windowModule.addHeaderPanel(windowHandler.getWindow(), undoManagerPanel.getClass(), undoManagerPanel.getResourceBundle());
-        windowHandler.showCentered(frameModule.getFrame());
+        windowHandler.showCentered(dialogParentComponent.getComponent());
     }
 
     @Nonnull
@@ -77,6 +77,9 @@ public class UndoManagerAction extends AbstractAction implements ActionContextCh
         manager.registerUpdateListener(UndoRedoState.class, (instance) -> {
             undoHandler = instance;
             setEnabled(instance != null);
+        });
+        manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+            dialogParentComponent = instance;
         });
     }
 }
