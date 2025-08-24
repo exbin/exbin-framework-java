@@ -145,6 +145,10 @@ public class OptionsAction extends AbstractAction {
         }
     }
 
+    public void setDialogParentComponent(DialogParentComponent dialogParentComponent) {
+        this.dialogParentComponent = dialogParentComponent;
+    }
+
     @ParametersAreNonnullByDefault
     public interface OptionsPagesProvider {
 

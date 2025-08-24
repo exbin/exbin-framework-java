@@ -27,6 +27,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActiveComponent;
+import org.exbin.framework.action.api.DeletionController;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardController;
 
@@ -62,7 +63,7 @@ public class CutAction extends AbstractAction implements ActionContextChange {
     @Override
     public void register(ActionContextChangeManager manager) {
         manager.registerUpdateListener(ActiveComponent.class, component -> {
-            clipboardSupport = component instanceof ClipboardController ? (ClipboardController) component : null;
+            clipboardSupport = component instanceof ClipboardController && component instanceof DeletionController ? (ClipboardController) component : null;
             update();
         });
     }
@@ -73,6 +74,6 @@ public class CutAction extends AbstractAction implements ActionContextChange {
     }
 
     public void update() {
-        setEnabled(clipboardSupport != null && clipboardSupport.hasDataToCopy());
+        setEnabled(clipboardSupport != null && clipboardSupport.hasDataToCopy() && ((DeletionController) clipboardSupport).canDelete());
     }
 }

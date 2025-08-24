@@ -46,6 +46,8 @@ public interface ClipboardController {
 
     /**
      * Returns whether it is possible to paste current content of the clipboard.
+     * <p>
+     * TODO: Replace with "clipboard contains valid content for paste"
      *
      * @return true if can perform paste
      */
