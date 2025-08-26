@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.text.font.action;
 
-import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -30,7 +30,7 @@ import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
-import org.exbin.framework.action.api.ActiveComponent;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
@@ -49,7 +49,7 @@ public class TextFontAction extends AbstractAction {
     public static final String HELP_ID = "choose-font";
 
     private TextFontController textFontSupported;
-    private Component component;
+    private DialogParentComponent dialogParentComponent;
 
     public TextFontAction() {
     }
@@ -61,9 +61,14 @@ public class TextFontAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
             manager.registerUpdateListener(TextFontController.class, (instance) -> {
                 textFontSupported = instance;
-                setEnabled(textFontSupported != null);
+                setEnabled(textFontSupported != null && dialogParentComponent != null);
+            });
+            manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                dialogParentComponent = instance;
+                setEnabled(textFontSupported != null && dialogParentComponent != null);
             });
         });
+        setEnabled(false);
     }
 
     @Override
@@ -74,7 +79,7 @@ public class TextFontAction extends AbstractAction {
         OptionsControlPanel controlPanel = new OptionsControlPanel();
         HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
         helpModule.addLinkToControlPanel(controlPanel, new HelpLink(HELP_ID));
-        final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
+        final WindowHandler dialog = windowModule.createDialog(dialogParentComponent.getComponent(), Dialog.ModalityType.APPLICATION_MODAL, fontPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
         controlPanel.setController((OptionsControlController.ControlActionType actionType) -> {
@@ -91,6 +96,6 @@ public class TextFontAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
-        dialog.showCentered(component);
+        dialog.showCentered(dialogParentComponent.getComponent());
     }
 }
