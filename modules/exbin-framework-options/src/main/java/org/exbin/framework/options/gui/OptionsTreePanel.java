@@ -90,6 +90,7 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
 
         // Create menu tree
         top = new OptionsMutableTreeNode(resourceBundle.getString("options.root.caption"), OPTIONS_PANEL_KEY);
+        optionsTree.setRootVisible(true);
         optionsTree.setModel(new DefaultTreeModel(top, true));
         optionsTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
             if (e.getPath() != null) {
@@ -118,7 +119,6 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
                 }
             }
         });
-        optionsTree.setRootVisible(true);
     }
 
     @Nonnull
@@ -233,6 +233,10 @@ public class OptionsTreePanel extends javax.swing.JPanel implements OptionsPageR
         } else {
             pageRecord = new PageRecord(optionPage, visualParams);
             optionPages.put(panelKey, pageRecord);
+            if (OPTIONS_PANEL_KEY.equals(panelKey) && currentOptionsPanel == null) {
+                currentOptionsPanel = pageRecord;
+                optionsAreaScrollPane.setViewportView(currentOptionsPanel.getPanel());
+            }
             pageRecord.setOptionsModifiedListener(optionsModifiedListener);
         }
         optionsTree.setSelectionRow(0);
