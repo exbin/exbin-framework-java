@@ -109,6 +109,7 @@ public class BasicModuleRecord implements ModuleRecord {
         this.classLoader = classLoader;
     }
 
+    @Nonnull
     @Override
     public Optional<String> getProvider() {
         return Optional.ofNullable(provider);

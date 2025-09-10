@@ -43,7 +43,12 @@ public class PreferencesModule implements PreferencesModuleApi {
         } else {
             prefsPreferences = java.util.prefs.Preferences.userNodeForPackage(clazz);
         }
-        appPreferences = new PreferencesWrapper(prefsPreferences);
+        setupAppPreferences(prefsPreferences);
+    }
+
+    @Override
+    public void setupAppPreferences(java.util.prefs.Preferences preferences) {
+        appPreferences = new PreferencesWrapper(preferences);
     }
 
     @Nonnull

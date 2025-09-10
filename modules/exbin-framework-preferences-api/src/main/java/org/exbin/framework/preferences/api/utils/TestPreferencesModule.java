@@ -34,6 +34,10 @@ public class TestPreferencesModule implements PreferencesModuleApi {
     public void setupAppPreferences(Class clazz) {
     }
 
+    @Override
+    public void setupAppPreferences(java.util.prefs.Preferences preferences) {
+    }
+    
     @Nonnull
     @Override
     public OptionsStorage getAppPreferences() {

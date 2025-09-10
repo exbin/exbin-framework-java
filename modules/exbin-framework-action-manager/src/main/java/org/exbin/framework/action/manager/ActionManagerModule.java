@@ -39,6 +39,8 @@ public class ActionManagerModule implements org.exbin.framework.Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ActionManagerModule.class);
 
+    public static final String KEYMAP_GROUP_ID = "keymap";
+
     private ResourceBundle resourceBundle;
 
     public ActionManagerModule() {
@@ -66,7 +68,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
 
-        OptionsGroup keymapOptionsGroup = optionsModule.createOptionsGroup("keymap", getResourceBundle());
+        OptionsGroup keymapOptionsGroup = optionsModule.createOptionsGroup(KEYMAP_GROUP_ID, getResourceBundle());
         optionsPageManagement.registerGroup(keymapOptionsGroup);
 
         ActionManagerOptionsPage actionManagerOptionsPage = new ActionManagerOptionsPage();

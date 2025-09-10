@@ -18,6 +18,7 @@ package org.exbin.framework.action.manager.model;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.KeyStroke;
 import javax.swing.table.AbstractTableModel;
@@ -64,6 +65,7 @@ public class KeyMapTableModel extends AbstractTableModel {
         throw new IllegalStateException();
     }
 
+    @Nullable
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         KeyMapRecord record = records.get(rowIndex);

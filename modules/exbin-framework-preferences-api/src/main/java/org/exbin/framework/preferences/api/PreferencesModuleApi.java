@@ -30,9 +30,20 @@ public interface PreferencesModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(PreferencesModuleApi.class);
 
-    @Nonnull
+    /**
+     * Setups application preferences using class instance as base.
+     *
+     * @param clazz class instance
+     */
     void setupAppPreferences(Class clazz);
-    
+
+    /**
+     * Setups application preferences using preferences instance.
+     *
+     * @param preferences preferences instance
+     */
+    void setupAppPreferences(java.util.prefs.Preferences preferences);
+
     @Nonnull
     OptionsStorage getAppPreferences();
 }
