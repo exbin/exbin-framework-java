@@ -44,6 +44,11 @@ public interface PreferencesModuleApi extends Module {
      */
     void setupAppPreferences(java.util.prefs.Preferences preferences);
 
+    /**
+     * Returns application preferences.
+     *
+     * @return application preferences
+     */
     @Nonnull
     OptionsStorage getAppPreferences();
 }

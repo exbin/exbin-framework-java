@@ -16,7 +16,7 @@
 package org.exbin.framework.operation.api;
 
 /**
- * Operation capable reporting progress.
+ * Operation capable of reporting progress.
  *
  * @author ExBin Project (https://exbin.org)
  */
