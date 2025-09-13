@@ -13,29 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api;
+package org.exbin.framework.contribution.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
+import org.exbin.framework.Module;
 
 /**
- * Toolbar contribution rule for items group.
+ * Interface for contribution sequence output.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-@Immutable
-public class GroupToolBarContribution implements ToolBarContribution {
+public interface ContributionSequenceOutput extends Module {
 
-    private final String groupId;
+    /**
+     * Initializes next sequence item.
+     *
+     * @param itemContribution item contribution
+     */
+    void initItem(ItemSequenceContribution itemContribution);
 
-    public GroupToolBarContribution(String groupId) {
-        this.groupId = groupId;
-    }
+    /**
+     * Reports next sequence item.
+     *
+     * @param itemContribution item contribution
+     */
+    void add(ItemSequenceContribution itemContribution);
 
-    @Nonnull
-    public String getGroupId() {
-        return groupId;
-    }
+    /**
+     * Reports next separator.
+     */
+    void addSeparator();
+
+    /**
+     * Checks whether sequence is empty.
+     *
+     * @return true if empty
+     */
+    boolean isEmpty();
 }

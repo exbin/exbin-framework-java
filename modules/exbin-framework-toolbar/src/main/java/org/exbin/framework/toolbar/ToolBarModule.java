@@ -23,16 +23,17 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
-import org.exbin.framework.toolbar.api.ToolBarContribution;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.toolbar.api.GroupToolBarContributionRule;
-import org.exbin.framework.toolbar.api.PositionToolBarContributionRule;
-import org.exbin.framework.toolbar.api.PositionToolBarContributionRule.PositionMode;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
+import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule.PositionMode;
+import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.toolbar.api.ToolBarManager;
 
 /**
  * Implementation of tool bar module.
@@ -42,7 +43,7 @@ import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 @ParametersAreNonnullByDefault
 public class ToolBarModule implements ToolBarModuleApi {
 
-    private ToolBarManager toolBarManager = null;
+    private DefaultToolBarManager toolBarManager = null;
     private ResourceBundle resourceBundle;
 
     public ToolBarModule() {
@@ -77,12 +78,18 @@ public class ToolBarModule implements ToolBarModuleApi {
     }
 
     @Nonnull
-    private ToolBarManager getToolBarManager() {
+    private DefaultToolBarManager getToolBarManager() {
         if (toolBarManager == null) {
-            toolBarManager = new ToolBarManager();
+            toolBarManager = new DefaultToolBarManager();
         }
 
         return toolBarManager;
+    }
+
+    @Nonnull
+    @Override
+    public ToolBarManager createToolBarManager() {
+        return new DefaultToolBarManager();
     }
 
     @Override
@@ -112,15 +119,15 @@ public class ToolBarModule implements ToolBarModuleApi {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         ClipboardActionsApi clipboardActions = actionModule.getClipboardActions();
         ToolBarManagement mgmt = getMainToolBarManagement(MODULE_ID);
-        ToolBarContribution contribution = mgmt.registerToolBarGroup(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
-        mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
+        SequenceContribution contribution = mgmt.registerToolBarGroup(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
+        mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionMode.TOP));
         contribution = mgmt.registerToolBarItem(clipboardActions.createCutAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
         contribution = mgmt.registerToolBarItem(clipboardActions.createCopyAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
         contribution = mgmt.registerToolBarItem(clipboardActions.createPasteAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
         contribution = mgmt.registerToolBarItem(clipboardActions.createDeleteAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
     }
 }

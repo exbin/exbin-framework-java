@@ -18,9 +18,12 @@ package org.exbin.framework.toolbar.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import org.exbin.framework.contribution.api.GroupSequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContributionRule;
 
 /**
- * Interface for registered tool bars management.
+ * Interface for tool bar definition management.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -34,7 +37,7 @@ public interface ToolBarManagement {
      * @return toolbar contribution
      */
     @Nonnull
-    ToolBarContribution registerToolBarItem(Action action);
+    ActionToolBarContribution registerToolBarItem(Action action);
 
     /**
      * Registers group as a child item for given tool bar.
@@ -43,7 +46,7 @@ public interface ToolBarManagement {
      * @return toolbar contribution
      */
     @Nonnull
-    ToolBarContribution registerToolBarGroup(String groupId);
+    GroupSequenceContribution registerToolBarGroup(String groupId);
 
     /**
      * Registers tool bar contribution rule.
@@ -51,5 +54,5 @@ public interface ToolBarManagement {
      * @param toolBarContribution tool bar contribution
      * @param rule tool bar contribution rule
      */
-    void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule);
+    void registerToolBarRule(SequenceContribution toolBarContribution, SequenceContributionRule rule);
 }

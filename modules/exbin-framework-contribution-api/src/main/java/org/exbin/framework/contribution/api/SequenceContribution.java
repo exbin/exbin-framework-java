@@ -13,29 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.sidebar.api;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
+package org.exbin.framework.contribution.api;
 
 /**
- * Sidebar contribution rule for items group.
+ * Interface for sequence contributions.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-@Immutable
-public class GroupSideBarContribution implements SideBarContribution {
-
-    private final String groupId;
-
-    public GroupSideBarContribution(String groupId) {
-        this.groupId = groupId;
-    }
-
-    @Nonnull
-    public String getGroupId() {
-        return groupId;
-    }
+public interface SequenceContribution {
 }

@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api;
+package org.exbin.framework.contribution.api;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for tool bar contributions rule.
+ * Interface for contribution support module.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ToolBarContributionRule {
+@ParametersAreNonnullByDefault
+public interface ContributionModuleApi extends Module {
+
+    public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(ContributionModuleApi.class);
+
 }

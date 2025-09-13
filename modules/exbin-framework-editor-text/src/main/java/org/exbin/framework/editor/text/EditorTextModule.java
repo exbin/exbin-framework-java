@@ -50,14 +50,10 @@ import org.exbin.framework.editor.text.service.TextAppearanceService;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.GroupMenuContributionRule;
-import org.exbin.framework.toolbar.api.GroupToolBarContributionRule;
 import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.menu.api.PositionMenuContributionRule;
-import org.exbin.framework.toolbar.api.PositionToolBarContributionRule;
 import org.exbin.framework.menu.api.SeparationMenuContributionRule;
-import org.exbin.framework.toolbar.api.SeparationToolBarContributionRule;
-import org.exbin.framework.toolbar.api.ToolBarContribution;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.editor.text.options.TextAppearanceOptionsPage;
 import org.exbin.framework.editor.text.options.TextColorOptionsPage;
@@ -79,6 +75,10 @@ import org.exbin.framework.text.font.options.TextFontOptionsPage;
 import org.exbin.framework.text.font.service.TextFontService;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
+import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
+import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.utils.UiUtils;
 
 /**
@@ -485,11 +485,11 @@ public class EditorTextModule implements Module {
         getFindReplaceActions();
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
         ToolBarManagement mgmt = toolBarModule.getMainToolBarManagement(MODULE_ID);
-        ToolBarContribution contribution = mgmt.registerToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID);
-        mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionToolBarContributionRule.PositionMode.MIDDLE));
-        mgmt.registerToolBarRule(contribution, new SeparationToolBarContributionRule(SeparationToolBarContributionRule.SeparationMode.AROUND));
+        SequenceContribution contribution = mgmt.registerToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID);
+        mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE));
+        mgmt.registerToolBarRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
         contribution = mgmt.registerToolBarItem(findReplaceActions.createEditFindAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(EDIT_FIND_TOOL_BAR_GROUP_ID));
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {

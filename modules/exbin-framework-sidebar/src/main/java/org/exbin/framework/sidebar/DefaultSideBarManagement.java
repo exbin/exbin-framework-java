@@ -18,8 +18,10 @@ package org.exbin.framework.sidebar;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.sidebar.api.SideBarContribution;
-import org.exbin.framework.sidebar.api.SideBarContributionRule;
+import org.exbin.framework.contribution.api.GroupSequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.sidebar.api.ActionSideBarContribution;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 
 /**
@@ -30,11 +32,11 @@ import org.exbin.framework.sidebar.api.SideBarManagement;
 @ParametersAreNonnullByDefault
 public class DefaultSideBarManagement implements SideBarManagement {
 
-    private final SideBarManager sideBarManager;
+    private final DefaultSideBarManager sideBarManager;
     private final String sideBarId;
     private final String moduleId;
 
-    public DefaultSideBarManagement(SideBarManager sideBarManager, String sideBarId, String moduleId) {
+    public DefaultSideBarManagement(DefaultSideBarManager sideBarManager, String sideBarId, String moduleId) {
         this.sideBarManager = sideBarManager;
         this.sideBarId = sideBarId;
         this.moduleId = moduleId;
@@ -42,18 +44,18 @@ public class DefaultSideBarManagement implements SideBarManagement {
 
     @Nonnull
     @Override
-    public SideBarContribution registerSideBarItem(String sideBarId, Action action) {
+    public ActionSideBarContribution registerSideBarItem(Action action) {
         return sideBarManager.registerSideBarItem(sideBarId, moduleId, action);
     }
 
     @Nonnull
     @Override
-    public SideBarContribution registerSideBarGroup(String sideBarId, String groupId) {
+    public GroupSequenceContribution registerSideBarGroup(String groupId) {
         return sideBarManager.registerSideBarGroup(sideBarId, moduleId, groupId);
     }
 
     @Override
-    public void registerSideBarRule(SideBarContribution sideBarContribution, SideBarContributionRule rule) {
+    public void registerSideBarRule(SequenceContribution sideBarContribution, SequenceContributionRule rule) {
         sideBarManager.registerSideBarRule(sideBarContribution, rule);
     }
 }

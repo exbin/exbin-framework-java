@@ -30,7 +30,7 @@ public interface UiModuleApi extends Module {
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(UiModuleApi.class);
 
     /**
-     * Initialize UI. Should be called before any GUI is created.
+     * Initializes UI. Should be called before any GUI is created.
      */
     void initSwingUi();
 
@@ -42,7 +42,7 @@ public interface UiModuleApi extends Module {
     void addPreInitAction(Runnable runnable);
 
     /**
-     * Manually execute pre init actions.
+     * Manually executes pre init actions.
      */
     void executePreInitActions();
 
@@ -54,7 +54,7 @@ public interface UiModuleApi extends Module {
     void addPostInitAction(Runnable runnable);
 
     /**
-     * Manually execute post init actions.
+     * Manually executes post init actions.
      */
     void executePostInitActions();
 

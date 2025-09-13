@@ -6,5 +6,6 @@
   <homepage>https://exbin.org</homepage>
   <description>Support for side bar</description>
   <dependency>
+    <module id="org.exbin.framework.contribution.api.ContributionModuleApi" />
   </dependency>
 </module>

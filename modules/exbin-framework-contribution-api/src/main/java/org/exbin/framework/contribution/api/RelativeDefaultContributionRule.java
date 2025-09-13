@@ -13,43 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.sidebar.api;
+package org.exbin.framework.contribution.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Side bar contribution rule for items separation.
+ * Default contribution rule for item relative position.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class SeparationSideBarContributionRule implements SideBarContributionRule {
+public class RelativeDefaultContributionRule implements RelativeSequenceContributionRule {
 
-    private final SeparationMode separationMode;
+    private final NextToMode nextToMode;
+    private final String contributionId;
 
-    public SeparationSideBarContributionRule(SeparationMode separationMode) {
-        this.separationMode = separationMode;
+    public RelativeDefaultContributionRule(NextToMode nextToMode, String contributionId) {
+        this.nextToMode = nextToMode;
+        this.contributionId = contributionId;
     }
 
     @Nonnull
-    public SeparationMode getSeparationMode() {
-        return separationMode;
+    @Override
+    public NextToMode getNextToMode() {
+        return nextToMode;
     }
 
-    /**
-     * Enumeration of menu separator placement modes.
-     */
-    public enum SeparationMode {
-
-        NONE,
-        ABOVE,
-        /**
-         * Includes separator both above and below
-         */
-        AROUND,
-        BELOW
+    @Nonnull
+    @Override
+    public String getContributionId() {
+        return contributionId;
     }
 }

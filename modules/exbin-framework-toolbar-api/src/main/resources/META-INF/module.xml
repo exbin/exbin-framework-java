@@ -6,5 +6,6 @@
   <homepage>https://exbin.org</homepage>
   <description>Support for toolbar handling</description>
   <dependency>
+    <module id="org.exbin.framework.contribution.api.ContributionModuleApi" />
   </dependency>
 </module>

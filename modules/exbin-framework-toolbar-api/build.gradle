@@ -26,6 +26,7 @@ dependencies {
     api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'core', 'exbin-framework')
     api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-action-api')
     api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-utils')
+    api moduleDep('ExbinFrameworkJava', 'org.exbin.framework', 'modules', 'exbin-framework-contribution-api')
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     testImplementation group : 'junit', name: 'junit', version: '4.13.2'
 }

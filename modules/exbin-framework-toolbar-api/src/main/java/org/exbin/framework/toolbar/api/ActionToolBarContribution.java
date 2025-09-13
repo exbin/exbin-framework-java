@@ -16,25 +16,45 @@
 package org.exbin.framework.toolbar.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JComponent;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.contribution.api.ItemSequenceContribution;
 
 /**
- * Record for action as menu item contribution.
+ * Action toolbar item contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionToolBarContribution implements ToolBarContribution {
+public class ActionToolBarContribution implements ItemSequenceContribution {
 
     private final Action action;
+    private JComponent component;
 
     public ActionToolBarContribution(Action action) {
         this.action = action;
     }
 
     @Nonnull
+    @Override
+    public String getContributionId() {
+        return (String) action.getValue(ActionConsts.ACTION_ID);
+    }
+
+    @Nonnull
     public Action getAction() {
         return action;
+    }
+
+    @Nullable
+    public JComponent getComponent() {
+        return component;
+    }
+
+    public void setComponent(JComponent component) {
+        this.component = component;
     }
 }

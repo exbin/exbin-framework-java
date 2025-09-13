@@ -13,45 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api;
+package org.exbin.framework.contribution.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Toolbar contribution rule for item relative position.
+ * Sequence contribution rule for items separation.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class RelativeToolBarContributionRule implements ToolBarContributionRule {
+public class SeparationSequenceContributionRule implements SequenceContributionRule {
 
-    private final NextToMode nextToMode;
-    private final String contributionId;
+    private final SeparationMode separationMode;
 
-    public RelativeToolBarContributionRule(NextToMode nextToMode, String contributionId) {
-        this.nextToMode = nextToMode;
-        this.contributionId = contributionId;
-    }
-
-    @Nonnull
-    public NextToMode getNextToMode() {
-        return nextToMode;
-    }
-
-    @Nonnull
-    public String getContributionId() {
-        return contributionId;
+    public SeparationSequenceContributionRule(SeparationMode separationMode) {
+        this.separationMode = separationMode;
     }
 
     /**
-     * Enumeration of menu next to modes.
+     * Returns separation mode.
+     *
+     * @return separation mode
      */
-    public enum NextToMode {
+    @Nonnull
+    public SeparationMode getSeparationMode() {
+        return separationMode;
+    }
 
-        BEFORE,
-        AFTER
+    /**
+     * Enumeration of menu separator placement modes.
+     */
+    public enum SeparationMode {
+
+        NONE,
+        ABOVE,
+        /**
+         * Includes separator both above and below
+         */
+        AROUND,
+        BELOW
     }
 }

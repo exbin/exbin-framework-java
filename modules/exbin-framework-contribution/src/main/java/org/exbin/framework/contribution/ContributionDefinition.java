@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar;
+package org.exbin.framework.contribution;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,40 +21,40 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.toolbar.api.ToolBarContribution;
-import org.exbin.framework.toolbar.api.ToolBarContributionRule;
+import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContributionRule;
 
 /**
- * Toolbar definition.
+ * Contribution definition.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ToolBarDefinition {
+public class ContributionDefinition {
 
     private final String pluginId;
-    private List<ToolBarContribution> contributions = new ArrayList<>();
-    private Map<ToolBarContribution, List<ToolBarContributionRule>> rules = new HashMap<>();
+    private List<SequenceContribution> contributions = new ArrayList<>();
+    private Map<SequenceContribution, List<SequenceContributionRule>> rules = new HashMap<>();
 
-    public ToolBarDefinition(String pluginId) {
+    public ContributionDefinition(String pluginId) {
         this.pluginId = pluginId;
     }
 
     @Nonnull
-    public List<ToolBarContribution> getContributions() {
+    public List<SequenceContribution> getContributions() {
         return contributions;
     }
 
-    public void setContributions(List<ToolBarContribution> contributions) {
+    public void setContributions(List<SequenceContribution> contributions) {
         this.contributions = contributions;
     }
 
     @Nonnull
-    public Map<ToolBarContribution, List<ToolBarContributionRule>> getRules() {
+    public Map<SequenceContribution, List<SequenceContributionRule>> getRules() {
         return rules;
     }
 
-    public void setRules(Map<ToolBarContribution, List<ToolBarContributionRule>> rules) {
+    public void setRules(Map<SequenceContribution, List<SequenceContributionRule>> rules) {
         this.rules = rules;
     }
 }

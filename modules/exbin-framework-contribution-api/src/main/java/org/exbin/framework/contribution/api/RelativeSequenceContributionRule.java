@@ -13,38 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.sidebar.api;
+package org.exbin.framework.contribution.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Sidebar contribution rule for item relative position.
+ * Sequence contribution rule for item relative position.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 @Immutable
-public class RelativeSideBarContributionRule implements SideBarContributionRule {
+public interface RelativeSequenceContributionRule extends SequenceContributionRule {
 
-    private final NextToMode nextToMode;
-    private final String contributionId;
-
-    public RelativeSideBarContributionRule(NextToMode nextToMode, String contributionId) {
-        this.nextToMode = nextToMode;
-        this.contributionId = contributionId;
-    }
-
+    /**
+     * Returns next to mode.
+     *
+     * @return next to mode
+     */
     @Nonnull
-    public NextToMode getNextToMode() {
-        return nextToMode;
-    }
+    public NextToMode getNextToMode();
 
+    /**
+     * Returns position relative contribution id.
+     *
+     * @return contribution id
+     */
     @Nonnull
-    public String getContributionId() {
-        return contributionId;
-    }
+    public String getContributionId();
 
     /**
      * Enumeration of menu next to modes.

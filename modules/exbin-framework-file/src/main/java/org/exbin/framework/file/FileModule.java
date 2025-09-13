@@ -28,17 +28,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.menu.api.GroupMenuContributionRule;
-import org.exbin.framework.toolbar.api.GroupToolBarContributionRule;
 import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.menu.api.PositionMenuContributionRule;
-import org.exbin.framework.toolbar.api.PositionToolBarContributionRule;
 import org.exbin.framework.menu.api.RelativeMenuContributionRule;
-import org.exbin.framework.toolbar.api.ToolBarContribution;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.file.action.FileActions;
 import org.exbin.framework.file.action.NewFileAction;
@@ -145,14 +145,14 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public void registerToolBarFileHandlingActions() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
         ToolBarManagement mgmt = toolBarModule.getMainToolBarManagement(MODULE_ID);
-        ToolBarContribution contribution = mgmt.registerToolBarGroup(FILE_TOOL_BAR_GROUP_ID);
-        mgmt.registerToolBarRule(contribution, new PositionToolBarContributionRule(PositionToolBarContributionRule.PositionMode.TOP));
+        SequenceContribution contribution = mgmt.registerToolBarGroup(FILE_TOOL_BAR_GROUP_ID);
+        mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerToolBarItem(createNewFileAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(FILE_TOOL_BAR_GROUP_ID));
         contribution = mgmt.registerToolBarItem(createOpenFileAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(FILE_TOOL_BAR_GROUP_ID));
         contribution = mgmt.registerToolBarItem(createSaveFileAction());
-        mgmt.registerToolBarRule(contribution, new GroupToolBarContributionRule(FILE_TOOL_BAR_GROUP_ID));
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(FILE_TOOL_BAR_GROUP_ID));
     }
 
     @Override

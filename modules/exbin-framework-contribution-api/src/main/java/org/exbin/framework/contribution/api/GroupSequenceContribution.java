@@ -13,12 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.toolbar.api;
+package org.exbin.framework.contribution.api;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * Interface for tool bar contributions.
+ * Sequence contribution for items group.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ToolBarContribution {
+@ParametersAreNonnullByDefault
+@Immutable
+public class GroupSequenceContribution implements SequenceContribution {
+
+    private final String groupId;
+
+    public GroupSequenceContribution(String groupId) {
+        this.groupId = groupId;
+    }
+
+    /**
+     * Returns group id.
+     *
+     * @return group id
+     */
+    @Nonnull
+    public String getGroupId() {
+        return groupId;
+    }
 }

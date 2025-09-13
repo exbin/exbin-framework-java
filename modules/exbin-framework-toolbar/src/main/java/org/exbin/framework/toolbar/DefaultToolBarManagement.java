@@ -18,8 +18,10 @@ package org.exbin.framework.toolbar;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.toolbar.api.ToolBarContribution;
-import org.exbin.framework.toolbar.api.ToolBarContributionRule;
+import org.exbin.framework.contribution.api.GroupSequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.toolbar.api.ActionToolBarContribution;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 
 /**
@@ -30,11 +32,11 @@ import org.exbin.framework.toolbar.api.ToolBarManagement;
 @ParametersAreNonnullByDefault
 public class DefaultToolBarManagement implements ToolBarManagement {
 
-    private final ToolBarManager toolBarManager;
+    private final DefaultToolBarManager toolBarManager;
     private final String toolBarId;
     private final String moduleId;
 
-    public DefaultToolBarManagement(ToolBarManager toolBarManager, String toolBarId, String moduleId) {
+    public DefaultToolBarManagement(DefaultToolBarManager toolBarManager, String toolBarId, String moduleId) {
         this.toolBarManager = toolBarManager;
         this.toolBarId = toolBarId;
         this.moduleId = moduleId;
@@ -42,18 +44,18 @@ public class DefaultToolBarManagement implements ToolBarManagement {
 
     @Nonnull
     @Override
-    public ToolBarContribution registerToolBarItem(Action action) {
+    public ActionToolBarContribution registerToolBarItem(Action action) {
         return toolBarManager.registerToolBarItem(toolBarId, moduleId, action);
     }
 
     @Nonnull
     @Override
-    public ToolBarContribution registerToolBarGroup(String groupId) {
+    public GroupSequenceContribution registerToolBarGroup(String groupId) {
         return toolBarManager.registerToolBarGroup(toolBarId, moduleId, groupId);
     }
 
     @Override
-    public void registerToolBarRule(ToolBarContribution toolBarContribution, ToolBarContributionRule rule) {
+    public void registerToolBarRule(SequenceContribution toolBarContribution, SequenceContributionRule rule) {
         toolBarManager.registerToolBarRule(toolBarContribution, rule);
     }
 }

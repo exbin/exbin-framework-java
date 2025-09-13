@@ -26,6 +26,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.sidebar.api.SideBarManager;
 import org.exbin.framework.sidebar.api.SideBarModuleApi;
 
 /**
@@ -36,7 +37,7 @@ import org.exbin.framework.sidebar.api.SideBarModuleApi;
 @ParametersAreNonnullByDefault
 public class SideBarModule implements SideBarModuleApi {
 
-    private SideBarManager sideBarManager = null;
+    private DefaultSideBarManager sideBarManager = null;
     private ResourceBundle resourceBundle;
 
     public SideBarModule() {
@@ -71,12 +72,18 @@ public class SideBarModule implements SideBarModuleApi {
     }
 
     @Nonnull
-    private SideBarManager getSideBarManager() {
+    private DefaultSideBarManager getSideBarManager() {
         if (sideBarManager == null) {
-            sideBarManager = new SideBarManager();
+            sideBarManager = new DefaultSideBarManager();
         }
 
         return sideBarManager;
+    }
+
+    @Nonnull
+    @Override
+    public SideBarManager createSideBarManager() {
+        return new DefaultSideBarManager();
     }
 
     @Override

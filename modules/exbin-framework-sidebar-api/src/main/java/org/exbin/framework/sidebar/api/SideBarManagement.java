@@ -18,6 +18,9 @@ package org.exbin.framework.sidebar.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import org.exbin.framework.contribution.api.GroupSequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContributionRule;
 
 /**
  * Interface for registered side bars management.
@@ -30,22 +33,20 @@ public interface SideBarManagement {
     /**
      * Registers item as a child item for given side bar.
      *
-     * @param sideBarId sidebar id
      * @param action action
      * @return sidebar contribution
      */
     @Nonnull
-    SideBarContribution registerSideBarItem(String sideBarId, Action action);
+    ActionSideBarContribution registerSideBarItem(Action action);
 
     /**
      * Registers group as a child item for given side bar.
      *
-     * @param sideBarId sidebar id
      * @param groupId group id
      * @return sidebar contribution
      */
     @Nonnull
-    SideBarContribution registerSideBarGroup(String sideBarId, String groupId);
+    GroupSequenceContribution registerSideBarGroup(String groupId);
 
     /**
      * Registers side bar contribution rule.
@@ -53,5 +54,5 @@ public interface SideBarManagement {
      * @param sideBarContribution side bar contribution
      * @param rule side bar contribution rule
      */
-    void registerSideBarRule(SideBarContribution sideBarContribution, SideBarContributionRule rule);
+    void registerSideBarRule(SequenceContribution sideBarContribution, SequenceContributionRule rule);
 }

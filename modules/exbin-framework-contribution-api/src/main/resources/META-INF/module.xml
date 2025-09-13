@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.contribution.api.ContributionModuleApi</api>
+  <name>Contribution Support API</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for contribution handling</description>
+  <dependency>
+  </dependency>
+</module>

@@ -64,6 +64,14 @@ public interface ToolBarModuleApi extends Module {
     ToolBarManagement getMainToolBarManagement(String moduleId);
 
     /**
+     * Creates tool bar manager.
+     *
+     * @return tool bar manager
+     */
+    @Nonnull
+    ToolBarManager createToolBarManager();
+
+    /**
      * Returns tool bar using given identificator.
      *
      * @param targetToolBar target toolbar

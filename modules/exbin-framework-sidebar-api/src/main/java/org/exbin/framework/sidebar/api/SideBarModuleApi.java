@@ -63,6 +63,14 @@ public interface SideBarModuleApi extends Module {
     void registerSideBar(String sideBarId, String moduleId);
 
     /**
+     * Creates side bar manager.
+     *
+     * @return side bar manager
+     */
+    @Nonnull
+    SideBarManager createSideBarManager();
+
+    /**
      * Returns side bar using given identificator.
      *
      * @param targetSideBar target sidebar

@@ -16,25 +16,45 @@
 package org.exbin.framework.sidebar.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JComponent;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.contribution.api.ItemSequenceContribution;
 
 /**
- * Record for action as side bar contribution.
+ * Action side bar item contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionSideBarContribution implements SideBarContribution {
+public class ActionSideBarContribution implements ItemSequenceContribution {
 
     private final Action action;
+    private JComponent component;
 
     public ActionSideBarContribution(Action action) {
         this.action = action;
     }
 
     @Nonnull
+    @Override
+    public String getContributionId() {
+        return (String) action.getValue(ActionConsts.ACTION_ID);
+    }
+
+    @Nonnull
     public Action getAction() {
         return action;
+    }
+
+    @Nullable
+    public JComponent getComponent() {
+        return component;
+    }
+
+    public void setComponent(JComponent component) {
+        this.component = component;
     }
 }
