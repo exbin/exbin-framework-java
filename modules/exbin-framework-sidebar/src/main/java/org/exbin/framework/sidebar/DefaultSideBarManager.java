@@ -33,9 +33,6 @@ import org.exbin.framework.contribution.ContributionManager;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
 import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionType;
-import static org.exbin.framework.action.api.ActionType.CHECK;
-import static org.exbin.framework.action.api.ActionType.CYCLE;
-import static org.exbin.framework.action.api.ActionType.RADIO;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
@@ -61,13 +58,13 @@ public class DefaultSideBarManager extends ContributionManager implements SideBa
     }
 
     @Override
-    public void registerSideBar(String sideBarId, String pluginId) {
-        registerDefinition(sideBarId, pluginId);
+    public void registerSideBar(String sideBarId, String moduleId) {
+        registerDefinition(sideBarId, moduleId);
     }
 
     @Nonnull
     @Override
-    public ActionSideBarContribution registerSideBarItem(String sideBarId, String pluginId, Action action) {
+    public ActionSideBarContribution registerSideBarItem(String sideBarId, String moduleId, Action action) {
         ContributionDefinition definition = definitions.get(sideBarId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + sideBarId + " doesn't exist");
@@ -80,8 +77,8 @@ public class DefaultSideBarManager extends ContributionManager implements SideBa
 
     @Nonnull
     @Override
-    public GroupSequenceContribution registerSideBarGroup(String sideBarId, String pluginId, String groupId) {
-        return registerContributionGroup(sideBarId, pluginId, groupId);
+    public GroupSequenceContribution registerSideBarGroup(String sideBarId, String moduleId, String groupId) {
+        return registerContributionGroup(sideBarId, moduleId, groupId);
     }
 
     @Override
@@ -188,9 +185,10 @@ public class DefaultSideBarManager extends ContributionManager implements SideBa
         }
 
         @Override
-        public void initItem(ItemSequenceContribution itemContribution) {
+        public boolean initItem(ItemSequenceContribution itemContribution) {
             Action action = ((ActionSideBarContribution) itemContribution).getAction();
             ((ActionSideBarContribution) itemContribution).setComponent(DefaultSideBarManager.createSideBarComponent(action));
+            return true;
         }
 
         @Override

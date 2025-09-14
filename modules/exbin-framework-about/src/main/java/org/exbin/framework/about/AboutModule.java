@@ -24,11 +24,11 @@ import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.about.action.AboutAction;
 import org.exbin.framework.about.api.AboutModuleApi;
-import org.exbin.framework.menu.api.GroupMenuContributionRule;
-import org.exbin.framework.menu.api.MenuContribution;
+import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
+import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.menu.api.PositionMenuContributionRule;
-import org.exbin.framework.menu.api.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
@@ -79,12 +79,12 @@ public class AboutModule implements AboutModuleApi {
         }
 
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(HELP_ABOUT_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM_LAST));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(aboutActionRegistered ? SeparationMenuContributionRule.SeparationMode.NONE : SeparationMenuContributionRule.SeparationMode.ABOVE));
+        SequenceContribution contribution = mgmt.registerMenuGroup(HELP_ABOUT_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM_LAST));
+        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(aboutActionRegistered ? SeparationSequenceContributionRule.SeparationMode.NONE : SeparationSequenceContributionRule.SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
             contribution = mgmt.registerMenuItem(createAboutAction());
-            mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(HELP_ABOUT_MENU_GROUP_ID));
+            mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(HELP_ABOUT_MENU_GROUP_ID));
         }
     }
 

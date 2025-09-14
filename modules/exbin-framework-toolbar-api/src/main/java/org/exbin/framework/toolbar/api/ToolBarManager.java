@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.toolbar.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -59,7 +60,7 @@ public interface ToolBarManager {
     void registerToolBar(String toolBarId, String pluginId);
 
     /**
-     * Registers tool bar item contribution
+     * Registers tool bar item contribution.
      *
      * @param toolBarId tool bar id
      * @param pluginId plugin id
@@ -81,10 +82,18 @@ public interface ToolBarManager {
     GroupSequenceContribution registerToolBarGroup(String toolBarId, String pluginId, String groupId);
 
     /**
-     * Register contribution rule.
+     * Register tool bar contribution rule.
      *
-     * @param contribution contribution
-     * @param rule rule
+     * @param contribution tool bar contribution
+     * @param rule tool bar rule
      */
     void registerToolBarRule(SequenceContribution contribution, SequenceContributionRule rule);
+
+    /**
+     * Returns list of managed actions.
+     *
+     * @return list of actions
+     */
+    @Nonnull
+    List<Action> getAllManagedActions();
 }

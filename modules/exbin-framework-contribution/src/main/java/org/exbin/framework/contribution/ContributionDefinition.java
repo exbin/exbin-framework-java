@@ -32,12 +32,12 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 @ParametersAreNonnullByDefault
 public class ContributionDefinition {
 
-    private final String pluginId;
+    private final String moduleId;
     private List<SequenceContribution> contributions = new ArrayList<>();
     private Map<SequenceContribution, List<SequenceContributionRule>> rules = new HashMap<>();
 
-    public ContributionDefinition(String pluginId) {
-        this.pluginId = pluginId;
+    public ContributionDefinition(String moduleId) {
+        this.moduleId = moduleId;
     }
 
     @Nonnull

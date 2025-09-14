@@ -17,23 +17,33 @@ package org.exbin.framework.menu.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JMenuItem;
+import org.exbin.framework.contribution.api.ItemSequenceContribution;
 
 /**
- * Record for action as menu item contribution.
+ * Record for direct menu item contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DirectSubMenuContribution implements MenuContribution {
+public class DirectMenuContribution implements ItemSequenceContribution {
 
-    private final MenuItemProvider menuItemProvider;
+    private String contributionId;
+    private JMenuItem menuItem;
 
-    public DirectSubMenuContribution(MenuItemProvider menuItemProvider) {
-        this.menuItemProvider = menuItemProvider;
+    public DirectMenuContribution(String contributionId, JMenuItem menuItem) {
+        this.contributionId = contributionId;
+        this.menuItem = menuItem;
     }
 
     @Nonnull
-    public MenuItemProvider getMenuItemProvider() {
-        return menuItemProvider;
+    @Override
+    public String getContributionId() {
+        return contributionId;
+    }
+
+    @Nonnull
+    public JMenuItem getMenuItem() {
+        return menuItem;
     }
 }

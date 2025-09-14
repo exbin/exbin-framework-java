@@ -25,8 +25,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.menu.api.GroupMenuContributionRule;
-import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.EditorProviderChangeListener;
@@ -34,7 +32,6 @@ import org.exbin.framework.editor.api.EditorProviderComponentListener;
 import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.menu.api.PositionMenuContributionRule;
 import org.exbin.framework.editor.action.CloseAllFilesAction;
 import org.exbin.framework.editor.action.CloseFileAction;
 import org.exbin.framework.editor.action.CloseOtherFilesAction;
@@ -47,6 +44,9 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
+import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.SequenceContribution;
 
 /**
  * Framework editor module.
@@ -252,10 +252,10 @@ public class EditorModule implements EditorModuleApi {
     public void registerMenuFileCloseActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(FileModuleApi.FILE_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
+        SequenceContribution contribution = mgmt.registerMenuGroup(FileModuleApi.FILE_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(createCloseFileAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FileModuleApi.FILE_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FileModuleApi.FILE_MENU_GROUP_ID));
     }
 
     @Nonnull

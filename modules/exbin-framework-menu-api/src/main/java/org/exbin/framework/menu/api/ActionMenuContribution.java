@@ -16,8 +16,12 @@
 package org.exbin.framework.menu.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JMenuItem;
+import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.contribution.api.ItemSequenceContribution;
 
 /**
  * Record for action as menu item contribution.
@@ -25,16 +29,32 @@ import javax.swing.Action;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionMenuContribution implements MenuContribution {
+public class ActionMenuContribution implements ItemSequenceContribution {
 
     private final Action action;
+    private JMenuItem menuItem;
 
     public ActionMenuContribution(Action action) {
         this.action = action;
     }
 
     @Nonnull
+    @Override
+    public String getContributionId() {
+        return (String) action.getValue(ActionConsts.ACTION_ID);
+    }
+
+    @Nonnull
     public Action getAction() {
         return action;
+    }
+
+    @Nullable
+    public JMenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(JMenuItem menuItem) {
+        this.menuItem = menuItem;
     }
 }

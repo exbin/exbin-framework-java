@@ -19,20 +19,22 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 
 /**
- * Interface for contribution sequence output.
+ * Interface for tree contribution sequence output.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ContributionSequenceOutput extends Module {
+public interface TreeContributionSequenceOutput extends Module {
 
     /**
      * Initializes next sequence item.
      *
      * @param itemContribution item contribution
+     * @param definitionId definition id
+     * @param subId sub contribution id
      * @return true if valid
      */
-    boolean initItem(ItemSequenceContribution itemContribution);
+    boolean initItem(ItemSequenceContribution itemContribution, String definitionId, String subId);
 
     /**
      * Reports next sequence item.
@@ -40,6 +42,23 @@ public interface ContributionSequenceOutput extends Module {
      * @param itemContribution item contribution
      */
     void add(ItemSequenceContribution itemContribution);
+
+    /**
+     * Initializes next sub sequence.
+     *
+     * @param itemContribution item contribution
+     * @param definitionId definition id
+     * @param subId sub contribution id
+     * @return true if valid
+     */
+    boolean initItem(SubSequenceContribution itemContribution, String definitionId, String subId);
+
+    /**
+     * Reports next sub sequence.
+     *
+     * @param itemContribution item contribution
+     */
+    void add(SubSequenceContribution itemContribution);
 
     /**
      * Reports next separator.

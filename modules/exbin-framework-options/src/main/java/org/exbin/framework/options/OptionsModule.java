@@ -22,16 +22,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
+import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsPanelType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsPageReceiver;
 import org.exbin.framework.options.api.OptionsPage;
-import org.exbin.framework.menu.api.GroupMenuContributionRule;
-import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.menu.api.PositionMenuContributionRule;
-import org.exbin.framework.menu.api.SeparationMenuContributionRule;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.action.OptionsAction;
@@ -176,12 +176,12 @@ public class OptionsModule implements OptionsModuleApi {
             optionsActionRegistered = true;
         }
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM_LAST));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(optionsActionRegistered ? SeparationMenuContributionRule.SeparationMode.NONE : SeparationMenuContributionRule.SeparationMode.AROUND));
+        SequenceContribution contribution = mgmt.registerMenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM_LAST));
+        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(optionsActionRegistered ? SeparationSequenceContributionRule.SeparationMode.NONE : SeparationSequenceContributionRule.SeparationMode.AROUND));
         if (!optionsActionRegistered) {
             contribution = mgmt.registerMenuItem(optionsAction);
-            mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TOOLS_OPTIONS_MENU_GROUP_ID));
+            mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TOOLS_OPTIONS_MENU_GROUP_ID));
         }
     }
 

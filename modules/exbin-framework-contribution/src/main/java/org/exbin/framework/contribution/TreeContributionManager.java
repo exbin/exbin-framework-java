@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.utils.ObjectUtils;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
@@ -36,21 +35,24 @@ import org.exbin.framework.contribution.api.RelativeSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.contribution.api.SubSequenceContribution;
+import org.exbin.framework.contribution.api.SubSequenceContributionRule;
+import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 
 /**
- * Contribution manager.
+ * Tree contribution manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ContributionManager {
+public class TreeContributionManager {
 
     /**
      * Definition records: definition id -> contribution definition.
      */
     protected final Map<String, ContributionDefinition> definitions = new HashMap<>();
 
-    public ContributionManager() {
+    public TreeContributionManager() {
     }
 
     /**
@@ -59,7 +61,7 @@ public class ContributionManager {
      * @param targetSequence target ouput sequence
      * @param definitionId definition id
      */
-    public void buildSequence(ContributionSequenceOutput targetSequence, String definitionId) {
+    public void buildSequence(TreeContributionSequenceOutput targetSequence, String definitionId) {
         ContributionDefinition contributionDef = definitions.get(definitionId);
 
         if (contributionDef == null) {
@@ -72,6 +74,7 @@ public class ContributionManager {
         // Build contributions tree
         for (SequenceContribution contribution : contributionDef.getContributions()) {
             String parentGroupId = null;
+            String parentSubId = null;
             PositionSequenceContributionRule.PositionMode positionHint = null;
             SeparationSequenceContributionRule.SeparationMode separationMode = null;
             List<String> afterIds = new ArrayList<>();
@@ -98,28 +101,33 @@ public class ContributionManager {
                         }
                     } else if (rule instanceof GroupSequenceContributionRule) {
                         parentGroupId = ((GroupSequenceContributionRule) rule).getGroupId();
+                    } else if (rule instanceof SubSequenceContributionRule) {
+                        parentSubId = ((SubSequenceContributionRule) rule).getSubContributionId();
                     }
                 }
             }
 
-            BuilderGroupRecord groupRecord = createGroup(builderRecord, parentGroupId);
+            BuilderGroupRecord groupRecord = createGroup(builderRecord, parentSubId, parentGroupId);
+            BuilderSubRecord subRecord = builderRecord.subMap.get((String) (parentSubId == null ? "" : parentSubId));
 
             BuilderContributionRecord contributionRecord;
             String contributionId = null;
             if (contribution instanceof GroupSequenceContribution) {
                 String groupId = ((GroupSequenceContribution) contribution).getGroupId();
-                contributionRecord = builderRecord.groupsMap.get(groupId);
+                contributionRecord = subRecord.groupsMap.get(groupId);
                 if (contributionRecord == null) {
                     contributionRecord = new BuilderGroupRecord(groupId);
-                    builderRecord.groupsMap.put(groupId, (BuilderGroupRecord) contributionRecord);
+                    subRecord.groupsMap.put(groupId, (BuilderGroupRecord) contributionRecord);
                 }
+            } else if (contribution instanceof SubSequenceContribution) {
+                contributionRecord = new BuilderSubContributionRecord((SubSequenceContribution) contribution);
             } else if (contribution instanceof ItemSequenceContribution) {
                 contributionRecord = new BuilderItemContributionRecord((ItemSequenceContribution) contribution);
             } else {
                 throw new IllegalStateException("Unsupported contribution type: " + (contribution == null ? "null" : contribution.getClass().getName()));
             }
 
-            if (contributionId != null && builderRecord.contributionsMap.containsKey(contributionId)) {
+            if (contributionId != null && subRecord.contributionsMap.containsKey(contributionId)) {
                 throw new IllegalStateException("Contribution with id " + contributionId + " already exists");
             }
 
@@ -132,20 +140,20 @@ public class ContributionManager {
             lastContributionRecord = contributionRecord;
 
             // Convert before rules to after rules
-            List<String> defferedAfterIds = builderRecord.afterMap.remove(contributionId);
+            List<String> defferedAfterIds = subRecord.afterMap.remove(contributionId);
             if (defferedAfterIds != null) {
                 contributionRecord.placeAfter.addAll(defferedAfterIds);
             }
             for (String itemId : beforeIds) {
-                BuilderContributionRecord itemRecord = builderRecord.contributionsMap.get(itemId);
+                BuilderContributionRecord itemRecord = subRecord.contributionsMap.get(itemId);
                 if (itemRecord != null) {
                     itemRecord.placeAfter.add(contributionId);
                 } else {
-                    List<String> itemAfterIds = builderRecord.afterMap.get(itemId);
+                    List<String> itemAfterIds = subRecord.afterMap.get(itemId);
                     if (itemAfterIds == null) {
                         itemAfterIds = new ArrayList<>();
                         itemAfterIds.add(contributionId);
-                        builderRecord.afterMap.put(itemId, itemAfterIds);
+                        subRecord.afterMap.put(itemId, itemAfterIds);
                     } else {
                         itemAfterIds.add(contributionId);
                     }
@@ -154,44 +162,45 @@ public class ContributionManager {
 
             groupRecord.contributions.add(contributionRecord);
             if (contributionId != null) {
-                builderRecord.contributionsMap.put(contributionId, contributionRecord);
+                subRecord.contributionsMap.put(contributionId, contributionRecord);
             }
         }
 
-        BuilderGroupRecord rootRecord = builderRecord.groupsMap.get("");
-        if (rootRecord == null) {
-            return;
-        }
-
-        // Generate sequence
-        List<BuilderGroupRecord> processing = new ArrayList<>();
-        processing.add(rootRecord);
+        // Generate menu
+        List<BuilderProcessingRecord> processing = new ArrayList<>();
         BuilderContributionMatch contributionMatch = new BuilderContributionMatch();
+        BuilderProcessingRecord rootRecord = new BuilderProcessingRecord();
+        rootRecord.sub = builderRecord.subMap.get("");
+        rootRecord.sub.sequenceOutput = targetSequence;
+        rootRecord.group = rootRecord.sub.groupsMap.get("");
+        processing.add(rootRecord);
         while (!processing.isEmpty()) {
-            BuilderGroupRecord processingRecord = processing.get(processing.size() - 1);
+            BuilderProcessingRecord processingRecord = processing.get(processing.size() - 1);
+            BuilderSubRecord subRecord = processingRecord.sub;
+            BuilderGroupRecord groupRecord = processingRecord.group;
 
-            if (processingRecord.processingState == SectionProcessingState.START) {
-                if (processingRecord.separationMode == SeparationSequenceContributionRule.SeparationMode.ABOVE || processingRecord.separationMode == SeparationSequenceContributionRule.SeparationMode.AROUND) {
-                    builderRecord.separatorQueued = true;
+            if (groupRecord.processingState == SectionProcessingState.START) {
+                if (groupRecord.separationMode == SeparationSequenceContributionRule.SeparationMode.ABOVE || groupRecord.separationMode == SeparationSequenceContributionRule.SeparationMode.AROUND) {
+                    subRecord.separatorQueued = true;
                 }
-                processingRecord.processingState = SectionProcessingState.CONTRIBUTION;
+                groupRecord.processingState = SectionProcessingState.CONTRIBUTION;
             }
 
-            if (processingRecord.processingState == SectionProcessingState.CONTRIBUTION) {
-                if (!processingRecord.contributions.isEmpty()) {
+            if (groupRecord.processingState == SectionProcessingState.CONTRIBUTION) {
+                if (!groupRecord.contributions.isEmpty()) {
                     contributionMatch.clear();
                     BuilderContributionRecord record;
                     while (contributionMatch.nextMatch == -1) {
                         int index = 0;
-                        while (index < processingRecord.contributions.size()) {
-                            record = processingRecord.contributions.get(index);
+                        while (index < groupRecord.contributions.size()) {
+                            record = groupRecord.contributions.get(index);
                             boolean noAfterItems = record.placeAfter == null || record.placeAfter.isEmpty();
-                            boolean directPlaceMatch = noAfterItems ? false : builderRecord.processedContributions.containsAll(record.placeAfter);
+                            boolean directPlaceMatch = noAfterItems ? false : subRecord.processedContributions.containsAll(record.placeAfter);
                             if (noAfterItems || directPlaceMatch) {
                                 if (contributionMatch.fallbackMatch == -1) {
                                     contributionMatch.fallbackMatch = index;
                                 }
-                                if (record.positionHint == processingRecord.processingPosition) {
+                                if (record.positionHint == groupRecord.processingPosition) {
                                     if (contributionMatch.positionMatch == -1) {
                                         contributionMatch.positionMatch = index;
                                     }
@@ -200,7 +209,7 @@ public class ContributionManager {
                                         contributionMatch.nextMatch = index;
                                     }
 
-                                    if (contributionMatch.nextHintMatch == -1 && record.previousHint == builderRecord.previousContribution) {
+                                    if (contributionMatch.nextHintMatch == -1 && record.previousHint == subRecord.previousContribution) {
                                         contributionMatch.nextHintMatch = index;
                                     }
                                 }
@@ -208,72 +217,144 @@ public class ContributionManager {
                             index++;
                         }
 
-                        if (contributionMatch.positionMatch >= 0 || processingRecord.processingPosition == PositionSequenceContributionRule.PositionMode.BOTTOM_LAST) {
+                        if (contributionMatch.positionMatch >= 0 || groupRecord.processingPosition == PositionSequenceContributionRule.PositionMode.BOTTOM_LAST) {
                             break;
                         }
 
-                        processingRecord.processingPosition = PositionSequenceContributionRule.PositionMode.values()[processingRecord.processingPosition.ordinal() + 1];
+                        groupRecord.processingPosition = PositionSequenceContributionRule.PositionMode.values()[groupRecord.processingPosition.ordinal() + 1];
                     }
                     if (contributionMatch.hasFoundMatch()) {
                         int index = contributionMatch.bestMatch();
-                        record = processingRecord.contributions.remove(index);
+                        record = groupRecord.contributions.remove(index);
 
                         if (record.separationMode == SeparationSequenceContributionRule.SeparationMode.ABOVE || record.separationMode == SeparationSequenceContributionRule.SeparationMode.AROUND) {
-                            builderRecord.separatorQueued = true;
+                            subRecord.separatorQueued = true;
                         }
                         if (record instanceof BuilderGroupRecord) {
-                            processing.add((BuilderGroupRecord) record);
+                            BuilderProcessingRecord groupProcessingRecord = new BuilderProcessingRecord();
+                            groupProcessingRecord.sub = subRecord;
+                            groupProcessingRecord.group = (BuilderGroupRecord) record;
+                            processing.add(groupProcessingRecord);
                         } else if (record instanceof BuilderItemContributionRecord) {
                             BuilderItemContributionRecord contributionRecord = (BuilderItemContributionRecord) record;
-                            boolean valid = targetSequence.initItem(((BuilderItemContributionRecord) record).contribution);
+                            boolean valid = subRecord.sequenceOutput.initItem(contributionRecord.contribution, definitionId, subRecord.subId);
                             if (valid) {
-                                if (builderRecord.separatorQueued) {
-                                    if (!targetSequence.isEmpty()) {
-                                        targetSequence.addSeparator();
+                                if (subRecord.separatorQueued) {
+                                    if (!subRecord.sequenceOutput.isEmpty()) {
+                                        subRecord.sequenceOutput.addSeparator();
                                     }
-                                    builderRecord.separatorQueued = false;
+                                    subRecord.separatorQueued = false;
                                 }
-                                targetSequence.add(((BuilderItemContributionRecord) record).contribution);
-                                builderRecord.previousContribution = contributionRecord;
+                                subRecord.sequenceOutput.add(contributionRecord.contribution);
+                                subRecord.previousContribution = contributionRecord;
+                            }
+                        } else if (record instanceof BuilderSubContributionRecord) {
+                            BuilderSubContributionRecord contributionRecord = (BuilderSubContributionRecord) record;
+                            boolean valid = subRecord.sequenceOutput.initItem(contributionRecord.contribution, definitionId, subRecord.subId);
+                            if (valid) {
+                                BuilderSubRecord subSection = builderRecord.subMap.get(contributionRecord.contributionId);
+                                if (subSection != null) {
+                                    subSection.subContribution = contributionRecord.contribution;
+                                    subSection.sequenceOutput = contributionRecord.contribution.getSubOutput();
+                                    BuilderProcessingRecord subProcessingRecord = new BuilderProcessingRecord();
+                                    subProcessingRecord.sub = subSection;
+                                    subProcessingRecord.group = subSection.groupsMap.get("");
+                                    subProcessingRecord.isSubMode = true;
+                                    processing.add(subProcessingRecord);
+                                }
+                                subRecord.previousContribution = contributionRecord;
                             }
                         }
 
                         if (record.separationMode == SeparationSequenceContributionRule.SeparationMode.BELOW || record.separationMode == SeparationSequenceContributionRule.SeparationMode.AROUND) {
-                            builderRecord.separatorQueued = true;
+                            subRecord.separatorQueued = true;
                         }
-                        builderRecord.processedContributions.add(record.contributionId);
+                        subRecord.processedContributions.add(record.contributionId);
                     } else {
-                        Logger.getLogger(ContributionManager.class.getName()).log(Level.SEVERE, "Skipping items");
-                        processingRecord.contributions.clear();
+                        Logger.getLogger(TreeContributionManager.class.getName()).log(Level.SEVERE, "Skipping items");
+                        groupRecord.contributions.clear();
                     }
                     continue;
                 } else {
-                    processingRecord.processingState = SectionProcessingState.END;
+                    groupRecord.processingState = SectionProcessingState.END;
                 }
             }
 
-            if (processingRecord.processingState == SectionProcessingState.END) {
-                if (processingRecord.separationMode == SeparationSequenceContributionRule.SeparationMode.BELOW || processingRecord.separationMode == SeparationSequenceContributionRule.SeparationMode.AROUND) {
-                    builderRecord.separatorQueued = true;
+            if (groupRecord.processingState == SectionProcessingState.END) {
+                if (groupRecord.separationMode == SeparationSequenceContributionRule.SeparationMode.BELOW || groupRecord.separationMode == SeparationSequenceContributionRule.SeparationMode.AROUND) {
+                    subRecord.separatorQueued = true;
                 }
                 processing.remove(processing.size() - 1);
+                if (processingRecord.isSubMode && !subRecord.sequenceOutput.isEmpty()) {
+                    BuilderSubRecord parentMenuRecord = processing.get(processing.size() - 1).sub;
+                    if (parentMenuRecord.separatorQueued) {
+                        if (!parentMenuRecord.sequenceOutput.isEmpty()) {
+                            parentMenuRecord.sequenceOutput.addSeparator();
+                        }
+                        parentMenuRecord.separatorQueued = false;
+                    }
+                    parentMenuRecord.sequenceOutput.add(subRecord.subContribution);
+                }
             }
         }
     }
 
     @Nonnull
-    private static BuilderGroupRecord createGroup(BuilderRecord builderRecord, @Nullable String groupId) {
+    private static BuilderGroupRecord createGroup(BuilderRecord builderRecord, @Nullable String subId, @Nullable String groupId) {
+        if (subId == null) {
+            subId = "";
+        }
         if (groupId == null) {
             groupId = "";
         }
 
-        BuilderGroupRecord groupRecord = builderRecord.groupsMap.get(groupId);
+        BuilderSubRecord subRecord = builderRecord.subMap.get(subId);
+        if (subRecord == null) {
+            subRecord = new BuilderSubRecord(subId, builderRecord.sequenceOutput);
+            builderRecord.subMap.put(subId, subRecord);
+        }
+
+        BuilderGroupRecord groupRecord = subRecord.groupsMap.get(groupId);
         if (groupRecord == null) {
             groupRecord = new BuilderGroupRecord(groupId);
-            builderRecord.groupsMap.put(groupId, groupRecord);
+            subRecord.groupsMap.put(groupId, groupRecord);
         }
 
         return groupRecord;
+    }
+
+    public boolean subGroupExists(String subId, String groupId) {
+        ContributionDefinition definition = definitions.get(subId);
+        if (definition == null) {
+            return false;
+        }
+
+        for (SequenceContribution contribution : definition.getContributions()) {
+            if (contribution instanceof GroupSequenceContribution && ((GroupSequenceContribution) contribution).getGroupId().equals(groupId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void unregisterDefinition(String menuId) {
+        ContributionDefinition definition = definitions.get(menuId);
+        if (definition != null) {
+            // TODO clear pointers to improve garbage collection performance?
+//            List<MenuContribution> contributions = definition.getContributions();
+//            for (MenuContribution contribution : contributions) {
+//                contribution.
+//            }
+
+            /*            for (Map.Entry<String, String> usage : pluginsUsage.entrySet()) {
+                if (menuId.equals(usage.getValue())) {
+                    pluginsUsage.remove(usage.getKey());
+                    break;
+                }
+            } */
+            definitions.remove(menuId);
+        }
     }
 
     public void registerDefinition(String definitionId, String moduleId) {
@@ -290,7 +371,7 @@ public class ContributionManager {
     }
 
     @Nonnull
-    public GroupSequenceContribution registerContributionGroup(String definitionId, String moduleId, String groupId) {
+    public GroupSequenceContribution registerContributionGroup(String definitionId, String pluginId, String groupId) {
         ContributionDefinition definition = definitions.get(definitionId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + definitionId + " doesn't exist");
@@ -323,6 +404,17 @@ public class ContributionManager {
 
     private static class BuilderRecord {
 
+        TreeContributionSequenceOutput sequenceOutput;
+        Map<String, BuilderSubRecord> subMap = new HashMap<>();
+    }
+
+    @ParametersAreNonnullByDefault
+    private static class BuilderSubRecord {
+
+        TreeContributionSequenceOutput sequenceOutput;
+        SubSequenceContribution subContribution;
+        String subId;
+
         Map<String, BuilderGroupRecord> groupsMap = new HashMap<>();
         Map<String, BuilderContributionRecord> contributionsMap = new HashMap<>();
 
@@ -330,6 +422,11 @@ public class ContributionManager {
         BuilderContributionRecord previousContribution = null;
         Map<String, List<String>> afterMap = new HashMap<>();
         Set<String> processedContributions = new HashSet<>();
+
+        public BuilderSubRecord(String subId, TreeContributionSequenceOutput sequenceOutput) {
+            this.subId = subId;
+            this.sequenceOutput = sequenceOutput;
+        }
     }
 
     @ParametersAreNonnullByDefault
@@ -342,6 +439,13 @@ public class ContributionManager {
         public BuilderGroupRecord(String groupId) {
             contributionId = groupId;
         }
+    }
+
+    private static class BuilderProcessingRecord {
+
+        BuilderSubRecord sub;
+        BuilderGroupRecord group;
+        boolean isSubMode = false;
     }
 
     private enum SectionProcessingState {
@@ -362,6 +466,22 @@ public class ContributionManager {
 
         @Nonnull
         public ItemSequenceContribution getContribution() {
+            return contribution;
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private static class BuilderSubContributionRecord extends BuilderContributionRecord {
+
+        final SubSequenceContribution contribution;
+
+        public BuilderSubContributionRecord(SubSequenceContribution contribution) {
+            this.contribution = contribution;
+            this.contributionId = contribution.getContributionId();
+        }
+
+        @Nonnull
+        public SubSequenceContribution getContribution() {
             return contribution;
         }
     }

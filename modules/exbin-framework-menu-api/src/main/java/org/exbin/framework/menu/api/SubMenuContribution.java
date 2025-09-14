@@ -16,8 +16,12 @@
 package org.exbin.framework.menu.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JMenu;
+import org.exbin.framework.contribution.api.SubSequenceContribution;
+import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 
 /**
  * Record of sub/child menu contribution.
@@ -25,14 +29,22 @@ import javax.swing.Action;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SubMenuContribution implements MenuContribution {
+public class SubMenuContribution implements SubSequenceContribution {
 
     private final String subMenuId;
     private final Action action;
+    private JMenu subMenu;
+    private TreeContributionSequenceOutput subOutput;
 
     public SubMenuContribution(String subMenuId, Action action) {
         this.subMenuId = subMenuId;
         this.action = action;
+    }
+
+    @Nonnull
+    @Override
+    public String getContributionId() {
+        return subMenuId;
     }
 
     @Nonnull
@@ -43,5 +55,24 @@ public class SubMenuContribution implements MenuContribution {
     @Nonnull
     public Action getAction() {
         return action;
+    }
+
+    @Nullable
+    public JMenu getSubMenu() {
+        return subMenu;
+    }
+
+    public void setSubMenu(JMenu subMenu) {
+        this.subMenu = subMenu;
+    }
+
+    @Nullable
+    @Override
+    public TreeContributionSequenceOutput getSubOutput() {
+        return subOutput;
+    }
+
+    public void setSubOutput(TreeContributionSequenceOutput subOutput) {
+        this.subOutput = subOutput;
     }
 }

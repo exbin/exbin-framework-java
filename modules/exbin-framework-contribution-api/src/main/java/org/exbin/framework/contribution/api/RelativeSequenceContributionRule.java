@@ -16,6 +16,7 @@
 package org.exbin.framework.contribution.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -23,8 +24,17 @@ import javax.annotation.concurrent.Immutable;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 @Immutable
-public interface RelativeSequenceContributionRule extends SequenceContributionRule {
+public class RelativeSequenceContributionRule implements SequenceContributionRule {
+
+    private final NextToMode nextToMode;
+    private final String contributionId;
+
+    public RelativeSequenceContributionRule(NextToMode nextToMode, String contributionId) {
+        this.nextToMode = nextToMode;
+        this.contributionId = contributionId;
+    }
 
     /**
      * Returns next to mode.
@@ -32,7 +42,9 @@ public interface RelativeSequenceContributionRule extends SequenceContributionRu
      * @return next to mode
      */
     @Nonnull
-    public NextToMode getNextToMode();
+    public NextToMode getNextToMode() {
+        return nextToMode;
+    }
 
     /**
      * Returns position relative contribution id.
@@ -40,7 +52,9 @@ public interface RelativeSequenceContributionRule extends SequenceContributionRu
      * @return contribution id
      */
     @Nonnull
-    public String getContributionId();
+    public String getContributionId() {
+        return contributionId;
+    }
 
     /**
      * Enumeration of menu next to modes.

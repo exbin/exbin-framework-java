@@ -30,6 +30,7 @@ import javax.swing.JPopupMenu;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 
 /**
  * Interface for menu support module.
@@ -77,6 +78,14 @@ public interface MenuModuleApi extends Module {
      */
     @Nonnull
     MenuManagement getMainMenuManagement(String moduleId);
+
+    /**
+     * Creates menu manager.
+     *
+     * @return menu manager
+     */
+    @Nonnull
+    MenuManager createMenuManager();
 
     /**
      * Returns menu management interface.
@@ -142,7 +151,7 @@ public interface MenuModuleApi extends Module {
      * @param moduleId module id
      * @param separationMode separation mode
      */
-    void registerClipboardMenuItems(String menuId, @Nullable String subMenuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode);
+    void registerClipboardMenuItems(String menuId, @Nullable String subMenuId, String moduleId, SeparationSequenceContributionRule.SeparationMode separationMode);
 
     /**
      * Registers clipboard menu items.
@@ -153,7 +162,7 @@ public interface MenuModuleApi extends Module {
      * @param moduleId module id
      * @param separationMode separation mode
      */
-    void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, @Nullable String subMenuId, String moduleId, SeparationMenuContributionRule.SeparationMode separationMode);
+    void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, @Nullable String subMenuId, String moduleId, SeparationSequenceContributionRule.SeparationMode separationMode);
 
     /**
      * Returns list of action managed by menu managers.

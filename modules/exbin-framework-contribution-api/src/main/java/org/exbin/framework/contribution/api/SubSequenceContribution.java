@@ -13,29 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.menu.api;
+package org.exbin.framework.contribution.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Menu contribution rule for sub menu items.
+ * Sequence sub contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 @Immutable
-public class SubMenuContributionRule implements MenuContributionRule {
+public interface SubSequenceContribution extends SequenceContribution {
 
-    private final String subMenuId;
-
-    public SubMenuContributionRule(String subMenuId) {
-        this.subMenuId = subMenuId;
-    }
-
+    /**
+     * Returns sub sequence contribution id.
+     *
+     * @return sub sequence contribution id
+     */
     @Nonnull
-    public String getSubMenuId() {
-        return subMenuId;
-    }
+    String getContributionId();
+
+    /**
+     * Returns sub sequence builder output.
+     *
+     * @return sequence output
+     */
+    @Nonnull
+    TreeContributionSequenceOutput getSubOutput();
 }

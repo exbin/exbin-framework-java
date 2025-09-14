@@ -30,15 +30,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.RelativeSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.menu.api.GroupMenuContributionRule;
-import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.menu.api.PositionMenuContributionRule;
-import org.exbin.framework.menu.api.RelativeMenuContributionRule;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.file.action.FileActions;
 import org.exbin.framework.file.action.NewFileAction;
@@ -129,16 +126,16 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public void registerMenuFileHandlingActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(FILE_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
+        SequenceContribution contribution = mgmt.registerMenuGroup(FILE_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(createNewFileAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FILE_MENU_GROUP_ID));
         contribution = mgmt.registerMenuItem(createOpenFileAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FILE_MENU_GROUP_ID));
         contribution = mgmt.registerMenuItem(createSaveFileAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FILE_MENU_GROUP_ID));
         contribution = mgmt.registerMenuItem(createSaveAsFileAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FILE_MENU_GROUP_ID));
     }
 
     @Override
@@ -172,9 +169,9 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         getRecentFilesActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(() -> recentFilesActions.getOpenRecentMenu());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(FILE_MENU_GROUP_ID));
-        mgmt.registerMenuRule(contribution, new RelativeMenuContributionRule(RelativeMenuContributionRule.NextToMode.AFTER, OpenFileAction.ACTION_ID));
+        SequenceContribution contribution = mgmt.registerMenuItem(() -> recentFilesActions.getOpenRecentMenu());
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FILE_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new RelativeSequenceContributionRule(RelativeSequenceContributionRule.NextToMode.AFTER, OpenFileAction.ACTION_ID));
     }
 
     @Nonnull

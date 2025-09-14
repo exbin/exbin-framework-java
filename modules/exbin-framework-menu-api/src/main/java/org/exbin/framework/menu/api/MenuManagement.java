@@ -18,6 +18,9 @@ package org.exbin.framework.menu.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import org.exbin.framework.contribution.api.GroupSequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.contribution.api.SequenceContributionRule;
 
 /**
  * Interface for registered menus management.
@@ -34,7 +37,7 @@ public interface MenuManagement {
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(MenuItemProvider menuProvider);
+    DirectMenuContribution registerMenuItem(MenuItemProvider menuProvider);
 
     /**
      * Registers menu item as a child item for given menu.
@@ -43,7 +46,7 @@ public interface MenuManagement {
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(Action action);
+    ActionMenuContribution registerMenuItem(Action action);
 
     /**
      * Registers menu item as a child item for given menu.
@@ -53,7 +56,7 @@ public interface MenuManagement {
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(String subMenuId, Action subMenuAction);
+    SubMenuContribution registerMenuItem(String subMenuId, Action subMenuAction);
 
     /**
      * Registers menu item as a child item for given menu.
@@ -63,7 +66,7 @@ public interface MenuManagement {
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuItem(String subMenuId, String subMenuName);
+    SubMenuContribution registerMenuItem(String subMenuId, String subMenuName);
 
     /**
      * Registers menu item as a child item for given menu.
@@ -72,7 +75,7 @@ public interface MenuManagement {
      * @return menu contribution
      */
     @Nonnull
-    MenuContribution registerMenuGroup(String groupId);
+    GroupSequenceContribution registerMenuGroup(String groupId);
 
     /**
      * Returns true if given menu group exists.
@@ -85,10 +88,10 @@ public interface MenuManagement {
     /**
      * Registers menu contribution rule.
      *
-     * @param menuContribution menu contribution
+     * @param contribution menu contribution
      * @param rule menu contribution rule
      */
-    void registerMenuRule(MenuContribution menuContribution, MenuContributionRule rule);
+    void registerMenuRule(SequenceContribution contribution, SequenceContributionRule rule);
 
     /**
      * Returns submenu management.

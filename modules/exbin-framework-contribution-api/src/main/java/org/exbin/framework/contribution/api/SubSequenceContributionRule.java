@@ -20,31 +20,22 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Default contribution rule for item relative position.
+ * Sequence contribution rule for sub sequence.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class RelativeDefaultContributionRule implements RelativeSequenceContributionRule {
+public class SubSequenceContributionRule implements SequenceContributionRule {
 
-    private final NextToMode nextToMode;
-    private final String contributionId;
+    private final String subContributionId;
 
-    public RelativeDefaultContributionRule(NextToMode nextToMode, String contributionId) {
-        this.nextToMode = nextToMode;
-        this.contributionId = contributionId;
+    public SubSequenceContributionRule(String subContributionId) {
+        this.subContributionId = subContributionId;
     }
 
     @Nonnull
-    @Override
-    public NextToMode getNextToMode() {
-        return nextToMode;
-    }
-
-    @Nonnull
-    @Override
-    public String getContributionId() {
-        return contributionId;
+    public String getSubContributionId() {
+        return subContributionId;
     }
 }

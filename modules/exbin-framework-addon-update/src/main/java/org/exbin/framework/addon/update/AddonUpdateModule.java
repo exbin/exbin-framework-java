@@ -29,11 +29,11 @@ import org.exbin.framework.addon.update.service.CheckForUpdateService;
 import org.exbin.framework.addon.update.service.impl.CheckForUpdateServiceImpl;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.addon.update.action.CheckForUpdateAction;
-import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.menu.api.PositionMenuContributionRule;
 import org.exbin.framework.addon.update.api.AddonUpdateModuleApi;
 import org.exbin.framework.addon.update.options.CheckForUpdateOptionsPage;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.api.OptionsPageManagement;
@@ -75,8 +75,8 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     public void registerDefaultMenuItem() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(getCheckUpdateAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE_LAST));
+        SequenceContribution contribution = mgmt.registerMenuItem(getCheckUpdateAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE_LAST));
     }
 
     @Override

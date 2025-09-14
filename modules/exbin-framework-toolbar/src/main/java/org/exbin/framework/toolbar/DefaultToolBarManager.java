@@ -67,13 +67,13 @@ public class DefaultToolBarManager extends ContributionManager implements ToolBa
     }
 
     @Override
-    public void registerToolBar(String toolBarId, String pluginId) {
-        registerDefinition(toolBarId, pluginId);
+    public void registerToolBar(String toolBarId, String moduleId) {
+        registerDefinition(toolBarId, moduleId);
     }
 
     @Nonnull
     @Override
-    public ActionToolBarContribution registerToolBarItem(String toolBarId, String pluginId, Action action) {
+    public ActionToolBarContribution registerToolBarItem(String toolBarId, String moduleId, Action action) {
         ContributionDefinition definition = definitions.get(toolBarId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + toolBarId + " doesn't exist");
@@ -86,8 +86,8 @@ public class DefaultToolBarManager extends ContributionManager implements ToolBa
 
     @Nonnull
     @Override
-    public GroupSequenceContribution registerToolBarGroup(String toolBarId, String pluginId, String groupId) {
-        return registerContributionGroup(toolBarId, pluginId, groupId);
+    public GroupSequenceContribution registerToolBarGroup(String toolBarId, String moduleId, String groupId) {
+        return registerContributionGroup(toolBarId, moduleId, groupId);
     }
 
     @Override
@@ -96,6 +96,7 @@ public class DefaultToolBarManager extends ContributionManager implements ToolBa
     }
 
     @Nonnull
+    @Override
     public List<Action> getAllManagedActions() {
         List<Action> actions = new ArrayList<>();
         for (ContributionDefinition definition : definitions.values()) {
@@ -189,9 +190,10 @@ public class DefaultToolBarManager extends ContributionManager implements ToolBa
         }
 
         @Override
-        public void initItem(ItemSequenceContribution itemContribution) {
+        public boolean initItem(ItemSequenceContribution itemContribution) {
             Action action = ((ActionToolBarContribution) itemContribution).getAction();
             ((ActionToolBarContribution) itemContribution).setComponent(DefaultToolBarManager.createToolBarComponent(action));
+            return true;
         }
 
         @Override
@@ -223,9 +225,10 @@ public class DefaultToolBarManager extends ContributionManager implements ToolBa
         }
 
         @Override
-        public void initItem(ItemSequenceContribution itemContribution) {
+        public boolean initItem(ItemSequenceContribution itemContribution) {
             Action action = ((ActionToolBarContribution) itemContribution).getAction();
             ((ActionToolBarContribution) itemContribution).setComponent(DefaultToolBarManager.createToolBarComponent(action));
+            return true;
         }
 
         @Override

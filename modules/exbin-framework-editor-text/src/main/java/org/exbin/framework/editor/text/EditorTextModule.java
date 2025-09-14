@@ -49,11 +49,7 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.editor.text.service.TextAppearanceService;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.menu.api.GroupMenuContributionRule;
-import org.exbin.framework.menu.api.MenuContribution;
 import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.menu.api.PositionMenuContributionRule;
-import org.exbin.framework.menu.api.SeparationMenuContributionRule;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.editor.text.options.TextAppearanceOptionsPage;
 import org.exbin.framework.editor.text.options.TextColorOptionsPage;
@@ -160,8 +156,8 @@ public class EditorTextModule implements Module {
 
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(() -> encodingsHandler.getToolsEncodingMenu());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP_LAST));
+        SequenceContribution contribution = mgmt.registerMenuItem(() -> encodingsHandler.getToolsEncodingMenu());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP_LAST));
     }
 
     public void registerOptionsPanels() {
@@ -308,22 +304,22 @@ public class EditorTextModule implements Module {
         createWordWrappingAction();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(createWordWrappingAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
+        SequenceContribution contribution = mgmt.registerMenuItem(createWordWrappingAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(createGoToLineAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
+        SequenceContribution contribution = mgmt.registerMenuItem(createGoToLineAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerEditSelection() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(createEditSelectionAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(MenuModuleApi.CLIPBOARD_ACTIONS_MENU_GROUP_ID));
+        SequenceContribution contribution = mgmt.registerMenuItem(createEditSelectionAction());
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(MenuModuleApi.CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
 
     public void registerTextPopupMenu() {
@@ -333,42 +329,42 @@ public class EditorTextModule implements Module {
         MenuManagement mgmt = menuModule.getMenuManagement(TEXT_POPUP_MENU_ID, MODULE_ID);
         ClipboardActionsApi clipboardActions = actionModule.getClipboardActions();
 
-        MenuContribution contribution = mgmt.registerMenuGroup(TEXT_POPUP_VIEW_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
+        SequenceContribution contribution = mgmt.registerMenuGroup(TEXT_POPUP_VIEW_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
         contribution = mgmt.registerMenuGroup(TEXT_POPUP_EDIT_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
         contribution = mgmt.registerMenuGroup(TEXT_POPUP_SELECTION_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
         contribution = mgmt.registerMenuGroup(TEXT_POPUP_FIND_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
         contribution = mgmt.registerMenuGroup(TEXT_POPUP_TOOLS_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
 
         contribution = mgmt.registerMenuItem(clipboardActions.createCutAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
         contribution = mgmt.registerMenuItem(clipboardActions.createCopyAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
         contribution = mgmt.registerMenuItem(clipboardActions.createPasteAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
         contribution = mgmt.registerMenuItem(clipboardActions.createDeleteAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
 
         contribution = mgmt.registerMenuItem(clipboardActions.createSelectAllAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
         contribution = mgmt.registerMenuItem(createEditSelectionAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_SELECTION_GROUP_ID));
 
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_FIND_GROUP_ID));
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditReplaceAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_FIND_GROUP_ID));
         contribution = mgmt.registerMenuItem(createGoToLineAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(TEXT_POPUP_FIND_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_FIND_GROUP_ID));
     }
 
     public TextStatusPanel getTextStatusPanel() {
@@ -470,15 +466,15 @@ public class EditorTextModule implements Module {
         getFindReplaceActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuGroup(EDIT_FIND_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.MIDDLE));
-        mgmt.registerMenuRule(contribution, new SeparationMenuContributionRule(SeparationMenuContributionRule.SeparationMode.AROUND));
+        SequenceContribution contribution = mgmt.registerMenuGroup(EDIT_FIND_MENU_GROUP_ID);
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE));
+        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(EDIT_FIND_MENU_GROUP_ID));
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAgainAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(EDIT_FIND_MENU_GROUP_ID));
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditReplaceAction());
-        mgmt.registerMenuRule(contribution, new GroupMenuContributionRule(EDIT_FIND_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(EDIT_FIND_MENU_GROUP_ID));
     }
 
     public void registerEditFindToolBarActions() {
@@ -495,24 +491,24 @@ public class EditorTextModule implements Module {
     public void registerToolsOptionsMenuActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(createTextFontAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
+        SequenceContribution contribution = mgmt.registerMenuItem(createTextFontAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(createTextColorAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
     }
 
     public void registerPropertiesMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(createPropertiesAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
+        SequenceContribution contribution = mgmt.registerMenuItem(createPropertiesAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(createPrintAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.BOTTOM));
+        SequenceContribution contribution = mgmt.registerMenuItem(createPrintAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
     }
 
     @Nonnull

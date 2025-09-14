@@ -35,9 +35,9 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.action.api.ActionContextService;
-import org.exbin.framework.menu.api.MenuContribution;
+import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
+import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.menu.api.PositionMenuContributionRule;
 import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.editor.api.EditorModuleApi;
@@ -86,12 +86,12 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         menuModule.registerMenu(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
         MenuManagement mgmt = menuModule.getMenuManagement(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
-        MenuContribution contribution = mgmt.registerMenuItem(editorModule.createCloseFileAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
+        SequenceContribution contribution = mgmt.registerMenuItem(editorModule.createCloseFileAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(editorModule.createCloseAllFilesAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem( editorModule.createCloseOtherFilesAction());
-        mgmt.registerMenuRule(contribution, new PositionMenuContributionRule(PositionMenuContributionRule.PositionMode.TOP));
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
 
         multiEditorPanel.setController(new MultiEditorPanel.Controller() {
             @Override

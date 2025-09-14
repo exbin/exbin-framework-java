@@ -32,5 +32,5 @@ public interface ItemSequenceContribution extends SequenceContribution {
      * @return item contribution id
      */
     @Nonnull
-    public String getContributionId();
+    String getContributionId();
 }
