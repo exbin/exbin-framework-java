@@ -268,12 +268,16 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
 
         @Override
         public boolean initItem(ItemSequenceContribution itemContribution, String definitionId, String subId) {
-            if (itemContribution instanceof DirectMenuContribution) {
-                return true;
+            Action action;
+            JMenuItem menuItem;
+            if (itemContribution instanceof ActionMenuContribution) {
+                menuItem = null;
+                action = ((ActionMenuContribution) itemContribution).getAction();
+            } else {
+                menuItem = ((DirectMenuContribution) itemContribution).getMenuItem();
+                action = menuItem.getAction();
             }
-
-            Action action = ((ActionMenuContribution) itemContribution).getAction();
-            if (isPopup) {
+            if (isPopup && action != null) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                 if (menuCreation != null) {
                     if (!menuCreation.shouldCreate(definitionId, subId)) {
@@ -282,10 +286,12 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
                 }
             }
 
-            JMenuItem menuItem = DefaultMenuManager.createMenuItem(action, buttonGroups);
-            ((ActionMenuContribution) itemContribution).setMenuItem(menuItem);
+            if (itemContribution instanceof ActionMenuContribution) {
+                menuItem = DefaultMenuManager.createMenuItem(action, buttonGroups);
+                ((ActionMenuContribution) itemContribution).setMenuItem(menuItem);
+            }
 
-            if (isPopup) {
+            if (isPopup && action != null) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                 if (menuCreation != null) {
                     menuCreation.onCreate(menuItem, definitionId, subId);
@@ -322,7 +328,7 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
             JMenu subMenu = UiUtils.createMenu();
             subMenu.setAction(action);
             ((SubMenuContribution) itemContribution).setSubMenu(subMenu);
-            ((SubMenuContribution) itemContribution).setSubOutput(new MenuWrapper(subMenu, activationUpdateService, buttonGroups));
+            ((SubMenuContribution) itemContribution).setSubOutput(new MenuWrapper(subMenu, activationUpdateService, buttonGroups, isPopup));
 
             if (isPopup && action != null) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
@@ -372,14 +378,11 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
 
         @Override
         public boolean initItem(ItemSequenceContribution itemContribution, String definitionId, String subId) {
-            if (itemContribution instanceof DirectMenuContribution) {
-                return true;
+            if (itemContribution instanceof ActionMenuContribution) {
+                Action action = ((ActionMenuContribution) itemContribution).getAction();
+                JMenuItem menuItem = DefaultMenuManager.createMenuItem(action, buttonGroups);
+                ((ActionMenuContribution) itemContribution).setMenuItem(menuItem);
             }
-
-            Action action = ((ActionMenuContribution) itemContribution).getAction();
-
-            JMenuItem menuItem = DefaultMenuManager.createMenuItem(action, buttonGroups);
-            ((ActionMenuContribution) itemContribution).setMenuItem(menuItem);
 
             return true;
         }
@@ -440,12 +443,16 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
 
         @Override
         public boolean initItem(ItemSequenceContribution itemContribution, String definitionId, String subId) {
-            if (itemContribution instanceof DirectMenuContribution) {
-                return true;
+            Action action;
+            JMenuItem menuItem;
+            if (itemContribution instanceof ActionMenuContribution) {
+                menuItem = null;
+                action = ((ActionMenuContribution) itemContribution).getAction();
+            } else {
+                menuItem = ((DirectMenuContribution) itemContribution).getMenuItem();
+                action = menuItem.getAction();
             }
-
-            Action action = ((ActionMenuContribution) itemContribution).getAction();
-            {
+            if (action != null) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                 if (menuCreation != null) {
                     if (!menuCreation.shouldCreate(definitionId, subId)) {
@@ -454,10 +461,12 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
                 }
             }
 
-            JMenuItem menuItem = DefaultMenuManager.createMenuItem(action, buttonGroups);
-            ((ActionMenuContribution) itemContribution).setMenuItem(menuItem);
+            if (itemContribution instanceof ActionMenuContribution) {
+                menuItem = DefaultMenuManager.createMenuItem(action, buttonGroups);
+                ((ActionMenuContribution) itemContribution).setMenuItem(menuItem);
+            }
 
-            {
+            if (action != null) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                 if (menuCreation != null) {
                     menuCreation.onCreate(menuItem, definitionId, subId);
@@ -495,7 +504,7 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
             JMenu subMenu = UiUtils.createMenu();
             subMenu.setAction(action);
             ((SubMenuContribution) itemContribution).setSubMenu(subMenu);
-            ((SubMenuContribution) itemContribution).setSubOutput(new MenuWrapper(subMenu, activationUpdateService, buttonGroups));
+            ((SubMenuContribution) itemContribution).setSubOutput(new MenuWrapper(subMenu, activationUpdateService, buttonGroups, true));
 
             if (action != null) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
