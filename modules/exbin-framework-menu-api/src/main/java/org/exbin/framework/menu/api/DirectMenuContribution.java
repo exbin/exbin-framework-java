@@ -17,7 +17,9 @@ package org.exbin.framework.menu.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import javax.swing.JMenuItem;
+import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
 
 /**
@@ -28,22 +30,42 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 @ParametersAreNonnullByDefault
 public class DirectMenuContribution implements ItemSequenceContribution {
 
+    private MenuItemProvider menuItemProvider;
     private String contributionId;
     private JMenuItem menuItem;
 
-    public DirectMenuContribution(String contributionId, JMenuItem menuItem) {
-        this.contributionId = contributionId;
-        this.menuItem = menuItem;
+    public DirectMenuContribution(MenuItemProvider menuItemProvider) {
+        this.menuItemProvider = menuItemProvider;
     }
 
     @Nonnull
     @Override
     public String getContributionId() {
+        if (menuItem == null) {
+            createItem();
+        }
+
         return contributionId;
     }
 
     @Nonnull
     public JMenuItem getMenuItem() {
+        if (menuItem == null) {
+            createItem();
+        }
+
         return menuItem;
+    }
+
+    private void createItem() {
+        menuItem = menuItemProvider.createMenuItem();
+        contributionId = "";
+        Action action = menuItem.getAction();
+        if (action != null) {
+            contributionId = (String) action.getValue(ActionConsts.ACTION_ID);
+            if (contributionId == null) {
+                contributionId = "";
+            }
+        }
     }
 }

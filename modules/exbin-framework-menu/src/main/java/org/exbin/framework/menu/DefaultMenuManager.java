@@ -161,17 +161,7 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
             definitions.put(menuId, definition);
         }
 
-        JMenuItem menuItem = menuItemProvider.createMenuItem();
-        String contributionId = "";
-        Action action = menuItem.getAction();
-        if (action != null) {
-            contributionId = (String) action.getValue(ActionConsts.ACTION_ID);
-            if (contributionId == null) {
-                contributionId = "";
-            }
-        }
-        
-        DirectMenuContribution menuContribution = new DirectMenuContribution(contributionId, menuItem);
+        DirectMenuContribution menuContribution = new DirectMenuContribution(menuItemProvider);
         definition.getContributions().add(menuContribution);
         return menuContribution;
     }
