@@ -26,13 +26,32 @@ import org.exbin.framework.utils.OkCancelControlComponent;
 @ParametersAreNonnullByDefault
 public interface MultiStepControlController {
 
+    /**
+     * Invokes control action.
+     *
+     * @param actionType action type
+     */
     void controlActionPerformed(ControlActionType actionType);
 
+    /**
+     * Interface for control component.
+     */
     @ParametersAreNonnullByDefault
     public interface MultiStepControlComponent extends OkCancelControlComponent {
 
+        /**
+         * Invokes action button click.
+         *
+         * @param actionType action type
+         */
         void performClick(ControlActionType actionType);
 
+        /**
+         * Sets action button enablement.
+         *
+         * @param actionType action type
+         * @param enablement button enablement
+         */
         void setActionEnabled(ControlActionType actionType, boolean enablement);
     }
 

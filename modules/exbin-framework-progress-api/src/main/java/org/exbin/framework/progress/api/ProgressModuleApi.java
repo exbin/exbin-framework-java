@@ -20,7 +20,7 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
 /**
- * Support for operations with progress state 
+ * Support for operations with progress state
  *
  * @author ExBin Project (https://exbin.org)
  */

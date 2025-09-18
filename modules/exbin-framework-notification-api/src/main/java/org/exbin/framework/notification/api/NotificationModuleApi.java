@@ -13,40 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.theme.api;
+package org.exbin.framework.notification.api;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
 
 /**
- * Look&amp;feel provider.
+ * Support module api for notifications.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface LafProvider {
+@ParametersAreNonnullByDefault
+public interface NotificationModuleApi extends Module {
 
-    /**
-     * Returns look and feel string identifier.
-     *
-     * @return string identifier
-     */
-    @Nonnull
-    String getLafId();
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(NotificationModuleApi.class);
 
-    /**
-     * Returns look and feel default name.
-     *
-     * @return name
-     */
-    @Nonnull
-    String getLafName();
-
-    /**
-     * Installs look and feel into UIManager.
-     */
-    void installLaf();
-
-    /**
-     * Applies specific look and feel.
-     */
-    void applyLaf();
 }

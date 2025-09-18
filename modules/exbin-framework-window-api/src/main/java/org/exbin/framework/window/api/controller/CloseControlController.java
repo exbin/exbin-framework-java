@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.window.api.controller;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.OkCancelControlComponent;
 
 /**
@@ -23,15 +22,28 @@ import org.exbin.framework.utils.OkCancelControlComponent;
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface CloseControlController {
 
+    /**
+     * Invokes control action.
+     */
     void controlActionPerformed();
 
+    /**
+     * Interface for control component.
+     */
     public interface CloseControlComponent extends OkCancelControlComponent {
 
+        /**
+         * Invokes close button click.
+         */
         void performCloseClick();
 
+        /**
+         * Sets close button enablement.
+         *
+         * @param enablement button enablement
+         */
         void setCloseActionEnabled(boolean enablement);
     }
 }

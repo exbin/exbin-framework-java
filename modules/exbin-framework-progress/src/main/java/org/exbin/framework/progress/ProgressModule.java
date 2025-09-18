@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.progress;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.progress.api.ProgressModuleApi;
 
 /**
@@ -22,7 +23,7 @@ import org.exbin.framework.progress.api.ProgressModuleApi;
  *
  * @author ExBin Project (https://exbin.org)
  */
-
+@ParametersAreNonnullByDefault
 public class ProgressModule implements ProgressModuleApi {
 
 }

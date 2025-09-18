@@ -16,14 +16,12 @@
 package org.exbin.framework.ui.theme.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Look&amp;feel provider with support for additional options.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface ConfigurableLafProvider extends LafProvider {
 
     /**
