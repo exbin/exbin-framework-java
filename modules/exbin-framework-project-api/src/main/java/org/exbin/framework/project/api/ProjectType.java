@@ -28,9 +28,19 @@ import javax.swing.JComponent;
 @ParametersAreNonnullByDefault
 public interface ProjectType {
 
+    /**
+     * Returns project type id.
+     *
+     * @return project type id
+     */
     @Nonnull
     String getId();
 
+    /**
+     * Returns project category.
+     *
+     * @return
+     */
     @Nonnull
     ProjectCategory getCategory();
 

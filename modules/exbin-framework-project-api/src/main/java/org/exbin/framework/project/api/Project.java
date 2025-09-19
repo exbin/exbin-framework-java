@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.project.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -25,5 +26,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface Project {
 
+    @Nonnull
     ProjectType getProjectType();
 }
