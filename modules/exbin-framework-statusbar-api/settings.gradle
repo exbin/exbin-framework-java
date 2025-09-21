@@ -1,0 +1,9 @@
+rootProject.name = 'exbin-framework-statusbar-api'
+
+if (rootProject.path == ':') {
+    include ':core:exbin-framework'
+    include ':modules:exbin-framework-operation-api'
+    include ':modules:exbin-framework-utils'
+}
+
+apply from: '../exbin-framework-java-modules-settings.gradle'

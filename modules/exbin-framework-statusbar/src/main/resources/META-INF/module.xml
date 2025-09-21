@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.statusbar.StatusBarModule</api>
+  <name>Status bar Support Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Module to provide support for status bar</description>
+  <dependency>
+    <module id="org.exbin.framework.statusbar.api.StatusBarModuleApi" />
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+  </dependency>
+</module>
