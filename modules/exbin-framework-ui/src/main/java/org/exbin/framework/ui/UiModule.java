@@ -34,7 +34,7 @@ import org.exbin.framework.ui.options.LanguageOptions;
 import org.exbin.framework.ui.options.page.LanguageOptionsPage;
 
 /**
- * Module user interface handling.
+ * Module for user interface handling.
  *
  * @author ExBin Project (https://exbin.org)
  */
