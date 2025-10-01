@@ -38,8 +38,7 @@ import org.exbin.framework.action.api.clipboard.TextClipboardController;
 @ParametersAreNonnullByDefault
 public class ToolBarEditorPanel extends javax.swing.JPanel {
 
-    private UndoRedoState undoHandler = null;
-    private TextClipboardController clipboardHandler = null;
+    private UndoRedoState undoRedo = null;
     private JToolBar toolBar = null;
 
     public ToolBarEditorPanel() {
@@ -83,18 +82,17 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
         });
     }
 
-    public void setUndoHandler(UndoRedoState undoHandler, UndoActions undoActions) {
-        this.undoHandler = undoHandler;
+    public void setUndoHandler(UndoRedoState undoRedo, UndoActions undoActions) {
+        this.undoRedo = undoRedo;
         initToolBar();
         toolBar.add(undoActions.createUndoAction());
         toolBar.add(undoActions.createRedoAction());
         // TODO undoActions.updateUndoActions();
     }
 
-    public void setClipboardHandler(TextClipboardController clipboardHandler, ClipboardActionsApi clipboardActions) {
-        this.clipboardHandler = clipboardHandler;
+    public void setClipboardHandler(TextClipboardController clipboardController, ClipboardActionsApi clipboardActions) {
         initToolBar();
-        if (undoHandler != null) {
+        if (undoRedo != null) {
             toolBar.addSeparator();
         }
         toolBar.add(clipboardActions.createCutAction());

@@ -32,7 +32,7 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardController;
 
 /**
- * Clipboard cut action.
+ * Cut to clipboard action.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -41,7 +41,7 @@ public class CutAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "cutAction";
 
-    private ClipboardController clipboardSupport;
+    protected ClipboardController clipboardSupport;
 
     public CutAction() {
     }

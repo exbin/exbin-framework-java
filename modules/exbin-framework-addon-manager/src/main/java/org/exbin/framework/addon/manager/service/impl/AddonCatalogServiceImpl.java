@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +77,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     public int checkStatus(String version) throws AddonCatalogServiceException {
         URL checkUrl;
         try {
-            checkUrl = new URL(addonServiceUrl + "api/?op=check-" + version);
+            checkUrl = new URI(addonServiceUrl + "api/?op=check-" + version).toURL();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(checkUrl.openStream()))) {
                 String line = reader.readLine();
                 if (line == null || line.isEmpty()) {
@@ -85,7 +87,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             } catch (IOException ex) {
                 throw new AddonCatalogServiceException("Invalid response for status", ex);
             }
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             throw new AddonCatalogServiceException(ex);
         }
     }
@@ -96,7 +98,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
         List<AddonRecord> searchResult = new ArrayList<>();
         URL searchUrl;
         try {
-            searchUrl = new URL(addonServiceUrl + "api/?op=list");
+            searchUrl = new URI(addonServiceUrl + "api/?op=list").toURL();
             try (InputStream searchStream = searchUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -177,7 +179,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             } catch (IOException | SAXException | ParserConfigurationException ex) {
                 throw new AddonCatalogServiceException(ex);
             }
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             throw new AddonCatalogServiceException(ex);
         }
 
@@ -189,7 +191,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     public AddonRecord getAddonDependency(String addonId) throws AddonCatalogServiceException {
         URL requestUrl;
         try {
-            requestUrl = new URL(addonServiceUrl + "api/?op=addondep&id=" + addonId);
+            requestUrl = new URI(addonServiceUrl + "api/?op=addondep&id=" + addonId).toURL();
             try (InputStream searchStream = requestUrl.openStream()) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -260,7 +262,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             } catch (IOException | SAXException | ParserConfigurationException ex) {
                 throw new AddonCatalogServiceException("Error processing response for addon dependency for addon: " + addonId, ex);
             }
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             throw new AddonCatalogServiceException("Error processing response for addon dependency for addon: " + addonId, ex);
         }
 
@@ -272,7 +274,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     public String getAddonFile(String addonId) throws AddonCatalogServiceException {
         URL requestUrl;
         try {
-            requestUrl = new URL(addonServiceUrl + "api/?op=addonfile&id=" + addonId);
+            requestUrl = new URI(addonServiceUrl + "api/?op=addonfile&id=" + addonId).toURL();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
                 String line = reader.readLine();
                 if (line == null || line.isEmpty()) {
@@ -282,7 +284,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             } catch (IOException ex) {
                 throw new AddonCatalogServiceException("Invalid response for file request for addon: " + addonId, ex);
             }
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             throw new AddonCatalogServiceException("Invalid response for file request for addon: " + addonId, ex);
         }
     }
@@ -293,7 +295,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
         List<UpdateRecord> records = new ArrayList<>();
         URL requestUrl;
         try {
-            requestUrl = new URL(addonServiceUrl + "api/?op=updates");
+            requestUrl = new URI(addonServiceUrl + "api/?op=updates").toURL();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
                 String line;
                 do {
@@ -306,7 +308,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             } catch (IOException ex) {
                 throw new AddonCatalogServiceException("Invalid response for addon updates", ex);
             }
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             throw new AddonCatalogServiceException("Invalid response for addon updates", ex);
         }
 
@@ -324,13 +326,13 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     public String getModuleDetails(String addonId) throws AddonCatalogServiceException {
         URL requestUrl;
         try {
-            requestUrl = new URL(addonServiceUrl + "api/?op=addondetail&id=" + addonId);
+            requestUrl = new URI(addonServiceUrl + "api/?op=addondetail&id=" + addonId).toURL();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestUrl.openStream()))) {
                 return reader.lines().collect(Collectors.joining("\n"));
             } catch (IOException ex) {
                 throw new AddonCatalogServiceException("Invalid response for file request for addon: " + addonId, ex);
             }
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             throw new AddonCatalogServiceException("Invalid response for file request for addon: " + addonId, ex);
         }
     }

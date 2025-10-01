@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.editor.text.action;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;

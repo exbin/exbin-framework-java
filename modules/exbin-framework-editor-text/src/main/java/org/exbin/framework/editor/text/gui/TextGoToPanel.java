@@ -136,6 +136,10 @@ public class TextGoToPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
+    public int getCharPos() {
+        return (Integer) posLineSpinner.getValue();
+    }
+
     public void setCharPos(int i) {
         ((SpinnerNumberModel) posLineSpinner.getModel()).setValue(i);
     }
@@ -144,8 +148,8 @@ public class TextGoToPanel extends javax.swing.JPanel {
         return (Integer) jumpLineSpinner.getValue();
     }
 
-    public int getCharPos() {
-        return (Integer) posLineSpinner.getValue();
+    public void setLine(int i) {
+        ((SpinnerNumberModel) jumpLineSpinner.getModel()).setValue(i);
     }
 
     public void setMaxLine(int i) {
@@ -156,11 +160,7 @@ public class TextGoToPanel extends javax.swing.JPanel {
         ((SpinnerNumberModel) posLineSpinner.getModel()).setMaximum(i);
     }
 
-    public void setSelected() {
-        jumpLineSpinner.requestFocusInWindow();
-    }
-
     public void initFocus() {
-
+        jumpLineSpinner.requestFocusInWindow();
     }
 }

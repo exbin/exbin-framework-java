@@ -19,7 +19,8 @@ import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,9 +73,9 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
             String addonServiceUrl = addonManagerModule.getAddonServiceUrl();
             HTMLDocument htmlDocument = new HTMLDocument();
-            htmlDocument.setBase(new URL(addonServiceUrl));
+            htmlDocument.setBase(new URI(addonServiceUrl).toURL());
             overviewTextPane.setDocument(htmlDocument);
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             Logger.getLogger(AddonDetailsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         providerLinkListener = new java.awt.event.MouseAdapter() {

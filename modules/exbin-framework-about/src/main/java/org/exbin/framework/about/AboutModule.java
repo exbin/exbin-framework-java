@@ -41,7 +41,7 @@ import org.exbin.framework.utils.DesktopUtils;
 @ParametersAreNonnullByDefault
 public class AboutModule implements AboutModuleApi {
 
-    private JComponent sideComponent = null;
+    protected JComponent sideComponent = null;
 
     public AboutModule() {
     }

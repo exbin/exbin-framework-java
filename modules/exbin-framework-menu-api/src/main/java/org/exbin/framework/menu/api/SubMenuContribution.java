@@ -31,10 +31,10 @@ import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 @ParametersAreNonnullByDefault
 public class SubMenuContribution implements SubSequenceContribution {
 
-    private final String subMenuId;
-    private final Action action;
-    private JMenu subMenu;
-    private TreeContributionSequenceOutput subOutput;
+    protected final String subMenuId;
+    protected final Action action;
+    protected JMenu subMenu;
+    protected TreeContributionSequenceOutput subOutput;
 
     public SubMenuContribution(String subMenuId, Action action) {
         this.subMenuId = subMenuId;

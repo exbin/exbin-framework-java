@@ -31,7 +31,7 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardController;
 
 /**
- * Clipboard copy action.
+ * Copy to clipboard action.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -40,7 +40,7 @@ public class CopyAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "copyAction";
 
-    private ClipboardController clipboardSupport;
+    protected ClipboardController clipboardSupport;
 
     public CopyAction() {
     }

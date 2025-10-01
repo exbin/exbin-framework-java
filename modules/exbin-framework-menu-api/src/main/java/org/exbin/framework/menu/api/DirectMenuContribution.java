@@ -30,9 +30,9 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 @ParametersAreNonnullByDefault
 public class DirectMenuContribution implements ItemSequenceContribution {
 
-    private MenuItemProvider menuItemProvider;
-    private String contributionId;
-    private JMenuItem menuItem;
+    protected MenuItemProvider menuItemProvider;
+    protected String contributionId;
+    protected JMenuItem menuItem;
 
     public DirectMenuContribution(MenuItemProvider menuItemProvider) {
         this.menuItemProvider = menuItemProvider;

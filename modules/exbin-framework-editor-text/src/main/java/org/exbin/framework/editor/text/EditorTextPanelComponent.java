@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultEditorKit;
 import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
 import org.exbin.framework.editor.text.gui.TextPanel;
@@ -30,6 +31,7 @@ import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.text.font.TextFontController;
 import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
+import org.exbin.framework.utils.ActionUtils;
 
 /**
  * Text panel component.
@@ -63,7 +65,7 @@ public class EditorTextPanelComponent implements ActiveComponent, TextPanelCompo
 
     @Override
     public void performDelete() {
-        textPanel.getTextArea().getInputContext().dispatchEvent(new KeyEvent(textPanel, KeyEvent.KEY_PRESSED, 0, 0, KeyEvent.VK_DELETE, KeyEvent.CHAR_UNDEFINED));
+        ActionUtils.invokeTextAction(textPanel.getTextArea(), DefaultEditorKit.deleteNextCharAction);
     }
 
     @Override

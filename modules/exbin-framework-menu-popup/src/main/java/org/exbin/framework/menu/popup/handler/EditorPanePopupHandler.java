@@ -24,6 +24,8 @@ import java.awt.datatransfer.StringSelection;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Dictionary;
 import java.util.logging.Level;
@@ -320,7 +322,7 @@ public class EditorPanePopupHandler implements TextClipboardController, LinkActi
         try {
             // From ImageView.loadImage
             URL reference = document.getBase();
-            URL imageUrl = new URL(reference, imageSrc);
+            URL imageUrl = reference.toURI().resolve(imageSrc).toURL();
             Image image;
             @SuppressWarnings("unchecked")
             Dictionary<URL, Image> cache = (Dictionary<URL, Image>) document.getProperty(IMAGE_CACHE_PROPERTY);
@@ -338,8 +340,8 @@ public class EditorPanePopupHandler implements TextClipboardController, LinkActi
             if (image != null) {
                 ClipboardUtils.pasteImage(image);
             }
-        } catch (MalformedURLException ex) {
-
+        } catch (MalformedURLException | URISyntaxException ex) {
+            // ignore
         }
     }
 }

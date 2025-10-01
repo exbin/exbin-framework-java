@@ -19,14 +19,11 @@ import org.exbin.framework.component.action.DefaultEditItemActions;
 import org.exbin.framework.component.action.DefaultMoveItemActions;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPanel;
-import org.exbin.framework.component.api.DialogControlPanelHandler;
 import org.exbin.framework.component.api.toolbar.EditItemActions;
 import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
 import org.exbin.framework.component.api.ComponentModuleApi;
 import org.exbin.framework.component.api.toolbar.MoveItemActions;
 import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
-import org.exbin.framework.component.gui.DialogControlPanel;
 
 /**
  * Implementation of framework component module.
@@ -54,13 +51,5 @@ public class ComponentModule implements ComponentModuleApi {
     public MoveItemActions createMoveItemActions(MoveItemActionsHandler moveItemActionsHandler) {
         DefaultMoveItemActions moveActions = new DefaultMoveItemActions();
         return moveActions;
-    }
-
-    @Nonnull
-    @Override
-    public JPanel createDialogControlPanel(DialogControlPanelHandler handler) {
-        DialogControlPanel controlPanel =  new DialogControlPanel();
-        controlPanel.setControl(handler);
-        return controlPanel;
     }
 }

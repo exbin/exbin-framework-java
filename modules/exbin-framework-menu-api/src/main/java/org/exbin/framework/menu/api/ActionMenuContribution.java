@@ -31,8 +31,8 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 @ParametersAreNonnullByDefault
 public class ActionMenuContribution implements ItemSequenceContribution {
 
-    private final Action action;
-    private JMenuItem menuItem;
+    protected final Action action;
+    protected JMenuItem menuItem;
 
     public ActionMenuContribution(Action action) {
         this.action = action;

@@ -21,6 +21,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -114,8 +116,8 @@ public class AddonUpdateOperation {
         String licenseDownloadPrefix = addonManagerModule.getAddonServiceUrl() + "license/";
         for (LicenseItemRecord record : licenseRecords) {
             try {
-                record.setUrl(new URL(licenseDownloadPrefix + record.getRemoteFile()));
-            } catch (MalformedURLException ex) {
+                record.setUrl(new URI(licenseDownloadPrefix + record.getRemoteFile()).toURL());
+            } catch (MalformedURLException | URISyntaxException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -132,9 +134,9 @@ public class AddonUpdateOperation {
         for (String moduleFile : updateOperations.downloadModule) {
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, moduleFile), moduleFile);
             try {
-                record.setUrl(new URL(libraryDownloadPrefix + moduleFile));
+                record.setUrl(new URI(libraryDownloadPrefix + moduleFile).toURL());
                 downloadRecords.add(record);
-            } catch (MalformedURLException ex) {
+            } catch (MalformedURLException | URISyntaxException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -142,9 +144,9 @@ public class AddonUpdateOperation {
         for (String library : updateOperations.downloadLibraries) {
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), library);
             try {
-                record.setUrl(new URL(libraryDownloadPrefix + library));
+                record.setUrl(new URI(libraryDownloadPrefix + library).toURL());
                 downloadRecords.add(record);
-            } catch (MalformedURLException ex) {
+            } catch (MalformedURLException | URISyntaxException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -153,9 +155,9 @@ public class AddonUpdateOperation {
             String libraryFile = BasicModuleProvider.mavenCodeToFileName(library);
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), libraryFile);
             try {
-                record.setUrl(new URL(AddonUpdateOperation.mavenCodeToDownloadUrl(library)));
+                record.setUrl(new URI(AddonUpdateOperation.mavenCodeToDownloadUrl(library)).toURL());
                 downloadRecords.add(record);
-            } catch (MalformedURLException ex) {
+            } catch (MalformedURLException | URISyntaxException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -237,7 +239,7 @@ public class AddonUpdateOperation {
         for (File addonFile : addonFiles) {
             if (addonFile.getName().endsWith(".jar")) {
                 try {
-                    URL moduleRecordUrl = new URL("jar:" + addonFile.toURI().toURL().toExternalForm() + "!/META-INF/module.xml");
+                    URL moduleRecordUrl = new URI("jar:" + addonFile.toURI().toURL().toExternalForm() + "!/META-INF/module.xml").toURL();
                     try (BufferedReader reader = new BufferedReader(new InputStreamReader(moduleRecordUrl.openStream()))) {
                         String line = reader.readLine();
                         do {
@@ -275,7 +277,7 @@ public class AddonUpdateOperation {
                     } catch (NumberFormatException | IOException ex) {
                         Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, "Failed to read modules update cache", ex);
                     }
-                } catch (MalformedURLException ex) {
+                } catch (MalformedURLException | URISyntaxException ex) {
                     Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

@@ -21,7 +21,6 @@ import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
 import org.exbin.framework.component.api.toolbar.EditItemActions;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPanel;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
@@ -52,13 +51,4 @@ public interface ComponentModuleApi extends Module {
      */
     @Nonnull
     MoveItemActions createMoveItemActions(MoveItemActionsHandler moveItemActionsHandler);
-
-    /**
-     * Returns new instance of dialog control panel.
-     *
-     * @param handler dialog control panel handler
-     * @return dialog control panel
-     */
-    @Nonnull
-    JPanel createDialogControlPanel(DialogControlPanelHandler handler);
 }

@@ -39,7 +39,7 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
 
     public static final String ACTION_ID = "deleteAction";
 
-    private DeletionController deletionSupport;
+    protected DeletionController deletionSupport;
 
     public DeleteAction() {
     }
@@ -49,6 +49,7 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
+        setEnabled(false);
     }
 
     @Override

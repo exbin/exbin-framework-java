@@ -16,6 +16,7 @@
 package org.exbin.framework.help.online;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,8 +73,8 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
         URL targetUrl = helpUrl;
         if (helpLink != null) {
             try {
-                targetUrl = new URL(helpUrl, "#" + helpLink.getHelpId());
-            } catch (MalformedURLException ex) {
+                targetUrl = helpUrl.toURI().resolve("#" + helpLink.getHelpId()).toURL();
+            } catch (MalformedURLException | URISyntaxException ex) {
                 Logger.getLogger(HelpOnlineModule.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

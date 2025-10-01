@@ -57,8 +57,10 @@ public class AboutAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
             manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                 dialogParentComponent = instance;
+                setEnabled(dialogParentComponent != null);
             });
         });
+        setEnabled(false);
     }
 
     @Override

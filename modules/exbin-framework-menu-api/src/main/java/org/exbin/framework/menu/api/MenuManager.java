@@ -62,9 +62,14 @@ public interface MenuManager {
      */
     void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextService activationUpdateService);
 
+    /**
+     * Checks whether menu group exists.
+     *
+     * @param menuId menu id
+     * @param groupId group id
+     * @return true if group exists
+     */
     boolean menuGroupExists(String menuId, String groupId);
-
-    void unregisterMenu(String menuId);
 
     /**
      * Registers menu definition.
@@ -73,6 +78,13 @@ public interface MenuManager {
      * @param moduleId module id
      */
     void registerMenu(String menuId, String moduleId);
+
+    /**
+     * Unregisters menu definition
+     *
+     * @param menuId menu id
+     */
+    void unregisterMenu(String menuId);
 
     /**
      * Registers menu item contribution.
