@@ -30,6 +30,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import org.exbin.auxiliary.dropdownbutton.DropDownButton;
+import org.exbin.auxiliary.dropdownbutton.DropDownButtonVariant;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.toolbar.api.ActionToolBarContribution;
 import org.exbin.framework.action.api.ActionType;
@@ -142,7 +143,7 @@ public class DefaultToolBarManager extends ContributionManager implements ToolBa
                 }
                 case CYCLE: {
                     JPopupMenu popupMenu = (JPopupMenu) action.getValue(ActionConsts.CYCLE_POPUP_MENU);
-                    DropDownButton dropDown = new DropDownButton(action, popupMenu);
+                    DropDownButton dropDown = new DropDownButton(DropDownButtonVariant.TOOL, action, popupMenu);
                     dropDown.setActionTooltip((String) action.getValue(Action.SHORT_DESCRIPTION));
                     action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
                         dropDown.setActionText((String) action.getValue(Action.NAME));
