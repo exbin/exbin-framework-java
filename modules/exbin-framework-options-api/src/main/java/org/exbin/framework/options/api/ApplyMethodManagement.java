@@ -18,17 +18,26 @@ package org.exbin.framework.options.api;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for options page.
+ * Interface for options apply management.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface OptionsData {
+public interface ApplyMethodManagement {
 
     /**
-     * Copies all values to options data of the same type.
+     * Registers options apply method.
      *
-     * @param options options
+     * @param <T> class type
+     * @param instanceClass instance class
+     * @param applyMethod apply method
      */
-    void copyTo(OptionsData options);
+    <T> void registerApplyMethod(T instanceClass, ApplyMethod<T> applyMethod);
+
+    /**
+     * Registers options apply method rule.
+     *
+     * @param applyMethodRule apply method rule
+     */
+    void registerApplyMethodRule(ApplyMethodRule applyMethodRule);
 }

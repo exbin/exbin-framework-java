@@ -15,20 +15,32 @@
  */
 package org.exbin.framework.options.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.preferences.api.OptionsStorage;
 
 /**
- * Interface for options page.
+ * Interface for options apply method.
  *
  * @author ExBin Project (https://exbin.org)
+ * @param <T> instance class
  */
 @ParametersAreNonnullByDefault
-public interface OptionsData {
+public interface ApplyMethod<T> {
 
     /**
-     * Copies all values to options data of the same type.
+     * Returns options component id.
      *
-     * @param options options
+     * @return id
      */
-    void copyTo(OptionsData options);
+    @Nonnull
+    String getId();
+
+    /**
+     * Applies options.
+     *
+     * @param instance target instance
+     * @param optionsStorage options storage
+     */
+    void applyOptions(T instance, OptionsStorage optionsStorage);
 }
