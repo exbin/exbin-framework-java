@@ -22,7 +22,7 @@ import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.exbin.framework.preferences.PreferencesWrapper;
+import org.exbin.framework.options.PreferencesWrapper;
 
 /**
  * Stub preferences class.

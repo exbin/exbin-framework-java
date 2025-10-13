@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.ui.theme.options.ThemeOptionsPage;
+import org.exbin.framework.ui.theme.settings.ThemeSettingsComponent;
 
 /**
  * UI theme options manager.
@@ -36,8 +36,8 @@ public class ThemeOptionsManager {
     }
 
     @Nonnull
-    public ThemeOptionsPage createThemeOptionsPage() {
-        ThemeOptionsPage themeOptionsPage = new ThemeOptionsPage();
+    public ThemeSettingsComponent createThemeOptionsPage() {
+        ThemeSettingsComponent themeOptionsPage = new ThemeSettingsComponent();
         themeOptionsPage.setResourceBundle(resourceBundle);
         return themeOptionsPage;
     }

@@ -20,14 +20,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.action.manager.options.ActionManagerOptionsPage;
+import org.exbin.framework.action.manager.settings.KeyMapSettingsComponent;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.api.GroupOptionsPageRule;
-import org.exbin.framework.options.api.OptionsGroup;
-import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPageManagement;
-import org.exbin.framework.options.api.VisualOptionsPageParams;
-import org.exbin.framework.options.api.VisualOptionsPageRule;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Action manager module.
@@ -39,7 +38,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ActionManagerModule.class);
 
-    public static final String KEYMAP_GROUP_ID = "keymap";
+    public static final String SETTINGS_PAGE_ID = "actionManager";
 
     private ResourceBundle resourceBundle;
 
@@ -64,16 +63,12 @@ public class ActionManagerModule implements org.exbin.framework.Module {
         }
     }
 
-    public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        OptionsGroup keymapOptionsGroup = optionsModule.createOptionsGroup(KEYMAP_GROUP_ID, getResourceBundle());
-        optionsPageManagement.registerGroup(keymapOptionsGroup);
-
-        ActionManagerOptionsPage actionManagerOptionsPage = new ActionManagerOptionsPage();
-        optionsPageManagement.registerPage(actionManagerOptionsPage);
-        optionsPageManagement.registerPageRule(actionManagerOptionsPage, new GroupOptionsPageRule(keymapOptionsGroup));
-        optionsPageManagement.registerPageRule(actionManagerOptionsPage, new VisualOptionsPageRule(new VisualOptionsPageParams(true)));
+        SettingsPageContribution pageContribution = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+        SettingsComponentContribution settingsContribution = settingsManagement.registerComponent(new KeyMapSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsContribution, new SettingsPageContributionRule(pageContribution.getContributionId()));
     }
 }

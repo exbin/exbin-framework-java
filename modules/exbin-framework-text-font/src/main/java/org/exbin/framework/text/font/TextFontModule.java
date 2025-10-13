@@ -22,15 +22,18 @@ import org.exbin.framework.App;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.text.font.action.TextFontAction;
-import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.text.font.service.TextFontService;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.text.font.options.TextFontOptionsPage;
-import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.text.font.settings.TextFontSettingsComponent;
 import org.exbin.framework.utils.ObjectUtils;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 
 /**
- * Text editor module.
+ * Text font module.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -38,6 +41,7 @@ import org.exbin.framework.utils.ObjectUtils;
 public class TextFontModule implements Module {
 
     public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(TextFontModule.class);
+    public static final String SETTINGS_PAGE_ID = "textFont";
 
     private ResourceBundle resourceBundle;
 
@@ -70,13 +74,14 @@ public class TextFontModule implements Module {
         this.textFontService = textFontService;
     }
 
-    public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-
-        TextFontOptionsPage textFontOptionsPage = new TextFontOptionsPage();
-        textFontOptionsPage.setTextFontService(textFontService);
-        optionsPageManagement.registerPage(textFontOptionsPage);
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        SettingsPageContribution settingsPage = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+        TextFontSettingsComponent textFontSettingsComponent = new TextFontSettingsComponent();
+        textFontSettingsComponent.setTextFontService(textFontService);
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(textFontSettingsComponent);
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
     }
 
     @Nonnull

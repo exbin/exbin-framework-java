@@ -25,18 +25,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.App;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.api.GroupOptionsPageRule;
-import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPageManagement;
-import org.exbin.framework.options.api.RelativeOptionsPageRule;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.theme.api.LafProvider;
-import org.exbin.framework.ui.theme.options.ThemeOptions;
+import org.exbin.framework.ui.theme.settings.ThemeSettings;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.ui.theme.api.UiThemeModuleApi;
-import org.exbin.framework.ui.theme.options.ThemeOptionsPage;
+import org.exbin.framework.ui.theme.settings.ThemeSettingsComponent;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 
 /**
  * Module user interface handling.
@@ -45,6 +43,8 @@ import org.exbin.framework.ui.theme.options.ThemeOptionsPage;
  */
 @ParametersAreNonnullByDefault
 public class UiThemeModule implements UiThemeModuleApi {
+
+    public static final String SETTINGS_PAGE_ID = "theme";
 
     private ResourceBundle resourceBundle;
     private final List<LafProvider> lafProviders = new ArrayList<>();
@@ -84,8 +84,8 @@ public class UiThemeModule implements UiThemeModuleApi {
     public void registerThemeInit() {
         UiModuleApi uiModule = App.getModule(UiModuleApi.class);
         uiModule.addPreInitAction(() -> {
-            PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-            ThemeOptions themeOptions = new ThemeOptions(preferencesModule.getAppPreferences());
+            OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+            ThemeSettings themeOptions = new ThemeSettings(preferencesModule.getAppOptions());
 
             LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
             String iconSet = themeOptions.getIconSet();
@@ -192,14 +192,14 @@ public class UiThemeModule implements UiThemeModuleApi {
     }
 
     @Override
-    public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        ThemeSettingsComponent themeSettingsPage = themeOptionsManager.createThemeOptionsPage();
         getThemeOptionsManager();
-        ThemeOptionsPage themeOptionsPage = themeOptionsManager.createThemeOptionsPage();
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-        optionsPageManagement.registerPage(themeOptionsPage);
-        optionsPageManagement.registerPageRule(themeOptionsPage, new GroupOptionsPageRule("appearance"));
-        optionsPageManagement.registerPageRule(themeOptionsPage, new RelativeOptionsPageRule(RelativeOptionsPageRule.NextToMode.AFTER, "language"));
+//        settingsManagement.registerPage(themeSettingsPage);
+//        settingsManagement.registerPageRule(themeSettingsPage, new GroupOptionsPageRule("appearance"));
+//        settingsManagement.registerPageRule(themeSettingsPage, new RelativeOptionsPageRule(RelativeOptionsPageRule.NextToMode.AFTER, "language"));
     }
 
     @Nonnull

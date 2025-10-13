@@ -15,12 +15,9 @@
  */
 package org.exbin.framework.options.api;
 
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.io.InputStream;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
@@ -33,77 +30,36 @@ import org.exbin.framework.ModuleUtils;
 public interface OptionsModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(OptionsModuleApi.class);
-    public static String TOOLS_OPTIONS_MENU_GROUP_ID = MODULE_ID + ".toolsOptionsMenuGroup";
 
     /**
-     * Returns options page management.
+     * Setups application options using class instance as base.
      *
-     * @param moduleId module id
-     * @return
+     * @param clazz class instance
+     */
+    void setupAppOptions(Class clazz);
+
+    /**
+     * Setups application options using preferences instance.
+     *
+     * @param preferences preferences instance
+     */
+    void setupAppOptions(java.util.prefs.Preferences preferences);
+
+    /**
+     * Returns application options.
+     *
+     * @return application options
      */
     @Nonnull
-    OptionsPageManagement getOptionsPageManagement(String moduleId);
+    OptionsStorage getAppOptions();
 
     /**
-     * Creates open options dialog action.
+     * Creates read-only options storage using java.util.Preferences format from
+     * given stream.
      *
-     * @return options action
+     * @param inputStream input stream
+     * @return options storage
      */
     @Nonnull
-    Action createOptionsAction();
-
-    /**
-     * Registers options menu action in default position.
-     */
-    void registerMenuAction();
-
-    /**
-     * Loads all settings from preferences and applies it.
-     */
-    void initialLoadFromPreferences();
-
-    /**
-     * Invokes options changed event.
-     */
-    void notifyOptionsChanged();
-
-    /**
-     * Returns options panel type.
-     *
-     * @return options panel type
-     */
-    @Nonnull
-    OptionsPanelType getOptionsPanelType();
-
-    /**
-     * Sets options panel type.
-     *
-     * @param optionsPanelType options panel type
-     */
-    void setOptionsPanelType(OptionsPanelType optionsPanelType);
-
-    /**
-     * Sets root options caption.
-     *
-     * @return caption
-     */
-    @Nonnull
-    Optional<String> getOptionsRootCaption();
-
-    /**
-     * Sets root options caption.
-     *
-     * @param optionsRootCaption caption
-     */
-    void setOptionsRootCaption(@Nullable String optionsRootCaption);
-
-    /**
-     * Creates options group from resource bundle values.
-     *
-     * @param groupId group id
-     * @param resourceBundle resource bundle
-     * @return options group
-     */
-    @Nonnull
-    OptionsGroup createOptionsGroup(String groupId, ResourceBundle resourceBundle);
+    OptionsStorage createStreamPreferencesStorage(InputStream inputStream);
 }

@@ -32,7 +32,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.frame.api.ApplicationExitListener;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
@@ -45,9 +44,10 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.frame.action.FrameActions;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.preferences.api.OptionsStorage;
+import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
+import org.exbin.framework.options.api.OptionsModuleApi;
 
 /**
  * Module frame handling.
@@ -143,9 +143,9 @@ public class FrameModule implements FrameModuleApi {
     public void loadFramePosition() {
         getFrameHandler();
         WindowPosition framePosition = new WindowPosition();
-        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-        if (preferencesFramePositionExists(preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX)) {
-            loadFramePositionFromPreferences(framePosition, preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
+        OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+        if (preferencesFramePositionExists(preferencesModule.getAppOptions(), PREFERENCES_FRAME_PREFIX)) {
+            loadFramePositionFromPreferences(framePosition, preferencesModule.getAppOptions(), PREFERENCES_FRAME_PREFIX);
             WindowUtils.setWindowPosition(applicationFrame, framePosition);
         }
     }
@@ -153,8 +153,8 @@ public class FrameModule implements FrameModuleApi {
     @Override
     public void saveFramePosition() {
         WindowPosition windowPosition = WindowUtils.getWindowPosition(applicationFrame);
-        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-        saveFramePositionToPreferences(windowPosition, preferencesModule.getAppPreferences(), PREFERENCES_FRAME_PREFIX);
+        OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+        saveFramePositionToPreferences(windowPosition, preferencesModule.getAppOptions(), PREFERENCES_FRAME_PREFIX);
     }
 
     static private void saveFramePositionToPreferences(WindowPosition windowPosition, OptionsStorage pref, String prefix) {

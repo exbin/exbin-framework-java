@@ -15,195 +15,60 @@
  */
 package org.exbin.framework.options;
 
-import com.formdev.flatlaf.extras.FlatDesktop;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.io.InputStream;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
-import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
-import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
-import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPanelType;
-import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.api.OptionsPageReceiver;
-import org.exbin.framework.options.api.OptionsPage;
-import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.options.action.OptionsAction;
-import org.exbin.framework.options.api.OptionsGroup;
-import org.exbin.framework.options.api.OptionsGroupRule;
-import org.exbin.framework.options.api.OptionsPageManagement;
-import org.exbin.framework.options.api.OptionsPageRule;
-import org.exbin.framework.utils.DesktopUtils;
 
 /**
- * Implementation of framework options module.
+ * Implementation of options module.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OptionsModule implements OptionsModuleApi {
 
-    public static final String OPTIONS_GROUP_PREFIX = "optionsGroup.";
-
-    private ResourceBundle resourceBundle;
-
-    private OptionsPanelType optionsPanelType = OptionsPanelType.TREE;
-    private OptionsPageManager optionsPageManager;
-    private String optionsRootCaption = null;
+    private OptionsStorage appOptions;
 
     public OptionsModule() {
     }
 
-    @Nonnull
-    private ResourceBundle getResourceBundle() {
-        if (resourceBundle == null) {
-            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OptionsModule.class);
+    @Override
+    public void setupAppOptions(Class clazz) {
+        java.util.prefs.Preferences prefsPreferences;
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.startsWith("win")) {
+            prefsPreferences = new FilePreferencesFactory().userNodeForPackage(clazz);
+        } else {
+            prefsPreferences = java.util.prefs.Preferences.userNodeForPackage(clazz);
         }
-
-        return resourceBundle;
+        setupAppOptions(prefsPreferences);
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
+    @Override
+    public void setupAppOptions(java.util.prefs.Preferences preferences) {
+        appOptions = new PreferencesWrapper(preferences);
+    }
+
+    @Nonnull
+    @Override
+    public OptionsStorage getAppOptions() {
+        if (appOptions == null) {
+            setupAppOptions(App.getModuleProvider().getManifestClass());
         }
+        return appOptions;
     }
 
     @Nonnull
     @Override
-    public OptionsAction createOptionsAction() {
-        ensureSetup();
-        OptionsAction optionsAction = new OptionsAction();
-        getOptionsPageManager();
-        optionsAction.setup(resourceBundle, (OptionsPageReceiver optionsPageReceiver) -> {
-            optionsPageManager.passOptionsPages(optionsPageReceiver);
-        });
-
-        return optionsAction;
+    public OptionsStorage createStreamPreferencesStorage(InputStream inputStream) {
+        java.util.prefs.Preferences filePreferences = new StreamPreferences(inputStream);
+        return new PreferencesWrapper(filePreferences);
     }
 
-    @Override
-    public void notifyOptionsChanged() {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.notifyFrameUpdated();
-    }
-
-    @Override
-    public void initialLoadFromPreferences() {
-        getOptionsPageManager().initialLoadFromPreferences();
-        notifyOptionsChanged();
-    }
-
-    @Nonnull
-    public OptionsPageManager getOptionsPageManager() {
-        if (optionsPageManager == null) {
-            optionsPageManager = new OptionsPageManager();
-        }
-
-        return optionsPageManager;
-    }
-
-    @Nonnull
-    @Override
-    public OptionsPageManagement getOptionsPageManagement(String moduleId) {
-        return new OptionsPageManagement() {
-            @Override
-            public void registerGroup(OptionsGroup optionsGroup) {
-                getOptionsPageManager().registerGroup(optionsGroup);
-            }
-
-            @Override
-            public void registerGroup(String groupId, String groupName) {
-                getOptionsPageManager().registerGroup(groupId, groupName);
-            }
-
-            @Override
-            public void registerGroupRule(OptionsGroup optionsGroup, OptionsGroupRule groupRule) {
-                getOptionsPageManager().registerGroupRule(optionsGroup, groupRule);
-            }
-
-            @Override
-            public void registerGroupRule(String groupId, OptionsGroupRule groupRule) {
-                getOptionsPageManager().registerGroupRule(groupId, groupRule);
-            }
-
-            @Override
-            public void registerPage(OptionsPage<?> optionsPage) {
-                getOptionsPageManager().registerPage(optionsPage);
-            }
-
-            @Override
-            public void registerPageRule(OptionsPage<?> optionsPage, OptionsPageRule optionsPageRule) {
-                getOptionsPageManager().registerPageRule(optionsPage, optionsPageRule);
-            }
-
-            @Override
-            public void registerPageRule(String pageId, OptionsPageRule pageRule) {
-                getOptionsPageManager().registerPageRule(pageId, pageRule);
-            }
-        };
-    }
-
-    @Nonnull
-    @Override
-    public OptionsGroup createOptionsGroup(String groupId, ResourceBundle resourceBundle) {
-        String groupName = resourceBundle.getString(OPTIONS_GROUP_PREFIX + groupId + ".name");
-        BasicOptionsGroup optionsGroup = new BasicOptionsGroup(groupId, groupName);
-        return optionsGroup;
-    }
-
-    @Override
-    public void registerMenuAction() {
-        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        OptionsAction optionsAction = createOptionsAction();
-
-        boolean optionsActionRegistered = false;
-        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
-            FlatDesktop.setPreferencesHandler(() -> {
-                optionsAction.actionPerformed(null);
-            });
-            /* // TODO: Replace after migration to Java 9+
-            Desktop desktop = Desktop.getDesktop();
-            desktop.setPreferencesHandler((e) -> {
-                optionsAction.actionPerformed(null);
-            }); */
-            optionsActionRegistered = true;
-        }
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM_LAST));
-        mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(optionsActionRegistered ? SeparationSequenceContributionRule.SeparationMode.NONE : SeparationSequenceContributionRule.SeparationMode.AROUND));
-        if (!optionsActionRegistered) {
-            contribution = mgmt.registerMenuItem(optionsAction);
-            mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TOOLS_OPTIONS_MENU_GROUP_ID));
-        }
-    }
-
-    @Nonnull
-    @Override
-    public OptionsPanelType getOptionsPanelType() {
-        return optionsPanelType;
-    }
-
-    @Override
-    public void setOptionsPanelType(OptionsPanelType optionsPanelType) {
-        this.optionsPanelType = optionsPanelType;
-    }
-
-    @Nonnull
-    @Override
-    public Optional<String> getOptionsRootCaption() {
-        return Optional.ofNullable(optionsRootCaption);
-    }
-
-    @Override
-    public void setOptionsRootCaption(@Nullable String optionsRootCaption) {
-        this.optionsRootCaption = optionsRootCaption;
+    public void setAppOptions(OptionsStorage appOptions) {
+        this.appOptions = appOptions;
     }
 }

@@ -110,5 +110,5 @@ public interface FileModuleApi extends Module {
 
     void updateRecentFilesList(URI fileUri, @Nullable FileType fileType);
 
-    void registerOptionsPanels();
+    void registerSettings();
 }

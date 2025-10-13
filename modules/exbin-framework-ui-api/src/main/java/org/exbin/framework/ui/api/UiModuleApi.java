@@ -61,5 +61,5 @@ public interface UiModuleApi extends Module {
     /**
      * Registers options panels.
      */
-    void registerOptionsPanels();
+    void registerSettings();
 }

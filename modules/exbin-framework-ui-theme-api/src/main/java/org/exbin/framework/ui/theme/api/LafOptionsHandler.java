@@ -18,7 +18,7 @@ package org.exbin.framework.ui.theme.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
-import org.exbin.framework.preferences.api.OptionsStorage;
+import org.exbin.framework.options.api.OptionsStorage;
 
 /**
  * Look&amp;feel provider with options handler.

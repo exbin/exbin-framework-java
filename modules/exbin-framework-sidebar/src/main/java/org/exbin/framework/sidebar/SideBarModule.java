@@ -26,6 +26,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.sidebar.api.SideBarManager;
 import org.exbin.framework.sidebar.api.SideBarModuleApi;
 
@@ -107,20 +108,10 @@ public class SideBarModule implements SideBarModuleApi {
     public SideBarManagement getSideBarManagement(String sideBarId, String moduleId) {
         return new DefaultSideBarManagement(getSideBarManager(), sideBarId, moduleId);
     }
-
+    
     @Override
-    public void registerSideBarClipboardActions() {
-        /*        getClipboardActions();
-        ToolBarManagement mgmt = getToolBarManagement(MODULE_ID);
-        ToolBarContribution contribution = mgmt.registerSideBarGroup(ActionConsts.MAIN_TOOL_BAR_ID, CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
-        mgmt.registerSideBarRule(contribution, new PositionToolBarContributionRule(PositionMode.TOP));
-        contribution = mgmt.registerSideBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCutAction());
-        mgmt.registerSideBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerSideBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createCopyAction());
-        mgmt.registerSideBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerSideBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createPasteAction());
-        mgmt.registerSideBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerSideBarItem(ActionConsts.MAIN_TOOL_BAR_ID, clipboardActions.createDeleteAction());
-        mgmt.registerSideBarRule(contribution, new GroupToolBarContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID)); */
+    public void registerFrameSideBar() {
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        // TODO frameModule.
     }
 }

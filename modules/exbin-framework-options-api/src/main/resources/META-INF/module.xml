@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
 <module>
   <api>org.exbin.framework.options.api.OptionsModuleApi</api>
-  <name>Options Support Module</name>
+  <name>Options API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
-  <description>Module to provide support for application options</description>
+  <description>Module for options</description>
   <dependency>
-    <module id="org.exbin.framework.action.api.ActionModuleApi" />
-    <module id="org.exbin.framework.preferences.api.PreferencesModuleApi" />
-    <module id="org.exbin.framework.utils.UtilsModule" />
   </dependency>
 </module>

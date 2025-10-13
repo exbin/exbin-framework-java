@@ -23,13 +23,13 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.App;
-import org.exbin.framework.text.encoding.options.TextEncodingOptions;
+import org.exbin.framework.text.encoding.settings.TextEncodingSettings;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.options.api.OptionsModifiedListener;
-import org.exbin.framework.options.api.OptionsComponent;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
+import org.exbin.framework.options.settings.api.SettingsComponent;
+import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 
 /**
  * Text encoding selection panel.
@@ -37,9 +37,9 @@ import org.exbin.framework.utils.UtilsModule;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingListPanel extends javax.swing.JPanel implements OptionsComponent<TextEncodingOptions> {
+public class TextEncodingListPanel extends javax.swing.JPanel implements SettingsComponent<TextEncodingSettings> {
 
-    private OptionsModifiedListener optionsModifiedListener;
+    private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingListPanel.class);
     private AddEncodingsOperation addEncodingsOperation = null;
 
@@ -91,12 +91,12 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Options
     }
 
     @Override
-    public void saveToOptions(TextEncodingOptions options) {
+    public void saveToOptions(TextEncodingSettings options) {
         options.setEncodings(getEncodingList());
     }
 
     @Override
-    public void loadFromOptions(TextEncodingOptions options) {
+    public void loadFromOptions(TextEncodingSettings options) {
         setEncodingList(options.getEncodings());
     }
 
@@ -319,13 +319,13 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Options
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void setOptionsModifiedListener(OptionsModifiedListener optionsModifiedListener) {
-        this.optionsModifiedListener = optionsModifiedListener;
+    public void setSettingsModifiedListener(SettingsModifiedListener settingsModifiedListener) {
+        this.settingsModifiedListener = settingsModifiedListener;
     }
 
     public void notifyModified() {
-        if (optionsModifiedListener != null) {
-            optionsModifiedListener.wasModified();
+        if (settingsModifiedListener != null) {
+            settingsModifiedListener.wasModified();
         }
     }
 

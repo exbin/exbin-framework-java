@@ -45,18 +45,17 @@ import org.exbin.framework.file.action.SaveAsFileAction;
 import org.exbin.framework.file.action.SaveFileAction;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileOperationsProvider;
-import org.exbin.framework.file.options.FileOptions;
-import org.exbin.framework.file.options.FileOptionsPage;
+import org.exbin.framework.file.settings.FileSettingsComponent;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.options.api.GroupOptionsPageRule;
-import org.exbin.framework.options.api.OptionsGroup;
-import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPage;
-import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Framework file module.
@@ -66,6 +65,7 @@ import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 @ParametersAreNonnullByDefault
 public class FileModule implements FileModuleApi, FileOperationsProvider {
 
+    public static final String SETTINGS_PAGE_ID = "file";
     private java.util.ResourceBundle resourceBundle = null;
     private FileOperations fileOperations;
 
@@ -226,8 +226,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
                     return registeredFileTypes;
                 }
             });
-            PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-            recentFilesActions.setPreferences(preferencesModule.getAppPreferences());
+            OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+            recentFilesActions.setPreferences(preferencesModule.getAppOptions());
         }
         return recentFilesActions;
     }
@@ -271,23 +271,12 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         fileOperations.loadFromFile(fileUri, null);
     }
 
-    @Nonnull
-    public FileOptionsPage createFileOptionsPage() {
-        FileOptionsPage fileOptionsPage = new FileOptionsPage();
-        fileOptionsPage.setResourceBundle(getResourceBundle());
-        return fileOptionsPage;
-    }
-
     @Override
-    public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsPage<FileOptions> fileOptionsPage = createFileOptionsPage();
-
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-        OptionsGroup fileOptionsGroup = optionsModule.createOptionsGroup("file", getResourceBundle());
-        optionsPageManagement.registerGroup(fileOptionsGroup);
-
-        optionsPageManagement.registerPage(fileOptionsPage);
-        optionsPageManagement.registerPageRule(fileOptionsPage, new GroupOptionsPageRule(fileOptionsGroup));
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement setingsManagement = settingsModule.getMainSettingsManager();
+        SettingsPageContribution settingsPage = setingsManagement.registerPage(SETTINGS_PAGE_ID);
+        SettingsComponentContribution settingsComponent = setingsManagement.registerComponent(new FileSettingsComponent());
+        setingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
     }
 }

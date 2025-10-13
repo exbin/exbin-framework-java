@@ -80,15 +80,15 @@ public interface SideBarModuleApi extends Module {
     void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextService activationUpdateService);
 
     /**
-     * Registers side bar clipboard actions.
-     */
-    void registerSideBarClipboardActions();
-
-    /**
      * Returns list of action managed by sidebar managers.
      *
      * @return list of actions
      */
     @Nonnull
     List<Action> getSideBarManagedActions();
+
+    /**
+     * Returns side bar into main frame.
+     */
+    void registerFrameSideBar();
 }

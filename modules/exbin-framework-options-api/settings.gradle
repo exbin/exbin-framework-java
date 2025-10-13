@@ -2,10 +2,6 @@ rootProject.name = 'exbin-framework-options-api'
 
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
-    include ':modules:exbin-framework-action-api'
-    include ':modules:exbin-framework-menu-popup-api'
-    include ':modules:exbin-framework-preferences-api'
-    include ':modules:exbin-framework-utils'
 }
 
 apply from: '../exbin-framework-java-modules-settings.gradle'

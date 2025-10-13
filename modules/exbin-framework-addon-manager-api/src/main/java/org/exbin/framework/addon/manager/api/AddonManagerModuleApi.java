@@ -56,5 +56,5 @@ public interface AddonManagerModuleApi extends Module {
 
     void setDevMode(boolean devMode);
 
-    void registerOptionsPanels();
+    void registerSettings();
 }

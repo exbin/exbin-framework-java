@@ -48,6 +48,8 @@ include ":modules:exbin-framework-help-online"
 include ":modules:exbin-framework-help-online-api"
 include ":modules:exbin-framework-options"
 include ":modules:exbin-framework-options-api"
+include ":modules:exbin-framework-options-settings"
+include ":modules:exbin-framework-options-settings-api"
 include ":modules:exbin-framework-utils"
 include ":modules:exbin-framework-about"
 include ":modules:exbin-framework-about-api"
@@ -68,8 +70,6 @@ include ":modules:exbin-framework-editor-api"
 include ":modules:exbin-framework-editor-text"
 include ":modules:exbin-framework-text-encoding"
 include ":modules:exbin-framework-text-font"
-include ":modules:exbin-framework-preferences"
-include ":modules:exbin-framework-preferences-api"
 
 File placeholder = file("deps/.downloaded")
 if (placeholder.exists()) {

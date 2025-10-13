@@ -7,7 +7,7 @@
   <description>Module for window handling</description>
   <dependency>
     <module id="org.exbin.framework.utils.UtilsModule" />
-    <module id="org.exbin.framework.preferences.PreferencesModule" />
+    <module id="org.exbin.framework.options.api.OptionsModuleApi" />
     <module id="org.exbin.framework.language.api.LanguageModuleApi" />
   </dependency>
 </module>

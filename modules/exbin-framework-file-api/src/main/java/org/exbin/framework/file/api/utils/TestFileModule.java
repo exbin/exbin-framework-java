@@ -179,6 +179,6 @@ public class TestFileModule implements FileModuleApi {
     }
 
     @Override
-    public void registerOptionsPanels() {
+    public void registerSettings() {
     }
 }

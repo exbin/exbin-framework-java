@@ -23,14 +23,17 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.text.encoding.options.TextEncodingOptions;
-import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.text.encoding.settings.TextEncodingSettings;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.text.encoding.options.TextEncodingOptionsPage;
-import org.exbin.framework.options.api.OptionsPageManagement;
-import org.exbin.framework.preferences.api.OptionsStorage;
+import org.exbin.framework.text.encoding.settings.TextEncodingSettingsComponent;
+import org.exbin.framework.options.api.OptionsStorage;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Text encoding module.
@@ -41,6 +44,7 @@ import org.exbin.framework.preferences.api.OptionsStorage;
 public class TextEncodingModule implements Module {
 
     public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(TextEncodingModule.class);
+    public static final String SETTINGS_PAGE_ID = "textEncoding";
 
     private ResourceBundle resourceBundle;
 
@@ -74,13 +78,12 @@ public class TextEncodingModule implements Module {
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP_LAST));
     }
 
-    public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-
-        TextEncodingOptionsPage textEncodingOptionsPage = new TextEncodingOptionsPage();
-        textEncodingOptionsPage.setEncodingsHandler(getEncodingsHandler());
-        optionsPageManagement.registerPage(textEncodingOptionsPage);
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        SettingsPageContribution settingsPage = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new TextEncodingSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
     }
 
     @Nonnull
@@ -94,6 +97,6 @@ public class TextEncodingModule implements Module {
     }
 
     public void loadFromPreferences(OptionsStorage preferences) {
-        getEncodingsHandler().loadFromOptions(new TextEncodingOptions(preferences));
+        getEncodingsHandler().loadFromOptions(new TextEncodingSettings(preferences));
     }
 }

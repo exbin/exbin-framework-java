@@ -92,11 +92,13 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     @Override
     public UndoActions createUndoActions() {
         return new UndoActions() {
+            @Nonnull
             @Override
             public Action createUndoAction() {
                 return OperationUndoModule.this.createUndoAction();
             }
 
+            @Nonnull
             @Override
             public Action createRedoAction() {
                 return OperationUndoModule.this.createRedoAction();

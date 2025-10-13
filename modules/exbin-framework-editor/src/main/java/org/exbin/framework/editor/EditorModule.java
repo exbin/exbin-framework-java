@@ -36,9 +36,6 @@ import org.exbin.framework.editor.action.CloseAllFilesAction;
 import org.exbin.framework.editor.action.CloseFileAction;
 import org.exbin.framework.editor.action.CloseOtherFilesAction;
 import org.exbin.framework.editor.action.EditorActions;
-import org.exbin.framework.options.api.OptionsGroup;
-import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
@@ -47,6 +44,8 @@ import org.exbin.framework.action.api.clipboard.TextClipboardController;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 
 /**
  * Framework editor module.
@@ -56,6 +55,7 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 @ParametersAreNonnullByDefault
 public class EditorModule implements EditorModuleApi {
 
+    public static final String SETTINGS_PAGE_ID = "editor";
     private final List<EditorProvider> editors = new ArrayList<>();
     private final List<EditorProviderChangeListener> changeListeners = new ArrayList<>();
     private final List<EditorProviderComponentListener> componentListeners = new ArrayList<>();
@@ -317,11 +317,10 @@ public class EditorModule implements EditorModuleApi {
     }
 
     @Override
-    public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-
-        OptionsGroup editorOptionsGroup = optionsModule.createOptionsGroup("editor", getResourceBundle());
-        optionsPageManagement.registerGroup(editorOptionsGroup);
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        
+        settingsManagement.registerPage(SETTINGS_PAGE_ID);
     }
 }

@@ -23,14 +23,17 @@ import org.exbin.framework.App;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
-import org.exbin.framework.addon.manager.options.page.AddonManagerOptionsPage;
+import org.exbin.framework.addon.manager.settings.AddonManagerSettingsComponent;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Addon manager module.
@@ -39,6 +42,8 @@ import org.exbin.framework.options.api.OptionsPageManagement;
  */
 @ParametersAreNonnullByDefault
 public class AddonManagerModule implements AddonManagerModuleApi {
+
+    public static final String SETTINGS_PAGE_ID = "addonManager";
 
     private static boolean devMode = false;
     private String addonServiceCoreUrl = "https://www.exbin.org/";
@@ -109,11 +114,13 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     }
 
     @Override
-    public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-        AddonManagerOptionsPage addonManagerOptionsPage = new AddonManagerOptionsPage();
-        optionsPageManagement.registerPage(addonManagerOptionsPage);
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        
+        SettingsPageContribution settingsPage = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new AddonManagerSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
     }
 
     @Nonnull

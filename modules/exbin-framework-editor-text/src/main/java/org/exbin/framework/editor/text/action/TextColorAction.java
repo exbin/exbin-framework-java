@@ -23,11 +23,10 @@ import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.text.options.gui.TextColorPanel;
+import org.exbin.framework.editor.text.settings.gui.TextColorPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
-import org.exbin.framework.editor.text.options.TextColorOptions;
+import org.exbin.framework.editor.text.settings.TextColorSettings;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.file.api.FileHandler;
@@ -35,8 +34,9 @@ import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.DialogParentComponent;
-import org.exbin.framework.options.api.DefaultOptionsStorage;
+import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
 import org.exbin.framework.window.api.controller.OptionsControlController;
+import org.exbin.framework.options.api.OptionsModuleApi;
 
 /**
  * Text color action.
@@ -110,10 +110,10 @@ public class TextColorAction extends AbstractAction {
         controlPanel.setController((OptionsControlController.ControlActionType actionType) -> {
             if (actionType != OptionsControlController.ControlActionType.CANCEL) {
                 if (actionType == OptionsControlController.ControlActionType.SAVE) {
-                    PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-                    TextColorOptions options = new TextColorOptions(new DefaultOptionsStorage());
+                    OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+                    TextColorSettings options = new TextColorSettings(new DefaultOptionsStorage());
                     colorPanel.saveToOptions(options);
-                    options.copyTo(new TextColorOptions(preferencesModule.getAppPreferences()));
+                    options.copyTo(new TextColorSettings(preferencesModule.getAppOptions()));
                 }
                 textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());
             }

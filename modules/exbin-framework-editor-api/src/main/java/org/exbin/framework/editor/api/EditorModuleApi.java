@@ -121,7 +121,7 @@ public interface EditorModuleApi extends Module {
     void removeEditorProviderComponentListener(EditorProviderComponentListener listener);
 
     /**
-     * Registers options panels.
+     * Registers settings.
      */
-    void registerOptionsPanels();
+    void registerSettings();
 }

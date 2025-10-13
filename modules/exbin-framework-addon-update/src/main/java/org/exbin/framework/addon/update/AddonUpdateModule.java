@@ -24,19 +24,22 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.App;
-import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.addon.update.service.CheckForUpdateService;
 import org.exbin.framework.addon.update.service.impl.CheckForUpdateServiceImpl;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.addon.update.action.CheckForUpdateAction;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.addon.update.api.AddonUpdateModuleApi;
-import org.exbin.framework.addon.update.options.CheckForUpdateOptionsPage;
+import org.exbin.framework.addon.update.settings.CheckForUpdateSettingsComponent;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.options.api.OptionsPageManagement;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Implementation of framework check update module.
@@ -45,6 +48,8 @@ import org.exbin.framework.options.api.OptionsPageManagement;
  */
 @ParametersAreNonnullByDefault
 public class AddonUpdateModule implements AddonUpdateModuleApi {
+
+    public static final String SETTINGS_PAGE_ID = "checkForUpdate";
 
     private CheckForUpdateAction checkUpdateAction;
 
@@ -80,11 +85,12 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     }
 
     @Override
-    public void registerOptionsPanels() {
-        CheckForUpdateOptionsPage optionsPage = new CheckForUpdateOptionsPage();
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
-        optionsPageManagement.registerPage(optionsPage);
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        SettingsPageContribution settingsPage = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new CheckForUpdateSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
     }
 
     @Nonnull

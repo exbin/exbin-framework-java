@@ -37,7 +37,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -46,6 +45,7 @@ import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
+import org.exbin.framework.options.api.OptionsModuleApi;
 
 /**
  * Basic appplication frame.
@@ -338,8 +338,8 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
 
     @Override
     public void setDefaultSize(Dimension windowSize) {
-        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-        String rectangleString = preferencesModule.getAppPreferences().get(FrameModuleApi.PREFERENCES_FRAME_RECTANGLE, "");
+        OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+        String rectangleString = preferencesModule.getAppOptions().get(FrameModuleApi.PREFERENCES_FRAME_RECTANGLE, "");
         if (!rectangleString.isEmpty()) {
             String[] split = rectangleString.split("[,]");
             Rectangle rect = new Rectangle(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));

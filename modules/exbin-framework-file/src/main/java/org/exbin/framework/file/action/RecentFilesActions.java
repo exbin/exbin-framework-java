@@ -34,10 +34,10 @@ import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileSystemView;
 import org.exbin.framework.App;
 import org.exbin.framework.file.api.FileType;
-import org.exbin.framework.file.options.RecentFilesOptions;
+import org.exbin.framework.file.settings.RecentFilesSettings;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.preferences.api.OptionsStorage;
+import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.utils.UiUtils;
 
 /**
@@ -86,7 +86,7 @@ public class RecentFilesActions {
     }
 
     private void loadState(JMenu fileOpenRecentMenu) {
-        RecentFilesOptions recentFilesOptions = new RecentFilesOptions(preferences);
+        RecentFilesSettings recentFilesOptions = new RecentFilesSettings(preferences);
         recentFiles.clear();
         int recent = 1;
         while (recent < 14) {
@@ -107,7 +107,7 @@ public class RecentFilesActions {
             return;
         }
 
-        RecentFilesOptions recentFilesParameters = new RecentFilesOptions(preferences);
+        RecentFilesSettings recentFilesParameters = new RecentFilesSettings(preferences);
         for (int i = 0; i < recentFiles.size(); i++) {
             recentFilesParameters.setFilePath(recentFiles.get(i).getFileName(), i + 1);
             recentFilesParameters.setModuleName(recentFiles.get(i).getModuleName(), i + 1);

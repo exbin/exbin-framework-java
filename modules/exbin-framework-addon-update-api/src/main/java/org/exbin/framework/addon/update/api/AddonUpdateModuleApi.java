@@ -44,7 +44,10 @@ public interface AddonUpdateModuleApi extends Module {
 
     void registerDefaultMenuItem();
 
-    void registerOptionsPanels();
+    /**
+     * Registers settings pages and components.
+     */
+    void registerSettings();
 
     /**
      * Returns URL of update data source.

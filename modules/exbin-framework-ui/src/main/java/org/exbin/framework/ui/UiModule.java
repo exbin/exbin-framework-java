@@ -22,16 +22,16 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.preferences.api.PreferencesModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.api.GroupOptionsPageRule;
-import org.exbin.framework.options.api.OptionsGroup;
-import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsPageManagement;
 import org.exbin.framework.ui.api.UiModuleApi;
-import org.exbin.framework.ui.options.page.AppearanceOptionsPage;
-import org.exbin.framework.ui.options.LanguageOptions;
-import org.exbin.framework.ui.options.page.LanguageOptionsPage;
+import org.exbin.framework.ui.settings.AppearanceSettingsComponent;
+import org.exbin.framework.ui.settings.LanguageSettings;
+import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
+import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Module for user interface handling.
@@ -40,6 +40,9 @@ import org.exbin.framework.ui.options.page.LanguageOptionsPage;
  */
 @ParametersAreNonnullByDefault
 public class UiModule implements UiModuleApi {
+
+    public static final String SETTINGS_PAGE_ID = "appearance";
+    public static final String SETTINGS_LANGUAGE_PAGE_ID = "language";
 
     private ResourceBundle resourceBundle;
 
@@ -68,8 +71,8 @@ public class UiModule implements UiModuleApi {
     public void initSwingUi() {
         executePreInitActions();
 
-        PreferencesModuleApi preferencesModule = App.getModule(PreferencesModuleApi.class);
-        LanguageOptions languageOptions = new LanguageOptions(preferencesModule.getAppPreferences());
+        OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+        LanguageSettings languageOptions = new LanguageSettings(preferencesModule.getAppOptions());
 
         // Switching language
         // TODO Move to language module, because language can be independent of UI
@@ -107,22 +110,25 @@ public class UiModule implements UiModuleApi {
     }
 
     @Override
-    public void registerOptionsPanels() {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsPageManagement optionsPageManagement = optionsModule.getOptionsPageManagement(MODULE_ID);
+    public void registerSettings() {
+        OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        SettingsPageContribution settingsPage = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new AppearanceSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
+/*
+        OptionsGroup appearanceOptionsGroup = settingsModule.createOptionsGroup("appearance", getResourceBundle());
+        settingsManagement.registerGroup(appearanceOptionsGroup);
 
-        OptionsGroup appearanceOptionsGroup = optionsModule.createOptionsGroup("appearance", getResourceBundle());
-        optionsPageManagement.registerGroup(appearanceOptionsGroup);
+        LanguageSettingsComponent languageOptionsPage = new LanguageSettingsComponent();
+        settingsManagement.registerPage(languageOptionsPage);
+        settingsManagement.registerPageRule(languageOptionsPage, new GroupOptionsPageRule(appearanceOptionsGroup));
 
-        LanguageOptionsPage languageOptionsPage = new LanguageOptionsPage();
-        optionsPageManagement.registerPage(languageOptionsPage);
-        optionsPageManagement.registerPageRule(languageOptionsPage, new GroupOptionsPageRule(appearanceOptionsGroup));
+        OptionsGroup uiOptionsGroup = settingsModule.createOptionsGroup("ui", getResourceBundle());
+        settingsManagement.registerGroup(uiOptionsGroup);
 
-        OptionsGroup uiOptionsGroup = optionsModule.createOptionsGroup("ui", getResourceBundle());
-        optionsPageManagement.registerGroup(uiOptionsGroup);
-
-        AppearanceOptionsPage appearanceOptionsPage = new AppearanceOptionsPage();
-        optionsPageManagement.registerPage(appearanceOptionsPage);
-        optionsPageManagement.registerPageRule(appearanceOptionsPage, new GroupOptionsPageRule(uiOptionsGroup));
+        AppearanceSettingsComponent appearanceOptionsPage = new AppearanceSettingsComponent();
+        settingsManagement.registerPage(appearanceOptionsPage);
+        settingsManagement.registerPageRule(appearanceOptionsPage, new GroupOptionsPageRule(uiOptionsGroup)); */
     }
 }

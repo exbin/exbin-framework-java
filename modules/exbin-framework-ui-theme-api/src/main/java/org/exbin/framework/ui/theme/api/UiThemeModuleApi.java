@@ -54,5 +54,5 @@ public interface UiThemeModuleApi extends Module {
     /**
      * Registers options panels.
      */
-    void registerOptionsPanels();
+    void registerSettings();
 }
