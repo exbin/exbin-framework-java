@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Text editor encodings options.
@@ -30,7 +30,7 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingSettings implements SettingsData {
+public class TextEncodingOptions implements SettingsOptions {
 
     public static final String KEY_TEXT_ENCODING_PREFIX = "textEncoding.";
     public static final String KEY_TEXT_ENCODING_DEFAULT = KEY_TEXT_ENCODING_PREFIX + "default";
@@ -38,7 +38,7 @@ public class TextEncodingSettings implements SettingsData {
 
     private final OptionsStorage storage;
 
-    public TextEncodingSettings(OptionsStorage storage) {
+    public TextEncodingOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
@@ -84,8 +84,8 @@ public class TextEncodingSettings implements SettingsData {
     }
 
     @Override
-    public void copyTo(SettingsData options) {
-        TextEncodingSettings with = (TextEncodingSettings) options;
+    public void copyTo(SettingsOptions options) {
+        TextEncodingOptions with = (TextEncodingOptions) options;
         with.setDefaultEncoding(getDefaultEncoding());
         with.setEncodings(getEncodings());
         with.setSelectedEncoding(getSelectedEncoding());

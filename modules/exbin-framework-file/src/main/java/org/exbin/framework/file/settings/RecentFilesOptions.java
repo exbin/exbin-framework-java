@@ -19,15 +19,15 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Recently opened files preferences.
+ * Options for recently opened files.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class RecentFilesSettings implements SettingsData {
+public class RecentFilesOptions implements SettingsOptions {
 
     public static final String KEY_RECENTFILE_PATH_PREFIX = "recentFile.path.";
     public static final String KEY_RECENTFILE_MODULE_PREFIX = "recentFile.module.";
@@ -35,7 +35,7 @@ public class RecentFilesSettings implements SettingsData {
 
     private final OptionsStorage storage;
 
-    public RecentFilesSettings(OptionsStorage storage) {
+    public RecentFilesOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
@@ -71,8 +71,8 @@ public class RecentFilesSettings implements SettingsData {
     }
 
     @Override
-    public void copyTo(SettingsData options) {
-        RecentFilesSettings with = (RecentFilesSettings) options;
+    public void copyTo(SettingsOptions options) {
+        RecentFilesOptions with = (RecentFilesOptions) options;
         int index = 0;
         do {
             Optional<String> filePath = getFilePath(index);

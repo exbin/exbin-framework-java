@@ -18,15 +18,15 @@ package org.exbin.framework.ui.theme.settings;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * UI theme settings.
+ * UI theme options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ThemeSettings implements SettingsData {
+public class ThemeOptions implements SettingsOptions {
 
     public static final String KEY_LOOK_AND_FEEL = "lookAndFeel";
     public static final String KEY_ICONSET = "iconset";
@@ -39,7 +39,7 @@ public class ThemeSettings implements SettingsData {
 
     private final OptionsStorage storage;
 
-    public ThemeSettings(OptionsStorage storage) {
+    public ThemeOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
@@ -114,8 +114,8 @@ public class ThemeSettings implements SettingsData {
     }
 
     @Override
-    public void copyTo(SettingsData options) {
-        ThemeSettings with = (ThemeSettings) options;
+    public void copyTo(SettingsOptions options) {
+        ThemeOptions with = (ThemeOptions) options;
         with.setLookAndFeel(getLookAndFeel());
         with.setFontAntialiasing(getFontAntialiasing());
         with.setGuiScaling(getGuiScaling());

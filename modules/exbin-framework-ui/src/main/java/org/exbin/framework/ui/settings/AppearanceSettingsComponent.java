@@ -25,11 +25,11 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.ui.settings.gui.AppearanceSettingsPanel;
-import org.exbin.framework.ui.settings.AppearanceSettings;
+import org.exbin.framework.ui.settings.AppearanceOptions;
 import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Appearance settings component.
@@ -37,11 +37,11 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceSettingsComponent implements SettingsComponentProvider<AppearanceSettings> {
+public class AppearanceSettingsComponent implements SettingsComponentProvider<AppearanceOptions> {
 
     @Nonnull
     @Override
-    public SettingsComponent<AppearanceSettings> createComponent() {
+    public SettingsComponent<AppearanceOptions> createComponent() {
         return new AppearanceSettingsPanel();
     }
 

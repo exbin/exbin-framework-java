@@ -31,7 +31,7 @@ import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * File options page.
@@ -39,7 +39,7 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileSettingsComponent implements SettingsComponentProvider<FileSettings> {
+public class FileSettingsComponent implements SettingsComponentProvider<FileOptions> {
 
     private java.util.ResourceBundle resourceBundle;
 
@@ -49,7 +49,7 @@ public class FileSettingsComponent implements SettingsComponentProvider<FileSett
 
     @Nonnull
     @Override
-    public SettingsComponent<FileSettings> createComponent() {
+    public SettingsComponent<FileOptions> createComponent() {
         FileSettingsPanel fileSettingsPanel = new FileSettingsPanel();
         List<String> fileDialogsKeys = new ArrayList<>();
         fileDialogsKeys.add(FileDialogsType.SWING.name());

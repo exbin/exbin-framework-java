@@ -32,7 +32,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.update.gui.CheckForUpdatePanel;
-import org.exbin.framework.addon.update.settings.CheckForUpdateSettings;
+import org.exbin.framework.addon.update.settings.CheckForUpdateOptions;
 import org.exbin.framework.addon.update.service.CheckForUpdateService;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -137,7 +137,7 @@ public class CheckForUpdateAction extends AbstractAction {
 
     public void checkOnStart(Frame frame) {
         OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-        CheckForUpdateSettings checkForUpdateParameters = new CheckForUpdateSettings(preferencesModule.getAppOptions());
+        CheckForUpdateOptions checkForUpdateParameters = new CheckForUpdateOptions(preferencesModule.getAppOptions());
         boolean checkOnStart = checkForUpdateParameters.isShouldCheckForUpdate();
 
         if (!checkOnStart) {

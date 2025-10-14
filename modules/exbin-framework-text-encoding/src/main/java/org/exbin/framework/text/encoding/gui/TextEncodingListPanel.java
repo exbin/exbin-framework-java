@@ -23,7 +23,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.App;
-import org.exbin.framework.text.encoding.settings.TextEncodingSettings;
+import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
@@ -37,7 +37,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingListPanel extends javax.swing.JPanel implements SettingsComponent<TextEncodingSettings> {
+public class TextEncodingListPanel extends javax.swing.JPanel implements SettingsComponent<TextEncodingOptions> {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingListPanel.class);
@@ -91,12 +91,12 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void saveToOptions(TextEncodingSettings options) {
+    public void saveToOptions(TextEncodingOptions options) {
         options.setEncodings(getEncodingList());
     }
 
     @Override
-    public void loadFromOptions(TextEncodingSettings options) {
+    public void loadFromOptions(TextEncodingOptions options) {
         setEncodingList(options.getEncodings());
     }
 

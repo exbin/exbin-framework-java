@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.addon.update.settings.CheckForUpdateSettings;
+import org.exbin.framework.addon.update.settings.CheckForUpdateOptions;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
@@ -33,7 +33,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implements SettingsComponent<CheckForUpdateSettings> {
+public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implements SettingsComponent<CheckForUpdateOptions> {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ApplicationUpdateSettingsPanel.class);
@@ -49,12 +49,12 @@ public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implement
     }
 
     @Override
-    public void loadFromOptions(CheckForUpdateSettings options) {
+    public void loadFromOptions(CheckForUpdateOptions options) {
         checkForUpdatesOnStartCheckBox.setSelected(options.isShouldCheckForUpdate());
     }
 
     @Override
-    public void saveToOptions(CheckForUpdateSettings options) {
+    public void saveToOptions(CheckForUpdateOptions options) {
         options.setShouldCheckForUpdate(checkForUpdatesOnStartCheckBox.isSelected());
     }
 

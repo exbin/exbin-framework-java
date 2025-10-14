@@ -28,7 +28,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.theme.api.LafProvider;
-import org.exbin.framework.ui.theme.settings.ThemeSettings;
+import org.exbin.framework.ui.theme.settings.ThemeOptions;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.ui.theme.api.UiThemeModuleApi;
 import org.exbin.framework.ui.theme.settings.ThemeSettingsComponent;
@@ -85,7 +85,7 @@ public class UiThemeModule implements UiThemeModuleApi {
         UiModuleApi uiModule = App.getModule(UiModuleApi.class);
         uiModule.addPreInitAction(() -> {
             OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-            ThemeSettings themeOptions = new ThemeSettings(preferencesModule.getAppOptions());
+            ThemeOptions themeOptions = new ThemeOptions(preferencesModule.getAppOptions());
 
             LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
             String iconSet = themeOptions.getIconSet();
@@ -195,7 +195,7 @@ public class UiThemeModule implements UiThemeModuleApi {
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
-        ThemeSettingsComponent themeSettingsPage = themeOptionsManager.createThemeOptionsPage();
+        ThemeSettingsComponent themeSettingsPage = getThemeOptionsManager().createThemeOptionsPage();
         getThemeOptionsManager();
 //        settingsManagement.registerPage(themeSettingsPage);
 //        settingsManagement.registerPageRule(themeSettingsPage, new GroupOptionsPageRule("appearance"));

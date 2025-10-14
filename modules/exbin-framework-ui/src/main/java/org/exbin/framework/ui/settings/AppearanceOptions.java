@@ -17,15 +17,15 @@ package org.exbin.framework.ui.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Appearance settings.
+ * Appearance options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceSettings implements SettingsData {
+public class AppearanceOptions implements SettingsOptions {
 
     public static final String KEY_TOOLBAR_VISIBLE = "toolBar.visible";
     public static final String KEY_TOOLBAR_CAPTIONS = "toolBar.captions";
@@ -33,7 +33,7 @@ public class AppearanceSettings implements SettingsData {
 
     private final OptionsStorage storage;
 
-    public AppearanceSettings(OptionsStorage storage) {
+    public AppearanceOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
@@ -62,8 +62,8 @@ public class AppearanceSettings implements SettingsData {
     }
 
     @Override
-    public void copyTo(SettingsData options) {
-        AppearanceSettings with = (AppearanceSettings) options;
+    public void copyTo(SettingsOptions options) {
+        AppearanceOptions with = (AppearanceOptions) options;
         with.setShowStatusBar(isShowStatusBar());
         with.setShowToolBar(isShowToolBar());
         with.setShowToolBarCaptions(isShowToolBarCaptions());

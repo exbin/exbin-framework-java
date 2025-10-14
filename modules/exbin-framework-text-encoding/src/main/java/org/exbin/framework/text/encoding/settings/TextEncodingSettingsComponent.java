@@ -33,7 +33,7 @@ import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController;
 import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Text encoding options page.
@@ -41,7 +41,7 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingSettingsComponent implements SettingsComponentProvider<TextEncodingSettings> {
+public class TextEncodingSettingsComponent implements SettingsComponentProvider<TextEncodingOptions> {
 
     private EncodingsHandler encodingsHandler;
 

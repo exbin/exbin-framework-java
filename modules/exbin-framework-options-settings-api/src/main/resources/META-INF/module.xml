@@ -7,7 +7,7 @@
   <description>Module to provide support for application settings</description>
   <dependency>
     <module id="org.exbin.framework.action.api.ActionModuleApi" />
-    <module id="org.exbin.framework.options.settings.api.OptionsSettingsModuleApi" />
+    <module id="org.exbin.framework.options.api.OptionsModuleApi" />
     <module id="org.exbin.framework.utils.UtilsModule" />
   </dependency>
 </module>

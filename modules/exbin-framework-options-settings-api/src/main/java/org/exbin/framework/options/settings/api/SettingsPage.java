@@ -26,7 +26,7 @@ import org.exbin.framework.options.api.OptionsStorage;
  * @param <T> options data
  */
 @ParametersAreNonnullByDefault
-public interface SettingsPage<T extends SettingsData> {
+public interface SettingsPage<T extends SettingsOptions> {
 
     /**
      * Returns settings page id.

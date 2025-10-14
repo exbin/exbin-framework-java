@@ -23,6 +23,6 @@ import org.exbin.framework.utils.ComponentResourceProvider;
  * @author ExBin Project (https://exbin.org)
  * @param <T> options data
  */
-public interface DefaultSettingsPage<T extends SettingsData> extends SettingsPage<T>, ComponentResourceProvider {
+public interface DefaultSettingsPage<T extends SettingsOptions> extends SettingsPage<T>, ComponentResourceProvider {
 
 }

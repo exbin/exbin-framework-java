@@ -31,11 +31,11 @@ import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.ui.settings.gui.LanguageSettingsPanel;
 import org.exbin.framework.ui.model.LanguageRecord;
-import org.exbin.framework.ui.settings.LanguageSettings;
+import org.exbin.framework.ui.settings.LanguageOptions;
 import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Language settings component.
@@ -43,11 +43,11 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class LanguageSettingsComponent implements SettingsComponentProvider<LanguageSettings> {
+public class LanguageSettingsComponent implements SettingsComponentProvider<LanguageOptions> {
 
     @Nonnull
     @Override
-    public SettingsComponent<LanguageSettings> createComponent() {
+    public SettingsComponent<LanguageOptions> createComponent() {
         LanguageSettingsPanel panel = new LanguageSettingsPanel();
         ResourceBundle resourceBundle = panel.getResourceBundle();
         List<LanguageRecord> languageLocales = new ArrayList<>();

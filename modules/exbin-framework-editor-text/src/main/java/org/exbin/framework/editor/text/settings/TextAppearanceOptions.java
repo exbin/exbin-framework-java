@@ -13,38 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.addon.update.settings;
+package org.exbin.framework.editor.text.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Check for update on start options.
+ * Text appearance options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CheckForUpdateSettings implements SettingsData {
+public class TextAppearanceOptions implements SettingsOptions {
 
-    public static final String KEY_CHECK_FOR_UPDATE_ON_START = "start.checkForUpdate";
+    public static final String KEY_TEXT_WORD_WRAPPING = "textAppearance.wordWrap";
 
     private final OptionsStorage storage;
 
-    public CheckForUpdateSettings(OptionsStorage storage) {
+    public TextAppearanceOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
-    public boolean isShouldCheckForUpdate() {
-        return storage.getBoolean(KEY_CHECK_FOR_UPDATE_ON_START, true);
+    public boolean isWordWrapping() {
+        return storage.getBoolean(KEY_TEXT_WORD_WRAPPING, false);
     }
 
-    public void setShouldCheckForUpdate(boolean shouldCheck) {
-        storage.putBoolean(KEY_CHECK_FOR_UPDATE_ON_START, shouldCheck);
+    public void setWordWrapping(boolean wordWrap) {
+        storage.putBoolean(KEY_TEXT_WORD_WRAPPING, wordWrap);
     }
 
     @Override
-    public void copyTo(SettingsData options) {
-        ((CheckForUpdateSettings) options).setShouldCheckForUpdate(isShouldCheckForUpdate());
+    public void copyTo(SettingsOptions options) {
+        ((TextAppearanceOptions) options).setWordWrapping(isWordWrapping());
     }
 }

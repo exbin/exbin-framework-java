@@ -33,7 +33,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.ui.theme.ThemeConfigurationAction;
 import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
-import org.exbin.framework.ui.theme.settings.ThemeSettings;
+import org.exbin.framework.ui.theme.settings.ThemeOptions;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
@@ -46,7 +46,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsComponent<ThemeSettings> {
+public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsComponent<ThemeOptions> {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ThemeSettingsPanel.class);
     private SettingsModifiedListener settingsModifiedListener;
@@ -73,7 +73,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }
 
     @Override
-    public void loadFromOptions(ThemeSettings options) {
+    public void loadFromOptions(ThemeOptions options) {
         visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
         iconSetComboBox.setSelectedIndex(findMatchingElement(iconSetComboBox.getModel(), options.getIconSet()));
         renderingModeComboBox.setSelectedIndex(findMatchingElement(renderingModeComboBox.getModel(), options.getRenderingMode()));
@@ -96,7 +96,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }
 
     @Override
-    public void saveToOptions(ThemeSettings options) {
+    public void saveToOptions(ThemeOptions options) {
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         options.setIconSet((String) iconSetComboBox.getSelectedItem());
         options.setRenderingMode((String) renderingModeComboBox.getSelectedItem());

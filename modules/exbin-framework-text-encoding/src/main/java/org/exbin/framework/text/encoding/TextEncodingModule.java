@@ -23,7 +23,7 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.text.encoding.settings.TextEncodingSettings;
+import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.menu.api.MenuManagement;
@@ -97,6 +97,6 @@ public class TextEncodingModule implements Module {
     }
 
     public void loadFromPreferences(OptionsStorage preferences) {
-        getEncodingsHandler().loadFromOptions(new TextEncodingSettings(preferences));
+        getEncodingsHandler().loadFromOptions(new TextEncodingOptions(preferences));
     }
 }

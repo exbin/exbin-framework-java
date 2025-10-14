@@ -24,15 +24,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Text font settings.
+ * Text font options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontSettings implements SettingsData {
+public class TextFontOptions implements SettingsOptions {
 
     public static final String KEY_TEXT_FONT_PREFIX = "textFont.";
     public static final String KEY_TEXT_FONT_DEFAULT = KEY_TEXT_FONT_PREFIX + "default";
@@ -47,7 +47,7 @@ public class TextFontSettings implements SettingsData {
 
     private final OptionsStorage storage;
 
-    public TextFontSettings(OptionsStorage storage) {
+    public TextFontOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
@@ -136,8 +136,8 @@ public class TextFontSettings implements SettingsData {
     }
 
     @Override
-    public void copyTo(SettingsData options) {
-        TextFontSettings with = (TextFontSettings) options;
+    public void copyTo(SettingsOptions options) {
+        TextFontOptions with = (TextFontOptions) options;
         with.setFontAttributes(getFontAttributes());
         with.setUseDefaultFont(isUseDefaultFont());
     }

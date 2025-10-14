@@ -27,7 +27,7 @@ import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Text appearance settings component.
@@ -35,7 +35,7 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceSettingsComponent implements SettingsComponentProvider<TextAppearanceSettings> {
+public class TextAppearanceSettingsComponent implements SettingsComponentProvider<TextAppearanceOptions> {
 
     private TextAppearanceService textAppearanceService;
 
@@ -45,7 +45,7 @@ public class TextAppearanceSettingsComponent implements SettingsComponentProvide
 
     @Nonnull
     @Override
-    public SettingsComponent<TextAppearanceSettings> createComponent() {
+    public SettingsComponent<TextAppearanceOptions> createComponent() {
         return new TextAppearanceSettingsPanel();
     }
 

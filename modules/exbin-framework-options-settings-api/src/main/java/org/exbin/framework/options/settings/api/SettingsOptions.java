@@ -18,17 +18,17 @@ package org.exbin.framework.options.settings.api;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for options settingds data.
+ * Interface for settings options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface SettingsData {
+public interface SettingsOptions {
 
     /**
-     * Copies all options to settings data of the same type.
+     * Copies all options to settings options of the same type.
      *
-     * @param settingsData settings data
+     * @param settingsOptions settings options
      */
-    void copyTo(SettingsData settingsData);
+    void copyTo(SettingsOptions settingsOptions);
 }

@@ -19,7 +19,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Text color options.
@@ -27,7 +27,7 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorSettings implements SettingsData {
+public class TextColorOptions implements SettingsOptions {
 
     public static final String KEY_TEXT_COLOR_DEFAULT = "textColor.default";
     public static final String KEY_TEXT_COLOR_TEXT = "textColor.text";
@@ -38,7 +38,7 @@ public class TextColorSettings implements SettingsData {
 
     private final OptionsStorage storage;
 
-    public TextColorSettings(OptionsStorage storage) {
+    public TextColorOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
@@ -130,9 +130,9 @@ public class TextColorSettings implements SettingsData {
     }
 
     @Override
-    public void copyTo(SettingsData options) {
-        if (options instanceof TextColorSettings) {
-            TextColorSettings with = (TextColorSettings) options;
+    public void copyTo(SettingsOptions options) {
+        if (options instanceof TextColorOptions) {
+            TextColorOptions with = (TextColorOptions) options;
             with.setFoundBackgroundColor(getFoundBackgroundColor());
             with.setSelectionBackgroundColor(getSelectionBackgroundColor());
             with.setSelectionTextColor(getSelectionTextColor());

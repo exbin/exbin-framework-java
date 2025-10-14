@@ -25,7 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @param <T> settings data class
  */
 @ParametersAreNonnullByDefault
-public interface SettingsComponentProvider<T extends SettingsData> {
+public interface SettingsComponentProvider<T extends SettingsOptions> {
 
     /**
      * Creates settings component.

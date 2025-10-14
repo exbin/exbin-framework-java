@@ -19,15 +19,15 @@ import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * UI language settings.
+ * UI language options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class LanguageSettings implements SettingsData {
+public class LanguageOptions implements SettingsOptions {
 
     public static final String KEY_LOCALE_LANGUAGE = "locale.language";
     public static final String KEY_LOCALE_COUNTRY = "locale.country";
@@ -36,7 +36,7 @@ public class LanguageSettings implements SettingsData {
 
     private final OptionsStorage preferences;
 
-    public LanguageSettings(OptionsStorage preferences) {
+    public LanguageOptions(OptionsStorage preferences) {
         this.preferences = preferences;
     }
 
@@ -107,8 +107,8 @@ public class LanguageSettings implements SettingsData {
     }
 
     @Override
-    public void copyTo(SettingsData options) {
-        LanguageSettings with = (LanguageSettings) options;
+    public void copyTo(SettingsOptions options) {
+        LanguageOptions with = (LanguageOptions) options;
         with.setLocaleCountry(getLocaleCountry());
         with.setLocaleLanguage(getLocaleLanguage());
         with.setLocaleTag(getLocaleTag());

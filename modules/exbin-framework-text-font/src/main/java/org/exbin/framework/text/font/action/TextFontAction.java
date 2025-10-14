@@ -24,7 +24,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.text.font.gui.TextFontPanel;
-import org.exbin.framework.text.font.settings.TextFontSettings;
+import org.exbin.framework.text.font.settings.TextFontOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
@@ -86,7 +86,7 @@ public class TextFontAction extends AbstractAction {
             if (actionType != OptionsControlController.ControlActionType.CANCEL) {
                 if (actionType == OptionsControlController.ControlActionType.SAVE) {
                     OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-                    TextFontSettings parameters = new TextFontSettings(preferencesModule.getAppOptions());
+                    TextFontOptions parameters = new TextFontOptions(preferencesModule.getAppOptions());
                     parameters.setUseDefaultFont(false);
                     parameters.setFont(fontPanel.getStoredFont());
                 }

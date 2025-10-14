@@ -26,7 +26,7 @@ import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Check for update on start settings page.
@@ -34,10 +34,10 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CheckForUpdateSettingsComponent implements SettingsComponentProvider<CheckForUpdateSettings> {
+public class CheckForUpdateSettingsComponent implements SettingsComponentProvider<CheckForUpdateOptions> {
     
     @Override
-    public SettingsComponent<CheckForUpdateSettings> createComponent() {
+    public SettingsComponent<CheckForUpdateOptions> createComponent() {
         return new ApplicationUpdateSettingsPanel();
     }
 

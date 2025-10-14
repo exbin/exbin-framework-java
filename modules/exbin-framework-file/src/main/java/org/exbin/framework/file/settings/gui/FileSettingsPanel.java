@@ -26,7 +26,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.file.settings.FileSettings;
+import org.exbin.framework.file.settings.FileOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
@@ -40,7 +40,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileSettingsPanel extends javax.swing.JPanel implements SettingsComponent<FileSettings> {
+public class FileSettingsPanel extends javax.swing.JPanel implements SettingsComponent<FileOptions> {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FileSettingsPanel.class);
@@ -79,12 +79,12 @@ public class FileSettingsPanel extends javax.swing.JPanel implements SettingsCom
     }
 
     @Override
-    public void loadFromOptions(FileSettings options) {
+    public void loadFromOptions(FileOptions options) {
         fileDialogsComboBox.setSelectedIndex(findMatchingElement(fileDialogsComboBox.getModel(), options.getFileDialogs()));
     }
 
     @Override
-    public void saveToOptions(FileSettings options) {
+    public void saveToOptions(FileOptions options) {
         options.setFileDialogs((String) fileDialogsComboBox.getSelectedItem());
     }
 

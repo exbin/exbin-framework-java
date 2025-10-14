@@ -25,7 +25,7 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.settings.gui.TextColorPanel;
 import org.exbin.framework.editor.text.gui.TextPanel;
-import org.exbin.framework.editor.text.settings.TextColorSettings;
+import org.exbin.framework.editor.text.settings.TextColorOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
@@ -111,9 +111,9 @@ public class TextColorAction extends AbstractAction {
             if (actionType != OptionsControlController.ControlActionType.CANCEL) {
                 if (actionType == OptionsControlController.ControlActionType.SAVE) {
                     OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-                    TextColorSettings options = new TextColorSettings(new DefaultOptionsStorage());
+                    TextColorOptions options = new TextColorOptions(new DefaultOptionsStorage());
                     colorPanel.saveToOptions(options);
-                    options.copyTo(new TextColorSettings(preferencesModule.getAppOptions()));
+                    options.copyTo(new TextColorOptions(preferencesModule.getAppOptions()));
                 }
                 textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());
             }

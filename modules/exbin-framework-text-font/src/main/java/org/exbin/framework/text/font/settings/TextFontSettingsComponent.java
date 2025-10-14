@@ -34,7 +34,7 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Text font options.
@@ -42,7 +42,7 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontSettingsComponent implements SettingsComponentProvider<TextFontSettings> {
+public class TextFontSettingsComponent implements SettingsComponentProvider<TextFontOptions> {
 
     private TextFontSettingsPanel panel;
     private TextFontService textFontService;
@@ -53,7 +53,7 @@ public class TextFontSettingsComponent implements SettingsComponentProvider<Text
 
     @Nonnull
     @Override
-    public SettingsComponent<TextFontSettings> createComponent() {
+    public SettingsComponent<TextFontOptions> createComponent() {
         if (panel == null) {
             panel = new TextFontSettingsPanel();
             panel.setTextFontService(textFontService);
@@ -72,7 +72,7 @@ public class TextFontSettingsComponent implements SettingsComponentProvider<Text
                         if (actionType != DefaultControlController.ControlActionType.CANCEL) {
                             if (actionType == DefaultControlController.ControlActionType.OK) {
                                 OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-                                TextFontSettings textFontParameters = new TextFontSettings(preferencesModule.getAppOptions());
+                                TextFontOptions textFontParameters = new TextFontOptions(preferencesModule.getAppOptions());
                                 textFontParameters.setUseDefaultFont(true);
                                 textFontParameters.setFont(fontPanel.getStoredFont());
                             }

@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.editor.text.settings.TextColorSettings;
+import org.exbin.framework.editor.text.settings.TextColorOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.editor.text.service.TextColorService;
@@ -36,7 +36,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextColorSettings> {
+public class TextColorSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextColorOptions> {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorSettingsPanel.class);
@@ -66,7 +66,7 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
     }
 
     @Override
-    public void loadFromOptions(TextColorSettings options) {
+    public void loadFromOptions(TextColorOptions options) {
         boolean defaultColor = options.isUseDefaultColors();
         defaultColorCheckBox.setSelected(defaultColor);
         colorPanel.setEnabled(!defaultColor);
@@ -74,7 +74,7 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
     }
 
     @Override
-    public void saveToOptions(TextColorSettings options) {
+    public void saveToOptions(TextColorOptions options) {
         options.setUseDefaultColors(defaultColorCheckBox.isSelected());
         colorPanel.saveToOptions(options);
     }

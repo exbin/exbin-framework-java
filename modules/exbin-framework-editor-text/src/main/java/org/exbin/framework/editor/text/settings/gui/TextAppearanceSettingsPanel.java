@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.editor.text.settings.TextAppearanceSettings;
+import org.exbin.framework.editor.text.settings.TextAppearanceOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.TestApplication;
@@ -33,7 +33,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextAppearanceSettings> {
+public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextAppearanceOptions> {
 
     private SettingsModifiedListener settingsModifiedListener;
     private ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceSettingsPanel.class);
@@ -49,12 +49,12 @@ public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements S
     }
 
     @Override
-    public void saveToOptions(TextAppearanceSettings options) {
+    public void saveToOptions(TextAppearanceOptions options) {
         options.setWordWrapping(wordWrapCheckBox.isSelected());
     }
 
     @Override
-    public void loadFromOptions(TextAppearanceSettings options) {
+    public void loadFromOptions(TextAppearanceOptions options) {
         wordWrapCheckBox.setSelected(options.isWordWrapping());
     }
 

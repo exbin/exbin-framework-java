@@ -29,7 +29,7 @@ import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Text color options.
@@ -37,7 +37,7 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorSettingsComponent implements SettingsComponentProvider<TextColorSettings> {
+public class TextColorSettingsComponent implements SettingsComponentProvider<TextColorOptions> {
 
     private TextColorSettingsPanel panel;
     private TextColorService textColorService;
@@ -48,7 +48,7 @@ public class TextColorSettingsComponent implements SettingsComponentProvider<Tex
 
     @Nonnull
     @Override
-    public SettingsComponent<TextColorSettings> createComponent() {
+    public SettingsComponent<TextColorOptions> createComponent() {
         if (panel == null) {
             panel = new TextColorSettingsPanel();
             panel.setTextColorService(textColorService);

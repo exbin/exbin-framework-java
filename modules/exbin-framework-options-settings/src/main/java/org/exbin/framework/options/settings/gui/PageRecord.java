@@ -24,10 +24,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
 import org.exbin.framework.options.settings.api.SettingsComponent;
-import org.exbin.framework.options.settings.api.SettingsData;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsPage;
 import org.exbin.framework.options.api.OptionsStorage;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Options settings page record.
@@ -81,7 +81,7 @@ public class PageRecord {
     public void loadFromPreferences(OptionsStorage preferences) {
         for (int i = 0; i < pages.size(); i++) {
             SettingsPage page = pages.get(i);
-            SettingsData options = page.createOptions();
+            SettingsOptions options = page.createOptions();
 //            page.loadFromPreferences(preferences, options);
             SettingsComponent component = components.get(i);
             component.loadFromOptions(options);
@@ -92,7 +92,7 @@ public class PageRecord {
     public void saveToPreferences(OptionsStorage preferences) {
         for (int i = 0; i < pages.size(); i++) {
             SettingsPage page = pages.get(i);
-            SettingsData options = page.createOptions();
+            SettingsOptions options = page.createOptions();
             SettingsComponent component = components.get(i);
             component.saveToOptions(options);
 //            page.saveToPreferences(preferences, options);
@@ -103,7 +103,7 @@ public class PageRecord {
     public void saveAndApply(OptionsStorage preferences) {
         for (int i = 0; i < pages.size(); i++) {
             SettingsPage page = pages.get(i);
-            SettingsData options = page.createOptions();
+            SettingsOptions options = page.createOptions();
             SettingsComponent component = components.get(i);
             component.saveToOptions(options);
 //            page.saveToPreferences(preferences, options);
@@ -115,7 +115,7 @@ public class PageRecord {
     public void applyPreferencesChanges(OptionsStorage preferences) {
         for (int i = 0; i < pages.size(); i++) {
             SettingsPage page = pages.get(i);
-            SettingsData options = page.createOptions();
+            SettingsOptions options = page.createOptions();
             SettingsComponent component = components.get(i);
             component.saveToOptions(options);
 //            page.applyPreferencesChanges(options);

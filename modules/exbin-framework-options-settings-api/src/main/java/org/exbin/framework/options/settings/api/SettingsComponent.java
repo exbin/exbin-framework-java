@@ -25,7 +25,7 @@ import org.exbin.framework.utils.ComponentResourceProvider;
  * @param <T> settings data class
  */
 @ParametersAreNonnullByDefault
-public interface SettingsComponent<T extends SettingsData> extends ComponentResourceProvider {
+public interface SettingsComponent<T extends SettingsOptions> extends ComponentResourceProvider {
 
     /**
      * Loads configuration from given options settings data.

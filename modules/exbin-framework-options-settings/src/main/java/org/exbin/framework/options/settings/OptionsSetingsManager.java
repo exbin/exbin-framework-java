@@ -15,8 +15,11 @@
  */
 package org.exbin.framework.options.settings;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.ContributionManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
@@ -34,22 +37,37 @@ import org.exbin.framework.options.settings.api.SettingsPageContribution;
 @ParametersAreNonnullByDefault
 public class OptionsSetingsManager extends ContributionManager implements OptionsSettingsManagement {
 
+    public static final String MAIN_OPTIONS_ID = "main";
+    
+    protected ContributionDefinition mainDefinition;
+
+    public OptionsSetingsManager() {
+        mainDefinition = new ContributionDefinition(OptionsSettingsModule.MODULE_ID);
+        definitions.put(MAIN_OPTIONS_ID, mainDefinition);
+    }
+
     @Nonnull
     @Override
     public SettingsComponentContribution registerComponent(SettingsComponentProvider<?> componentProvider) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        SettingsComponentContribution contribution = new SettingsComponentContribution(componentProvider.toString(), componentProvider);
+        mainDefinition.getContributions().add(contribution);
+        return contribution;
     }
 
     @Nonnull
     @Override
     public SettingsPageContribution registerPage(String pageId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        SettingsPageContribution contribution = new SettingsPageContribution(pageId);
+        mainDefinition.getContributions().add(contribution);
+        return contribution;
     }
 
     @Nonnull
     @Override
     public GroupSequenceContribution registerGroup(String groupId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        GroupSequenceContribution contribution = new GroupSequenceContribution(groupId);
+        mainDefinition.getContributions().add(contribution);
+        return contribution;
     }
 
     @Override
@@ -59,7 +77,12 @@ public class OptionsSetingsManager extends ContributionManager implements Option
 
     @Override
     public void registerSettingsRule(SequenceContribution contribution, SequenceContributionRule rule) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<SequenceContributionRule> rules = mainDefinition.getRules().get(contribution);
+        if (rules == null) {
+            rules = new ArrayList<>();
+            mainDefinition.getRules().put(contribution, rules);
+        }
+        rules.add(rule);
     }
 
 //    private final List<String> groupsOrder = new ArrayList<>();

@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.TextEncodingStatusApi;
-import org.exbin.framework.text.encoding.settings.TextEncodingSettings;
+import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 import org.exbin.framework.text.encoding.service.TextEncodingService;
 
 /**
@@ -77,7 +77,7 @@ public class TextEncodingServiceImpl implements TextEncodingService {
     }
 
     @Override
-    public void loadFromOptions(TextEncodingSettings preferences) {
+    public void loadFromOptions(TextEncodingOptions preferences) {
         selectedEncoding = preferences.getSelectedEncoding();
         encodings.clear();
         encodings.addAll(preferences.getEncodings());

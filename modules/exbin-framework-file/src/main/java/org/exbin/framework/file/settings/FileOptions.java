@@ -13,32 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.manager.settings;
+package org.exbin.framework.file.settings;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.file.FileDialogsType;
 import org.exbin.framework.options.api.OptionsStorage;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Action manager settings options.
+ * File options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ActionManagerSettings implements SettingsData {
+public class FileOptions implements SettingsOptions {
 
-    public static final String KEY_ACTION_KEYS = "action.keys";
-    public static final String KEY_ACTION_KEY_PREFIX = "action.key.";
-    public static final String KEY_ACTION_KEY_ID = "id";
-    public static final String KEY_ACTION_KEY_SHORTCUT = "shortcut";
+    public static final String KEY_FILE_DIALOGS = "fileDialogs";
 
     private final OptionsStorage storage;
 
-    public ActionManagerSettings(OptionsStorage storage) {
+    public FileOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
+    @Nonnull
+    public String getFileDialogs() {
+        return storage.get(KEY_FILE_DIALOGS, FileDialogsType.SWING.name());
+    }
+
+    public void setFileDialogs(String fileDialogs) {
+        storage.put(KEY_FILE_DIALOGS, fileDialogs);
+    }
+
     @Override
-    public void copyTo(SettingsData settingsData) {
+    public void copyTo(SettingsOptions options) {
+        ((FileOptions) options).setFileDialogs(getFileDialogs());
     }
 }

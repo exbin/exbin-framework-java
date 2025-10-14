@@ -22,7 +22,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsData;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Addon manager options.
@@ -30,7 +30,7 @@ import org.exbin.framework.options.settings.api.SettingsData;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonManagerOptions implements SettingsData {
+public class AddonManagerOptions implements SettingsOptions {
 
     public static final String KEY_ACTIVATED_VERSION = "addonManager.activatedVersion";
 
@@ -53,7 +53,7 @@ public class AddonManagerOptions implements SettingsData {
     }
 
     @Override
-    public void copyTo(SettingsData options) {
+    public void copyTo(SettingsOptions options) {
         AddonManagerOptions with = (AddonManagerOptions) options;
         with.setActivatedVersion(getActivatedVersion());
     }

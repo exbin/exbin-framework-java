@@ -25,7 +25,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.settings.AppearanceSettingsComponent;
-import org.exbin.framework.ui.settings.LanguageSettings;
+import org.exbin.framework.ui.settings.LanguageOptions;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
@@ -72,7 +72,7 @@ public class UiModule implements UiModuleApi {
         executePreInitActions();
 
         OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-        LanguageSettings languageOptions = new LanguageSettings(preferencesModule.getAppOptions());
+        LanguageOptions languageOptions = new LanguageOptions(preferencesModule.getAppOptions());
 
         // Switching language
         // TODO Move to language module, because language can be independent of UI
