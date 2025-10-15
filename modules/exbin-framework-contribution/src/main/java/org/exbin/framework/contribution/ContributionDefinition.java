@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.contribution.api.SequenceContribution;
@@ -32,12 +33,10 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 @ParametersAreNonnullByDefault
 public class ContributionDefinition {
 
-    private final String moduleId;
     private List<SequenceContribution> contributions = new ArrayList<>();
     private Map<SequenceContribution, List<SequenceContributionRule>> rules = new HashMap<>();
 
-    public ContributionDefinition(String moduleId) {
-        this.moduleId = moduleId;
+    public ContributionDefinition() {
     }
 
     @Nonnull
@@ -49,12 +48,48 @@ public class ContributionDefinition {
         this.contributions = contributions;
     }
 
+    public void addContribution(SequenceContribution contribution) {
+        contributions.add(contribution);
+    }
+
+    public void removeContribution(SequenceContribution contribution) {
+        contributions.remove(contribution);
+    }
+
+    public boolean containsContribution(SequenceContribution contribution) {
+        return contributions.contains(contribution);
+    }
+
     @Nonnull
     public Map<SequenceContribution, List<SequenceContributionRule>> getRules() {
         return rules;
     }
 
+    @Nonnull
+    public Optional<List<SequenceContributionRule>> getContributionRules(SequenceContribution contribution) {
+        return Optional.ofNullable(rules.get(contribution));
+    }
+
     public void setRules(Map<SequenceContribution, List<SequenceContributionRule>> rules) {
         this.rules = rules;
+    }
+
+    public void addRule(SequenceContribution contribution, SequenceContributionRule rule) {
+        List<SequenceContributionRule> contributionRules = rules.get(contribution);
+        if (contributionRules == null) {
+            contributionRules = new ArrayList<>();
+            rules.put(contribution, contributionRules);
+        }
+        contributionRules.add(rule);
+    }
+
+    public void removeRule(SequenceContribution contribution, SequenceContributionRule rule) {
+        List<SequenceContributionRule> contributionRules = rules.get(contribution);
+        if (contributionRules != null) {
+            contributionRules.remove(rule);
+            if (contributionRules.isEmpty()) {
+                rules.put(contribution, null);
+            }
+        }
     }
 }

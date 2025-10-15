@@ -16,17 +16,33 @@
 package org.exbin.framework.options.settings;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.ContributionManager;
+import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
+import org.exbin.framework.contribution.api.ItemSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.options.api.OptionsStorage;
+import org.exbin.framework.options.settings.api.ApplySettingsContribution;
+import org.exbin.framework.options.settings.api.ApplySettingsDependsOnRule;
+import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsApplier;
+import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
+import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptions;
+import org.exbin.framework.options.settings.api.SettingsOptionsBuilder;
+import org.exbin.framework.options.settings.api.SettingsPage;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 
 /**
@@ -37,36 +53,38 @@ import org.exbin.framework.options.settings.api.SettingsPageContribution;
 @ParametersAreNonnullByDefault
 public class OptionsSetingsManager extends ContributionManager implements OptionsSettingsManagement {
 
-    public static final String MAIN_OPTIONS_ID = "main";
-    
-    protected ContributionDefinition mainDefinition;
+    protected final Map<Class<?>, SettingsOptionsBuilder> optionsSettings = new HashMap<>();
+    protected final Map<Class<?>, List<ApplySettingsContribution>> applySettingsContributions = new HashMap<>();
+    protected final Map<ApplySettingsContribution, List<ApplySettingsDependsOnRule>> applySettingsContributionRules = new HashMap<>();
+
+    protected final ContributionDefinition definition = new ContributionDefinition();
 
     public OptionsSetingsManager() {
-        mainDefinition = new ContributionDefinition(OptionsSettingsModule.MODULE_ID);
-        definitions.put(MAIN_OPTIONS_ID, mainDefinition);
+    }
+
+    @Override
+    public <T extends SettingsOptions> void registerOptionsSettings(Class<T> settingsClass, SettingsOptionsBuilder<T> builder) {
+        optionsSettings.put(settingsClass, builder);
     }
 
     @Nonnull
     @Override
     public SettingsComponentContribution registerComponent(SettingsComponentProvider<?> componentProvider) {
         SettingsComponentContribution contribution = new SettingsComponentContribution(componentProvider.toString(), componentProvider);
-        mainDefinition.getContributions().add(contribution);
+        definition.addContribution(contribution);
         return contribution;
     }
 
-    @Nonnull
     @Override
-    public SettingsPageContribution registerPage(String pageId) {
-        SettingsPageContribution contribution = new SettingsPageContribution(pageId);
-        mainDefinition.getContributions().add(contribution);
-        return contribution;
+    public void registerPage(SettingsPageContribution contribution) {
+        definition.addContribution(contribution);
     }
 
     @Nonnull
     @Override
     public GroupSequenceContribution registerGroup(String groupId) {
         GroupSequenceContribution contribution = new GroupSequenceContribution(groupId);
-        mainDefinition.getContributions().add(contribution);
+        definition.addContribution(contribution);
         return contribution;
     }
 
@@ -77,75 +95,76 @@ public class OptionsSetingsManager extends ContributionManager implements Option
 
     @Override
     public void registerSettingsRule(SequenceContribution contribution, SequenceContributionRule rule) {
-        List<SequenceContributionRule> rules = mainDefinition.getRules().get(contribution);
-        if (rules == null) {
-            rules = new ArrayList<>();
-            mainDefinition.getRules().put(contribution, rules);
-        }
-        rules.add(rule);
-    }
-
-//    private final List<String> groupsOrder = new ArrayList<>();
-//    private final Map<String, OptionsGroup> groups = new HashMap<>();
-//    private final Map<String, List<OptionsGroupRule>> groupRules = new HashMap<>();
-//    private final List<String> pagesOrder = new ArrayList<>();
-//    private final Map<String, SettingsPage<?>> pages = new HashMap<>();
-//    private final Map<String, List<SettingsPageRule>> pagesRules = new HashMap<>();
-
-    /*
-    @Override
-    public void registerGroup(OptionsGroup optionsGroup) {
-        String groupId = optionsGroup.getGroupId();
-        groups.put(groupId, optionsGroup);
-        groupsOrder.add(groupId);
-    }
-
-    @Override
-    public void registerGroup(String groupId, String groupName) {
-        registerGroup(new BasicOptionsGroup(groupId, groupName));
-    }
-
-    @Override
-    public void registerGroupRule(OptionsGroup optionsGroup, OptionsGroupRule groupRule) {
-        String groupId = optionsGroup.getGroupId();
-        registerGroupRule(groupId, groupRule);
-    }
-
-    @Override
-    public void registerGroupRule(String groupId, OptionsGroupRule groupRule) {
-        List<OptionsGroupRule> rules = groupRules.get(groupId);
-        if (rules == null) {
-            rules = new ArrayList<>();
-            groupRules.put(groupId, rules);
-        }
-        rules.add(groupRule);
-    }
-
-    @Override
-    public void registerPage(SettingsPage<?> settingsPage) {
-        String pageId = settingsPage.getId();
-        pages.put(pageId, settingsPage);
-        pagesOrder.add(pageId);
-    }
-
-    @Override
-    public void registerPageRule(SettingsPage<?> optionsPage, SettingsPageRule settingsPageRule) {
-        String pageId = optionsPage.getId();
-        registerPageRule(pageId, settingsPageRule);
-    }
-
-    @Override
-    public void registerPageRule(String pageId, SettingsPageRule pageRule) {
-        List<SettingsPageRule> rules = pagesRules.get(pageId);
-        if (rules == null) {
-            rules = new ArrayList<>();
-            pagesRules.put(pageId, rules);
-        }
-        rules.add(pageRule);
+        definition.addRule(contribution, rule);
     }
 
     public void passOptionsPages(SettingsPageReceiver optionsPageReceiver) {
-        List<String> processedGroupOrder = new ArrayList<>();
+        ContributionSequenceOutput output = new ContributionSequenceOutput() {
+            @Override
+            public boolean initItem(ItemSequenceContribution itemContribution) {
+                // TODO
+                return true;
+            }
+
+            @Override
+            public void add(ItemSequenceContribution itemContribution) {
+                List<SettingsPathItem> path = new ArrayList<>();
+                if (itemContribution instanceof SettingsComponentContribution) {
+                    // optionsPageReceiver.addSettingsPage(settingsPage, path);
+                } else if (itemContribution instanceof SettingsPageContribution) {
+                    SettingsPageContribution pageContribution = (SettingsPageContribution) itemContribution;
+
+                    path.add(new SettingsPathItem(itemContribution.getContributionId(), pageContribution.getPageName()));
+
+//                    SettingsComponentProvider settingsComponentProvider = ((SettingsComponentContribution) itemContribution).getSettingsComponentProvider();
+                    SettingsPage<SettingsOptions> settingsPage = new DefaultSettingsPage<SettingsOptions>() {
+                        @Override
+                        public String getId() {
+                            return pageContribution.getContributionId();
+                        }
+
+                        @Override
+                        public SettingsComponent<SettingsOptions> createComponent() {
+                            return new EmptySettingsComponent(); // settingsComponentProvider.createComponent();
+                        }
+
+                        @Override
+                        public SettingsOptions createOptions() {
+                            // TODO
+                            return null;
+                        }
+
+                        @Override
+                        public void loadFromOptions(OptionsStorage optionsStorage, SettingsOptions options) {
+                            // TODO
+                        }
+
+                        @Override
+                        public void saveToOptions(OptionsStorage optionsStorage, SettingsOptions options) {
+                            // TODO
+                        }
+
+                        @Override
+                        public ResourceBundle getResourceBundle() {
+                            return null;
+                        }
+                    };
+                    optionsPageReceiver.addSettingsPage(settingsPage, path);
+                }
+            }
+
+            @Override
+            public void addSeparator() {
+                // TODO
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+        };
+        buildSequence(output, definition);
+        /* List<String> processedGroupOrder = new ArrayList<>();
         for (String groupId : groupsOrder) {
             List<OptionsGroupRule> rules = groupRules.get(groupId);
             String parentGroupId = null;
@@ -202,10 +221,10 @@ public class OptionsSetingsManager extends ContributionManager implements Option
             if (!inGroup) {
                 processOptionsPage(optionsPageReceiver, pageId);
             }
-        }
+        } */
     }
 
-    private void processOptionsPage(SettingsPageReceiver optionsPageReceiver, String pageId) {
+    /* private void processOptionsPage(SettingsPageReceiver optionsPageReceiver, String pageId) {
         SettingsPage<?> optionsPage = pages.get(pageId);
         List<SettingsPathItem> path = null;
         VisualOptionsPageParams visualParams = null;
@@ -257,4 +276,61 @@ public class OptionsSetingsManager extends ContributionManager implements Option
             ((SettingsPage) optionsPage).loadFromPreferences(optionsStorage, options);
         }
     } */
+
+    @Override
+    public void registerApplySetting(Class<?> instanceClass, ApplySettingsContribution applySetting) {
+        List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
+        if (classApplySettings == null) {
+            classApplySettings = new ArrayList<>();
+            applySettingsContributions.put(instanceClass.getClass(), classApplySettings);
+        }
+
+        classApplySettings.add(applySetting);
+    }
+
+    @Override
+    public void registerApplySettingRule(ApplySettingsContribution applySettings, ApplySettingsDependsOnRule applySettingsRule) {
+        List<ApplySettingsDependsOnRule> rules = applySettingsContributionRules.get(applySettings);
+        if (rules == null) {
+            rules = new ArrayList<>();
+            applySettingsContributionRules.put(applySettings, rules);
+        }
+        rules.add(applySettingsRule);
+    }
+
+    public void applyOptions(Class<?> instanceClass, Object targetObject, OptionsStorage optionsStorage) {
+        List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
+        if (classApplySettings == null) {
+            return;
+        }
+
+        for (ApplySettingsContribution applySettings : classApplySettings) {
+            SettingsApplier settingsApplier = applySettings.getSettingsApplier();
+            // TODO
+            settingsApplier.applySettings(targetObject, null);
+        }
+    }
+    
+    private class EmptySettingsComponent extends JComponent implements SettingsComponent<SettingsOptions> {
+
+        @Override
+        public void loadFromOptions(SettingsOptions settingsData) {
+            // TODO
+        }
+
+        @Override
+        public void saveToOptions(SettingsOptions settingsData) {
+            // TODO
+        }
+
+        @Override
+        public void setSettingsModifiedListener(SettingsModifiedListener listener) {
+            // TODO
+        }
+
+        @Override
+        public ResourceBundle getResourceBundle() {
+            return null;
+        }
+    }
 }

@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.action.manager.settings.ActionManagerOptions;
 import org.exbin.framework.action.manager.settings.KeyMapSettingsComponent;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
@@ -67,8 +68,11 @@ public class ActionManagerModule implements org.exbin.framework.Module {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        SettingsPageContribution pageContribution = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+        settingsManagement.registerOptionsSettings(ActionManagerOptions.class, (optionsStorage) -> new ActionManagerOptions(optionsStorage));
+
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
+        settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsContribution = settingsManagement.registerComponent(new KeyMapSettingsComponent());
-        settingsManagement.registerSettingsRule(settingsContribution, new SettingsPageContributionRule(pageContribution.getContributionId()));
+        settingsManagement.registerSettingsRule(settingsContribution, new SettingsPageContributionRule(pageContribution));
     }
 }

@@ -20,13 +20,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.utils.ObjectUtils;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
@@ -47,11 +47,6 @@ import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 @ParametersAreNonnullByDefault
 public class TreeContributionManager {
 
-    /**
-     * Definition records: definition id -> contribution definition.
-     */
-    protected final Map<String, ContributionDefinition> definitions = new HashMap<>();
-
     public TreeContributionManager() {
     }
 
@@ -60,10 +55,9 @@ public class TreeContributionManager {
      *
      * @param targetSequence target ouput sequence
      * @param definitionId definition id
+     * @param contributionDef contribution definition
      */
-    public void buildSequence(TreeContributionSequenceOutput targetSequence, String definitionId) {
-        ContributionDefinition contributionDef = definitions.get(definitionId);
-
+    public void buildSequence(TreeContributionSequenceOutput targetSequence, String definitionId, @Nullable ContributionDefinition contributionDef) {
         if (contributionDef == null) {
             return;
         }
@@ -79,9 +73,9 @@ public class TreeContributionManager {
             SeparationSequenceContributionRule.SeparationMode separationMode = null;
             List<String> afterIds = new ArrayList<>();
             List<String> beforeIds = new ArrayList<>();
-            List<SequenceContributionRule> rules = contributionDef.getRules().get(contribution);
-            if (rules != null) {
-                for (SequenceContributionRule rule : rules) {
+            Optional<List<SequenceContributionRule>> rules = contributionDef.getContributionRules(contribution);
+            if (rules.isPresent()) {
+                for (SequenceContributionRule rule : rules.get()) {
                     if (rule instanceof PositionSequenceContributionRule) {
                         positionHint = ((PositionSequenceContributionRule) rule).getPositionMode();
                     } else if (rule instanceof SeparationSequenceContributionRule) {
@@ -321,85 +315,6 @@ public class TreeContributionManager {
         }
 
         return groupRecord;
-    }
-
-    public boolean subGroupExists(String subId, String groupId) {
-        ContributionDefinition definition = definitions.get(subId);
-        if (definition == null) {
-            return false;
-        }
-
-        for (SequenceContribution contribution : definition.getContributions()) {
-            if (contribution instanceof GroupSequenceContribution && ((GroupSequenceContribution) contribution).getGroupId().equals(groupId)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void unregisterDefinition(String menuId) {
-        ContributionDefinition definition = definitions.get(menuId);
-        if (definition != null) {
-            // TODO clear pointers to improve garbage collection performance?
-//            List<MenuContribution> contributions = definition.getContributions();
-//            for (MenuContribution contribution : contributions) {
-//                contribution.
-//            }
-
-            /*            for (Map.Entry<String, String> usage : pluginsUsage.entrySet()) {
-                if (menuId.equals(usage.getValue())) {
-                    pluginsUsage.remove(usage.getKey());
-                    break;
-                }
-            } */
-            definitions.remove(menuId);
-        }
-    }
-
-    public void registerDefinition(String definitionId, String moduleId) {
-        ObjectUtils.requireNonNull(definitionId);
-        ObjectUtils.requireNonNull(moduleId);
-
-        ContributionDefinition definition = definitions.get(definitionId);
-        if (definition != null) {
-            throw new IllegalStateException("Contribution definition with Id " + definitionId + " already exists.");
-        }
-
-        ContributionDefinition contributionDefinition = new ContributionDefinition(moduleId);
-        definitions.put(definitionId, contributionDefinition);
-    }
-
-    @Nonnull
-    public GroupSequenceContribution registerContributionGroup(String definitionId, String pluginId, String groupId) {
-        ContributionDefinition definition = definitions.get(definitionId);
-        if (definition == null) {
-            throw new IllegalStateException("Definition with Id " + definitionId + " doesn't exist");
-        }
-
-        GroupSequenceContribution groupContribution = new GroupSequenceContribution(groupId);
-        definition.getContributions().add(groupContribution);
-        return groupContribution;
-    }
-
-    public void registerContributionRule(SequenceContribution contribution, SequenceContributionRule rule) {
-        ContributionDefinition match = null;
-        for (ContributionDefinition definition : definitions.values()) {
-            if (definition.getContributions().contains(contribution)) {
-                match = definition;
-                break;
-            }
-        }
-        if (match == null) {
-            throw new IllegalStateException("Invalid definition contribution rule");
-        }
-
-        List<SequenceContributionRule> rules = match.getRules().get(contribution);
-        if (rules == null) {
-            rules = new ArrayList<>();
-            match.getRules().put(contribution, rules);
-        }
-        rules.add(rule);
     }
 
     private static class BuilderRecord {

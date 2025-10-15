@@ -15,14 +15,25 @@
  */
 package org.exbin.framework.options.settings.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.options.api.OptionsStorage;
 
 /**
- * Interface for settings apply rule.
+ * Interface for settings options builder.
  *
  * @author ExBin Project (https://exbin.org)
+ * @param <T> settins options
  */
 @ParametersAreNonnullByDefault
-public interface ApplySettingsContributionRule {
+public interface SettingsOptionsBuilder<T extends SettingsOptions> {
 
+    /**
+     * Creates instance of settings options.
+     *
+     * @param optionsStorage storage options
+     * @return settings options instance
+     */
+    @Nonnull
+    T createInstance(OptionsStorage optionsStorage);
 }

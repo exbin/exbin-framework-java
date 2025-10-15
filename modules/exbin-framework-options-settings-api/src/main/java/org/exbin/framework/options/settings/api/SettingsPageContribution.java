@@ -15,7 +15,9 @@
  */
 package org.exbin.framework.options.settings.api;
 
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
@@ -30,14 +32,30 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 public class SettingsPageContribution implements ItemSequenceContribution {
 
     private final String pageId;
+    private final ResourceBundle resourceBundle;
 
-    public SettingsPageContribution(String pageId) {
+    public SettingsPageContribution(String pageId, @Nullable ResourceBundle resourceBundle) {
         this.pageId = pageId;
+        this.resourceBundle = resourceBundle;
     }
 
     @Nonnull
     @Override
     public String getContributionId() {
         return pageId;
+    }
+
+    @Nullable
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    @Nullable
+    public String getPageName() {
+        if (resourceBundle == null) {
+            return null;
+        }
+
+        return resourceBundle.getString("settingsPage." + pageId + ".name");
     }
 }

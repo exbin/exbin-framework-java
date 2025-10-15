@@ -23,34 +23,25 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.file.FileDialogsType;
 import org.exbin.framework.file.FileModule;
-import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.settings.gui.FileSettingsPanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * File options page.
+ * File settings component.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FileSettingsComponent implements SettingsComponentProvider<FileOptions> {
 
-    private java.util.ResourceBundle resourceBundle;
-
-    public void setResourceBundle(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-    }
-
     @Nonnull
     @Override
     public SettingsComponent<FileOptions> createComponent() {
         FileSettingsPanel fileSettingsPanel = new FileSettingsPanel();
+        // TODO Move resources
+        ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FileModule.class);
         List<String> fileDialogsKeys = new ArrayList<>();
         fileDialogsKeys.add(FileDialogsType.SWING.name());
         fileDialogsKeys.add(FileDialogsType.AWT.name());
@@ -60,36 +51,4 @@ public class FileSettingsComponent implements SettingsComponentProvider<FileOpti
         fileSettingsPanel.setFileDialogs(fileDialogsKeys, fileDialogsNames);
         return fileSettingsPanel;
     }
-
-/*    @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(FileSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public FileSettings createOptions() {
-        return new FileSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, FileSettings options) {
-        FileSettings prefs = new FileSettings(preferences);
-        options.setFileDialogs(prefs.getFileDialogs());
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, FileSettings options) {
-        FileSettings prefs = new FileSettings(preferences);
-        prefs.setFileDialogs(options.getFileDialogs());
-    }
-
-    @Override
-    public void applyPreferencesChanges(FileSettings options) {
-        // TODO Support for other file dialogs
-        String fileDialogs = options.getFileDialogs();
-        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
-        ((FileModule) fileModule).setUseAwtDialogs(FileDialogsType.AWT.name().equals(fileDialogs));
-    } */
 }

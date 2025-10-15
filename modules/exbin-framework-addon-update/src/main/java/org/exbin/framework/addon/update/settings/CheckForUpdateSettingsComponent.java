@@ -61,9 +61,5 @@ public class CheckForUpdateSettingsComponent implements SettingsComponentProvide
     @Override
     public void saveToPreferences(OptionsStorage preferences, CheckForUpdateSettings options) {
         options.copyTo(new CheckForUpdateSettings(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges(CheckForUpdateSettings options) {
     } */
 }

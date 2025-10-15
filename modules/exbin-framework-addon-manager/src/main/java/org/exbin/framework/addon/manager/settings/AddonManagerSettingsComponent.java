@@ -15,18 +15,11 @@
  */
 package org.exbin.framework.addon.manager.settings;
 
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.settings.gui.AddonManagerSettingsPanel;
-import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Addon manager settings component provider.
@@ -41,30 +34,4 @@ public class AddonManagerSettingsComponent implements SettingsComponentProvider<
     public SettingsComponent<AddonManagerOptions> createComponent() {
         return new AddonManagerSettingsPanel();
     }
-/*
-    @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(AddonManagerSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public AddonManagerOptions createOptions() {
-        return new AddonManagerOptions(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, AddonManagerOptions options) {
-        new AddonManagerOptions(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, AddonManagerOptions options) {
-        options.copyTo(new AddonManagerOptions(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges(AddonManagerOptions options) {
-    } */
 }

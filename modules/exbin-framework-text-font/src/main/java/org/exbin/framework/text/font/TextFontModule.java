@@ -77,11 +77,14 @@ public class TextFontModule implements Module {
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
-        SettingsPageContribution settingsPage = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
+        settingsManagement.registerPage(pageContribution);
+
         TextFontSettingsComponent textFontSettingsComponent = new TextFontSettingsComponent();
         textFontSettingsComponent.setTextFontService(textFontService);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(textFontSettingsComponent);
-        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 
     @Nonnull

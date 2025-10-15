@@ -29,10 +29,10 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.contribution.ContributionDefinition;
-import org.exbin.framework.contribution.ContributionManager;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
 import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionType;
+import org.exbin.framework.contribution.ContributionsManager;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
@@ -46,14 +46,15 @@ import org.exbin.framework.sidebar.api.SideBarManager;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultSideBarManager extends ContributionManager implements SideBarManager {
+public class DefaultSideBarManager extends ContributionsManager implements SideBarManager {
 
     public DefaultSideBarManager() {
     }
 
     @Override
     public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextService activationUpdateService) {
-        buildSequence(new ToolBarWrapper(targetSideBar, activationUpdateService), sideBarId);
+        ContributionDefinition definition = definitions.get(sideBarId);
+        buildSequence(new ToolBarWrapper(targetSideBar, activationUpdateService), definition);
         activationUpdateService.requestUpdate();
     }
 
@@ -71,7 +72,7 @@ public class DefaultSideBarManager extends ContributionManager implements SideBa
         }
 
         ActionSideBarContribution sideBarContribution = new ActionSideBarContribution(action);
-        definition.getContributions().add(sideBarContribution);
+        definition.addContribution(sideBarContribution);
         return sideBarContribution;
     }
 

@@ -28,7 +28,6 @@ import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.options.settings.api.SettingsPanelType;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.SettingsPage;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
@@ -88,7 +87,7 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
         SettingsAction optionsAction = new SettingsAction();
         getMainSettingsManager();
         optionsAction.setup(resourceBundle, (SettingsPageReceiver optionsPageReceiver) -> {
-//            optionsSettingsManager.passOptionsPages(optionsPageReceiver);
+            getMainSettingsManager().passOptionsPages(optionsPageReceiver);
         });
 
         return optionsAction;
@@ -113,48 +112,7 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-/*    @Nonnull
-    @Override
-    public OptionsSettingsManagement getOptionsPageManagement(String moduleId) {
-        return new OptionsSettingsManagement() {
-            @Override
-            public void registerGroup(OptionsGroup optionsGroup) {
-                getMainSettingsManager().registerGroup(optionsGroup);
-            }
-
-            @Override
-            public void registerGroup(String groupId, String groupName) {
-                getMainSettingsManager().registerGroup(groupId, groupName);
-            }
-
-            @Override
-            public void registerGroupRule(OptionsGroup optionsGroup, OptionsGroupRule groupRule) {
-                getMainSettingsManager().registerGroupRule(optionsGroup, groupRule);
-            }
-
-            @Override
-            public void registerGroupRule(String groupId, OptionsGroupRule groupRule) {
-                getMainSettingsManager().registerGroupRule(groupId, groupRule);
-            }
-
-            @Override
-            public void registerPage(SettingsPage<?> settingsPage) {
-                getMainSettingsManager().registerPage(settingsPage);
-            }
-
-            @Override
-            public void registerPageRule(SettingsPage<?> settingsPage, SettingsPageRule optionsPageRule) {
-                getMainSettingsManager().registerPageRule(settingsPage, optionsPageRule);
-            }
-
-            @Override
-            public void registerPageRule(String pageId, SettingsPageRule pageRule) {
-                getMainSettingsManager().registerPageRule(pageId, pageRule);
-            }
-        };
-    }
-
-    @Nonnull
+/* @Nonnull
     @Override
     public OptionsGroup createOptionsGroup(String groupId, ResourceBundle resourceBundle) {
         String groupName = resourceBundle.getString(OPTIONS_GROUP_PREFIX + groupId + ".name");

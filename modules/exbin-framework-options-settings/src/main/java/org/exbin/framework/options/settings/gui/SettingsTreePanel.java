@@ -55,7 +55,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
 
     public static final String OPTIONS_PANEL_KEY = "options";
 
-    private OptionsStorage preferences = null;
+    private OptionsStorage optionsStorage = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsTreePanel.class);
     private final Map<String, PageRecord> settingsPages = new HashMap<>();
     private PageRecord currentSettingsPanel = null;
@@ -244,7 +244,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     public void loadAllFromPreferences() {
         settingsPages.values().forEach((pageRecord) -> {
             try {
-                pageRecord.loadFromPreferences(preferences);
+                pageRecord.loadFromPreferences(optionsStorage);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -254,7 +254,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     public void saveAndApplyAll() {
         settingsPages.values().forEach((pageRecord) -> {
             try {
-                pageRecord.saveAndApply(preferences);
+                pageRecord.saveAndApply(optionsStorage);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -267,7 +267,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     public void applyPreferencesChanges() {
         settingsPages.values().forEach((pageRecord) -> {
             try {
-                pageRecord.applyPreferencesChanges(preferences);
+                pageRecord.applyPreferencesChanges(optionsStorage);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -320,8 +320,8 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
         }
     }
 
-    public void setPreferences(OptionsStorage preferences) {
-        this.preferences = preferences;
+    public void setOptionsStorage(OptionsStorage optionsStorage) {
+        this.optionsStorage = optionsStorage;
     }
 
     @Override

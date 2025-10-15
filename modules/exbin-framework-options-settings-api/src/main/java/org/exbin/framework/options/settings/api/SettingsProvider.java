@@ -17,32 +17,22 @@ package org.exbin.framework.options.settings.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
 
 /**
- * Settings applier contribution.
+ * Settings provider interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-@Immutable
-public class ApplySettingsContribution {
+public interface SettingsProvider {
 
-    private final String contributionId;
-    private final SettingsApplier settingsApplier;
-
-    public ApplySettingsContribution(String contributionId, SettingsApplier settingsApplier) {
-        this.contributionId = contributionId;
-        this.settingsApplier = settingsApplier;
-    }
-
+    /**
+     * Returns instance of settings options of the given type.
+     *
+     * @param <T> setting options type
+     * @param settingsClass settings options class
+     * @return settings options instance
+     */
     @Nonnull
-    public String getContributionId() {
-        return contributionId;
-    }
-
-    @Nonnull
-    public SettingsApplier getSettingsApplier() {
-        return settingsApplier;
-    }
+    <T extends SettingsOptions> T getSettings(Class<T> settingsClass);
 }

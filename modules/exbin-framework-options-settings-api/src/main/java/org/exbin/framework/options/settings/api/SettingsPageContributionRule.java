@@ -35,6 +35,10 @@ public class SettingsPageContributionRule implements SequenceContributionRule {
         this.pageId = pageId;
     }
 
+    public SettingsPageContributionRule(SettingsPageContribution pageContribution) {
+        this(pageContribution.getContributionId());
+    }
+
     @Nonnull
     public String getPageId() {
         return pageId;

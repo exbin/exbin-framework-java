@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +28,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
-import org.exbin.framework.utils.ObjectUtils;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
@@ -45,11 +45,6 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 @ParametersAreNonnullByDefault
 public class ContributionManager {
 
-    /**
-     * Definition records: definition id -> contribution definition.
-     */
-    protected final Map<String, ContributionDefinition> definitions = new HashMap<>();
-
     public ContributionManager() {
     }
 
@@ -57,11 +52,9 @@ public class ContributionManager {
      * Builds sequence of items / events for given definition.
      *
      * @param targetSequence target ouput sequence
-     * @param definitionId definition id
+     * @param contributionDef contribution definition
      */
-    public void buildSequence(ContributionSequenceOutput targetSequence, String definitionId) {
-        ContributionDefinition contributionDef = definitions.get(definitionId);
-
+    public void buildSequence(ContributionSequenceOutput targetSequence, @Nullable ContributionDefinition contributionDef) {
         if (contributionDef == null) {
             return;
         }
@@ -76,9 +69,9 @@ public class ContributionManager {
             SeparationSequenceContributionRule.SeparationMode separationMode = null;
             List<String> afterIds = new ArrayList<>();
             List<String> beforeIds = new ArrayList<>();
-            List<SequenceContributionRule> rules = contributionDef.getRules().get(contribution);
-            if (rules != null) {
-                for (SequenceContributionRule rule : rules) {
+            Optional<List<SequenceContributionRule>> rules = contributionDef.getContributionRules(contribution);
+            if (rules.isPresent()) {
+                for (SequenceContributionRule rule : rules.get()) {
                     if (rule instanceof PositionSequenceContributionRule) {
                         positionHint = ((PositionSequenceContributionRule) rule).getPositionMode();
                     } else if (rule instanceof SeparationSequenceContributionRule) {
@@ -274,51 +267,6 @@ public class ContributionManager {
         }
 
         return groupRecord;
-    }
-
-    public void registerDefinition(String definitionId, String moduleId) {
-        ObjectUtils.requireNonNull(definitionId);
-        ObjectUtils.requireNonNull(moduleId);
-
-        ContributionDefinition definition = definitions.get(definitionId);
-        if (definition != null) {
-            throw new IllegalStateException("Contribution definition with Id " + definitionId + " already exists.");
-        }
-
-        ContributionDefinition contributionDefinition = new ContributionDefinition(moduleId);
-        definitions.put(definitionId, contributionDefinition);
-    }
-
-    @Nonnull
-    public GroupSequenceContribution registerContributionGroup(String definitionId, String moduleId, String groupId) {
-        ContributionDefinition definition = definitions.get(definitionId);
-        if (definition == null) {
-            throw new IllegalStateException("Definition with Id " + definitionId + " doesn't exist");
-        }
-
-        GroupSequenceContribution groupContribution = new GroupSequenceContribution(groupId);
-        definition.getContributions().add(groupContribution);
-        return groupContribution;
-    }
-
-    public void registerContributionRule(SequenceContribution contribution, SequenceContributionRule rule) {
-        ContributionDefinition match = null;
-        for (ContributionDefinition definition : definitions.values()) {
-            if (definition.getContributions().contains(contribution)) {
-                match = definition;
-                break;
-            }
-        }
-        if (match == null) {
-            throw new IllegalStateException("Invalid definition contribution rule");
-        }
-
-        List<SequenceContributionRule> rules = match.getRules().get(contribution);
-        if (rules == null) {
-            rules = new ArrayList<>();
-            match.getRules().put(contribution, rules);
-        }
-        rules.add(rule);
     }
 
     private static class BuilderRecord {

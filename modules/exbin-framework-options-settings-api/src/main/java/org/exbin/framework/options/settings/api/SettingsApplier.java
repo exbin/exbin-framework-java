@@ -18,26 +18,18 @@ package org.exbin.framework.options.settings.api;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for apply settings management.
+ * Interface for settings applier.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ApplySettingsManagement {
+public interface SettingsApplier {
 
     /**
-     * Registers apply settings method.
+     * Applies settings to specific instance.
      *
-     * @param instanceClass instance class
-     * @param applySettingContribution apply settings method
+     * @param instance target instance
+     * @param settingsProvider options settings provider
      */
-    void registerApplySetting(Class<?> instanceClass, ApplySettingsContribution applySettingContribution);
-
-    /**
-     * Registers apply settings rule.
-     *
-     * @param applySettings apply settings contribution
-     * @param applySettingsRule apply settings rule
-     */
-    void registerApplySettingRule(ApplySettingsContribution applySettings, ApplySettingsContributionRule applySettingsRule);
+    void applySettings(Object instance, SettingsProvider settingsProvider);
 }

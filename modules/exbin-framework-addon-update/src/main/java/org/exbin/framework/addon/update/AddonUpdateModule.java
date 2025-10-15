@@ -30,6 +30,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.addon.update.action.CheckForUpdateAction;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.addon.update.api.AddonUpdateModuleApi;
+import org.exbin.framework.addon.update.settings.CheckForUpdateOptions;
 import org.exbin.framework.addon.update.settings.CheckForUpdateSettingsComponent;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
@@ -88,9 +89,12 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
-        SettingsPageContribution settingsPage = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+        settingsManagement.registerOptionsSettings(CheckForUpdateOptions.class, (optionsStorage) -> new CheckForUpdateOptions(optionsStorage));
+
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, null);
+        settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new CheckForUpdateSettingsComponent());
-        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 
     @Nonnull

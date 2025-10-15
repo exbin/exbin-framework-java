@@ -26,7 +26,7 @@ import javax.annotation.concurrent.Immutable;
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class ApplySettingsDependsOnRule implements ApplySettingsContributionRule {
+public class ApplySettingsDependsOnRule {
 
     private final String dependOnPageId;
 

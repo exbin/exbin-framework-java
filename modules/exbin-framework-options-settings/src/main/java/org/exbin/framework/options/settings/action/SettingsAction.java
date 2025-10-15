@@ -112,7 +112,7 @@ public class SettingsAction extends AbstractAction {
             case TREE:
                 SettingsTreePanel optionsTreePanel = new SettingsTreePanel();
                 optionsPagesProvider.registerSettingsPages(optionsTreePanel);
-                optionsTreePanel.setPreferences(optionsModule.getAppOptions());
+                optionsTreePanel.setOptionsStorage(optionsModule.getAppOptions());
                 optionsTreePanel.pagesFinished();
                 optionsTreePanel.loadAllFromPreferences();
                 if (optionsRootCaption != null) {

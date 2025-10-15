@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.options.settings;
 
-import org.exbin.framework.options.settings.SettingsPathItem;
 import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;

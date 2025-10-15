@@ -45,13 +45,17 @@ import org.exbin.framework.file.action.SaveAsFileAction;
 import org.exbin.framework.file.action.SaveFileAction;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileOperationsProvider;
+import org.exbin.framework.file.settings.FileOptions;
+import org.exbin.framework.file.settings.FileSettingsApplier;
 import org.exbin.framework.file.settings.FileSettingsComponent;
+import org.exbin.framework.file.settings.RecentFilesOptions;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
@@ -274,9 +278,17 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
-        OptionsSettingsManagement setingsManagement = settingsModule.getMainSettingsManager();
-        SettingsPageContribution settingsPage = setingsManagement.registerPage(SETTINGS_PAGE_ID);
-        SettingsComponentContribution settingsComponent = setingsManagement.registerComponent(new FileSettingsComponent());
-        setingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        settingsManagement.registerOptionsSettings(FileOptions.class, (optionsStorage) -> new FileOptions(optionsStorage));
+        settingsManagement.registerOptionsSettings(RecentFilesOptions.class, (optionsStorage) -> new RecentFilesOptions(optionsStorage));
+
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
+        settingsManagement.registerPage(pageContribution);
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new FileSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
+
+        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new FileSettingsApplier()));
     }
 }
+
+// settingsPage

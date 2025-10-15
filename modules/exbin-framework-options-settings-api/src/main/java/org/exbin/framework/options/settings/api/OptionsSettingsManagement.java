@@ -30,6 +30,15 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 public interface OptionsSettingsManagement {
 
     /**
+     * Registers settings options.
+     *
+     * @param <T> settings options type
+     * @param settingsClass settings options class
+     * @param builder settings options builder
+     */
+    <T extends SettingsOptions> void registerOptionsSettings(Class<T> settingsClass, SettingsOptionsBuilder<T> builder);
+
+    /**
      * Registers settings component.
      *
      * @param componentProvider component provider
@@ -41,11 +50,9 @@ public interface OptionsSettingsManagement {
     /**
      * Registers settings page.
      *
-     * @param pageId page id
-     * @return contribution instance
+     * @param pageContribution page contribution
      */
-    @Nonnull
-    SettingsPageContribution registerPage(String pageId);
+    void registerPage(SettingsPageContribution pageContribution);
 
     /**
      * Registers settings group.
@@ -71,4 +78,20 @@ public interface OptionsSettingsManagement {
      * @param rule contribution rule
      */
     void registerSettingsRule(SequenceContribution contribution, SequenceContributionRule rule);
+
+    /**
+     * Registers apply settings method.
+     *
+     * @param instanceClass instance class
+     * @param applySettingContribution apply settings method
+     */
+    void registerApplySetting(Class<?> instanceClass, ApplySettingsContribution applySettingContribution);
+
+    /**
+     * Registers apply settings rule.
+     *
+     * @param applySettingsContribution apply settings contribution
+     * @param applySettingsRule apply settings rule
+     */
+    void registerApplySettingRule(ApplySettingsContribution applySettingsContribution, ApplySettingsDependsOnRule applySettingsRule);
 }

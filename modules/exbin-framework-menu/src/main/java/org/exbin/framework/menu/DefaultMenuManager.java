@@ -39,7 +39,7 @@ import org.exbin.framework.menu.api.SubMenuContribution;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.contribution.ContributionDefinition;
-import org.exbin.framework.contribution.TreeContributionManager;
+import org.exbin.framework.contribution.TreeContributionsManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
@@ -56,29 +56,32 @@ import org.exbin.framework.menu.api.MenuManager;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultMenuManager extends TreeContributionManager implements MenuManager {
+public class DefaultMenuManager extends TreeContributionsManager implements MenuManager {
 
     public DefaultMenuManager() {
     }
 
     @Override
     public void buildMenu(JMenu outputMenu, String menuId, ActionContextService activationUpdateService) {
+        ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        buildSequence(new MenuWrapper(outputMenu, activationUpdateService, buttonGroups), menuId);
+        buildSequence(new MenuWrapper(outputMenu, activationUpdateService, buttonGroups), menuId, definition);
         activationUpdateService.requestUpdate();
     }
 
     @Override
     public void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextService activationUpdateService) {
+        ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        buildSequence(new PopupMenuWrapper(outputMenu, activationUpdateService, buttonGroups), menuId);
+        buildSequence(new PopupMenuWrapper(outputMenu, activationUpdateService, buttonGroups), menuId, definition);
         activationUpdateService.requestUpdate();
     }
 
     @Override
     public void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextService activationUpdateService) {
+        ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        buildSequence(new MenuBarWrapper(outputMenuBar, activationUpdateService, buttonGroups), menuId);
+        buildSequence(new MenuBarWrapper(outputMenuBar, activationUpdateService, buttonGroups), menuId, definition);
         activationUpdateService.requestUpdate();
     }
 
@@ -118,12 +121,12 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
     public ActionMenuContribution registerMenuItem(String menuId, String moduleId, Action action) {
         ContributionDefinition definition = definitions.get(menuId);
         if (definition == null) {
-            definition = new ContributionDefinition(moduleId);
+            definition = new ContributionDefinition();
             definitions.put(menuId, definition);
         }
 
         ActionMenuContribution menuContribution = new ActionMenuContribution(action);
-        definition.getContributions().add(menuContribution);
+        definition.addContribution(menuContribution);
         return menuContribution;
     }
 
@@ -143,12 +146,12 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
     public SubMenuContribution registerMenuItem(String menuId, String moduleId, String subMenuId, Action subMenuAction) {
         ContributionDefinition definition = definitions.get(menuId);
         if (definition == null) {
-            definition = new ContributionDefinition(moduleId);
+            definition = new ContributionDefinition();
             definitions.put(menuId, definition);
         }
 
         SubMenuContribution menuContribution = new SubMenuContribution(subMenuId, subMenuAction);
-        definition.getContributions().add(menuContribution);
+        definition.addContribution(menuContribution);
         return menuContribution;
     }
 
@@ -157,12 +160,12 @@ public class DefaultMenuManager extends TreeContributionManager implements MenuM
     public DirectMenuContribution registerMenuItem(String menuId, String moduleId, MenuItemProvider menuItemProvider) {
         ContributionDefinition definition = definitions.get(menuId);
         if (definition == null) {
-            definition = new ContributionDefinition(moduleId);
+            definition = new ContributionDefinition();
             definitions.put(menuId, definition);
         }
 
         DirectMenuContribution menuContribution = new DirectMenuContribution(menuItemProvider);
-        definition.getContributions().add(menuContribution);
+        definition.addContribution(menuContribution);
         return menuContribution;
     }
 

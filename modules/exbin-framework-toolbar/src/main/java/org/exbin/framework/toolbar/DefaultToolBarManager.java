@@ -36,7 +36,7 @@ import org.exbin.framework.toolbar.api.ActionToolBarContribution;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.contribution.ContributionDefinition;
-import org.exbin.framework.contribution.ContributionManager;
+import org.exbin.framework.contribution.ContributionsManager;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
@@ -50,20 +50,22 @@ import org.exbin.framework.toolbar.api.ToolBarManager;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultToolBarManager extends ContributionManager implements ToolBarManager {
+public class DefaultToolBarManager extends ContributionsManager implements ToolBarManager {
 
     public DefaultToolBarManager() {
     }
 
     @Override
     public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
-        buildSequence(new ToolBarWrapper(targetToolBar, activationUpdateService), toolBarId);
+        ContributionDefinition contributionDef = definitions.get(toolBarId);
+        buildSequence(new ToolBarWrapper(targetToolBar, activationUpdateService), contributionDef);
         activationUpdateService.requestUpdate();
     }
 
     @Override
     public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
-        buildSequence(new IconToolBarWrapper(targetToolBar, activationUpdateService), toolBarId);
+        ContributionDefinition contributionDef = definitions.get(toolBarId);
+        buildSequence(new IconToolBarWrapper(targetToolBar, activationUpdateService), contributionDef);
         activationUpdateService.requestUpdate();
     }
 
@@ -81,7 +83,7 @@ public class DefaultToolBarManager extends ContributionManager implements ToolBa
         }
 
         ActionToolBarContribution toolBarContribution = new ActionToolBarContribution(action);
-        definition.getContributions().add(toolBarContribution);
+        definition.addContribution(toolBarContribution);
         return toolBarContribution;
     }
 

@@ -23,6 +23,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
+import org.exbin.framework.addon.manager.settings.AddonManagerOptions;
 import org.exbin.framework.addon.manager.settings.AddonManagerSettingsComponent;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
@@ -117,10 +118,13 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
-        
-        SettingsPageContribution settingsPage = settingsManagement.registerPage(SETTINGS_PAGE_ID);
+
+        settingsManagement.registerOptionsSettings(AddonManagerOptions.class, (optionsStorage) -> new AddonManagerOptions(optionsStorage));
+
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, null);
+        settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new AddonManagerSettingsComponent());
-        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(settingsPage.getContributionId()));
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 
     @Nonnull

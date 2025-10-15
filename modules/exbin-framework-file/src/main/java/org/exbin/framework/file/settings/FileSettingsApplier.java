@@ -15,39 +15,28 @@
  */
 package org.exbin.framework.file.settings;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.file.FileDialogsType;
-import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsOptions;
+import org.exbin.framework.file.FileModule;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.options.settings.api.SettingsApplier;
+import org.exbin.framework.options.settings.api.SettingsProvider;
 
 /**
- * File settings options.
+ * File settings applier.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileOptions implements SettingsOptions {
-
-    public static final String KEY_FILE_DIALOGS = "fileDialogs";
-
-    private final OptionsStorage storage;
-
-    public FileOptions(OptionsStorage storage) {
-        this.storage = storage;
-    }
-
-    @Nonnull
-    public String getFileDialogs() {
-        return storage.get(KEY_FILE_DIALOGS, FileDialogsType.SWING.name());
-    }
-
-    public void setFileDialogs(String fileDialogs) {
-        storage.put(KEY_FILE_DIALOGS, fileDialogs);
-    }
+public class FileSettingsApplier implements SettingsApplier {
 
     @Override
-    public void copyTo(SettingsOptions options) {
-        ((FileOptions) options).setFileDialogs(getFileDialogs());
+    public void applySettings(Object instance, SettingsProvider settingsProvider) {
+        FileOptions fileOptions = settingsProvider.getSettings(FileOptions.class);
+        // TODO Support for other file dialogs
+        String fileDialogs = fileOptions.getFileDialogs();
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        ((FileModule) fileModule).setUseAwtDialogs(FileDialogsType.AWT.name().equals(fileDialogs));
     }
 }
