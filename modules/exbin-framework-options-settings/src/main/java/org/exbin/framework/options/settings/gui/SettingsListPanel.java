@@ -41,7 +41,6 @@ import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
-import org.exbin.framework.options.settings.api.SettingsPage;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
 
 /**
@@ -211,7 +210,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     }
 
     @Override
-    public void addSettingsPage(SettingsPage<?> settingsPage, @Nullable List<SettingsPathItem> path) {
+    public void addSettingsPage(SettingsPageX settingsPage, @Nullable List<SettingsPathItem> path) {
         String panelKey;
         if (path == null) {
             panelKey = OPTIONS_PANEL_KEY;
@@ -222,7 +221,8 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
         Integer pageRecordIndex = optionPageKeys.get(panelKey);
         if (pageRecordIndex != null) {
             PageRecord pageRecord = settingsPages.get(pageRecordIndex);
-            pageRecord.addOptionsPage(settingsPage, settingsModifiedListener);
+            throw new IllegalStateException();
+            // pageRecord.addOptionsPage(settingsPage, settingsModifiedListener);
         } else {
             PageRecord pageRecord = new PageRecord(settingsPage);
             if (path == null) {

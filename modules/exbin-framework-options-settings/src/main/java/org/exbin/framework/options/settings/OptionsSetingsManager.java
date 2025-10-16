@@ -42,8 +42,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptions;
 import org.exbin.framework.options.settings.api.SettingsOptionsBuilder;
-import org.exbin.framework.options.settings.api.SettingsPage;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.gui.SettingsPageX;
 
 /**
  * Options settings manager.
@@ -100,6 +100,10 @@ public class OptionsSetingsManager extends ContributionManager implements Option
 
     public void passOptionsPages(SettingsPageReceiver optionsPageReceiver) {
         ContributionSequenceOutput output = new ContributionSequenceOutput() {
+
+            private List<SettingsPathItem> path = new ArrayList<>();
+            private SettingsPageX settingsPage = null;
+
             @Override
             public boolean initItem(ItemSequenceContribution itemContribution) {
                 // TODO
@@ -108,48 +112,23 @@ public class OptionsSetingsManager extends ContributionManager implements Option
 
             @Override
             public void add(ItemSequenceContribution itemContribution) {
-                List<SettingsPathItem> path = new ArrayList<>();
                 if (itemContribution instanceof SettingsComponentContribution) {
-                    // optionsPageReceiver.addSettingsPage(settingsPage, path);
+                    SettingsComponentContribution componentContribution = (SettingsComponentContribution) itemContribution;
+                    SettingsComponent component = componentContribution.getSettingsComponentProvider().createComponent();
+                    settingsPage.addComponent(component);
+                    
                 } else if (itemContribution instanceof SettingsPageContribution) {
                     SettingsPageContribution pageContribution = (SettingsPageContribution) itemContribution;
 
+                    if (settingsPage != null) {
+                        optionsPageReceiver.addSettingsPage(settingsPage, path);
+                    }
+
+                    path = new ArrayList<>();
                     path.add(new SettingsPathItem(itemContribution.getContributionId(), pageContribution.getPageName()));
 
 //                    SettingsComponentProvider settingsComponentProvider = ((SettingsComponentContribution) itemContribution).getSettingsComponentProvider();
-                    SettingsPage<SettingsOptions> settingsPage = new DefaultSettingsPage<SettingsOptions>() {
-                        @Override
-                        public String getId() {
-                            return pageContribution.getContributionId();
-                        }
-
-                        @Override
-                        public SettingsComponent<SettingsOptions> createComponent() {
-                            return new EmptySettingsComponent(); // settingsComponentProvider.createComponent();
-                        }
-
-                        @Override
-                        public SettingsOptions createOptions() {
-                            // TODO
-                            return null;
-                        }
-
-                        @Override
-                        public void loadFromOptions(OptionsStorage optionsStorage, SettingsOptions options) {
-                            // TODO
-                        }
-
-                        @Override
-                        public void saveToOptions(OptionsStorage optionsStorage, SettingsOptions options) {
-                            // TODO
-                        }
-
-                        @Override
-                        public ResourceBundle getResourceBundle() {
-                            return null;
-                        }
-                    };
-                    optionsPageReceiver.addSettingsPage(settingsPage, path);
+                    settingsPage = new SettingsPageX(pageContribution.getContributionId());
                 }
             }
 
@@ -276,7 +255,6 @@ public class OptionsSetingsManager extends ContributionManager implements Option
             ((SettingsPage) optionsPage).loadFromPreferences(optionsStorage, options);
         }
     } */
-
     @Override
     public void registerApplySetting(Class<?> instanceClass, ApplySettingsContribution applySetting) {
         List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
@@ -310,8 +288,8 @@ public class OptionsSetingsManager extends ContributionManager implements Option
             settingsApplier.applySettings(targetObject, null);
         }
     }
-    
-    private class EmptySettingsComponent extends JComponent implements SettingsComponent<SettingsOptions> {
+
+    private static class EmptySettingsComponent extends JComponent implements SettingsComponent<SettingsOptions> {
 
         @Override
         public void loadFromOptions(SettingsOptions settingsData) {

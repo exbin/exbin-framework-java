@@ -15,19 +15,12 @@
  */
 package org.exbin.framework.editor.text.settings;
 
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
 import org.exbin.framework.editor.text.settings.gui.TextAppearanceSettingsPanel;
 import org.exbin.framework.editor.text.service.TextAppearanceService;
-import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Text appearance settings component.
@@ -48,31 +41,4 @@ public class TextAppearanceSettingsComponent implements SettingsComponentProvide
     public SettingsComponent<TextAppearanceOptions> createComponent() {
         return new TextAppearanceSettingsPanel();
     }
-
-    /* @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public TextAppearanceSettings createOptions() {
-        return new TextAppearanceSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, TextAppearanceSettings options) {
-        new TextAppearanceSettings(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, TextAppearanceSettings options) {
-        options.copyTo(new TextAppearanceSettings(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges(TextAppearanceSettings options) {
-        textAppearanceService.setWordWrapMode(options.isWordWrapping());
-    } */
 }

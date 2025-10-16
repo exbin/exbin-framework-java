@@ -24,6 +24,7 @@ import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.text.font.action.TextFontAction;
 import org.exbin.framework.text.font.service.TextFontService;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.text.font.settings.TextFontSettingsComponent;
 import org.exbin.framework.utils.ObjectUtils;
@@ -31,6 +32,8 @@ import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
+import org.exbin.framework.text.font.settings.TextFontOptions;
+import org.exbin.framework.text.font.settings.TextFontSettingsApplier;
 
 /**
  * Text font module.
@@ -77,6 +80,10 @@ public class TextFontModule implements Module {
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        
+        settingsManagement.registerOptionsSettings(TextFontOptions.class, (optionsStorage) -> new TextFontOptions(optionsStorage));
+        
+        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);

@@ -13,26 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options.settings;
+package org.exbin.framework.options.settings.gui;
 
+import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.options.settings.gui.SettingsPageX;
+import org.exbin.framework.options.settings.api.SettingsComponent;
 
 /**
- * Interface for options settings panel page receiver.
+ * Options settings page record.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface SettingsPageReceiver {
+public class SettingsPageX {
 
-    /**
-     * Adds settings page.
-     *
-     * @param settingsPage settings page
-     * @param path optional path
-     */
-    void addSettingsPage(SettingsPageX settingsPage, @Nullable List<SettingsPathItem> path);
+    private final String pageId;
+    private List<SettingsComponent<?>> components = new ArrayList<>();
+
+    public SettingsPageX(String pageId) {
+        this.pageId = pageId;
+    }
+
+    @Nonnull
+    public String getPageId() {
+        return pageId;
+    }
+
+    @Nonnull
+    public List<SettingsComponent<?>> getComponents() {
+        return components;
+    }
+
+    public void addComponent(SettingsComponent<?> component) {
+        components.add(component);
+    }
 }

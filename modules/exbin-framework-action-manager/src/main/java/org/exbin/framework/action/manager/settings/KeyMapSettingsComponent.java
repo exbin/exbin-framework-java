@@ -69,28 +69,4 @@ public class KeyMapSettingsComponent implements SettingsComponentProvider<Action
         panel.setRecords(records);
         return panel;
     }
-
-    /* @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(KeyMapSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public ActionManagerSettings createOptions() {
-        return new ActionManagerSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, ActionManagerSettings options) {
-        ActionManagerSettings prefs = new ActionManagerSettings(preferences);
-        prefs.copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, ActionManagerSettings options) {
-        ActionManagerSettings prefs = new ActionManagerSettings(preferences);
-        options.copyTo(prefs);
-    } */
 }

@@ -15,24 +15,15 @@
  */
 package org.exbin.framework.editor.text.settings;
 
-import java.awt.Color;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
 import org.exbin.framework.editor.text.settings.gui.TextColorSettingsPanel;
 import org.exbin.framework.editor.text.service.TextColorService;
-import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Text color options.
+ * Text color settings component.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -55,46 +46,4 @@ public class TextColorSettingsComponent implements SettingsComponentProvider<Tex
         }
         return panel;
     }
-
-    /* @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(TextColorSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public TextColorSettings createOptions() {
-        return new TextColorSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, TextColorSettings options) {
-        new TextColorSettings(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, TextColorSettings options) {
-        options.copyTo(new TextColorSettings(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges(TextColorSettings options) {
-        if (options.isUseDefaultColors()) {
-            textColorService.setCurrentTextColors(textColorService.getDefaultTextColors());
-        } else {
-            Color[] colors = new Color[5];
-            colors[0] = intToColor(options.getTextColor());
-            colors[1] = intToColor(options.getTextBackgroundColor());
-            colors[2] = intToColor(options.getSelectionTextColor());
-            colors[3] = intToColor(options.getSelectionBackgroundColor());
-            colors[4] = intToColor(options.getFoundBackgroundColor());
-            textColorService.setCurrentTextColors(colors);
-        }
-    }
-
-    @Nullable
-    private Color intToColor(@Nullable Integer intValue) {
-        return intValue == null ? null : new Color(intValue);
-    } */
 }

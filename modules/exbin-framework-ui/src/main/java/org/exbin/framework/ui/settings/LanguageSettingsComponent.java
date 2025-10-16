@@ -27,15 +27,10 @@ import javax.swing.ImageIcon;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.LanguageProvider;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.ui.settings.gui.LanguageSettingsPanel;
 import org.exbin.framework.ui.model.LanguageRecord;
-import org.exbin.framework.ui.settings.LanguageOptions;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Language settings component.
@@ -69,30 +64,4 @@ public class LanguageSettingsComponent implements SettingsComponentProvider<Lang
         panel.setDefaultLocaleName("<" + resourceBundle.getString("locale.defaultLanguage") + ">");
         return panel;
     }
-
-/*    @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(LanguageSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public LanguageSettings createOptions() {
-        return new LanguageSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, LanguageSettings options) {
-        new LanguageSettings(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, LanguageSettings options) {
-        options.copyTo(new LanguageSettings(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges(LanguageSettings options) {
-    } */
 }

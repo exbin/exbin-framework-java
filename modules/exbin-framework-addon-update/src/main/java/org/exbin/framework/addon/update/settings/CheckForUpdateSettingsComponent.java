@@ -15,18 +15,10 @@
  */
 package org.exbin.framework.addon.update.settings;
 
-import java.util.ResourceBundle;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
 import org.exbin.framework.addon.update.settings.gui.ApplicationUpdateSettingsPanel;
-import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Check for update on start settings page.
@@ -40,26 +32,4 @@ public class CheckForUpdateSettingsComponent implements SettingsComponentProvide
     public SettingsComponent<CheckForUpdateOptions> createComponent() {
         return new ApplicationUpdateSettingsPanel();
     }
-
-    /* @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(ApplicationUpdateSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public CheckForUpdateSettings createOptions() {
-        return new CheckForUpdateSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, CheckForUpdateSettings options) {
-        new CheckForUpdateSettings(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, CheckForUpdateSettings options) {
-        options.copyTo(new CheckForUpdateSettings(preferences));
-    } */
 }

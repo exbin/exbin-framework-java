@@ -16,7 +16,6 @@
 package org.exbin.framework.text.encoding.settings;
 
 import java.util.List;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
@@ -24,19 +23,14 @@ import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.text.encoding.settings.gui.TextEncodingSettingsPanel;
 import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
-import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Text encoding options page.
+ * Text encoding options settings component.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -74,32 +68,4 @@ public class TextEncodingSettingsComponent implements SettingsComponentProvider<
 
         return panel;
     }
-/*
-    @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(TextEncodingSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public TextEncodingSettings createOptions() {
-        return new TextEncodingSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, TextEncodingSettings options) {
-        new TextEncodingSettings(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, TextEncodingSettings options) {
-        options.copyTo(new TextEncodingSettings(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges(TextEncodingSettings options) {
-        encodingsHandler.setSelectedEncoding(options.getSelectedEncoding());
-        encodingsHandler.setEncodings(options.getEncodings());
-    } */
 }

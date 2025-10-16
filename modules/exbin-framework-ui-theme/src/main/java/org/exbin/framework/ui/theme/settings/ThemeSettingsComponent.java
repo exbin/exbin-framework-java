@@ -29,8 +29,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.IconSetProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.ui.theme.GuiFontAntialiasing;
 import org.exbin.framework.ui.theme.GuiMacOsAppearance;
 import org.exbin.framework.ui.theme.GuiRenderingMethod;
@@ -227,38 +225,4 @@ public class ThemeSettingsComponent implements SettingsComponentProvider<ThemeOp
         });
         return themeOptionsPanel;
     }
-
-    /* @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(ThemeSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public ThemeSettings createOptions() {
-        return new ThemeSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, ThemeSettings options) {
-        new ThemeSettings(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, ThemeSettings options) {
-        options.copyTo(new ThemeSettings(preferences));
-        for (LafOptionsHandler lafOptions : themeOptionsHandlers.values()) {
-            lafOptions.saveToPreferences(preferences);
-        }
-    }
-
-    @Override
-    public void applyPreferencesChanges(ThemeSettings options) {
-        String selectedTheme = options.getLookAndFeel();
-        // TODO application.applyLookAndFeel(selectedTheme);
-
-        // TODO This would require rebuild of the window to force icons reload
-        // App.getModule(LanguageModuleApi.class).switchToIconSet(options.getIconSet());
-    } */
 }

@@ -15,21 +15,11 @@
  */
 package org.exbin.framework.ui.settings;
 
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.ui.settings.gui.AppearanceSettingsPanel;
-import org.exbin.framework.ui.settings.AppearanceOptions;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Appearance settings component.
@@ -44,37 +34,4 @@ public class AppearanceSettingsComponent implements SettingsComponentProvider<Ap
     public SettingsComponent<AppearanceOptions> createComponent() {
         return new AppearanceSettingsPanel();
     }
-
-/*    @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(AppearanceSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public AppearanceSettings createOptions() {
-        return new AppearanceSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, AppearanceSettings options) {
-        new AppearanceSettings(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, AppearanceSettings options) {
-        options.copyTo(new AppearanceSettings(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges(AppearanceSettings options) {
-        // TODO Drop frame module dependency / move frame options to frame module
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationFrameHandler frame = frameModule.getFrameHandler();
-        frame.setToolBarVisible(options.isShowToolBar());
-        frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
-        frame.setStatusBarVisible(options.isShowStatusBar());
-        frameModule.notifyFrameUpdated();
-    } */
 }

@@ -37,36 +37,37 @@ import org.exbin.framework.options.settings.api.SettingsOptions;
 @ParametersAreNonnullByDefault
 public class PageRecord {
 
-    private final List<SettingsPage<?>> pages = new ArrayList<>();
+    private final SettingsPageX page;
     private final List<SettingsComponent<?>> components = new ArrayList<>();
     private final JPanel panel = new JPanel();
     private final GroupLayout.ParallelGroup horizontalGroup;
     private final GroupLayout.SequentialGroup verticalGroup;
 
-    public PageRecord(SettingsPage<?> page) {
+    public PageRecord(SettingsPageX page) {
+        this.page = page;
         GroupLayout groupLayout = new GroupLayout(panel);
         horizontalGroup = groupLayout.createParallelGroup();
         groupLayout.setHorizontalGroup(horizontalGroup);
         verticalGroup = groupLayout.createSequentialGroup();
         groupLayout.setVerticalGroup(verticalGroup);
         panel.setLayout(groupLayout);
-        PageRecord.this.addOptionsPage(page, null);
-    }
+        
+//        pages.add(page);
+//        SettingsComponent<?> optionsComponent = page.createComponent();
+//        if (listener != null) {
+//            optionsComponent.setSettingsModifiedListener(listener);
+//        }
 
-    public void addOptionsPage(SettingsPage<?> page, @Nullable SettingsModifiedListener listener) {
-        pages.add(page);
-        SettingsComponent<?> optionsComponent = page.createComponent();
-        if (listener != null) {
-            optionsComponent.setSettingsModifiedListener(listener);
-        }
-        components.add(optionsComponent);
-        panel.add((Component) optionsComponent);
-        horizontalGroup.addComponent((Component) optionsComponent);
+        for (SettingsComponent<?> settingsComponent : page.getComponents()) {
+            components.add(settingsComponent);
+            panel.add((Component) settingsComponent);
+            horizontalGroup.addComponent((Component) settingsComponent);
 //        if (visualParams != null && visualParams.isExpand()) {
 //            verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
 //        } else {
-            verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
+            verticalGroup.addComponent((Component) settingsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
 //        }
+        }
 
         panel.revalidate();
         panel.repaint();
@@ -79,47 +80,47 @@ public class PageRecord {
 
     @SuppressWarnings("unchecked")
     public void loadFromPreferences(OptionsStorage preferences) {
-        for (int i = 0; i < pages.size(); i++) {
-            SettingsPage page = pages.get(i);
-            SettingsOptions options = page.createOptions();
-//            page.loadFromPreferences(preferences, options);
-            SettingsComponent component = components.get(i);
-            component.loadFromOptions(options);
-        }
+//        for (int i = 0; i < pages.size(); i++) {
+//            SettingsPage page = pages.get(i);
+//            SettingsOptions options = page.createOptions();
+////            page.loadFromPreferences(preferences, options);
+//            SettingsComponent component = components.get(i);
+//            component.loadFromOptions(options);
+//        }
     }
 
     @SuppressWarnings("unchecked")
     public void saveToPreferences(OptionsStorage preferences) {
-        for (int i = 0; i < pages.size(); i++) {
-            SettingsPage page = pages.get(i);
-            SettingsOptions options = page.createOptions();
-            SettingsComponent component = components.get(i);
-            component.saveToOptions(options);
-//            page.saveToPreferences(preferences, options);
-        }
+//        for (int i = 0; i < pages.size(); i++) {
+//            SettingsPage page = pages.get(i);
+//            SettingsOptions options = page.createOptions();
+//            SettingsComponent component = components.get(i);
+//            component.saveToOptions(options);
+////            page.saveToPreferences(preferences, options);
+//        }
     }
 
     @SuppressWarnings("unchecked")
     public void saveAndApply(OptionsStorage preferences) {
-        for (int i = 0; i < pages.size(); i++) {
-            SettingsPage page = pages.get(i);
-            SettingsOptions options = page.createOptions();
-            SettingsComponent component = components.get(i);
-            component.saveToOptions(options);
-//            page.saveToPreferences(preferences, options);
-//            page.applyPreferencesChanges(options);
-        }
+//        for (int i = 0; i < pages.size(); i++) {
+//            SettingsPage page = pages.get(i);
+//            SettingsOptions options = page.createOptions();
+//            SettingsComponent component = components.get(i);
+//            component.saveToOptions(options);
+////            page.saveToPreferences(preferences, options);
+////            page.applyPreferencesChanges(options);
+//        }
     }
 
     @SuppressWarnings("unchecked")
     public void applyPreferencesChanges(OptionsStorage preferences) {
-        for (int i = 0; i < pages.size(); i++) {
-            SettingsPage page = pages.get(i);
-            SettingsOptions options = page.createOptions();
-            SettingsComponent component = components.get(i);
-            component.saveToOptions(options);
-//            page.applyPreferencesChanges(options);
-        }
+//        for (int i = 0; i < pages.size(); i++) {
+//            SettingsPage page = pages.get(i);
+//            SettingsOptions options = page.createOptions();
+//            SettingsComponent component = components.get(i);
+//            component.saveToOptions(options);
+////            page.applyPreferencesChanges(options);
+//        }
     }
 
     public void setSettingsModifiedListener(SettingsModifiedListener listener) {

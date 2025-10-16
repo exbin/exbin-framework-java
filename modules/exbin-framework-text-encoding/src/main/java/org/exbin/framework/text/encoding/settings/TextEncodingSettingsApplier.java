@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options.settings;
+package org.exbin.framework.text.encoding.settings;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.options.settings.gui.SettingsPageX;
+import org.exbin.framework.text.encoding.EncodingsHandler;
+import org.exbin.framework.options.settings.api.SettingsApplier;
+import org.exbin.framework.options.settings.api.SettingsProvider;
 
 /**
- * Interface for options settings panel page receiver.
+ * Text encoding settings applier.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface SettingsPageReceiver {
+public class TextEncodingSettingsApplier implements SettingsApplier {
 
-    /**
-     * Adds settings page.
-     *
-     * @param settingsPage settings page
-     * @param path optional path
-     */
-    void addSettingsPage(SettingsPageX settingsPage, @Nullable List<SettingsPathItem> path);
+    @Override
+    public void applySettings(Object instance, SettingsProvider settingsProvider) {
+        EncodingsHandler encodingsHandler = null;
+        TextEncodingOptions options = settingsProvider.getSettings(TextEncodingOptions.class);
+        encodingsHandler.setSelectedEncoding(options.getSelectedEncoding());
+        encodingsHandler.setEncodings(options.getEncodings());
+    }
 }

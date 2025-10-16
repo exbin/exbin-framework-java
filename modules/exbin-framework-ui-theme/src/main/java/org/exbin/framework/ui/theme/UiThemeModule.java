@@ -34,7 +34,9 @@ import org.exbin.framework.ui.theme.api.UiThemeModuleApi;
 import org.exbin.framework.ui.theme.settings.ThemeSettingsComponent;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.ui.theme.settings.ThemeSettingsApplier;
 
 /**
  * Module user interface handling.
@@ -195,6 +197,11 @@ public class UiThemeModule implements UiThemeModuleApi {
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        
+        settingsManagement.registerOptionsSettings(ThemeOptions.class, (optionsStorage) -> new ThemeOptions(optionsStorage));
+        
+        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
+        
         ThemeSettingsComponent themeSettingsPage = getThemeOptionsManager().createThemeOptionsPage();
         getThemeOptionsManager();
 //        settingsManagement.registerPage(themeSettingsPage);

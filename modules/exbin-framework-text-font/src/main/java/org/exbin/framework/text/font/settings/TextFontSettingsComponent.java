@@ -16,28 +16,22 @@
 package org.exbin.framework.text.font.settings;
 
 import java.awt.Font;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.text.font.gui.TextFontPanel;
 import org.exbin.framework.text.font.settings.gui.TextFontSettingsPanel;
 import org.exbin.framework.text.font.service.TextFontService;
-import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.options.settings.api.DefaultOptionsStorage;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Text font options.
+ * Text font settings component.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -95,31 +89,4 @@ public class TextFontSettingsComponent implements SettingsComponentProvider<Text
         }
         return panel;
     }
-
-    /* @Nonnull
-    @Override
-    public ResourceBundle getResourceBundle() {
-        return App.getModule(LanguageModuleApi.class).getBundle(TextFontSettingsPanel.class);
-    }
-
-    @Nonnull
-    @Override
-    public TextFontSettings createOptions() {
-        return new TextFontSettings(new DefaultOptionsStorage());
-    }
-
-    @Override
-    public void loadFromPreferences(OptionsStorage preferences, TextFontSettings options) {
-        new TextFontSettings(preferences).copyTo(options);
-    }
-
-    @Override
-    public void saveToPreferences(OptionsStorage preferences, TextFontSettings options) {
-        options.copyTo(new TextFontSettings(preferences));
-    }
-
-    @Override
-    public void applyPreferencesChanges(TextFontSettings options) {
-        textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
-    } */
 }
