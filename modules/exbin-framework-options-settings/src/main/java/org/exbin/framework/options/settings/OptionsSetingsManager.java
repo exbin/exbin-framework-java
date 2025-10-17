@@ -19,10 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.ContributionManager;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
@@ -33,17 +31,14 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.ApplySettingsDependsOnRule;
-import org.exbin.framework.options.settings.api.DefaultSettingsPage;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
-import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptions;
 import org.exbin.framework.options.settings.api.SettingsOptionsBuilder;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
-import org.exbin.framework.options.settings.gui.SettingsPageX;
 
 /**
  * Options settings manager.
@@ -102,7 +97,7 @@ public class OptionsSetingsManager extends ContributionManager implements Option
         ContributionSequenceOutput output = new ContributionSequenceOutput() {
 
             private List<SettingsPathItem> path = new ArrayList<>();
-            private SettingsPageX settingsPage = null;
+            private SettingsPage settingsPage = null;
 
             @Override
             public boolean initItem(ItemSequenceContribution itemContribution) {
@@ -116,11 +111,12 @@ public class OptionsSetingsManager extends ContributionManager implements Option
                     SettingsComponentContribution componentContribution = (SettingsComponentContribution) itemContribution;
                     SettingsComponent component = componentContribution.getSettingsComponentProvider().createComponent();
                     settingsPage.addComponent(component);
-                    
+
                 } else if (itemContribution instanceof SettingsPageContribution) {
                     SettingsPageContribution pageContribution = (SettingsPageContribution) itemContribution;
 
                     if (settingsPage != null) {
+                        settingsPage.finish();
                         optionsPageReceiver.addSettingsPage(settingsPage, path);
                     }
 
@@ -128,7 +124,7 @@ public class OptionsSetingsManager extends ContributionManager implements Option
                     path.add(new SettingsPathItem(itemContribution.getContributionId(), pageContribution.getPageName()));
 
 //                    SettingsComponentProvider settingsComponentProvider = ((SettingsComponentContribution) itemContribution).getSettingsComponentProvider();
-                    settingsPage = new SettingsPageX(pageContribution.getContributionId());
+                    settingsPage = new SettingsPage(pageContribution.getContributionId());
                 }
             }
 
@@ -143,118 +139,8 @@ public class OptionsSetingsManager extends ContributionManager implements Option
             }
         };
         buildSequence(output, definition);
-        /* List<String> processedGroupOrder = new ArrayList<>();
-        for (String groupId : groupsOrder) {
-            List<OptionsGroupRule> rules = groupRules.get(groupId);
-            String parentGroupId = null;
-            if (rules != null) {
-                for (OptionsGroupRule rule : rules) {
-                    if (rule instanceof ParentOptionsGroupRule) {
-                        parentGroupId = ((ParentOptionsGroupRule) rule).getParentGroupId();
-                    } else if (rule instanceof RelativeOptionsPageRule) {
-                        // TODO
-                    }
-                }
-            }
-//            if (parentGroupId == null) {
-            processedGroupOrder.add(groupId);
-//            }
-        }
-
-        // TODO Tree order + relative reordering
-//        List<String> path = new ArrayList<>();
-//        for (String groupId : processedGroupOrder) {
-//            path.clear();
-//            path.add(groupId);
-//            int index = processedGroupOrder.indexOf(groupId);
-//            
-//        }
-        // Process pages in groups first
-        for (String groupId : processedGroupOrder) {
-            for (String pageId : pagesOrder) {
-                List<SettingsPageRule> pageRules = pagesRules.get(pageId);
-                if (pageRules != null) {
-                    for (SettingsPageRule pageRule : pageRules) {
-                        if (pageRule instanceof GroupOptionsPageRule) {
-                            if (groupId.equals(((GroupOptionsPageRule) pageRule).getGroupId())) {
-                                processOptionsPage(optionsPageReceiver, pageId);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for (String pageId : pagesOrder) {
-            boolean inGroup = false;
-            List<SettingsPageRule> pageRules = pagesRules.get(pageId);
-            if (pageRules != null) {
-                for (SettingsPageRule pageRule : pageRules) {
-                    if (pageRule instanceof GroupOptionsPageRule) {
-                        inGroup = true;
-                        break;
-                    }
-                }
-            }
-            if (!inGroup) {
-                processOptionsPage(optionsPageReceiver, pageId);
-            }
-        } */
     }
 
-    /* private void processOptionsPage(SettingsPageReceiver optionsPageReceiver, String pageId) {
-        SettingsPage<?> optionsPage = pages.get(pageId);
-        List<SettingsPathItem> path = null;
-        VisualOptionsPageParams visualParams = null;
-        List<OptionsPageRule> rules = pagesRules.get(pageId);
-        if (rules != null) {
-            for (OptionsPageRule rule : rules) {
-                if (rule instanceof GroupOptionsPageRule) {
-                    path = getGroupPath(((GroupOptionsPageRule) rule).getGroupId());
-                } else if (rule instanceof VisualOptionsPageRule) {
-                    visualParams = ((VisualOptionsPageRule) rule).getVisualParams();
-                } else if (rule instanceof RelativeOptionsPageRule) {
-                    // TODO
-                }
-            }
-        }
-        optionsPageReceiver.addOptionsPage(optionsPage, path, visualParams);
-    }
-
-    @Nonnull
-    public List<SettingsPathItem> getGroupPath(String groupId) {
-        List<SettingsPathItem> path = new ArrayList<>();
-        while (groupId != null) {
-            OptionsGroup group = groups.get(groupId);
-            if (group == null) {
-                throw new IllegalStateException("Missing group: " + groupId);
-            }
-            path.add(0, new SettingsPathItem(groupId, group.getName()));
-            List<OptionsGroupRule> rules = groupRules.get(groupId);
-            groupId = null;
-            if (rules != null) {
-                for (OptionsGroupRule rule : rules) {
-                    if (rule instanceof ParentOptionsGroupRule) {
-                        groupId = ((ParentOptionsGroupRule) rule).getParentGroupId();
-                        break;
-                    }
-                }
-            }
-        }
-        return path;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void initialLoadFromPreferences() {
-        // TODO use preferences instead of options for initial apply
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
-        OptionsStorage optionsStorage = optionsModule.getAppOptions();
-        for (SettingsPage<? extends SettingsData> optionsPage : pages.values()) {
-            SettingsData options = optionsPage.createOptions();
-            ((SettingsPage) optionsPage).loadFromPreferences(optionsStorage, options);
-        }
-    } */
     @Override
     public void registerApplySetting(Class<?> instanceClass, ApplySettingsContribution applySetting) {
         List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
@@ -286,29 +172,6 @@ public class OptionsSetingsManager extends ContributionManager implements Option
             SettingsApplier settingsApplier = applySettings.getSettingsApplier();
             // TODO
             settingsApplier.applySettings(targetObject, null);
-        }
-    }
-
-    private static class EmptySettingsComponent extends JComponent implements SettingsComponent<SettingsOptions> {
-
-        @Override
-        public void loadFromOptions(SettingsOptions settingsData) {
-            // TODO
-        }
-
-        @Override
-        public void saveToOptions(SettingsOptions settingsData) {
-            // TODO
-        }
-
-        @Override
-        public void setSettingsModifiedListener(SettingsModifiedListener listener) {
-            // TODO
-        }
-
-        @Override
-        public ResourceBundle getResourceBundle() {
-            return null;
         }
     }
 }

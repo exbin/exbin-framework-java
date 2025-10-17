@@ -18,7 +18,6 @@ package org.exbin.framework.options.settings;
 import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.options.settings.gui.SettingsPageX;
 
 /**
  * Interface for options settings panel page receiver.
@@ -34,5 +33,5 @@ public interface SettingsPageReceiver {
      * @param settingsPage settings page
      * @param path optional path
      */
-    void addSettingsPage(SettingsPageX settingsPage, @Nullable List<SettingsPathItem> path);
+    void addSettingsPage(SettingsPage settingsPage, @Nullable List<SettingsPathItem> path);
 }

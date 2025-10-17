@@ -15,14 +15,13 @@
  */
 package org.exbin.framework.options.settings.api;
 
-import org.exbin.framework.utils.ComponentResourceProvider;
-
 /**
- * Abstract class for default options settings page.
+ * Flag for settings component to be extended vertically.
+ * <p>
+ * TODO: Should be removed later
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> options data
  */
-public interface DefaultSettingsPage<T extends SettingsOptions> extends SettingsPage<T>, ComponentResourceProvider {
+public interface VerticallyExpandable {
 
 }

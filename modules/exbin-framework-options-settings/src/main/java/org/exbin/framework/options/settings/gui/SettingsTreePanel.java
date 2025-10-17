@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options.settings.gui;
 
+import org.exbin.framework.options.settings.SettingsPage;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,8 +57,8 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
 
     private OptionsStorage optionsStorage = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsTreePanel.class);
-    private final Map<String, PageRecord> settingsPages = new HashMap<>();
-    private PageRecord currentSettingsPanel = null;
+    private final Map<String, SettingsPage> settingsPages = new HashMap<>();
+    private SettingsPage currentSettingsPanel = null;
     private SettingsModifiedListener settingsModifiedListener;
     private final List<LazyComponentListener> listeners = new ArrayList<>();
 
@@ -216,7 +217,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     }
 
     @Override
-    public void addSettingsPage(SettingsPageX settingsPage, @Nullable List<SettingsPathItem> path) {
+    public void addSettingsPage(SettingsPage pageRecord, @Nullable List<SettingsPathItem> path) {
         String panelKey;
         if (path == null) {
             panelKey = OPTIONS_PANEL_KEY;
@@ -225,12 +226,10 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
             establishPath(path);
         }
 
-        PageRecord pageRecord = settingsPages.get(panelKey);
-        if (pageRecord != null) {
+        if (settingsPages.get(panelKey) != null) {
             throw new IllegalStateException();
             // pageRecord.addOptionsPage(settingsPage, settingsModifiedListener);
         } else {
-            pageRecord = new PageRecord(settingsPage);
             settingsPages.put(panelKey, pageRecord);
             if (OPTIONS_PANEL_KEY.equals(panelKey) && currentSettingsPanel == null) {
                 currentSettingsPanel = pageRecord;
@@ -327,7 +326,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     @Override
     public void addChildComponentListener(LazyComponentListener listener) {
         listeners.add(listener);
-        for (PageRecord pageRecord : settingsPages.values()) {
+        for (SettingsPage pageRecord : settingsPages.values()) {
             listener.componentCreated(pageRecord.getPanel());
         }
     }

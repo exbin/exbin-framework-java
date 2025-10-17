@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options.settings.gui;
 
+import org.exbin.framework.options.settings.SettingsPage;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,9 +56,9 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
 
     private OptionsStorage optionsStorage = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsListPanel.class);
-    private final List<PageRecord> settingsPages = new ArrayList<>();
+    private final List<SettingsPage> settingsPages = new ArrayList<>();
     private final Map<String, Integer> optionPageKeys = new HashMap<>();
-    private PageRecord currentSettingsPanel = null;
+    private SettingsPage currentSettingsPanel = null;
     private SettingsModifiedListener settingsModifiedListener;
     private final List<LazyComponentListener> listeners = new ArrayList<>();
     private String rootCaption;
@@ -210,7 +211,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     }
 
     @Override
-    public void addSettingsPage(SettingsPageX settingsPage, @Nullable List<SettingsPathItem> path) {
+    public void addSettingsPage(SettingsPage pageRecord, @Nullable List<SettingsPathItem> path) {
         String panelKey;
         if (path == null) {
             panelKey = OPTIONS_PANEL_KEY;
@@ -218,13 +219,10 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
             panelKey = path.get(path.size() - 1).getGroupId();
         }
 
-        Integer pageRecordIndex = optionPageKeys.get(panelKey);
-        if (pageRecordIndex != null) {
-            PageRecord pageRecord = settingsPages.get(pageRecordIndex);
+        if (optionPageKeys.get(panelKey) != null) {
             throw new IllegalStateException();
             // pageRecord.addOptionsPage(settingsPage, settingsModifiedListener);
         } else {
-            PageRecord pageRecord = new PageRecord(settingsPage);
             if (path == null) {
                 settingsPages.add(0, pageRecord);
                 ((DefaultListModel<String>) categoriesList.getModel()).insertElementAt(rootCaption, 0);
@@ -281,7 +279,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     @Override
     public void addChildComponentListener(LazyComponentListener listener) {
         listeners.add(listener);
-        for (PageRecord pageRecord : settingsPages) {
+        for (SettingsPage pageRecord : settingsPages) {
             listener.componentCreated(pageRecord.getPanel());
         }
     }

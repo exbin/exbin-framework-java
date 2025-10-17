@@ -148,7 +148,7 @@ public class EditorTextModule implements Module {
 
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
-        OptionsSettingsManagement settingsPageManagement = settingsModule.getMainSettingsManager();
+        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
         /* OptionsGroup textEditorGroup = optionsModule.createOptionsGroup("textEditor", resourceBundle);
         optionsPageManagement.registerGroup(textEditorGroup);
@@ -278,8 +278,7 @@ public class EditorTextModule implements Module {
         TextEncodingSettingsComponent textEncodingOptionsPage = new TextEncodingSettingsComponent();
         textEncodingOptionsPage.setEncodingsHandler(getEncodingsHandler());
         optionsPageManagement.registerPage(textEncodingOptionsPage);
-        optionsPageManagement.registerPageRule(textEncodingOptionsPage, new GroupOptionsPageRule(textEditorEncodingGroup));
-        optionsPageManagement.registerPageRule(textEncodingOptionsPage, new VisualOptionsPageRule(new VisualOptionsPageParams(true))); */
+        optionsPageManagement.registerPageRule(textEncodingOptionsPage, new GroupOptionsPageRule(textEditorEncodingGroup)); */
     }
 
     public void registerUndoHandler() {

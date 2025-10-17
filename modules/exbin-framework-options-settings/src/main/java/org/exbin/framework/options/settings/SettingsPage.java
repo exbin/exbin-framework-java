@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options.settings.gui;
+package org.exbin.framework.options.settings;
 
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
-import org.exbin.framework.options.settings.api.SettingsPage;
 import org.exbin.framework.options.api.OptionsStorage;
-import org.exbin.framework.options.settings.api.SettingsOptions;
+import org.exbin.framework.options.settings.api.VerticallyExpandable;
 
 /**
  * Options settings page record.
@@ -35,47 +33,60 @@ import org.exbin.framework.options.settings.api.SettingsOptions;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class PageRecord {
+public class SettingsPage {
 
-    private final SettingsPageX page;
+    private final String pageId;
     private final List<SettingsComponent<?>> components = new ArrayList<>();
     private final JPanel panel = new JPanel();
     private final GroupLayout.ParallelGroup horizontalGroup;
     private final GroupLayout.SequentialGroup verticalGroup;
 
-    public PageRecord(SettingsPageX page) {
-        this.page = page;
+    public SettingsPage(String pageId) {
+        this.pageId = pageId;
         GroupLayout groupLayout = new GroupLayout(panel);
         horizontalGroup = groupLayout.createParallelGroup();
         groupLayout.setHorizontalGroup(horizontalGroup);
         verticalGroup = groupLayout.createSequentialGroup();
         groupLayout.setVerticalGroup(verticalGroup);
         panel.setLayout(groupLayout);
-        
-//        pages.add(page);
-//        SettingsComponent<?> optionsComponent = page.createComponent();
-//        if (listener != null) {
-//            optionsComponent.setSettingsModifiedListener(listener);
-//        }
-
-        for (SettingsComponent<?> settingsComponent : page.getComponents()) {
-            components.add(settingsComponent);
-            panel.add((Component) settingsComponent);
-            horizontalGroup.addComponent((Component) settingsComponent);
-//        if (visualParams != null && visualParams.isExpand()) {
-//            verticalGroup.addComponent((Component) optionsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-//        } else {
-            verticalGroup.addComponent((Component) settingsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
-//        }
-        }
-
-        panel.revalidate();
-        panel.repaint();
     }
 
     @Nonnull
     public JPanel getPanel() {
         return panel;
+    }
+
+    @Nonnull
+    public String getPageId() {
+        return pageId;
+    }
+    
+    public void addComponent(SettingsComponent<?> settingsComponent) {
+        if (!components.isEmpty()) {
+            appendLast(false);
+        }
+
+        components.add(settingsComponent);
+    }
+    
+    public void finish() {
+        if (!components.isEmpty()) {
+            appendLast(true);
+        }
+        
+        panel.revalidate();
+        panel.repaint();
+    }
+    
+    private void appendLast(boolean last) {
+        SettingsComponent<?> settingsComponent = components.get(components.size() - 1);
+        panel.add((Component) settingsComponent);
+        horizontalGroup.addComponent((Component) settingsComponent);
+        if (last && settingsComponent instanceof VerticallyExpandable) {
+            verticalGroup.addComponent((Component) settingsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        } else {
+            verticalGroup.addComponent((Component) settingsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
+        }
     }
 
     @SuppressWarnings("unchecked")

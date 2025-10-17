@@ -27,16 +27,17 @@ import org.exbin.framework.action.manager.settings.ActionManagerOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.VerticallyExpandable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
- * Keymap options panel.
+ * Keymap settings panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsComponent<ActionManagerOptions> {
+public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsComponent<ActionManagerOptions>, VerticallyExpandable {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(KeyMapSettingsPanel.class);
     

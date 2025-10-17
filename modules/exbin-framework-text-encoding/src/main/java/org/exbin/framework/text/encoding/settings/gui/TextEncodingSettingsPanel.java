@@ -36,14 +36,15 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.VerticallyExpandable;
 
 /**
- * Text encoding options panel.
+ * Text encoding settings panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextEncodingOptions> {
+public class TextEncodingSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextEncodingOptions>, VerticallyExpandable {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingSettingsPanel.class);
