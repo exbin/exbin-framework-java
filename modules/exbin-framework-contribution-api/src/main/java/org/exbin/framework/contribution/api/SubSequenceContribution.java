@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.contribution.api;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -40,5 +41,5 @@ public interface SubSequenceContribution extends SequenceContribution {
      * @return sequence output
      */
     @Nonnull
-    TreeContributionSequenceOutput getSubOutput();
+    Optional<TreeContributionSequenceOutput> getSubOutput();
 }

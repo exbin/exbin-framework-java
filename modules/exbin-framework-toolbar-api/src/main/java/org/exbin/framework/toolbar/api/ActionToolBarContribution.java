@@ -31,8 +31,8 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 @ParametersAreNonnullByDefault
 public class ActionToolBarContribution implements ItemSequenceContribution {
 
-    private final Action action;
-    private JComponent component;
+    protected final Action action;
+    protected JComponent component;
 
     public ActionToolBarContribution(Action action) {
         this.action = action;

@@ -34,6 +34,10 @@ public class GroupSequenceContributionRule implements SequenceContributionRule {
         this.groupId = groupId;
     }
 
+    public GroupSequenceContributionRule(GroupSequenceContribution groupContribution) {
+        this.groupId = groupContribution.getGroupId();
+    }
+
     /**
      * Returns group id.
      *

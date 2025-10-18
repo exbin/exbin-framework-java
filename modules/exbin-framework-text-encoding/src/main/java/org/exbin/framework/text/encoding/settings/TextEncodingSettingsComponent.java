@@ -37,6 +37,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class TextEncodingSettingsComponent implements SettingsComponentProvider<TextEncodingOptions> {
 
+    public static final String COMPONENT_ID = "textEncoding";
+
     private EncodingsHandler encodingsHandler;
 
     public void setEncodingsHandler(EncodingsHandler encodingsHandler) {

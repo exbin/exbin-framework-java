@@ -29,6 +29,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class AppearanceSettingsComponent implements SettingsComponentProvider<AppearanceOptions> {
 
+    public static final String COMPONENT_ID = "appearance";
+
     @Nonnull
     @Override
     public SettingsComponent<AppearanceOptions> createComponent() {

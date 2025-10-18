@@ -29,8 +29,8 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 @Immutable
 public class SettingsComponentContribution implements ItemSequenceContribution {
 
-    private final SettingsComponentProvider settingsComponentProvider;
-    private final String contributionId;
+    protected final SettingsComponentProvider settingsComponentProvider;
+    protected final String contributionId;
 
     public SettingsComponentContribution(String contributionId, SettingsComponentProvider settingsComponentProvider) {
         this.contributionId = contributionId;

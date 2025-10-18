@@ -93,7 +93,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, null);
         settingsManagement.registerPage(pageContribution);
-        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new CheckForUpdateSettingsComponent());
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(CheckForUpdateSettingsComponent.COMPONENT_ID, new CheckForUpdateSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 

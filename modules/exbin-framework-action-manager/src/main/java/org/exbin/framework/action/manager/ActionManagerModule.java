@@ -72,7 +72,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);
-        SettingsComponentContribution settingsContribution = settingsManagement.registerComponent(new KeyMapSettingsComponent());
+        SettingsComponentContribution settingsContribution = settingsManagement.registerComponent(KeyMapSettingsComponent.COMPONENT_ID, new KeyMapSettingsComponent());
         settingsManagement.registerSettingsRule(settingsContribution, new SettingsPageContributionRule(pageContribution));
     }
 }

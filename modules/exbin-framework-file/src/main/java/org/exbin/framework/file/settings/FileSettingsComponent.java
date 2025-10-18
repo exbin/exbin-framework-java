@@ -36,6 +36,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class FileSettingsComponent implements SettingsComponentProvider<FileOptions> {
 
+    public static final String COMPONENT_ID = "file";
+
     @Nonnull
     @Override
     public SettingsComponent<FileOptions> createComponent() {

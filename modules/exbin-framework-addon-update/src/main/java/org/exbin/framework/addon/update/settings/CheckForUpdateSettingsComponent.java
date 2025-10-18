@@ -28,6 +28,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class CheckForUpdateSettingsComponent implements SettingsComponentProvider<CheckForUpdateOptions> {
     
+    public static final String COMPONENT_ID = "checkForUpdate";
+
     @Override
     public SettingsComponent<CheckForUpdateOptions> createComponent() {
         return new ApplicationUpdateSettingsPanel();

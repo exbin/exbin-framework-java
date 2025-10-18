@@ -249,7 +249,8 @@ public class TreeContributionManager {
                                 BuilderSubRecord subSection = builderRecord.subMap.get(contributionRecord.contributionId);
                                 if (subSection != null) {
                                     subSection.subContribution = contributionRecord.contribution;
-                                    subSection.sequenceOutput = contributionRecord.contribution.getSubOutput();
+                                    Optional<TreeContributionSequenceOutput> subOutput = contributionRecord.contribution.getSubOutput();
+                                    subSection.sequenceOutput = subOutput.orElse(targetSequence);
                                     BuilderProcessingRecord subProcessingRecord = new BuilderProcessingRecord();
                                     subProcessingRecord.sub = subSection;
                                     subProcessingRecord.group = subSection.groupsMap.get("");

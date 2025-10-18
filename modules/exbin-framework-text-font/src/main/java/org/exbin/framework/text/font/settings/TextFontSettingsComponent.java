@@ -38,6 +38,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class TextFontSettingsComponent implements SettingsComponentProvider<TextFontOptions> {
 
+    public static final String COMPONENT_ID = "textFont";
+
     private TextFontSettingsPanel panel;
     private TextFontService textFontService;
 

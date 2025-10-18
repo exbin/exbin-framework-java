@@ -86,7 +86,7 @@ public class TextEncodingModule implements Module {
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);
-        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new TextEncodingSettingsComponent());
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(TextEncodingSettingsComponent.COMPONENT_ID, new TextEncodingSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 

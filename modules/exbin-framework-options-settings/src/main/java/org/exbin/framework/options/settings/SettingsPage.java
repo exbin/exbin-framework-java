@@ -35,11 +35,11 @@ import org.exbin.framework.options.settings.api.VerticallyExpandable;
 @ParametersAreNonnullByDefault
 public class SettingsPage {
 
-    private final String pageId;
-    private final List<SettingsComponent<?>> components = new ArrayList<>();
-    private final JPanel panel = new JPanel();
-    private final GroupLayout.ParallelGroup horizontalGroup;
-    private final GroupLayout.SequentialGroup verticalGroup;
+    protected final String pageId;
+    protected final List<SettingsComponent<?>> components = new ArrayList<>();
+    protected final JPanel panel = new JPanel();
+    protected final GroupLayout.ParallelGroup horizontalGroup;
+    protected final GroupLayout.SequentialGroup verticalGroup;
 
     public SettingsPage(String pageId) {
         this.pageId = pageId;
@@ -59,6 +59,10 @@ public class SettingsPage {
     @Nonnull
     public String getPageId() {
         return pageId;
+    }
+    
+    public int getComponentsCount() {
+        return components.size();
     }
     
     public void addComponent(SettingsComponent<?> settingsComponent) {

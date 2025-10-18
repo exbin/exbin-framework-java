@@ -90,7 +90,7 @@ public class TextFontModule implements Module {
 
         TextFontSettingsComponent textFontSettingsComponent = new TextFontSettingsComponent();
         textFontSettingsComponent.setTextFontService(textFontService);
-        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(textFontSettingsComponent);
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(textFontSettingsComponent.COMPONENT_ID, textFontSettingsComponent);
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 

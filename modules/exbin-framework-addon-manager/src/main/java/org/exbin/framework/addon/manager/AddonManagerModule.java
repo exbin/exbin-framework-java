@@ -123,7 +123,7 @@ public class AddonManagerModule implements AddonManagerModuleApi {
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, null);
         settingsManagement.registerPage(pageContribution);
-        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new AddonManagerSettingsComponent());
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(AddonManagerSettingsComponent.COMPONENT_ID, new AddonManagerSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 

@@ -120,7 +120,7 @@ public class UiModule implements UiModuleApi {
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);
-        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(new AppearanceSettingsComponent());
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(AppearanceSettingsComponent.COMPONENT_ID, new AppearanceSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
         /*
         OptionsGroup appearanceOptionsGroup = settingsModule.createOptionsGroup("appearance", getResourceBundle());

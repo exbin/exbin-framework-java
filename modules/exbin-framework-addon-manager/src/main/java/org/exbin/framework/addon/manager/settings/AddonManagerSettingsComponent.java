@@ -29,6 +29,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class AddonManagerSettingsComponent implements SettingsComponentProvider<AddonManagerOptions> {
 
+    public static final String COMPONENT_ID = "addonManager";
+
     @Nonnull
     @Override
     public SettingsComponent<AddonManagerOptions> createComponent() {

@@ -31,8 +31,8 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 @ParametersAreNonnullByDefault
 public class ActionSideBarContribution implements ItemSequenceContribution {
 
-    private final Action action;
-    private JComponent component;
+    protected final Action action;
+    protected  JComponent component;
 
     public ActionSideBarContribution(Action action) {
         this.action = action;

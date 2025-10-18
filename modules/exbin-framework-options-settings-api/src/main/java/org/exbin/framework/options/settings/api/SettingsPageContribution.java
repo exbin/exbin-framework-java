@@ -15,12 +15,14 @@
  */
 package org.exbin.framework.options.settings.api;
 
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
-import org.exbin.framework.contribution.api.ItemSequenceContribution;
+import org.exbin.framework.contribution.api.SubSequenceContribution;
+import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 
 /**
  * Settings page contribution.
@@ -29,10 +31,10 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class SettingsPageContribution implements ItemSequenceContribution {
+public class SettingsPageContribution implements SubSequenceContribution {
 
     private final String pageId;
-    private final ResourceBundle resourceBundle;
+    protected final ResourceBundle resourceBundle;
 
     public SettingsPageContribution(String pageId, @Nullable ResourceBundle resourceBundle) {
         this.pageId = pageId;
@@ -57,5 +59,11 @@ public class SettingsPageContribution implements ItemSequenceContribution {
         }
 
         return resourceBundle.getString("settingsPage." + pageId + ".name");
+    }
+
+    @Nonnull
+    @Override
+    public Optional<TreeContributionSequenceOutput> getSubOutput() {
+        return Optional.empty();
     }
 }

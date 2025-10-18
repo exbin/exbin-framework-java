@@ -22,12 +22,13 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.contribution.ContributionDefinition;
-import org.exbin.framework.contribution.ContributionManager;
-import org.exbin.framework.contribution.api.ContributionSequenceOutput;
+import org.exbin.framework.contribution.TreeContributionManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.contribution.api.SubSequenceContribution;
+import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.ApplySettingsDependsOnRule;
@@ -46,7 +47,7 @@ import org.exbin.framework.options.settings.api.SettingsPageContribution;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OptionsSetingsManager extends ContributionManager implements OptionsSettingsManagement {
+public class OptionsSetingsManager extends TreeContributionManager implements OptionsSettingsManagement {
 
     protected final Map<Class<?>, SettingsOptionsBuilder> optionsSettings = new HashMap<>();
     protected final Map<Class<?>, List<ApplySettingsContribution>> applySettingsContributions = new HashMap<>();
@@ -64,8 +65,8 @@ public class OptionsSetingsManager extends ContributionManager implements Option
 
     @Nonnull
     @Override
-    public SettingsComponentContribution registerComponent(SettingsComponentProvider<?> componentProvider) {
-        SettingsComponentContribution contribution = new SettingsComponentContribution(componentProvider.toString(), componentProvider);
+    public SettingsComponentContribution registerComponent(String contributionId, SettingsComponentProvider<?> componentProvider) {
+        SettingsComponentContribution contribution = new SettingsComponentContribution(contributionId, componentProvider);
         definition.addContribution(contribution);
         return contribution;
     }
@@ -94,25 +95,20 @@ public class OptionsSetingsManager extends ContributionManager implements Option
     }
 
     public void passOptionsPages(SettingsPageReceiver optionsPageReceiver) {
-        ContributionSequenceOutput output = new ContributionSequenceOutput() {
+        TreeContributionSequenceOutput output = new TreeContributionSequenceOutput() {
 
             private List<SettingsPathItem> path = new ArrayList<>();
             private SettingsPage settingsPage = null;
 
             @Override
-            public boolean initItem(ItemSequenceContribution itemContribution) {
+            public boolean initItem(ItemSequenceContribution itemContribution, String definitionId, String subId) {
                 // TODO
                 return true;
             }
 
             @Override
-            public void add(ItemSequenceContribution itemContribution) {
-                if (itemContribution instanceof SettingsComponentContribution) {
-                    SettingsComponentContribution componentContribution = (SettingsComponentContribution) itemContribution;
-                    SettingsComponent component = componentContribution.getSettingsComponentProvider().createComponent();
-                    settingsPage.addComponent(component);
-
-                } else if (itemContribution instanceof SettingsPageContribution) {
+            public boolean initItem(SubSequenceContribution itemContribution, String definitionId, String subId) {
+                if (itemContribution instanceof SettingsPageContribution) {
                     SettingsPageContribution pageContribution = (SettingsPageContribution) itemContribution;
 
                     if (settingsPage != null) {
@@ -126,6 +122,23 @@ public class OptionsSetingsManager extends ContributionManager implements Option
 //                    SettingsComponentProvider settingsComponentProvider = ((SettingsComponentContribution) itemContribution).getSettingsComponentProvider();
                     settingsPage = new SettingsPage(pageContribution.getContributionId());
                 }
+
+                return true;
+            }
+
+            @Override
+            public void add(SubSequenceContribution itemContribution) {
+            }
+
+            @Override
+            public void add(ItemSequenceContribution itemContribution) {
+                if (itemContribution instanceof SettingsComponentContribution) {
+                    SettingsComponentContribution componentContribution = (SettingsComponentContribution) itemContribution;
+                    SettingsComponent component = componentContribution.getSettingsComponentProvider().createComponent();
+                    if (settingsPage != null) {
+                        settingsPage.addComponent(component);
+                    }
+                }
             }
 
             @Override
@@ -138,7 +151,7 @@ public class OptionsSetingsManager extends ContributionManager implements Option
                 return false;
             }
         };
-        buildSequence(output, definition);
+        buildSequence(output, "settings", definition);
     }
 
     @Override
