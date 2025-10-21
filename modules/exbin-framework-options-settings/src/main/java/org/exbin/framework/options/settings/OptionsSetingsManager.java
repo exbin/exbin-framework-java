@@ -85,7 +85,7 @@ public class OptionsSetingsManager extends TreeContributionManager implements Op
     }
 
     @Override
-    public boolean menuGroupExists(String groupId) {
+    public boolean groupExists(String groupId) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -94,46 +94,43 @@ public class OptionsSetingsManager extends TreeContributionManager implements Op
         definition.addRule(contribution, rule);
     }
 
-    public void passOptionsPages(SettingsPageReceiver optionsPageReceiver) {
+    public void passSettingsPages(SettingsPageReceiver settingsPageReceiver) {
         TreeContributionSequenceOutput output = new TreeContributionSequenceOutput() {
 
             private List<SettingsPathItem> path = new ArrayList<>();
-            private SettingsPage settingsPage = null;
+            private SettingsPage settingsPage = new SettingsPage("root");
 
             @Override
-            public boolean initItem(ItemSequenceContribution itemContribution, String definitionId, String subId) {
+            public boolean initItem(SequenceContribution contribution, String definitionId, String subId) {
                 // TODO
                 return true;
             }
 
             @Override
-            public boolean initItem(SubSequenceContribution itemContribution, String definitionId, String subId) {
-                if (itemContribution instanceof SettingsPageContribution) {
-                    SettingsPageContribution pageContribution = (SettingsPageContribution) itemContribution;
+            public void add(SequenceContribution contribution) {
+                if (contribution instanceof SubSequenceContribution) {
+                    SubSequenceContribution subContribution = (SubSequenceContribution) contribution;
+                    System.out.println("SUB: " + subContribution.getContributionId());
+                    if (subContribution instanceof SettingsPageContribution) {
+                        SettingsPageContribution pageContribution = (SettingsPageContribution) subContribution;
 
-                    if (settingsPage != null) {
-                        settingsPage.finish();
-                        optionsPageReceiver.addSettingsPage(settingsPage, path);
+                        if (settingsPage != null) {
+                            settingsPage.finish();
+                            settingsPageReceiver.addSettingsPage(settingsPage, path.isEmpty() ? null : path);
+                        }
+
+                        path = new ArrayList<>();
+                        path.add(new SettingsPathItem(subContribution.getContributionId(), pageContribution.getPageName()));
+
+    //                    SettingsComponentProvider settingsComponentProvider = ((SettingsComponentContribution) itemContribution).getSettingsComponentProvider();
+                        settingsPage = new SettingsPage(pageContribution.getContributionId());
                     }
-
-                    path = new ArrayList<>();
-                    path.add(new SettingsPathItem(itemContribution.getContributionId(), pageContribution.getPageName()));
-
-//                    SettingsComponentProvider settingsComponentProvider = ((SettingsComponentContribution) itemContribution).getSettingsComponentProvider();
-                    settingsPage = new SettingsPage(pageContribution.getContributionId());
+                    return;
                 }
 
-                return true;
-            }
-
-            @Override
-            public void add(SubSequenceContribution itemContribution) {
-            }
-
-            @Override
-            public void add(ItemSequenceContribution itemContribution) {
-                if (itemContribution instanceof SettingsComponentContribution) {
-                    SettingsComponentContribution componentContribution = (SettingsComponentContribution) itemContribution;
+                System.out.println("ITEM: " + ((ItemSequenceContribution) contribution).getContributionId());
+                if (contribution instanceof SettingsComponentContribution) {
+                    SettingsComponentContribution componentContribution = (SettingsComponentContribution) contribution;
                     SettingsComponent component = componentContribution.getSettingsComponentProvider().createComponent();
                     if (settingsPage != null) {
                         settingsPage.addComponent(component);

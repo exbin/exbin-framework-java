@@ -30,6 +30,8 @@ import org.exbin.framework.options.settings.api.SettingsProvider;
 @ParametersAreNonnullByDefault
 public class AppearanceSettingsApplier implements SettingsApplier {
 
+    public static final String APPLIER_ID = "appearance";
+
     @Override
     public void applySettings(Object instance, SettingsProvider settingsProvider) {
         AppearanceOptions options = settingsProvider.getSettings(AppearanceOptions.class);

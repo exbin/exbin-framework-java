@@ -65,12 +65,12 @@ public interface OptionsSettingsManagement {
     GroupSequenceContribution registerGroup(String groupId);
 
     /**
-     * Returns true if given menu group exists.
+     * Returns true if given group exists.
      *
      * @param groupId group id
      * @return true if group exists
      */
-    boolean menuGroupExists(String groupId);
+    boolean groupExists(String groupId);
 
     /**
      * Registers settings component rule.

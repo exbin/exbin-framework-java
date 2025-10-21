@@ -27,38 +27,21 @@ import org.exbin.framework.Module;
 public interface TreeContributionSequenceOutput extends Module {
 
     /**
-     * Initializes next sequence item.
+     * Initializes next sequence contribution.
      *
-     * @param itemContribution item contribution
+     * @param contribution contribution
      * @param definitionId definition id
      * @param subId sub contribution id
      * @return true if valid
      */
-    boolean initItem(ItemSequenceContribution itemContribution, String definitionId, String subId);
+    boolean initItem(SequenceContribution contribution, String definitionId, String subId);
 
     /**
-     * Reports next sequence item.
+     * Reports next sequence contribution.
      *
-     * @param itemContribution item contribution
+     * @param contribution contribution
      */
-    void add(ItemSequenceContribution itemContribution);
-
-    /**
-     * Initializes next sub sequence.
-     *
-     * @param itemContribution item contribution
-     * @param definitionId definition id
-     * @param subId sub contribution id
-     * @return true if valid
-     */
-    boolean initItem(SubSequenceContribution itemContribution, String definitionId, String subId);
-
-    /**
-     * Reports next sub sequence.
-     *
-     * @param itemContribution item contribution
-     */
-    void add(SubSequenceContribution itemContribution);
+    void add(SequenceContribution contribution);
 
     /**
      * Reports next separator.

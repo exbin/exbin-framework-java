@@ -39,7 +39,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ActionManagerModule.class);
 
-    public static final String SETTINGS_PAGE_ID = "actionManager";
+    public static final String SETTINGS_PAGE_ID = "keymap";
 
     private ResourceBundle resourceBundle;
 
@@ -72,6 +72,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);
+
         SettingsComponentContribution settingsContribution = settingsManagement.registerComponent(KeyMapSettingsComponent.COMPONENT_ID, new KeyMapSettingsComponent());
         settingsManagement.registerSettingsRule(settingsContribution, new SettingsPageContributionRule(pageContribution));
     }

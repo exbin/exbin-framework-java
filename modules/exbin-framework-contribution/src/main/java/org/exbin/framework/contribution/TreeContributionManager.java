@@ -160,7 +160,7 @@ public class TreeContributionManager {
             }
         }
 
-        // Generate menu
+        // Generate sequence
         List<BuilderProcessingRecord> processing = new ArrayList<>();
         BuilderContributionMatch contributionMatch = new BuilderContributionMatch();
         BuilderProcessingRecord rootRecord = new BuilderProcessingRecord();
@@ -281,14 +281,14 @@ public class TreeContributionManager {
                 }
                 processing.remove(processing.size() - 1);
                 if (processingRecord.isSubMode && !subRecord.sequenceOutput.isEmpty()) {
-                    BuilderSubRecord parentMenuRecord = processing.get(processing.size() - 1).sub;
-                    if (parentMenuRecord.separatorQueued) {
-                        if (!parentMenuRecord.sequenceOutput.isEmpty()) {
-                            parentMenuRecord.sequenceOutput.addSeparator();
+                    BuilderSubRecord parentSubRecord = processing.get(processing.size() - 1).sub;
+                    if (parentSubRecord.separatorQueued) {
+                        if (!parentSubRecord.sequenceOutput.isEmpty()) {
+                            parentSubRecord.sequenceOutput.addSeparator();
                         }
-                        parentMenuRecord.separatorQueued = false;
+                        parentSubRecord.separatorQueued = false;
                     }
-                    parentMenuRecord.sequenceOutput.add(subRecord.subContribution);
+                    parentSubRecord.sequenceOutput.add(subRecord.subContribution);
                 }
             }
         }

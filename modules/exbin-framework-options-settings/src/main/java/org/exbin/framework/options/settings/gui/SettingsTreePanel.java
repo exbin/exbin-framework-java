@@ -218,7 +218,6 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
 
     @Override
     public void addSettingsPage(SettingsPage pageRecord, @Nullable List<SettingsPathItem> path) {
-        System.out.println("PAGE: " + pageRecord.getPageId() + ", " + pageRecord.getComponentsCount());
         String panelKey;
         if (path == null) {
             panelKey = OPTIONS_PANEL_KEY;

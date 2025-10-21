@@ -40,6 +40,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class LanguageSettingsComponent implements SettingsComponentProvider<LanguageOptions> {
 
+    public static final String COMPONENT_ID = "language";
+
     @Nonnull
     @Override
     public SettingsComponent<LanguageOptions> createComponent() {

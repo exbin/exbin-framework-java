@@ -15,10 +15,9 @@
  */
 package org.exbin.framework.options.settings.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
-import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.contribution.api.SubSequenceContributionRule;
 
 /**
  * Settings page contribution rule.
@@ -27,20 +26,13 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
  */
 @ParametersAreNonnullByDefault
 @Immutable
-public class SettingsPageContributionRule implements SequenceContributionRule {
-
-    private final String pageId;
+public class SettingsPageContributionRule extends SubSequenceContributionRule {
 
     public SettingsPageContributionRule(String pageId) {
-        this.pageId = pageId;
+        super(pageId);
     }
 
     public SettingsPageContributionRule(SettingsPageContribution pageContribution) {
         this(pageContribution.getContributionId());
-    }
-
-    @Nonnull
-    public String getPageId() {
-        return pageId;
     }
 }

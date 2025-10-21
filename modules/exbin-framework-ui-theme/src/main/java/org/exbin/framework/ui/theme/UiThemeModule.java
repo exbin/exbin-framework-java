@@ -36,6 +36,9 @@ import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 import org.exbin.framework.ui.theme.settings.ThemeSettingsApplier;
 
 /**
@@ -202,11 +205,8 @@ public class UiThemeModule implements UiThemeModuleApi {
         
         settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
         
-        ThemeSettingsComponent themeSettingsPage = getThemeOptionsManager().createThemeOptionsPage();
-        getThemeOptionsManager();
-//        settingsManagement.registerPage(themeSettingsPage);
-//        settingsManagement.registerPageRule(themeSettingsPage, new GroupOptionsPageRule("appearance"));
-//        settingsManagement.registerPageRule(themeSettingsPage, new RelativeOptionsPageRule(RelativeOptionsPageRule.NextToMode.AFTER, "language"));
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(ThemeSettingsComponent.COMPONENT_ID, getThemeOptionsManager().createThemeOptionsPage());
+        // settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 
     @Nonnull

@@ -28,11 +28,14 @@ import org.exbin.framework.ui.settings.AppearanceSettingsComponent;
 import org.exbin.framework.ui.settings.LanguageOptions;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 import org.exbin.framework.ui.settings.AppearanceOptions;
+import org.exbin.framework.ui.settings.AppearanceSettingsApplier;
+import org.exbin.framework.ui.settings.LanguageSettingsComponent;
 
 /**
  * Module for user interface handling.
@@ -72,8 +75,8 @@ public class UiModule implements UiModuleApi {
     public void initSwingUi() {
         executePreInitActions();
 
-        OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-        LanguageOptions languageOptions = new LanguageOptions(preferencesModule.getAppOptions());
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        LanguageOptions languageOptions = new LanguageOptions(optionsModule.getAppOptions());
 
         // Switching language
         // TODO Move to language module, because language can be independent of UI
@@ -117,24 +120,14 @@ public class UiModule implements UiModuleApi {
 
         settingsManagement.registerOptionsSettings(AppearanceOptions.class, (optionsStorage) -> new AppearanceOptions(optionsStorage));
         settingsManagement.registerOptionsSettings(LanguageOptions.class, (optionsStorage) -> new LanguageOptions(optionsStorage));
+        
+        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(AppearanceSettingsApplier.APPLIER_ID, new AppearanceSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(AppearanceSettingsComponent.COMPONENT_ID, new AppearanceSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
-        /*
-        OptionsGroup appearanceOptionsGroup = settingsModule.createOptionsGroup("appearance", getResourceBundle());
-        settingsManagement.registerGroup(appearanceOptionsGroup);
 
-        LanguageSettingsComponent languageOptionsPage = new LanguageSettingsComponent();
-        settingsManagement.registerPage(languageOptionsPage);
-        settingsManagement.registerPageRule(languageOptionsPage, new GroupOptionsPageRule(appearanceOptionsGroup));
-
-        OptionsGroup uiOptionsGroup = settingsModule.createOptionsGroup("ui", getResourceBundle());
-        settingsManagement.registerGroup(uiOptionsGroup);
-
-        AppearanceSettingsComponent appearanceOptionsPage = new AppearanceSettingsComponent();
-        settingsManagement.registerPage(appearanceOptionsPage);
-        settingsManagement.registerPageRule(appearanceOptionsPage, new GroupOptionsPageRule(uiOptionsGroup)); */
+        settingsManagement.registerComponent(LanguageSettingsComponent.COMPONENT_ID, new LanguageSettingsComponent());
     }
 }

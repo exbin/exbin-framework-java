@@ -54,6 +54,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class ThemeSettingsComponent implements SettingsComponentProvider<ThemeOptions> {
     
+    public static final String COMPONENT_ID = "theme";
+
     private ResourceBundle resourceBundle;
 
     private Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();

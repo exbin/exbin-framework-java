@@ -28,6 +28,8 @@ import org.exbin.framework.options.settings.api.SettingsProvider;
 @ParametersAreNonnullByDefault
 public class TextEncodingSettingsApplier implements SettingsApplier {
 
+    public static final String APPLIER_ID = "textEncoding";
+
     @Override
     public void applySettings(Object instance, SettingsProvider settingsProvider) {
         EncodingsHandler encodingsHandler = null;
