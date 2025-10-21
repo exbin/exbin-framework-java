@@ -15,16 +15,12 @@
  */
 package org.exbin.framework.options.settings.api;
 
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
-import org.exbin.framework.contribution.api.ItemSequenceContribution;
-import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SubSequenceContribution;
-import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 
 /**
  * Settings page contribution.
@@ -61,33 +57,5 @@ public class SettingsPageContribution implements SubSequenceContribution {
         }
 
         return resourceBundle.getString("settingsPage." + pageId + ".name");
-    }
-
-    @Nonnull
-    @Override
-    public Optional<TreeContributionSequenceOutput> getSubOutput() {
-        return Optional.of(new TreeContributionSequenceOutput() {
-            @Override
-            public boolean initItem(SequenceContribution contribution, String definitionId, String subId) {
-                return true;
-            }
-
-            @Override
-            public void add(SequenceContribution contribution) {
-                System.out.println("SP" + (contribution instanceof SubSequenceContribution
-                        ? "S " + pageId + ": " + ((SubSequenceContribution) contribution).getContributionId()
-                        : "A " + pageId + ": " + ((ItemSequenceContribution) contribution).getContributionId()));
-            }
-
-            @Override
-            public void addSeparator() {
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-        });
-        // return Optional.empty();
     }
 }

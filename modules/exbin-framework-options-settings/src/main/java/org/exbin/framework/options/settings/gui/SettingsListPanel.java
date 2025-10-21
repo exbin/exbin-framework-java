@@ -40,6 +40,7 @@ import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.api.OptionsStorage;
+import org.exbin.framework.options.settings.OptionsSettingsModule;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
@@ -51,8 +52,6 @@ import org.exbin.framework.options.settings.SettingsPageReceiver;
  */
 @ParametersAreNonnullByDefault
 public class SettingsListPanel extends javax.swing.JPanel implements SettingsPageReceiver, LazyComponentsIssuable {
-
-    public static final String OPTIONS_PANEL_KEY = "options";
 
     private OptionsStorage optionsStorage = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsListPanel.class);
@@ -214,7 +213,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     public void addSettingsPage(SettingsPage pageRecord, @Nullable List<SettingsPathItem> path) {
         String panelKey;
         if (path == null) {
-            panelKey = OPTIONS_PANEL_KEY;
+            panelKey = OptionsSettingsModule.OPTIONS_PANEL_KEY;
         } else {
             panelKey = path.get(path.size() - 1).getGroupId();
         }

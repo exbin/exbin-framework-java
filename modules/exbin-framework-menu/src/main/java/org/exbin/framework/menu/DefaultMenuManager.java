@@ -208,7 +208,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         activationUpdateService.requestUpdate(action);
     }
 
-    private static void finishMenuItem(JMenuItem menuItem, ActionContextService activationUpdateService) {
+    private static void finishMenuItem(@Nullable JMenuItem menuItem, ActionContextService activationUpdateService) {
         if (menuItem == null) {
             return;
         }
@@ -274,7 +274,6 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
                 JMenu subMenu = UiUtils.createMenu();
                 subMenu.setAction(action);
                 ((SubMenuContribution) contribution).setSubMenu(subMenu);
-                ((SubMenuContribution) contribution).setSubOutput(new MenuWrapper(subMenu, activationUpdateService, buttonGroups, isPopup));
 
                 if (isPopup && action != null) {
                     ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
@@ -322,7 +321,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         @Override
         public void add(SequenceContribution contribution) {
             if (contribution instanceof SubSequenceContribution) {
-                JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu();
+                JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
                 menu.add(subMenu);
                 DefaultMenuManager.finishMenuItem(subMenu, activationUpdateService);
                 return;
@@ -346,6 +345,12 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         @Nonnull
         public JMenu getMenu() {
             return menu;
+        }
+
+        @Nonnull
+        @Override
+        public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
+            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), activationUpdateService, buttonGroups, isPopup);
         }
 
         @Override
@@ -375,10 +380,9 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
                 JMenu subMenu = UiUtils.createMenu();
                 subMenu.setAction(action);
                 ((SubMenuContribution) contribution).setSubMenu(subMenu);
-                ((SubMenuContribution) contribution).setSubOutput(new MenuWrapper(subMenu, activationUpdateService, buttonGroups));
                 return true;
             }
-            
+
             if (contribution instanceof ActionMenuContribution) {
                 Action action = ((ActionMenuContribution) contribution).getAction();
                 JMenuItem menuItem = DefaultMenuManager.createMenuItem(action, buttonGroups);
@@ -391,12 +395,12 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         @Override
         public void add(SequenceContribution contribution) {
             if (contribution instanceof SubSequenceContribution) {
-                JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu();
+                JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
                 menuBar.add(subMenu);
                 DefaultMenuManager.finishMenuItem(subMenu, activationUpdateService);
                 return;
             }
-            
+
             if (contribution instanceof DirectMenuContribution) {
                 menuBar.add(((DirectMenuContribution) contribution).getMenuItem());
                 return;
@@ -409,6 +413,12 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
 
         @Override
         public void addSeparator() {
+        }
+
+        @Nonnull
+        @Override
+        public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
+            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), activationUpdateService, buttonGroups);
         }
 
         @Override
@@ -447,7 +457,6 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
                 JMenu subMenu = UiUtils.createMenu();
                 subMenu.setAction(action);
                 ((SubMenuContribution) contribution).setSubMenu(subMenu);
-                ((SubMenuContribution) contribution).setSubOutput(new MenuWrapper(subMenu, activationUpdateService, buttonGroups, true));
 
                 if (action != null) {
                     ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
@@ -458,7 +467,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
 
                 return true;
             }
-                    
+
             Action action;
             JMenuItem menuItem;
             if (contribution instanceof ActionMenuContribution) {
@@ -495,7 +504,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         @Override
         public void add(SequenceContribution contribution) {
             if (contribution instanceof SubMenuContribution) {
-                JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu();
+                JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
                 menu.add(subMenu);
                 DefaultMenuManager.finishMenuItem(subMenu, activationUpdateService);
                 return;
@@ -514,6 +523,12 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         @Override
         public void addSeparator() {
             menu.addSeparator();
+        }
+
+        @Nonnull
+        @Override
+        public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
+            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), activationUpdateService, buttonGroups, true);
         }
 
         @Override

@@ -249,8 +249,7 @@ public class TreeContributionManager {
                                 BuilderSubRecord subSection = builderRecord.subMap.get(contributionRecord.contributionId);
                                 if (subSection != null) {
                                     subSection.subContribution = contributionRecord.contribution;
-                                    Optional<TreeContributionSequenceOutput> subOutput = contributionRecord.contribution.getSubOutput();
-                                    subSection.sequenceOutput = subOutput.orElse(targetSequence);
+                                    subSection.sequenceOutput = subRecord.sequenceOutput.createSubOutput(contributionRecord.contribution);
                                     BuilderProcessingRecord subProcessingRecord = new BuilderProcessingRecord();
                                     subProcessingRecord.sub = subSection;
                                     subProcessingRecord.group = subSection.groupsMap.get("");
@@ -379,11 +378,6 @@ public class TreeContributionManager {
             this.contribution = contribution;
             contributionId = contribution.getContributionId();
         }
-
-        @Nonnull
-        public ItemSequenceContribution getContribution() {
-            return contribution;
-        }
     }
 
     @ParametersAreNonnullByDefault
@@ -394,11 +388,6 @@ public class TreeContributionManager {
         public BuilderSubContributionRecord(SubSequenceContribution contribution) {
             this.contribution = contribution;
             this.contributionId = contribution.getContributionId();
-        }
-
-        @Nonnull
-        public SubSequenceContribution getContribution() {
-            return contribution;
         }
     }
 

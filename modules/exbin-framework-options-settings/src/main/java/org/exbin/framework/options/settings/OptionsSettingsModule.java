@@ -44,6 +44,7 @@ import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 @ParametersAreNonnullByDefault
 public class OptionsSettingsModule implements OptionsSettingsModuleApi {
 
+    public static final String OPTIONS_PANEL_KEY = "options";
     public static final String OPTIONS_GROUP_PREFIX = "optionsGroup.";
 
     private ResourceBundle resourceBundle;

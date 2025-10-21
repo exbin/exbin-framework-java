@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.contribution.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 
@@ -47,6 +48,15 @@ public interface TreeContributionSequenceOutput extends Module {
      * Reports next separator.
      */
     void addSeparator();
+
+    /**
+     * Creates tree output for sub contribution.
+     *
+     * @param subContribution sub contribution
+     * @return sequence output
+     */
+    @Nonnull
+    TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution);
 
     /**
      * Checks whether sequence is empty.

@@ -17,7 +17,6 @@ package org.exbin.framework.menu.api;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JMenu;
@@ -58,22 +57,12 @@ public class SubMenuContribution implements SubSequenceContribution {
         return action;
     }
 
-    @Nullable
-    public JMenu getSubMenu() {
-        return subMenu;
+    @Nonnull
+    public Optional<JMenu> getSubMenu() {
+        return Optional.ofNullable(subMenu);
     }
 
     public void setSubMenu(JMenu subMenu) {
         this.subMenu = subMenu;
-    }
-
-    @Nullable
-    @Override
-    public Optional<TreeContributionSequenceOutput> getSubOutput() {
-        return Optional.ofNullable(subOutput);
-    }
-
-    public void setSubOutput(@Nullable TreeContributionSequenceOutput subOutput) {
-        this.subOutput = subOutput;
     }
 }

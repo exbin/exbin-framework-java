@@ -70,7 +70,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
 
         settingsManagement.registerOptionsSettings(ActionManagerOptions.class, (optionsStorage) -> new ActionManagerOptions(optionsStorage));
 
-        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);
 
         SettingsComponentContribution settingsContribution = settingsManagement.registerComponent(KeyMapSettingsComponent.COMPONENT_ID, new KeyMapSettingsComponent());

@@ -24,7 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.TreeContributionManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
-import org.exbin.framework.contribution.api.ItemSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.contribution.api.SubSequenceContribution;
@@ -95,60 +94,13 @@ public class OptionsSetingsManager extends TreeContributionManager implements Op
     }
 
     public void passSettingsPages(SettingsPageReceiver settingsPageReceiver) {
-        TreeContributionSequenceOutput output = new TreeContributionSequenceOutput() {
-
-            private List<SettingsPathItem> path = new ArrayList<>();
-            private SettingsPage settingsPage = new SettingsPage("root");
-
-            @Override
-            public boolean initItem(SequenceContribution contribution, String definitionId, String subId) {
-                // TODO
-                return true;
-            }
-
-            @Override
-            public void add(SequenceContribution contribution) {
-                if (contribution instanceof SubSequenceContribution) {
-                    SubSequenceContribution subContribution = (SubSequenceContribution) contribution;
-                    System.out.println("SUB: " + subContribution.getContributionId());
-                    if (subContribution instanceof SettingsPageContribution) {
-                        SettingsPageContribution pageContribution = (SettingsPageContribution) subContribution;
-
-                        if (settingsPage != null) {
-                            settingsPage.finish();
-                            settingsPageReceiver.addSettingsPage(settingsPage, path.isEmpty() ? null : path);
-                        }
-
-                        path = new ArrayList<>();
-                        path.add(new SettingsPathItem(subContribution.getContributionId(), pageContribution.getPageName()));
-
-    //                    SettingsComponentProvider settingsComponentProvider = ((SettingsComponentContribution) itemContribution).getSettingsComponentProvider();
-                        settingsPage = new SettingsPage(pageContribution.getContributionId());
-                    }
-                    return;
-                }
-
-                System.out.println("ITEM: " + ((ItemSequenceContribution) contribution).getContributionId());
-                if (contribution instanceof SettingsComponentContribution) {
-                    SettingsComponentContribution componentContribution = (SettingsComponentContribution) contribution;
-                    SettingsComponent component = componentContribution.getSettingsComponentProvider().createComponent();
-                    if (settingsPage != null) {
-                        settingsPage.addComponent(component);
-                    }
-                }
-            }
-
-            @Override
-            public void addSeparator() {
-                // TODO
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-        };
-        buildSequence(output, "settings", definition);
+        SettingsPage settingsPage = new SettingsPage(OptionsSettingsModule.OPTIONS_PANEL_KEY);
+        TreeContributionSequenceOutput output = new SettingsWrapper(settingsPageReceiver, settingsPage, new ArrayList<>());
+        List<SettingsPathItem> path = new ArrayList<>();
+        path.add(new SettingsPathItem(OptionsSettingsModule.OPTIONS_PANEL_KEY, null));
+        settingsPageReceiver.addSettingsPage(settingsPage, path);
+        buildSequence(output, OptionsSettingsModule.OPTIONS_PANEL_KEY, definition);
+        settingsPage.finish();
     }
 
     @Override
@@ -182,6 +134,64 @@ public class OptionsSetingsManager extends TreeContributionManager implements Op
             SettingsApplier settingsApplier = applySettings.getSettingsApplier();
             // TODO
             settingsApplier.applySettings(targetObject, null);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private class SettingsWrapper implements TreeContributionSequenceOutput {
+
+        private SettingsPageReceiver settingsPageReceiver;
+        private List<SettingsPathItem> path;
+        private final Map<String, SettingsPage> childPage = new HashMap<>();
+        private final SettingsPage settingsPage;
+
+        public SettingsWrapper(SettingsPageReceiver settingsPageReceiver, SettingsPage settingsPage, List<SettingsPathItem> path) {
+            this.settingsPageReceiver = settingsPageReceiver;
+            this.settingsPage = settingsPage;
+            this.path = path;
+        }
+
+        @Override
+        public boolean initItem(SequenceContribution contribution, String definitionId, String subId) {
+            return true;
+        }
+
+        @Override
+        public void add(SequenceContribution contribution) {
+            if (contribution instanceof SettingsComponentContribution) {
+                SettingsComponentContribution componentContribution = (SettingsComponentContribution) contribution;
+                SettingsComponent component = componentContribution.getSettingsComponentProvider().createComponent();
+                settingsPage.addComponent(component);
+            } else if (contribution instanceof SettingsPageContribution) {
+                String subPageId = ((SettingsPageContribution) contribution).getContributionId();
+                SettingsPage subPage = childPage.remove(subPageId);
+                if (subPage != null) {
+                    subPage.finish();
+                }
+            }
+        }
+
+        @Override
+        public void addSeparator() {
+            // TODO
+        }
+
+        @Nonnull
+        @Override
+        public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
+            SettingsPageContribution pageContribution = (SettingsPageContribution) subContribution;
+            SettingsPage subPage = new SettingsPage(pageContribution.getContributionId());
+            List<SettingsPathItem> subPath = new ArrayList<>();
+            subPath.addAll(path);
+            subPath.add(new SettingsPathItem(subContribution.getContributionId(), pageContribution.getPageName()));
+            settingsPageReceiver.addSettingsPage(subPage, subPath);
+            childPage.put(pageContribution.getContributionId(), subPage);
+            return new SettingsWrapper(settingsPageReceiver, subPage, subPath);
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return settingsPage.getComponentsCount() == 0;
         }
     }
 }

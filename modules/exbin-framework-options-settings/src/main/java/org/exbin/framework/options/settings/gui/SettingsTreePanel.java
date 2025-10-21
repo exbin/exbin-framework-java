@@ -38,6 +38,7 @@ import org.exbin.framework.options.settings.SettingsPathItem;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.options.api.OptionsStorage;
+import org.exbin.framework.options.settings.OptionsSettingsModule;
 import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
@@ -52,8 +53,6 @@ import org.exbin.framework.options.settings.SettingsPageReceiver;
  */
 @ParametersAreNonnullByDefault
 public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPageReceiver, LazyComponentsIssuable {
-
-    public static final String OPTIONS_PANEL_KEY = "options";
 
     private OptionsStorage optionsStorage = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsTreePanel.class);
@@ -88,7 +87,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
         });
 
         // Create menu tree
-        top = new OptionsMutableTreeNode(resourceBundle.getString("options.root.caption"), OPTIONS_PANEL_KEY);
+        top = new OptionsMutableTreeNode(resourceBundle.getString("options.root.caption"), OptionsSettingsModule.OPTIONS_PANEL_KEY);
         optionsTree.setRootVisible(true);
         optionsTree.setModel(new DefaultTreeModel(top, true));
         optionsTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
@@ -133,7 +132,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     }
 
     public void setRootCaption(String rootCaption) {
-        top = new OptionsMutableTreeNode(rootCaption, OPTIONS_PANEL_KEY);
+        top = new OptionsMutableTreeNode(rootCaption, OptionsSettingsModule.OPTIONS_PANEL_KEY);
         optionsTree.setModel(new DefaultTreeModel(top, true));
     }
 
@@ -220,7 +219,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     public void addSettingsPage(SettingsPage pageRecord, @Nullable List<SettingsPathItem> path) {
         String panelKey;
         if (path == null) {
-            panelKey = OPTIONS_PANEL_KEY;
+            panelKey = OptionsSettingsModule.OPTIONS_PANEL_KEY;
         } else {
             panelKey = path.get(path.size() - 1).getGroupId();
             establishPath(path);
@@ -231,7 +230,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
             // pageRecord.addOptionsPage(settingsPage, settingsModifiedListener);
         } else {
             settingsPages.put(panelKey, pageRecord);
-            if (OPTIONS_PANEL_KEY.equals(panelKey) && currentSettingsPanel == null) {
+            if (OptionsSettingsModule.OPTIONS_PANEL_KEY.equals(panelKey) && currentSettingsPanel == null) {
                 currentSettingsPanel = pageRecord;
                 optionsAreaScrollPane.setViewportView(currentSettingsPanel.getPanel());
             }
@@ -278,7 +277,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
 
     private void establishPath(List<SettingsPathItem> path) {
         OptionsMutableTreeNode node = top;
-        if (path.size() == 1 && OPTIONS_PANEL_KEY.equals(path.get(0).getGroupId())) {
+        if (path.size() == 1 && OptionsSettingsModule.OPTIONS_PANEL_KEY.equals(path.get(0).getGroupId())) {
             return;
         }
 
