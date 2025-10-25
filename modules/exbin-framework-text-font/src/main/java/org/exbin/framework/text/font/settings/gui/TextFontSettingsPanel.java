@@ -30,6 +30,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text font settings panel.
@@ -37,7 +38,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextFontOptions> {
+public class TextFontSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
     private FontChangeAction fontChangeAction;
@@ -60,19 +61,21 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void saveToOptions(TextFontOptions options) {
-        options.setUseDefaultFont(defaultFontCheckBox.isSelected());
-        options.setFontAttributes(codeFont != null ? codeFont.getAttributes() : null);
-    }
-
-    @Override
-    public void loadFromOptions(TextFontOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         boolean useDefaultFont = options.isUseDefaultFont();
         defaultFontCheckBox.setSelected(useDefaultFont);
         setEnabled(!useDefaultFont);
 
         codeFont = textFontService == null ? options.getFont(new Font(Font.MONOSPACED, Font.PLAIN, 12)) : textFontService.getDefaultFont().deriveFont(options.getFontAttributes());
         updateFontFields();
+    }
+
+    @Override
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
+        options.setUseDefaultFont(defaultFontCheckBox.isSelected());
+        options.setFontAttributes(codeFont != null ? codeFont.getAttributes() : null);
     }
 
     @Override

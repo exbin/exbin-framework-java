@@ -52,7 +52,7 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ThemeSettingsComponent implements SettingsComponentProvider<ThemeOptions> {
+public class ThemeSettingsComponent implements SettingsComponentProvider {
     
     public static final String COMPONENT_ID = "theme";
 
@@ -179,7 +179,7 @@ public class ThemeSettingsComponent implements SettingsComponentProvider<ThemeOp
 
     @Nonnull
     @Override
-    public SettingsComponent<ThemeOptions> createComponent() {
+    public SettingsComponent createComponent() {
         if (!valuesInitialized) {
             valuesInitialized = true;
             initValues();

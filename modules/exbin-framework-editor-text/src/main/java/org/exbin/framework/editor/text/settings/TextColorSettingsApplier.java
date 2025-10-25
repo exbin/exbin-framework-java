@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.options.settings.api.SettingsApplier;
-import org.exbin.framework.options.settings.api.SettingsProvider;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text color options.
@@ -31,8 +31,8 @@ import org.exbin.framework.options.settings.api.SettingsProvider;
 public class TextColorSettingsApplier implements SettingsApplier {
 
     @Override
-    public void applySettings(Object instance, SettingsProvider settingsProvider) {
-        TextColorOptions options = settingsProvider.getSettings(TextColorOptions.class);
+    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+        TextColorOptions options = settingsProvider.getSettingsOptions(TextColorOptions.class);
         TextColorService textColorService = null;
         if (options.isUseDefaultColors()) {
             textColorService.setCurrentTextColors(textColorService.getDefaultTextColors());

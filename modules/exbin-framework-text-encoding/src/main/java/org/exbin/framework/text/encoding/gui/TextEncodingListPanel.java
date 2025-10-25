@@ -30,6 +30,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text encoding selection panel.
@@ -37,7 +38,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingListPanel extends javax.swing.JPanel implements SettingsComponent<TextEncodingOptions> {
+public class TextEncodingListPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingListPanel.class);
@@ -91,12 +92,14 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void saveToOptions(TextEncodingOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
         options.setEncodings(getEncodingList());
     }
 
     @Override
-    public void loadFromOptions(TextEncodingOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
         setEncodingList(options.getEncodings());
     }
 

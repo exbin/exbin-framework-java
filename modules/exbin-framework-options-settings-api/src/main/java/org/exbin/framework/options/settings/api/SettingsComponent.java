@@ -22,24 +22,23 @@ import org.exbin.framework.utils.ComponentResourceProvider;
  * Interface for basic options settings component.
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> settings data class
  */
 @ParametersAreNonnullByDefault
-public interface SettingsComponent<T extends SettingsOptions> extends ComponentResourceProvider {
+public interface SettingsComponent extends ComponentResourceProvider {
 
     /**
-     * Loads configuration from given options settings data.
+     * Loads configuration from given settings options.
      *
-     * @param settingsData options settings data
+     * @param settingsOptionsProvider settings options provider
      */
-    void loadFromOptions(T settingsData);
+    void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider);
 
     /**
-     * Saves configuration from given options settings data.
+     * Saves configuration from given settings options.
      *
-     * @param settingsData options settings data
+     * @param settingsOptionsProvider settings options provider
      */
-    void saveToOptions(T settingsData);
+    void saveToOptions(SettingsOptionsProvider settingsOptionsProvider);
 
     /**
      * Registers listener monitoring for settings changes.

@@ -22,10 +22,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Interface for options settings component provider.
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> settings data class
  */
 @ParametersAreNonnullByDefault
-public interface SettingsComponentProvider<T extends SettingsOptions> {
+public interface SettingsComponentProvider {
 
     /**
      * Creates settings component.
@@ -33,5 +32,5 @@ public interface SettingsComponentProvider<T extends SettingsOptions> {
      * @return component instance
      */
     @Nonnull
-    SettingsComponent<T> createComponent();
+    SettingsComponent createComponent();
 }

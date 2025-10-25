@@ -31,6 +31,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text color selection panel.
@@ -38,7 +39,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorPanel extends javax.swing.JPanel implements SettingsComponent<TextColorOptions> {
+public class TextColorPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorPanel.class);
@@ -62,7 +63,8 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     }
 
     @Override
-    public void loadFromOptions(TextColorOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         setColorsFromArray(textColorService.getDefaultTextColors());
         Integer rgb;
         try {
@@ -103,7 +105,8 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     }
 
     @Override
-    public void saveToOptions(TextColorOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         options.setTextColor(getTextColor().getRGB());
         options.setTextBackgroundColor(getTextBackgroundColor().getRGB());
         options.setSelectionTextColor(getSelectionTextColor().getRGB());

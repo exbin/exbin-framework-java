@@ -26,6 +26,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text encoding settings panel.
@@ -33,7 +34,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextAppearanceOptions> {
+public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
     private ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceSettingsPanel.class);
@@ -49,13 +50,15 @@ public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements S
     }
 
     @Override
-    public void saveToOptions(TextAppearanceOptions options) {
-        options.setWordWrapping(wordWrapCheckBox.isSelected());
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(TextAppearanceOptions.class);
+        wordWrapCheckBox.setSelected(options.isWordWrapping());
     }
 
     @Override
-    public void loadFromOptions(TextAppearanceOptions options) {
-        wordWrapCheckBox.setSelected(options.isWordWrapping());
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(TextAppearanceOptions.class);
+        options.setWordWrapping(wordWrapCheckBox.isSelected());
     }
 
     /**

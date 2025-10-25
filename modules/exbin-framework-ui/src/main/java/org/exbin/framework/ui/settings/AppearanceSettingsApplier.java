@@ -20,7 +20,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.settings.api.SettingsApplier;
-import org.exbin.framework.options.settings.api.SettingsProvider;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Appearance settings applier.
@@ -33,8 +33,8 @@ public class AppearanceSettingsApplier implements SettingsApplier {
     public static final String APPLIER_ID = "appearance";
 
     @Override
-    public void applySettings(Object instance, SettingsProvider settingsProvider) {
-        AppearanceOptions options = settingsProvider.getSettings(AppearanceOptions.class);
+    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+        AppearanceOptions options = settingsProvider.getSettingsOptions(AppearanceOptions.class);
         // TODO Drop frame module dependency / move frame options to frame module
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         ApplicationFrameHandler frame = frameModule.getFrameHandler();

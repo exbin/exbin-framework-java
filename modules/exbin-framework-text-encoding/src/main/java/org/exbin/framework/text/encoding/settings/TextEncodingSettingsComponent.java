@@ -35,7 +35,7 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingSettingsComponent implements SettingsComponentProvider<TextEncodingOptions> {
+public class TextEncodingSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "textEncoding";
 

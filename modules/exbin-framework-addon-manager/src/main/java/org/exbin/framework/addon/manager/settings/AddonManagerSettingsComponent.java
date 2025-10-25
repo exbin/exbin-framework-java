@@ -27,13 +27,13 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonManagerSettingsComponent implements SettingsComponentProvider<AddonManagerOptions> {
+public class AddonManagerSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "addonManager";
 
     @Nonnull
     @Override
-    public SettingsComponent<AddonManagerOptions> createComponent() {
+    public SettingsComponent createComponent() {
         return new AddonManagerSettingsPanel();
     }
 }

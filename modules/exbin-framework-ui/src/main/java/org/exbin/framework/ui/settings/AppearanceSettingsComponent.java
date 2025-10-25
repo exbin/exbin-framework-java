@@ -27,13 +27,13 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceSettingsComponent implements SettingsComponentProvider<AppearanceOptions> {
+public class AppearanceSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "appearance";
 
     @Nonnull
     @Override
-    public SettingsComponent<AppearanceOptions> createComponent() {
+    public SettingsComponent createComponent() {
         return new AppearanceSettingsPanel();
     }
 }

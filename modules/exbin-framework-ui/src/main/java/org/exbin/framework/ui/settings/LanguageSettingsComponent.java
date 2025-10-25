@@ -38,13 +38,13 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class LanguageSettingsComponent implements SettingsComponentProvider<LanguageOptions> {
+public class LanguageSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "language";
 
     @Nonnull
     @Override
-    public SettingsComponent<LanguageOptions> createComponent() {
+    public SettingsComponent createComponent() {
         LanguageSettingsPanel panel = new LanguageSettingsPanel();
         ResourceBundle resourceBundle = panel.getResourceBundle();
         List<LanguageRecord> languageLocales = new ArrayList<>();

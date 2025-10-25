@@ -112,7 +112,7 @@ public class TextColorAction extends AbstractAction {
                 if (actionType == OptionsControlController.ControlActionType.SAVE) {
                     OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
                     TextColorOptions options = new TextColorOptions(new DefaultOptionsStorage());
-                    colorPanel.saveToOptions(options);
+                    // TODO colorPanel.saveToOptions(options);
                     options.copyTo(new TextColorOptions(preferencesModule.getAppOptions()));
                 }
                 textColorService.setCurrentTextColors(colorPanel.getArrayFromColors());

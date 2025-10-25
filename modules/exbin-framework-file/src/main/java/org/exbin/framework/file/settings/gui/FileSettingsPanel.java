@@ -33,6 +33,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Data inspector options panel.
@@ -40,7 +41,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileSettingsPanel extends javax.swing.JPanel implements SettingsComponent<FileOptions> {
+public class FileSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FileSettingsPanel.class);
@@ -79,12 +80,14 @@ public class FileSettingsPanel extends javax.swing.JPanel implements SettingsCom
     }
 
     @Override
-    public void loadFromOptions(FileOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        FileOptions options = settingsOptionsProvider.getSettingsOptions(FileOptions.class);
         fileDialogsComboBox.setSelectedIndex(findMatchingElement(fileDialogsComboBox.getModel(), options.getFileDialogs()));
     }
 
     @Override
-    public void saveToOptions(FileOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        FileOptions options = settingsOptionsProvider.getSettingsOptions(FileOptions.class);
         options.setFileDialogs((String) fileDialogsComboBox.getSelectedItem());
     }
 

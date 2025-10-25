@@ -34,13 +34,13 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileSettingsComponent implements SettingsComponentProvider<FileOptions> {
+public class FileSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "file";
 
     @Nonnull
     @Override
-    public SettingsComponent<FileOptions> createComponent() {
+    public SettingsComponent createComponent() {
         FileSettingsPanel fileSettingsPanel = new FileSettingsPanel();
         // TODO Move resources
         ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FileModule.class);

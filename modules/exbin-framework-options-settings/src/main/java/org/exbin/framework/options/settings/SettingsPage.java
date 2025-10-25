@@ -26,6 +26,7 @@ import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Options settings page record.
@@ -36,7 +37,7 @@ import org.exbin.framework.options.settings.api.VerticallyExpandable;
 public class SettingsPage {
 
     protected final String pageId;
-    protected final List<SettingsComponent<?>> components = new ArrayList<>();
+    protected final List<SettingsComponent> components = new ArrayList<>();
     protected final JPanel panel = new JPanel();
     protected final GroupLayout.ParallelGroup horizontalGroup;
     protected final GroupLayout.SequentialGroup verticalGroup;
@@ -65,7 +66,7 @@ public class SettingsPage {
         return components.size();
     }
     
-    public void addComponent(SettingsComponent<?> settingsComponent) {
+    public void addComponent(SettingsComponent settingsComponent) {
         if (!components.isEmpty()) {
             appendLast(false);
         }
@@ -83,7 +84,7 @@ public class SettingsPage {
     }
     
     private void appendLast(boolean last) {
-        SettingsComponent<?> settingsComponent = components.get(components.size() - 1);
+        SettingsComponent settingsComponent = components.get(components.size() - 1);
         panel.add((Component) settingsComponent);
         horizontalGroup.addComponent((Component) settingsComponent);
         if (last && settingsComponent instanceof VerticallyExpandable) {
@@ -93,26 +94,16 @@ public class SettingsPage {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void loadFromPreferences(OptionsStorage preferences) {
-//        for (int i = 0; i < pages.size(); i++) {
-//            SettingsPage page = pages.get(i);
-//            SettingsOptions options = page.createOptions();
-////            page.loadFromPreferences(preferences, options);
-//            SettingsComponent component = components.get(i);
-//            component.loadFromOptions(options);
-//        }
+    public void loadFromPreferences(SettingsOptionsProvider settingsProvider) {
+        for (SettingsComponent component : components) {
+            component.loadFromOptions(settingsProvider);
+        }
     }
 
-    @SuppressWarnings("unchecked")
-    public void saveToPreferences(OptionsStorage preferences) {
-//        for (int i = 0; i < pages.size(); i++) {
-//            SettingsPage page = pages.get(i);
-//            SettingsOptions options = page.createOptions();
-//            SettingsComponent component = components.get(i);
-//            component.saveToOptions(options);
-////            page.saveToPreferences(preferences, options);
-//        }
+    public void saveToPreferences(SettingsOptionsProvider settingsProvider) {
+        for (SettingsComponent component : components) {
+            component.saveToOptions(settingsProvider);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -139,7 +130,7 @@ public class SettingsPage {
     }
 
     public void setSettingsModifiedListener(SettingsModifiedListener listener) {
-        for (SettingsComponent<?> component : components) {
+        for (SettingsComponent component : components) {
             component.setSettingsModifiedListener(listener);
         }
     }

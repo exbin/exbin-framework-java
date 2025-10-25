@@ -28,7 +28,7 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorSettingsComponent implements SettingsComponentProvider<TextColorOptions> {
+public class TextColorSettingsComponent implements SettingsComponentProvider {
 
     private TextColorSettingsPanel panel;
     private TextColorService textColorService;
@@ -39,7 +39,7 @@ public class TextColorSettingsComponent implements SettingsComponentProvider<Tex
 
     @Nonnull
     @Override
-    public SettingsComponent<TextColorOptions> createComponent() {
+    public SettingsComponent createComponent() {
         if (panel == null) {
             panel = new TextColorSettingsPanel();
             panel.setTextColorService(textColorService);

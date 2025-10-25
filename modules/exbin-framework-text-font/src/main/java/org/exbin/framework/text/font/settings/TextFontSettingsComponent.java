@@ -36,7 +36,7 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFontSettingsComponent implements SettingsComponentProvider<TextFontOptions> {
+public class TextFontSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "textFont";
 
@@ -49,7 +49,7 @@ public class TextFontSettingsComponent implements SettingsComponentProvider<Text
 
     @Nonnull
     @Override
-    public SettingsComponent<TextFontOptions> createComponent() {
+    public SettingsComponent createComponent() {
         if (panel == null) {
             panel = new TextFontSettingsPanel();
             panel.setTextFontService(textFontService);

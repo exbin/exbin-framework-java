@@ -28,7 +28,7 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceSettingsComponent implements SettingsComponentProvider<TextAppearanceOptions> {
+public class TextAppearanceSettingsComponent implements SettingsComponentProvider {
 
     private TextAppearanceService textAppearanceService;
 
@@ -38,7 +38,7 @@ public class TextAppearanceSettingsComponent implements SettingsComponentProvide
 
     @Nonnull
     @Override
-    public SettingsComponent<TextAppearanceOptions> createComponent() {
+    public SettingsComponent createComponent() {
         return new TextAppearanceSettingsPanel();
     }
 }

@@ -36,6 +36,7 @@ import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.ui.settings.LanguageOptions;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Language settings panel.
@@ -43,7 +44,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class LanguageSettingsPanel extends javax.swing.JPanel implements SettingsComponent<LanguageOptions> {
+public class LanguageSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(LanguageSettingsPanel.class);
     private SettingsModifiedListener settingsModifiedListener;
@@ -64,7 +65,8 @@ public class LanguageSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void loadFromOptions(LanguageOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        LanguageOptions options = settingsOptionsProvider.getSettingsOptions(LanguageOptions.class);
         Locale languageLocale = options.getLocale();
         ComboBoxModel<LanguageRecord> languageComboBoxModel = languageComboBox.getModel();
         for (int i = 0; i < languageComboBoxModel.getSize(); i++) {
@@ -77,7 +79,8 @@ public class LanguageSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void saveToOptions(LanguageOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        LanguageOptions options = settingsOptionsProvider.getSettingsOptions(LanguageOptions.class);
         options.setLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
     }
 

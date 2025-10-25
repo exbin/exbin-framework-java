@@ -18,7 +18,7 @@ package org.exbin.framework.text.font.settings;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.text.font.service.TextFontService;
 import org.exbin.framework.options.settings.api.SettingsApplier;
-import org.exbin.framework.options.settings.api.SettingsProvider;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text font settings applier.
@@ -31,8 +31,8 @@ public class TextFontSettingsApplier implements SettingsApplier {
     public static final String APPLIER_ID = "textFont";
 
     @Override
-    public void applySettings(Object instance, SettingsProvider settingsProvider) {
-        TextFontOptions options = settingsProvider.getSettings(TextFontOptions.class);
+    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+        TextFontOptions options = settingsProvider.getSettingsOptions(TextFontOptions.class);
         TextFontService textFontService = null;
         textFontService.setCurrentFont(options.isUseDefaultFont() ? textFontService.getDefaultFont() : options.getFont(textFontService.getDefaultFont()));
     }

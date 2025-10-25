@@ -238,7 +238,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     public void loadAllFromPreferences() {
         settingsPages.forEach((pageRecord) -> {
             try {
-                pageRecord.loadFromPreferences(optionsStorage);
+                // TODO pageRecord.loadFromPreferences(optionsStorage);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsListPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -259,9 +259,9 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     }
 
     public void applyPreferencesChanges() {
-        settingsPages.forEach((pageRecord) -> {
+        settingsPages.forEach((settingsPage) -> {
             try {
-                pageRecord.applyPreferencesChanges(optionsStorage);
+                settingsPage.applyPreferencesChanges(optionsStorage);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsListPanel.class.getName()).log(Level.SEVERE, null, ex);
             }

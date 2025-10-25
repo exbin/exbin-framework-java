@@ -242,7 +242,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     public void loadAllFromPreferences() {
         settingsPages.values().forEach((pageRecord) -> {
             try {
-                pageRecord.loadFromPreferences(optionsStorage);
+                // TODO pageRecord.loadFromPreferences(optionsStorage);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }

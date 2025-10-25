@@ -17,7 +17,7 @@ package org.exbin.framework.editor.text.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.settings.api.SettingsApplier;
-import org.exbin.framework.options.settings.api.SettingsProvider;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text appearance settings applier.
@@ -28,8 +28,8 @@ import org.exbin.framework.options.settings.api.SettingsProvider;
 public class TextAppearanceSettingsApplier implements SettingsApplier {
 
     @Override
-    public void applySettings(Object instance, SettingsProvider settingsProvider) {
-        TextAppearanceOptions options = settingsProvider.getSettings(TextAppearanceOptions.class);
+    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+        TextAppearanceOptions options = settingsProvider.getSettingsOptions(TextAppearanceOptions.class);
         // textAppearanceService.setWordWrapMode(options.isWordWrapping());
     }
 }

@@ -26,6 +26,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Addon manager settings panel.
@@ -33,7 +34,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonManagerSettingsPanel extends javax.swing.JPanel implements SettingsComponent<AddonManagerOptions> {
+public class AddonManagerSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
     private ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerSettingsPanel.class);
@@ -49,11 +50,12 @@ public class AddonManagerSettingsPanel extends javax.swing.JPanel implements Set
     }
 
     @Override
-    public void saveToOptions(AddonManagerOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        AddonManagerOptions options = settingsOptionsProvider.getSettingsOptions(AddonManagerOptions.class);
     }
 
     @Override
-    public void loadFromOptions(AddonManagerOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
     }
 
     /**

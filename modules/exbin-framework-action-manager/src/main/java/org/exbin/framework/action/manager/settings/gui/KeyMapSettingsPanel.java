@@ -23,10 +23,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.action.manager.gui.KeyMapTablePanel;
 import org.exbin.framework.action.manager.model.KeyMapRecord;
-import org.exbin.framework.action.manager.settings.ActionManagerOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
@@ -37,7 +37,7 @@ import org.exbin.framework.utils.WindowUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsComponent<ActionManagerOptions>, VerticallyExpandable {
+public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsComponent, VerticallyExpandable {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(KeyMapSettingsPanel.class);
     
@@ -85,11 +85,11 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsC
     }
 
     @Override
-    public void loadFromOptions(ActionManagerOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
     }
 
     @Override
-    public void saveToOptions(ActionManagerOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
     }
 
     private void notifyModified() {

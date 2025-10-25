@@ -29,6 +29,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text color settings panel.
@@ -36,7 +37,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextColorSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextColorOptions> {
+public class TextColorSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorSettingsPanel.class);
@@ -66,17 +67,19 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
     }
 
     @Override
-    public void loadFromOptions(TextColorOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         boolean defaultColor = options.isUseDefaultColors();
         defaultColorCheckBox.setSelected(defaultColor);
         colorPanel.setEnabled(!defaultColor);
-        colorPanel.loadFromOptions(options);
+        colorPanel.loadFromOptions(settingsOptionsProvider);
     }
 
     @Override
-    public void saveToOptions(TextColorOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         options.setUseDefaultColors(defaultColorCheckBox.isSelected());
-        colorPanel.saveToOptions(options);
+        colorPanel.saveToOptions(settingsOptionsProvider);
     }
 
     /**

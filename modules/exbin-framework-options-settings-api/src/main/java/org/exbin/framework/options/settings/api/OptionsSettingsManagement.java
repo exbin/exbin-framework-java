@@ -46,7 +46,7 @@ public interface OptionsSettingsManagement {
      * @return contribution instance
      */
     @Nonnull
-    SettingsComponentContribution registerComponent(String contributionId, SettingsComponentProvider<?> componentProvider);
+    SettingsComponentContribution registerComponent(String contributionId, SettingsComponentProvider componentProvider);
 
     /**
      * Registers settings page.

@@ -36,6 +36,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
 
 /**
@@ -44,7 +45,7 @@ import org.exbin.framework.options.settings.api.VerticallyExpandable;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingSettingsPanel extends javax.swing.JPanel implements SettingsComponent<TextEncodingOptions>, VerticallyExpandable {
+public class TextEncodingSettingsPanel extends javax.swing.JPanel implements SettingsComponent, VerticallyExpandable {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingSettingsPanel.class);
@@ -81,16 +82,18 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }
 
     @Override
-    public void saveToOptions(TextEncodingOptions options) {
-        encodingPanel.saveToOptions(options);
-        options.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
+        encodingPanel.loadFromOptions(settingsOptionsProvider);
+        defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
+        updateEncodings();
     }
 
     @Override
-    public void loadFromOptions(TextEncodingOptions options) {
-        encodingPanel.loadFromOptions(options);
-        defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
-        updateEncodings();
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
+        encodingPanel.saveToOptions(settingsOptionsProvider);
+        options.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());
     }
 
     /**

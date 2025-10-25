@@ -31,5 +31,5 @@ public interface SettingsApplier {
      * @param instance target instance
      * @param settingsProvider options settings provider
      */
-    void applySettings(Object instance, SettingsProvider settingsProvider);
+    void applySettings(Object instance, SettingsOptionsProvider settingsProvider);
 }

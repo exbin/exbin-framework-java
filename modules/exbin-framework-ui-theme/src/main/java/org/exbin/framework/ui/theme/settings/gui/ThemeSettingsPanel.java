@@ -39,6 +39,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * UI theme options panel.
@@ -46,7 +47,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsComponent<ThemeOptions> {
+public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ThemeSettingsPanel.class);
     private SettingsModifiedListener settingsModifiedListener;
@@ -73,7 +74,8 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }
 
     @Override
-    public void loadFromOptions(ThemeOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        ThemeOptions options = settingsOptionsProvider.getSettingsOptions(ThemeOptions.class);
         visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
         iconSetComboBox.setSelectedIndex(findMatchingElement(iconSetComboBox.getModel(), options.getIconSet()));
         renderingModeComboBox.setSelectedIndex(findMatchingElement(renderingModeComboBox.getModel(), options.getRenderingMode()));
@@ -96,7 +98,8 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }
 
     @Override
-    public void saveToOptions(ThemeOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        ThemeOptions options = settingsOptionsProvider.getSettingsOptions(ThemeOptions.class);
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         options.setIconSet((String) iconSetComboBox.getSelectedItem());
         options.setRenderingMode((String) renderingModeComboBox.getSelectedItem());
@@ -527,7 +530,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
         this.themeConfigurationListener = themeConfigurationListener;
     }
 
-    public void addExtendedPanel(SettingsComponent<?> optionsPanel) {
+    public void addExtendedPanel(SettingsComponent optionsPanel) {
         if (extendedOptionsPanel != null) {
             remove((Component) extendedOptionsPanel);
         }

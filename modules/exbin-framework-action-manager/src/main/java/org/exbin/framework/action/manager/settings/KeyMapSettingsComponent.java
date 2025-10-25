@@ -37,13 +37,13 @@ import org.exbin.framework.toolbar.api.ToolBarModuleApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class KeyMapSettingsComponent implements SettingsComponentProvider<ActionManagerOptions> {
+public class KeyMapSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "keymap";
 
     @Nonnull
     @Override
-    public SettingsComponent<ActionManagerOptions> createComponent() {
+    public SettingsComponent createComponent() {
         KeyMapSettingsPanel panel = new KeyMapSettingsPanel();
         ResourceBundle resourceBundle = panel.getResourceBundle();
         List<KeyMapRecord> records = new ArrayList<>();

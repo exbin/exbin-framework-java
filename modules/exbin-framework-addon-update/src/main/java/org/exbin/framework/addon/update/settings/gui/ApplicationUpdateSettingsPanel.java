@@ -26,6 +26,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Application update settings panel.
@@ -33,7 +34,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implements SettingsComponent<CheckForUpdateOptions> {
+public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ApplicationUpdateSettingsPanel.class);
@@ -49,12 +50,14 @@ public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implement
     }
 
     @Override
-    public void loadFromOptions(CheckForUpdateOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        CheckForUpdateOptions options = settingsOptionsProvider.getSettingsOptions(CheckForUpdateOptions.class);
         checkForUpdatesOnStartCheckBox.setSelected(options.isShouldCheckForUpdate());
     }
 
     @Override
-    public void saveToOptions(CheckForUpdateOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        CheckForUpdateOptions options = settingsOptionsProvider.getSettingsOptions(CheckForUpdateOptions.class);
         options.setShouldCheckForUpdate(checkForUpdatesOnStartCheckBox.isSelected());
     }
 

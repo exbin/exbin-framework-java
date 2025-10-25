@@ -17,7 +17,7 @@ package org.exbin.framework.ui.theme.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.settings.api.SettingsApplier;
-import org.exbin.framework.options.settings.api.SettingsProvider;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * UI theme settings applier.
@@ -30,8 +30,8 @@ public class ThemeSettingsApplier implements SettingsApplier {
     public static final String APPLIER_ID = "theme";
 
     @Override
-    public void applySettings(Object instance, SettingsProvider settingsProvider) {
-        ThemeOptions options = settingsProvider.getSettings(ThemeOptions.class);
+    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+        ThemeOptions options = settingsProvider.getSettingsOptions(ThemeOptions.class);
         String selectedTheme = options.getLookAndFeel();
         // TODO application.applyLookAndFeel(selectedTheme);
 

@@ -21,7 +21,7 @@ import org.exbin.framework.file.FileDialogsType;
 import org.exbin.framework.file.FileModule;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.options.settings.api.SettingsApplier;
-import org.exbin.framework.options.settings.api.SettingsProvider;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * File settings applier.
@@ -32,8 +32,8 @@ import org.exbin.framework.options.settings.api.SettingsProvider;
 public class FileSettingsApplier implements SettingsApplier {
 
     @Override
-    public void applySettings(Object instance, SettingsProvider settingsProvider) {
-        FileOptions fileOptions = settingsProvider.getSettings(FileOptions.class);
+    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+        FileOptions fileOptions = settingsProvider.getSettingsOptions(FileOptions.class);
         // TODO Support for other file dialogs
         String fileDialogs = fileOptions.getFileDialogs();
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);

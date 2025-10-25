@@ -64,7 +64,7 @@ public class OptionsSetingsManager extends TreeContributionManager implements Op
 
     @Nonnull
     @Override
-    public SettingsComponentContribution registerComponent(String contributionId, SettingsComponentProvider<?> componentProvider) {
+    public SettingsComponentContribution registerComponent(String contributionId, SettingsComponentProvider componentProvider) {
         SettingsComponentContribution contribution = new SettingsComponentContribution(contributionId, componentProvider);
         definition.addContribution(contribution);
         return contribution;

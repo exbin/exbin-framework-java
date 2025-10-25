@@ -27,6 +27,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Appearance settings panel.
@@ -34,7 +35,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent<AppearanceOptions>, ComponentResourceProvider {
+public class AppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent, ComponentResourceProvider {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AppearanceSettingsPanel.class);
     private SettingsModifiedListener settingsModifiedListener;
@@ -50,14 +51,16 @@ public class AppearanceSettingsPanel extends javax.swing.JPanel implements Setti
     }
 
     @Override
-    public void loadFromOptions(AppearanceOptions options) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        AppearanceOptions options = settingsOptionsProvider.getSettingsOptions(AppearanceOptions.class);
         showToolbarCheckBox.setSelected(options.isShowToolBar());
         showCaptionsCheckBox.setSelected(options.isShowToolBarCaptions());
         showStatusbarCheckBox.setSelected(options.isShowStatusBar());
     }
 
     @Override
-    public void saveToOptions(AppearanceOptions options) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+        AppearanceOptions options = settingsOptionsProvider.getSettingsOptions(AppearanceOptions.class);
         options.setShowToolBar(showToolbarCheckBox.isSelected());
         options.setShowToolBarCaptions(showCaptionsCheckBox.isSelected());
         options.setShowStatusBar(showStatusbarCheckBox.isSelected());

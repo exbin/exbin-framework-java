@@ -19,12 +19,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Settings provider interface.
+ * Settings options provider interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface SettingsProvider {
+public interface SettingsOptionsProvider {
 
     /**
      * Returns instance of settings options of the given type.
@@ -34,5 +34,5 @@ public interface SettingsProvider {
      * @return settings options instance
      */
     @Nonnull
-    <T extends SettingsOptions> T getSettings(Class<T> settingsClass);
+    <T extends SettingsOptions> T getSettingsOptions(Class<T> settingsClass);
 }
