@@ -15,6 +15,9 @@
  */
 package org.exbin.framework.options;
 
+import org.exbin.framework.options.preferences.FilePreferencesFactory;
+import org.exbin.framework.options.preferences.PreferencesWrapper;
+import org.exbin.framework.options.preferences.StreamPreferences;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -66,6 +69,12 @@ public class OptionsModule implements OptionsModuleApi {
     public OptionsStorage createStreamPreferencesStorage(InputStream inputStream) {
         java.util.prefs.Preferences filePreferences = new StreamPreferences(inputStream);
         return new PreferencesWrapper(filePreferences);
+    }
+    
+    @Nonnull
+    @Override
+    public OptionsStorage createMemoryStorage() {
+        return new MemoryOptionsStorage();
     }
 
     public void setAppOptions(OptionsStorage appOptions) {

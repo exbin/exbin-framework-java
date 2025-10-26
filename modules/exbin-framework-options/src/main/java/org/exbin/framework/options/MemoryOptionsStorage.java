@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options.settings.api;
+package org.exbin.framework.options;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +24,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.options.api.OptionsStorage;
 
 /**
- * Default options storage.
+ * Memory options storage.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultOptionsStorage implements OptionsStorage {
+public class MemoryOptionsStorage implements OptionsStorage {
 
     private final Map<String, Object> values = new HashMap<>();
 

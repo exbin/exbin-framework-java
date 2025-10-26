@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options;
+package org.exbin.framework.options.preferences;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.exbin.framework.options.PreferencesWrapper;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Stub preferences class.
@@ -35,6 +35,7 @@ public class StubPreferences extends PreferencesWrapper {
         super(new StubPreferencesImpl());
     }
 
+    @ParametersAreNonnullByDefault
     private static final class StubPreferencesImpl extends AbstractPreferences {
 
         private final Map<String, String> spiValues;
@@ -45,18 +46,18 @@ public class StubPreferences extends PreferencesWrapper {
         }
 
         @Override
-        protected void putSpi(@Nonnull String key, @Nullable String value) {
+        protected void putSpi(String key, @Nullable String value) {
             spiValues.put(key, value);
         }
 
         @Nullable
         @Override
-        protected String getSpi(@Nonnull String key) {
+        protected String getSpi(String key) {
             return spiValues.get(key);
         }
 
         @Override
-        protected void removeSpi(@Nonnull String key) {
+        protected void removeSpi(String key) {
             spiValues.remove(key);
         }
 
@@ -84,7 +85,7 @@ public class StubPreferences extends PreferencesWrapper {
 
         @Nullable
         @Override
-        protected AbstractPreferences childSpi(@Nonnull String name) {
+        protected AbstractPreferences childSpi(String name) {
             return null;
         }
 

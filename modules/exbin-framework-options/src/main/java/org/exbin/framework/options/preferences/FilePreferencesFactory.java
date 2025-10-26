@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options;
+package org.exbin.framework.options.preferences;
 
 import java.io.File;
 import java.util.prefs.Preferences;

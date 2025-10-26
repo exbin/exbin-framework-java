@@ -54,6 +54,14 @@ public interface OptionsModuleApi extends Module {
     OptionsStorage getAppOptions();
 
     /**
+     * Creates new instance of options storage representing data in memory.
+     *
+     * @return options storage
+     */
+    @Nonnull
+    OptionsStorage createMemoryStorage();
+
+    /**
      * Creates read-only options storage using java.util.Preferences format from
      * given stream.
      *

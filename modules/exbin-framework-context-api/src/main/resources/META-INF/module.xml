@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.context.api.ContextModuleApi</api>
+  <name>Context Support API</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for context handling</description>
+  <dependency>
+  </dependency>
+</module>

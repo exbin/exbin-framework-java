@@ -1,10 +1,9 @@
-rootProject.name = 'exbin-framework-options-settings-api'
+rootProject.name = 'exbin-framework-context'
 
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
-    include ':modules:exbin-framework-contribution-api'
     include ':modules:exbin-framework-context-api'
-    include ':modules:exbin-framework-options-api'
+    include ':modules:exbin-framework-language-api'
     include ':modules:exbin-framework-utils'
 }
 

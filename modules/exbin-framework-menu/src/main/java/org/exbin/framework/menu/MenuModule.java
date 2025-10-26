@@ -44,7 +44,7 @@ import org.exbin.framework.menu.api.MenuManager;
 import org.exbin.framework.menu.api.MenuModuleApi;
 
 /**
- * Implementation of action module.
+ * Implementation of menu module.
  *
  * @author ExBin Project (https://exbin.org)
  */

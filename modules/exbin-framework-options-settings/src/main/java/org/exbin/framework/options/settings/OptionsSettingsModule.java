@@ -113,14 +113,6 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-/* @Nonnull
-    @Override
-    public OptionsGroup createOptionsGroup(String groupId, ResourceBundle resourceBundle) {
-        String groupName = resourceBundle.getString(OPTIONS_GROUP_PREFIX + groupId + ".name");
-        BasicOptionsGroup optionsGroup = new BasicOptionsGroup(groupId, groupName);
-        return optionsGroup;
-    } */
-
     @Override
     public void registerMenuAction() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);

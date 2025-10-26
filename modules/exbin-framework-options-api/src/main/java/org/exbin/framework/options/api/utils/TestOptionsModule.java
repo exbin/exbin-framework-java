@@ -47,6 +47,12 @@ public class TestOptionsModule implements OptionsModuleApi {
 
     @Nonnull
     @Override
+    public OptionsStorage createMemoryStorage() {
+        return new EmptyOptionsStorage();
+    }
+
+    @Nonnull
+    @Override
     public OptionsStorage createStreamPreferencesStorage(InputStream inputStream) {
         return new EmptyOptionsStorage();
     }
