@@ -95,4 +95,12 @@ public interface OptionsSettingsManagement {
      * @param applySettingsRule apply settings rule
      */
     void registerApplySettingRule(ApplySettingsContribution applySettingsContribution, ApplySettingsDependsOnRule applySettingsRule);
+
+    /**
+     * Returns settings options provider.
+     *
+     * @return settings options provider
+     */
+    @Nonnull
+    SettingsOptionsProvider getSettingsOptionsProvider();
 }

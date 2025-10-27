@@ -34,6 +34,8 @@ import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
+import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Options settings action.
@@ -75,13 +77,14 @@ public class SettingsAction extends AbstractAction {
         OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
         SettingsPanelType settingsPanelType = optionsSettingsModule.getSettingsPanelType();
         OptionsControlPanel controlPanel = new OptionsControlPanel();
+        OptionsSettingsManagement settingsManagement = optionsSettingsModule.getMainSettingsManager();
         String optionsRootCaption = optionsSettingsModule.getOptionsRootCaption().orElse(null);
         WindowHandler dialog;
         switch (settingsPanelType) {
             case LIST:
                 SettingsListPanel optionsListPanel = new SettingsListPanel();
                 optionsPagesProvider.registerSettingsPages(optionsListPanel);
-                optionsListPanel.setOptionsStorage(optionsModule.getAppOptions());
+                optionsListPanel.setSettingsOptionsProvider(settingsManagement.getSettingsOptionsProvider());
                 optionsListPanel.pagesFinished();
                 optionsListPanel.loadAllFromPreferences();
                 if (optionsRootCaption != null) {
@@ -112,7 +115,7 @@ public class SettingsAction extends AbstractAction {
             case TREE:
                 SettingsTreePanel optionsTreePanel = new SettingsTreePanel();
                 optionsPagesProvider.registerSettingsPages(optionsTreePanel);
-                optionsTreePanel.setOptionsStorage(optionsModule.getAppOptions());
+                optionsTreePanel.setSettingsOptionsProvider(settingsManagement.getSettingsOptionsProvider());
                 optionsTreePanel.pagesFinished();
                 optionsTreePanel.loadAllFromPreferences();
                 if (optionsRootCaption != null) {

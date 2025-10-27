@@ -35,6 +35,8 @@ import org.exbin.framework.options.settings.action.SettingsAction;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
+import org.exbin.framework.options.settings.api.SettingsOptionsOverrides;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Implementation of framework options settings module.
@@ -160,5 +162,11 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
     @Override
     public void setOptionsRootCaption(@Nullable String optionsRootCaption) {
         this.optionsRootCaption = optionsRootCaption;
+    }
+
+    @Nonnull
+    @Override
+    public SettingsOptionsOverrides createSettingsOptionsOverrides(SettingsOptionsProvider settingsOptionsProvider) {
+        return new DefaultSetingsOptionsOverrides(settingsOptionsProvider);
     }
 }

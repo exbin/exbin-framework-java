@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options.settings.api;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.utils.ComponentResourceProvider;
 import org.exbin.framework.context.api.ApplicationContextProvider;
@@ -31,15 +32,17 @@ public interface SettingsComponent extends ComponentResourceProvider {
      * Loads configuration from given settings options.
      *
      * @param settingsOptionsProvider settings options provider
+     * @param applicationContextProvider context provider
      */
-    void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider); // , ApplicationContextProvider applicationContextProvider
+    void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider);
 
     /**
      * Saves configuration from given settings options.
      *
      * @param settingsOptionsProvider settings options provider
+     * @param applicationContextProvider context provider
      */
-    void saveToOptions(SettingsOptionsProvider settingsOptionsProvider);
+    void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider);
 
     /**
      * Registers listener monitoring for settings changes.

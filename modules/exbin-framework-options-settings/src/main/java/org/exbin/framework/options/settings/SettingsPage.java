@@ -19,9 +19,11 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
+import org.exbin.framework.context.api.ApplicationContextProvider;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.api.OptionsStorage;
@@ -94,20 +96,20 @@ public class SettingsPage {
         }
     }
 
-    public void loadFromPreferences(SettingsOptionsProvider settingsProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
         for (SettingsComponent component : components) {
-            component.loadFromOptions(settingsProvider);
+            component.loadFromOptions(settingsProvider, applicationContextProvider);
         }
     }
 
-    public void saveToPreferences(SettingsOptionsProvider settingsProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
         for (SettingsComponent component : components) {
-            component.saveToOptions(settingsProvider);
+            component.saveToOptions(settingsProvider, applicationContextProvider);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public void saveAndApply(OptionsStorage preferences) {
+    public void saveAndApply(SettingsOptionsProvider settingsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
 //        for (int i = 0; i < pages.size(); i++) {
 //            SettingsPage page = pages.get(i);
 //            SettingsOptions options = page.createOptions();
@@ -119,7 +121,7 @@ public class SettingsPage {
     }
 
     @SuppressWarnings("unchecked")
-    public void applyPreferencesChanges(OptionsStorage preferences) {
+    public void applyPreferencesChanges(SettingsOptionsProvider settingsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
 //        for (int i = 0; i < pages.size(); i++) {
 //            SettingsPage page = pages.get(i);
 //            SettingsOptions options = page.createOptions();

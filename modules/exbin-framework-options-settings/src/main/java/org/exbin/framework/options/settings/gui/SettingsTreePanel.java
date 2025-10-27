@@ -45,6 +45,7 @@ import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Panel for application options settings.
@@ -54,7 +55,7 @@ import org.exbin.framework.options.settings.SettingsPageReceiver;
 @ParametersAreNonnullByDefault
 public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPageReceiver, LazyComponentsIssuable {
 
-    private OptionsStorage optionsStorage = null;
+    private SettingsOptionsProvider settingsOptionsProvider = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsTreePanel.class);
     private final Map<String, SettingsPage> settingsPages = new HashMap<>();
     private SettingsPage currentSettingsPanel = null;
@@ -242,7 +243,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     public void loadAllFromPreferences() {
         settingsPages.values().forEach((pageRecord) -> {
             try {
-                // TODO pageRecord.loadFromPreferences(optionsStorage);
+                pageRecord.loadFromOptions(settingsOptionsProvider, null);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -252,7 +253,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     public void saveAndApplyAll() {
         settingsPages.values().forEach((pageRecord) -> {
             try {
-                pageRecord.saveAndApply(optionsStorage);
+                pageRecord.saveAndApply(settingsOptionsProvider, null);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -265,7 +266,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     public void applyPreferencesChanges() {
         settingsPages.values().forEach((pageRecord) -> {
             try {
-                pageRecord.applyPreferencesChanges(optionsStorage);
+                pageRecord.applyPreferencesChanges(settingsOptionsProvider, null);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -318,8 +319,8 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
         }
     }
 
-    public void setOptionsStorage(OptionsStorage optionsStorage) {
-        this.optionsStorage = optionsStorage;
+    public void setSettingsOptionsProvider(SettingsOptionsProvider settingsOptionsProvider) {
+        this.settingsOptionsProvider = settingsOptionsProvider;
     }
 
     @Override

@@ -44,6 +44,7 @@ import org.exbin.framework.options.settings.OptionsSettingsModule;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Panel for application options settings.
@@ -53,7 +54,7 @@ import org.exbin.framework.options.settings.SettingsPageReceiver;
 @ParametersAreNonnullByDefault
 public class SettingsListPanel extends javax.swing.JPanel implements SettingsPageReceiver, LazyComponentsIssuable {
 
-    private OptionsStorage optionsStorage = null;
+    private SettingsOptionsProvider settingsOptionsProvider = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsListPanel.class);
     private final List<SettingsPage> settingsPages = new ArrayList<>();
     private final Map<String, Integer> optionPageKeys = new HashMap<>();
@@ -238,7 +239,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     public void loadAllFromPreferences() {
         settingsPages.forEach((pageRecord) -> {
             try {
-                // TODO pageRecord.loadFromPreferences(optionsStorage);
+                pageRecord.loadFromOptions(settingsOptionsProvider, null);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsListPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -248,7 +249,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     public void saveAndApplyAll() {
         settingsPages.forEach((pageRecord) -> {
             try {
-                pageRecord.saveAndApply(optionsStorage);
+                pageRecord.saveAndApply(settingsOptionsProvider, null);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsListPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -261,7 +262,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     public void applyPreferencesChanges() {
         settingsPages.forEach((settingsPage) -> {
             try {
-                settingsPage.applyPreferencesChanges(optionsStorage);
+                settingsPage.applyPreferencesChanges(settingsOptionsProvider, null);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsListPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -271,8 +272,8 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
         windowModule.notifyOptionsChanged();
     }
 
-    public void setOptionsStorage(OptionsStorage optionsStorage) {
-        this.optionsStorage = optionsStorage;
+    public void setSettingsOptionsProvider(SettingsOptionsProvider settingsOptionsProvider) {
+        this.settingsOptionsProvider = settingsOptionsProvider;
     }
 
     @Override

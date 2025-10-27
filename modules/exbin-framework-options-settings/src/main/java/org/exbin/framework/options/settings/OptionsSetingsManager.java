@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.TreeContributionManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
@@ -28,6 +29,7 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.contribution.api.SubSequenceContribution;
 import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
+import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.ApplySettingsDependsOnRule;
@@ -38,6 +40,7 @@ import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 import org.exbin.framework.options.settings.api.SettingsOptions;
 import org.exbin.framework.options.settings.api.SettingsOptionsBuilder;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 
 /**
@@ -51,6 +54,7 @@ public class OptionsSetingsManager extends TreeContributionManager implements Op
     protected final Map<Class<?>, SettingsOptionsBuilder> optionsSettings = new HashMap<>();
     protected final Map<Class<?>, List<ApplySettingsContribution>> applySettingsContributions = new HashMap<>();
     protected final Map<ApplySettingsContribution, List<ApplySettingsDependsOnRule>> applySettingsContributionRules = new HashMap<>();
+    protected SettingsOptionsProvider settingsOptionsProvider;
 
     protected final ContributionDefinition definition = new ContributionDefinition();
 
@@ -137,6 +141,32 @@ public class OptionsSetingsManager extends TreeContributionManager implements Op
         }
     }
 
+    @Nonnull
+    @Override
+    public SettingsOptionsProvider getSettingsOptionsProvider() {
+        if (settingsOptionsProvider == null) {
+            settingsOptionsProvider = new SettingsOptionsProvider() {
+                
+                Map<Class<?>, SettingsOptions> settingsOptions = new HashMap<>();
+
+                @Override
+                @SuppressWarnings("unchecked")
+                public <T extends SettingsOptions> T getSettingsOptions(Class<T> settingsClass) {
+                    SettingsOptions instance = settingsOptions.get(settingsClass);
+                    if (instance == null) {
+                        SettingsOptionsBuilder builder = optionsSettings.get(settingsClass);
+                        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+                        instance = builder.createInstance(optionsModule.getAppOptions());
+                    }
+                    
+                    return (T) instance;
+                }
+            };
+        }
+
+        return settingsOptionsProvider;
+    }
+    
     @ParametersAreNonnullByDefault
     private class SettingsWrapper implements TreeContributionSequenceOutput {
 

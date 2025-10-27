@@ -17,8 +17,10 @@ package org.exbin.framework.editor.text.settings.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.context.api.ApplicationContextProvider;
 import org.exbin.framework.editor.text.settings.TextAppearanceOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -50,13 +52,13 @@ public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements S
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
         TextAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(TextAppearanceOptions.class);
         wordWrapCheckBox.setSelected(options.isWordWrapping());
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
         TextAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(TextAppearanceOptions.class);
         options.setWordWrapping(wordWrapCheckBox.isSelected());
     }

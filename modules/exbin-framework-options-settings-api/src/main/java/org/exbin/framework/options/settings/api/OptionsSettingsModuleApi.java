@@ -103,4 +103,13 @@ public interface OptionsSettingsModuleApi extends Module {
      * @param optionsRootCaption caption
      */
     void setOptionsRootCaption(@Nullable String optionsRootCaption);
+
+    /**
+     * Creates settings options overrides.
+     *
+     * @param settingsOptionsProvider settings options provider
+     * @return settings options overrides
+     */
+    @Nonnull
+    SettingsOptionsOverrides createSettingsOptionsOverrides(SettingsOptionsProvider settingsOptionsProvider);
 }

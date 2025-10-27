@@ -2,6 +2,7 @@ rootProject.name = 'exbin-framework-options-settings'
 
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
+    include ':modules:exbin-framework-context-api'
     include ':modules:exbin-framework-contribution-api'
     include ':modules:exbin-framework-contribution'
     include ':modules:exbin-framework-action-api'
