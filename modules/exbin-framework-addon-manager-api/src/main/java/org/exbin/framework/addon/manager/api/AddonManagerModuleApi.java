@@ -31,6 +31,11 @@ public interface AddonManagerModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(AddonManagerModuleApi.class);
 
+    /**
+     * Creates addon manager action.
+     *
+     * @return addon manager action
+     */
     @Nonnull
     Action createAddonManagerAction();
 
@@ -50,11 +55,17 @@ public interface AddonManagerModuleApi extends Module {
 
     void setManualLegacyGitHubUrl(String manualLegacyGitHubUrl);
 
+    /**
+     * Registers addon manager menu item.
+     */
     void registerAddonManagerMenuItem();
 
     boolean isDevMode();
 
     void setDevMode(boolean devMode);
 
+    /**
+     * Registers settings.
+     */
     void registerSettings();
 }

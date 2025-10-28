@@ -2,8 +2,9 @@ rootProject.name = 'exbin-framework-ui-theme-api'
 
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
-    include ':modules:exbin-framework-action-api'
+    include ':modules:exbin-framework-context-api'
     include ':modules:exbin-framework-contribution-api'
+    include ':modules:exbin-framework-action-api'
     include ':modules:exbin-framework-menu-popup-api'
     include ':modules:exbin-framework-language-api'
     include ':modules:exbin-framework-options-settings-api'

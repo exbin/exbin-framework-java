@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.context.api;
+package org.exbin.framework.context;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.context.api.ApplicationContextManager;
 
 /**
- * Interface for context support module.
+ * Default application context manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ContextModuleApi extends Module {
+public class DefaultApplicationContextManager implements ApplicationContextManager {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ContextModuleApi.class);
+    @Override
+    public <T> void changeActiveState(Class<T> stateClass, T activeState) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-    /**
-     * Returns main application context manager.
-     *
-     * @return context manager
-     */
-    @Nonnull
-    ApplicationContextManager getMainContextManager();
+    @Override
+    public <T> T getActiveState(Class<T> stateClass) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

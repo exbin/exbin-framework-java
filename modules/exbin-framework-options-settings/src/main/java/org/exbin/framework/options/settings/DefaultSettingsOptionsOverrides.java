@@ -29,12 +29,12 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultSetingsOptionsOverrides implements SettingsOptionsOverrides {
+public class DefaultSettingsOptionsOverrides implements SettingsOptionsOverrides {
 
     protected final SettingsOptionsProvider settingsOptionsProvider;
     protected final Map<Class<? extends SettingsOptions>, Class<? extends SettingsOptions>> overrides = new HashMap<>();
 
-    public DefaultSetingsOptionsOverrides(SettingsOptionsProvider settingsOptionsProvider) {
+    public DefaultSettingsOptionsOverrides(SettingsOptionsProvider settingsOptionsProvider) {
         this.settingsOptionsProvider = settingsOptionsProvider;
     }
 

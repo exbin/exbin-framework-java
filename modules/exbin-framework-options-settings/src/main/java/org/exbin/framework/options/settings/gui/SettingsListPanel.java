@@ -39,7 +39,6 @@ import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.OptionsSettingsModule;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;

@@ -52,7 +52,7 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
     private ResourceBundle resourceBundle;
 
     private SettingsPanelType settingsPanelType = SettingsPanelType.TREE;
-    private OptionsSetingsManager optionsSettingsManager;
+    private OptionsSettingsManager optionsSettingsManager;
     private String optionsRootCaption = null;
 
     public OptionsSettingsModule() {
@@ -75,9 +75,9 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
 
     @Nonnull
     @Override
-    public OptionsSetingsManager getMainSettingsManager() {
+    public OptionsSettingsManager getMainSettingsManager() {
         if (optionsSettingsManager == null) {
-            optionsSettingsManager = new OptionsSetingsManager();
+            optionsSettingsManager = new OptionsSettingsManager();
         }
 
         return optionsSettingsManager;
@@ -167,6 +167,6 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
     @Nonnull
     @Override
     public SettingsOptionsOverrides createSettingsOptionsOverrides(SettingsOptionsProvider settingsOptionsProvider) {
-        return new DefaultSetingsOptionsOverrides(settingsOptionsProvider);
+        return new DefaultSettingsOptionsOverrides(settingsOptionsProvider);
     }
 }

@@ -49,7 +49,7 @@ import org.exbin.framework.options.settings.api.SettingsPageContribution;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OptionsSetingsManager extends TreeContributionManager implements OptionsSettingsManagement {
+public class OptionsSettingsManager extends TreeContributionManager implements OptionsSettingsManagement {
 
     protected final Map<Class<?>, SettingsOptionsBuilder> optionsSettings = new HashMap<>();
     protected final Map<Class<?>, List<ApplySettingsContribution>> applySettingsContributions = new HashMap<>();
@@ -58,7 +58,7 @@ public class OptionsSetingsManager extends TreeContributionManager implements Op
 
     protected final ContributionDefinition definition = new ContributionDefinition();
 
-    public OptionsSetingsManager() {
+    public OptionsSettingsManager() {
     }
 
     @Override

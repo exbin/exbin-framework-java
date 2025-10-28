@@ -15,26 +15,23 @@
  */
 package org.exbin.framework.context.api;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for context support module.
+ * Interface for context state provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ContextModuleApi extends Module {
-
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ContextModuleApi.class);
+public interface ApplicationContextManager extends ApplicationContextProvider {
 
     /**
-     * Returns main application context manager.
+     * Changes active state.
      *
-     * @return context manager
+     * @param <T> state type
+     * @param stateClass state class
+     * @param activeState active state
      */
-    @Nonnull
-    ApplicationContextManager getMainContextManager();
+    <T> void changeActiveState(Class<T> stateClass, @Nullable T activeState);
 }

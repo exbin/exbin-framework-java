@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.context.api.ApplicationContextManager;
 import org.exbin.framework.context.api.ContextModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
@@ -31,6 +32,8 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 public class ContextModule implements ContextModuleApi {
 
     private ResourceBundle resourceBundle;
+
+    private DefaultApplicationContextManager applicationContextManager;
 
     public ContextModule() {
     }
@@ -51,5 +54,14 @@ public class ContextModule implements ContextModuleApi {
         if (resourceBundle == null) {
             getResourceBundle();
         }
+    }
+
+    @Nonnull
+    @Override
+    public ApplicationContextManager getMainContextManager() {
+        if (applicationContextManager == null) {
+            applicationContextManager = new DefaultApplicationContextManager();
+        }
+        return applicationContextManager;
     }
 }
