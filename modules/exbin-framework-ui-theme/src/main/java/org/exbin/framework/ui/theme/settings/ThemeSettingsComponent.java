@@ -45,6 +45,7 @@ import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
+import org.exbin.framework.ui.theme.UiThemeModule;
 
 /**
  * UI theme settings.
@@ -53,10 +54,8 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
  */
 @ParametersAreNonnullByDefault
 public class ThemeSettingsComponent implements SettingsComponentProvider {
-    
-    public static final String COMPONENT_ID = "theme";
 
-    private ResourceBundle resourceBundle;
+    public static final String COMPONENT_ID = "theme";
 
     private Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();
 
@@ -75,11 +74,10 @@ public class ThemeSettingsComponent implements SettingsComponentProvider {
     private List<String> guiMacOsAppearanceKeys;
     private List<String> guiMacOsAppearanceNames;
 
-    public void setResourceBundle(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-    }
-
     public void initValues() {
+        UiThemeModule themeModule = (UiThemeModule) App.getModule(UiThemeModuleApi.class);
+        ResourceBundle resourceBundle = themeModule.getResourceBundle();
+
         themes = new ArrayList<>();
         themes.add("");
         boolean extraCrossPlatformLAF = !"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -207,6 +205,8 @@ public class ThemeSettingsComponent implements SettingsComponentProvider {
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, optionsHandler.createOptionsComponent(), controlPanel);
+            UiThemeModule themeModule = (UiThemeModule) App.getModule(UiThemeModuleApi.class);
+            ResourceBundle resourceBundle = themeModule.getResourceBundle();
             ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString("theme.optionsWindow.title"));
             controlPanel.setController((actionType) -> {
                 switch (actionType) {

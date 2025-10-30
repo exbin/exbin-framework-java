@@ -64,4 +64,10 @@ public class ContextModule implements ContextModuleApi {
         }
         return applicationContextManager;
     }
+
+    @Nonnull
+    @Override
+    public ApplicationContextManager createChildContextManager(ApplicationContextManager parentContextManager) {
+        return new ChildApplicationContextManager(parentContextManager);
+    }
 }

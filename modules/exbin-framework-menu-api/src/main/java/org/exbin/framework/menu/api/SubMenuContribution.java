@@ -21,7 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import org.exbin.framework.contribution.api.SubSequenceContribution;
-import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 
 /**
  * Record of sub/child menu contribution.
@@ -34,7 +33,6 @@ public class SubMenuContribution implements SubSequenceContribution {
     protected final String subMenuId;
     protected final Action action;
     protected JMenu subMenu;
-    protected TreeContributionSequenceOutput subOutput;
 
     public SubMenuContribution(String subMenuId, Action action) {
         this.subMenuId = subMenuId;

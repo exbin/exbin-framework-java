@@ -34,4 +34,18 @@ public interface ApplicationContextManager extends ApplicationContextProvider {
      * @param activeState active state
      */
     <T> void changeActiveState(Class<T> stateClass, @Nullable T activeState);
+
+    /**
+     * Adds change listener.
+     *
+     * @param changeListener change listener
+     */
+    void addChangeListener(ApplicationContextChangeListener changeListener);
+
+    /**
+     * Removes change listener.
+     *
+     * @param changeListener change listener
+     */
+    void removeChangeListener(ApplicationContextChangeListener changeListener);
 }

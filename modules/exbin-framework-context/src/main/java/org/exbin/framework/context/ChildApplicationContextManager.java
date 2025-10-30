@@ -17,31 +17,57 @@ package org.exbin.framework.context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ApplicationContextChangeListener;
 import org.exbin.framework.context.api.ApplicationContextManager;
 
 /**
- * Default application context manager.
+ * Child application context manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultApplicationContextManager implements ApplicationContextManager {
+public class ChildApplicationContextManager implements ApplicationContextManager {
 
+    protected final ApplicationContextManager parentContextManager;
     protected final Map<Class<?>, Object> activeStates = new HashMap<>();
+    protected final Set<Class<?>> childStates = new HashSet<>();
     protected final List<ApplicationContextChangeListener> changeListeners = new ArrayList<>();
+
+    public ChildApplicationContextManager(ApplicationContextManager parentContextManager) {
+        this.parentContextManager = parentContextManager;
+        parentContextManager.addChangeListener(new ApplicationContextChangeListener() {
+            @Override
+            public <T> void activeStateChanged(Class<T> stateClass, T activeState) {
+                if (childStates.contains(stateClass)) {
+                    return;
+                }
+
+                notifyChanged(stateClass, activeState);
+            }
+        });
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getActiveState(Class<T> stateClass) {
-        return (T) activeStates.get(stateClass);
+        if (childStates.contains(stateClass)) {
+            return (T) activeStates.get(stateClass);
+        }
+
+        return parentContextManager.getActiveState(stateClass);
     }
 
     @Override
     public <T> void changeActiveState(Class<T> stateClass, T activeState) {
+        if (!childStates.contains(stateClass)) {
+            childStates.add(stateClass);
+        }
+
         activeStates.put(stateClass, activeState);
         notifyChanged(stateClass, activeState);
     }

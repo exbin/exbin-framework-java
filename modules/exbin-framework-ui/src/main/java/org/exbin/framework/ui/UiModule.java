@@ -45,9 +45,6 @@ import org.exbin.framework.ui.settings.LanguageSettingsComponent;
 @ParametersAreNonnullByDefault
 public class UiModule implements UiModuleApi {
 
-    public static final String SETTINGS_PAGE_ID = "appearance";
-    public static final String SETTINGS_LANGUAGE_PAGE_ID = "language";
-
     private ResourceBundle resourceBundle;
 
     private List<Runnable> preInitActions = new ArrayList<>();
@@ -123,7 +120,7 @@ public class UiModule implements UiModuleApi {
         
         settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(AppearanceSettingsApplier.APPLIER_ID, new AppearanceSettingsApplier()));
 
-        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, getResourceBundle());
+        SettingsPageContribution pageContribution = new SettingsPageContribution(UiModuleApi.SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(AppearanceSettingsComponent.COMPONENT_ID, new AppearanceSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));

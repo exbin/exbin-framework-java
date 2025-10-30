@@ -37,7 +37,6 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
-import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 import org.exbin.framework.ui.theme.settings.ThemeSettingsApplier;
 
@@ -53,8 +52,6 @@ public class UiThemeModule implements UiThemeModuleApi {
 
     private ResourceBundle resourceBundle;
     private final List<LafProvider> lafProviders = new ArrayList<>();
-
-    private ThemeOptionsManager themeOptionsManager;
 
     public UiThemeModule() {
     }
@@ -200,20 +197,12 @@ public class UiThemeModule implements UiThemeModuleApi {
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
-        
-        settingsManagement.registerOptionsSettings(ThemeOptions.class, (optionsStorage) -> new ThemeOptions(optionsStorage));
-        
-        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
-        
-        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(ThemeSettingsComponent.COMPONENT_ID, getThemeOptionsManager().createThemeOptionsPage());
-        // settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
-    }
 
-    @Nonnull
-    public ThemeOptionsManager getThemeOptionsManager() {
-        if (themeOptionsManager == null) {
-            themeOptionsManager = new ThemeOptionsManager();
-        }
-        return themeOptionsManager;
+        settingsManagement.registerOptionsSettings(ThemeOptions.class, (optionsStorage) -> new ThemeOptions(optionsStorage));
+
+        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
+
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(ThemeSettingsComponent.COMPONENT_ID, new ThemeSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(UiModuleApi.SETTINGS_PAGE_ID));
     }
 }
