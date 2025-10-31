@@ -36,7 +36,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.context.api.ApplicationContextManager;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
@@ -135,8 +135,8 @@ public class FrameModule implements FrameModuleApi {
     @Override
     public void notifyFrameUpdated() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ComponentActivationListener componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
-        componentActivationListener.updated(ApplicationFrame.class, applicationFrame);
+        ApplicationContextManager contextManager = frameModule.getFrameHandler().getContextManager();
+        contextManager.changeActiveState(ApplicationFrame.class, applicationFrame);
     }
 
     @Override
@@ -260,8 +260,8 @@ public class FrameModule implements FrameModuleApi {
             appIcon = applicationFrame.getIconImage();
 
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-            ComponentActivationListener componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
-            componentActivationListener.updated(ApplicationFrame.class, applicationFrame);
+            ApplicationContextManager contextManager = frameModule.getFrameHandler().getContextManager();
+            contextManager.changeActiveState(ApplicationFrame.class, applicationFrame);
         }
 
         return applicationFrame;

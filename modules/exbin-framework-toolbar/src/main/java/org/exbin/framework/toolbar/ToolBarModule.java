@@ -25,7 +25,6 @@ import javax.swing.JToolBar;
 import org.exbin.framework.App;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
@@ -34,6 +33,7 @@ import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule.PositionMode;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.toolbar.api.ToolBarManager;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Implementation of tool bar module.
@@ -93,8 +93,8 @@ public class ToolBarModule implements ToolBarModuleApi {
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
-        getToolBarManager().buildToolBar(targetToolBar, toolBarId, activationUpdateService);
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService) {
+        getToolBarManager().buildToolBar(targetToolBar, toolBarId, actionUpdateService);
     }
 
     @Override

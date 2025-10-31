@@ -67,6 +67,12 @@ public class ContextModule implements ContextModuleApi {
 
     @Nonnull
     @Override
+    public ApplicationContextManager createContextManager() {
+        return new DefaultApplicationContextManager();
+    }
+
+    @Nonnull
+    @Override
     public ApplicationContextManager createChildContextManager(ApplicationContextManager parentContextManager) {
         return new ChildApplicationContextManager(parentContextManager);
     }

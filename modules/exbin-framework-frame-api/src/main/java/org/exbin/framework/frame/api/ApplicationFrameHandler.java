@@ -20,8 +20,8 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.ComponentActivationListener;
-import org.exbin.framework.action.api.ActionContextService;
+import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.context.api.ApplicationContextManager;
 
 /**
  * Interface for application frame.
@@ -115,9 +115,19 @@ public interface ApplicationFrameHandler {
      */
     void setDefaultSize(Dimension windowSize);
 
+    /**
+     * Returns context manager for this frame.
+     *
+     * @return context manager
+     */
     @Nonnull
-    ComponentActivationListener getComponentActivationListener();
-    
+    ApplicationContextManager getContextManager();
+
+    /**
+     * Returns action manager.
+     *
+     * @return action manager
+     */
     @Nonnull
-    ActionContextService getActionContextService();
+    ActionContextManager getActionContextService();
 }

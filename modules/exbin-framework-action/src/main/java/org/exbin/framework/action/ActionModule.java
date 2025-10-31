@@ -39,6 +39,7 @@ import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
+import org.exbin.framework.context.api.ApplicationContextManager;
 
 /**
  * Implementation of action module.
@@ -99,8 +100,8 @@ public class ActionModule implements ActionModuleApi {
 
     @Nonnull
     @Override
-    public ActionManager createActionManager() {
-        return new DefaultActionManager();
+    public ActionManager createActionManager(ApplicationContextManager contextManager) {
+        return new DefaultActionManager(contextManager);
     }
 
     @Override

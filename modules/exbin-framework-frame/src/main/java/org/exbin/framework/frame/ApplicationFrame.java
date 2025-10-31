@@ -38,14 +38,15 @@ import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.context.api.ApplicationContextManager;
+import org.exbin.framework.context.api.ContextModuleApi;
 
 /**
  * Basic appplication frame.
@@ -59,15 +60,18 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     private JPanel currentStatusBarPanel = null;
     private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
-    private ActionManager frameActionContextService;
+    private ApplicationContextManager frameContextManager;
+    private ActionManager frameActionManager;
 
     public ApplicationFrame() {
         this(true);
     }
 
     public ApplicationFrame(boolean undecorated) {
+        ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
+        frameContextManager = contextModule.createChildContextManager(contextModule.getMainContextManager());
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        frameActionContextService = actionModule.createActionManager();
+        frameActionManager = actionModule.createActionManager(frameContextManager);
 
         if (undecorated) {
             setUndecorated(true);
@@ -273,22 +277,22 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, new ActionContextService() {
-            @Override
+        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, new ActionContextManager() {
+            /* @Override
             public void registerListener(ComponentActivationListener listener) {
-                frameActionContextService.registerListener(listener);
+                frameActionManager.registerListener(listener);
             }
 
             @Override
             public void requestUpdate() {
-                frameActionContextService.requestUpdate();
-            }
+                frameActionManager.requestUpdate();
+            } */
 
             @Override
-            public void requestUpdate(Action action) {
-                frameActionContextService.registerAction(action);
-                frameActionContextService.initAction(action);
-                frameActionContextService.requestUpdate(action);
+            public void registerActionContext(Action action) {
+                frameActionManager.registerAction(action);
+                frameActionManager.initAction(action);
+                frameActionManager.registerActionContext(action);
             }
         });
         menuBar.revalidate();
@@ -298,22 +302,22 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainToolBar() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, new ActionContextService() {
-            @Override
+        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, new ActionContextManager() {
+            /* @Override
             public void registerListener(ComponentActivationListener listener) {
-                frameActionContextService.registerListener(listener);
+                frameActionManager.registerListener(listener);
             }
 
             @Override
             public void requestUpdate() {
-                frameActionContextService.requestUpdate();
-            }
+                frameActionManager.requestUpdate();
+            } */
 
             @Override
-            public void requestUpdate(Action action) {
-                frameActionContextService.registerAction(action);
-                frameActionContextService.initAction(action);
-                frameActionContextService.requestUpdate(action);
+            public void registerActionContext(Action action) {
+                frameActionManager.registerAction(action);
+                frameActionManager.initAction(action);
+                frameActionManager.registerActionContext(action);
             }
         });
     }
@@ -356,14 +360,14 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
 
     @Nonnull
     @Override
-    public ComponentActivationListener getComponentActivationListener() {
-        return frameActionContextService;
+    public ApplicationContextManager getContextManager() {
+        return frameContextManager;
     }
 
     @Nonnull
     @Override
-    public ActionContextService getActionContextService() {
-        return frameActionContextService;
+    public ActionContextManager getActionContextService() {
+        return frameActionManager;
     }
 
 //    @Override

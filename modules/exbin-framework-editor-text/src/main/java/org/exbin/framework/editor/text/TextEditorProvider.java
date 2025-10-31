@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.context.api.ApplicationContextManager;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
@@ -49,7 +49,7 @@ public class TextEditorProvider implements EditorProvider {
     private TextFileHandler activeFile;
     private FileTypes fileTypes;
 
-    private ComponentActivationListener componentActivationListener;
+    private ApplicationContextManager contextManager;
 
     private PropertyChangeListener propertyChangeListener;
     @Nullable
@@ -67,7 +67,7 @@ public class TextEditorProvider implements EditorProvider {
     private void init() {
         EditorTextModule editorTextModule = App.getModule(EditorTextModule.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
+        contextManager = frameModule.getFrameHandler().getContextManager();
 
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         fileTypes = new DefaultFileTypes(fileModule.getFileTypes());
@@ -83,16 +83,16 @@ public class TextEditorProvider implements EditorProvider {
     }
 
     private void activeFileChanged() {
-        componentActivationListener.updated(FileHandler.class, activeFile);
+        contextManager.changeActiveState(FileHandler.class, activeFile);
         if (activeFile instanceof TextFileHandler) {
-            ((TextFileHandler) activeFile).componentActivated(componentActivationListener);
+            ((TextFileHandler) activeFile).componentActivated(contextManager);
         }
-        componentActivationListener.updated(FileOperations.class, this);
+        contextManager.changeActiveState(FileOperations.class, this);
     }
 
     public void registerUndoHandler() {
         activeFile.registerUndoHandler();
-        componentActivationListener.updated(UndoRedoController.class, activeFile.undoRedoControl);
+        contextManager.changeActiveState(UndoRedoController.class, activeFile.undoRedoControl);
     }
 
     @Nonnull

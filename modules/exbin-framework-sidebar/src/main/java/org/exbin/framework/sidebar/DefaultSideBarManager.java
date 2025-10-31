@@ -30,7 +30,6 @@ import javax.swing.JToolBar;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.contribution.ContributionsManager;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
@@ -39,6 +38,7 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.sidebar.api.SideBarManager;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Sidebar manager.
@@ -52,10 +52,9 @@ public class DefaultSideBarManager extends ContributionsManager implements SideB
     }
 
     @Override
-    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextService activationUpdateService) {
+    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionUpdateService) {
         ContributionDefinition definition = definitions.get(sideBarId);
-        buildSequence(new ToolBarWrapper(targetSideBar, activationUpdateService), definition);
-        activationUpdateService.requestUpdate();
+        buildSequence(new ToolBarWrapper(targetSideBar, actionUpdateService), definition);
     }
 
     @Override
@@ -166,23 +165,23 @@ public class DefaultSideBarManager extends ContributionsManager implements SideB
         return newItem;
     }
 
-    protected static void finishSideBarAction(Action action, ActionContextService activationUpdateService) {
+    protected static void finishSideBarAction(Action action, ActionContextManager actionUpdateService) {
         if (action == null) {
             return;
         }
 
-        activationUpdateService.requestUpdate(action);
+        actionUpdateService.registerActionContext(action);
     }
 
     @ParametersAreNonnullByDefault
     protected static class ToolBarWrapper implements ContributionSequenceOutput {
 
         private final JToolBar toolBar;
-        private final ActionContextService activationUpdateService;
+        private final ActionContextManager actionUpdateService;
 
-        public ToolBarWrapper(JToolBar menuBar, ActionContextService activationUpdateService) {
+        public ToolBarWrapper(JToolBar menuBar, ActionContextManager actionUpdateService) {
             this.toolBar = menuBar;
-            this.activationUpdateService = activationUpdateService;
+            this.actionUpdateService = actionUpdateService;
         }
 
         @Override
@@ -195,7 +194,7 @@ public class DefaultSideBarManager extends ContributionsManager implements SideB
         @Override
         public void add(ItemSequenceContribution itemContribution) {
             toolBar.add(((ActionSideBarContribution) itemContribution).getComponent());
-            DefaultSideBarManager.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), activationUpdateService);
+            DefaultSideBarManager.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionUpdateService);
         }
 
         @Override

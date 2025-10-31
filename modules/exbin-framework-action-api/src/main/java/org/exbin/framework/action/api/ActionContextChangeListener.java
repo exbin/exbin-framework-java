@@ -18,7 +18,7 @@ package org.exbin.framework.action.api;
 import javax.annotation.Nullable;
 
 /**
- * Listener for action update when menu is activated for component.
+ * Listener for action stateChanged when menu is activated for component.
  *
  * @author ExBin Project (https://exbin.org)
  * @param <T> instance type
@@ -26,9 +26,9 @@ import javax.annotation.Nullable;
 public interface ActionContextChangeListener<T> {
 
     /**
-     * Notifies active instance changed.
+     * Notifies active state instance changed.
      *
      * @param instance class instance
      */
-    void update(@Nullable T instance);
+    void stateChanged(@Nullable T instance);
 }

@@ -20,6 +20,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Component activation provider interface.
+ * <br>
+ * TODO: Drop
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -32,5 +34,5 @@ public interface ComponentActivationProvider {
      * @return component activation service
      */
     @Nonnull
-    ActionContextService getActionContextService();
+    ActionContextManager getActionContextService();
 }

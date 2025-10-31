@@ -19,10 +19,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Interface for side bar manager.
@@ -37,9 +37,9 @@ public interface SideBarManager {
      *
      * @param targetSideBar output side bar
      * @param sideBarId side bar definition id
-     * @param activationUpdateService activation update service
+     * @param actionUpdateService action update service
      */
-    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextService activationUpdateService);
+    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionUpdateService);
 
     /**
      * Registers side bar.

@@ -34,7 +34,6 @@ import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
@@ -42,6 +41,7 @@ import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.menu.api.MenuManager;
 import org.exbin.framework.menu.api.MenuModuleApi;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Implementation of menu module.
@@ -179,13 +179,13 @@ public class MenuModule implements MenuModuleApi {
     }
 
     @Override
-    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextService activationUpdateService) {
-        getMenuManager().buildMenu(targetMenu, menuId, activationUpdateService);
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextManager actionUpdateService) {
+        getMenuManager().buildMenu(targetMenu, menuId, actionUpdateService);
     }
 
     @Override
-    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextService activationUpdateService) {
-        getMenuManager().buildMenu(targetMenuBar, menuId, activationUpdateService);
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextManager actionUpdateService) {
+        getMenuManager().buildMenu(targetMenuBar, menuId, actionUpdateService);
     }
 
     @Override

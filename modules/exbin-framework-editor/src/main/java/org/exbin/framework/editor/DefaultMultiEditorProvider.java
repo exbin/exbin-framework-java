@@ -32,9 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.ComponentActivationProvider;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.menu.api.MenuManagement;
@@ -54,6 +52,8 @@ import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.context.api.ApplicationContextManager;
 
 /**
  * Default multi editor provider.
@@ -106,7 +106,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
                 }
 
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                ActionContextService actionContextService = frameModule.getFrameHandler().getActionContextService();
+                ActionContextManager actionContextService = frameModule.getFrameHandler().getActionContextService();
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
                 JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
                 menuModule.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, actionContextService);
@@ -120,7 +120,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     public void activeFileChanged() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ComponentActivationListener componentActivationListener = frameModule.getFrameHandler().getComponentActivationListener();
+        ApplicationContextManager componentActivationListener = frameModule.getFrameHandler().getContextManager();
 
         if (activeFile instanceof EditorFileHandler) {
             ((EditorFileHandler) activeFile).componentDeactivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
@@ -133,8 +133,8 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         if (activeFile instanceof EditorFileHandler) {
             ((EditorFileHandler) activeFile).componentActivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
         }
-        componentActivationListener.updated(FileHandler.class, activeFile);
-        componentActivationListener.updated(FileOperations.class, this);
+        componentActivationListener.changeActiveState(FileHandler.class, activeFile);
+        componentActivationListener.changeActiveState(FileOperations.class, this);
     }
 
     /**

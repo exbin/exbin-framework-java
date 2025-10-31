@@ -25,10 +25,10 @@ import javax.swing.JToolBar;
 import org.exbin.framework.App;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.sidebar.api.SideBarManager;
 import org.exbin.framework.sidebar.api.SideBarModuleApi;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Implementation of side bar module.
@@ -88,8 +88,8 @@ public class SideBarModule implements SideBarModuleApi {
     }
 
     @Override
-    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextService activationUpdateService) {
-        getSideBarManager().buildSideBar(targetSideBar, sideBarId, activationUpdateService);
+    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionUpdateService) {
+        getSideBarManager().buildSideBar(targetSideBar, sideBarId, actionUpdateService);
     }
 
     @Override

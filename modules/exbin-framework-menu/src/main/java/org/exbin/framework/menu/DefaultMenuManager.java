@@ -37,7 +37,6 @@ import org.exbin.framework.menu.api.ActionMenuCreation;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.menu.api.SubMenuContribution;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.TreeContributionsManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
@@ -48,6 +47,7 @@ import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.framework.menu.api.DirectMenuContribution;
 import org.exbin.framework.menu.api.MenuItemProvider;
 import org.exbin.framework.menu.api.MenuManager;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Default menu manager.
@@ -61,27 +61,24 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
     }
 
     @Override
-    public void buildMenu(JMenu outputMenu, String menuId, ActionContextService activationUpdateService) {
+    public void buildMenu(JMenu outputMenu, String menuId, ActionContextManager actionUpdateService) {
         ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        buildSequence(new MenuWrapper(outputMenu, activationUpdateService, buttonGroups), menuId, definition);
-        activationUpdateService.requestUpdate();
+        buildSequence(new MenuWrapper(outputMenu, actionUpdateService, buttonGroups), menuId, definition);
     }
 
     @Override
-    public void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextService activationUpdateService) {
+    public void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextManager actionUpdateService) {
         ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        buildSequence(new PopupMenuWrapper(outputMenu, activationUpdateService, buttonGroups), menuId, definition);
-        activationUpdateService.requestUpdate();
+        buildSequence(new PopupMenuWrapper(outputMenu, actionUpdateService, buttonGroups), menuId, definition);
     }
 
     @Override
-    public void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextService activationUpdateService) {
+    public void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextManager actionUpdateService) {
         ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        buildSequence(new MenuBarWrapper(outputMenuBar, activationUpdateService, buttonGroups), menuId, definition);
-        activationUpdateService.requestUpdate();
+        buildSequence(new MenuBarWrapper(outputMenuBar, actionUpdateService, buttonGroups), menuId, definition);
     }
 
     @Override
@@ -200,30 +197,30 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         return menuItem;
     }
 
-    private static void finishMenuAction(@Nullable Action action, ActionContextService activationUpdateService) {
+    private static void finishMenuAction(@Nullable Action action, ActionContextManager actionUpdateService) {
         if (action == null) {
             return;
         }
 
-        activationUpdateService.requestUpdate(action);
+        actionUpdateService.registerActionContext(action);
     }
 
-    private static void finishMenuItem(@Nullable JMenuItem menuItem, ActionContextService activationUpdateService) {
+    private static void finishMenuItem(@Nullable JMenuItem menuItem, ActionContextManager actionUpdateService) {
         if (menuItem == null) {
             return;
         }
 
         if (menuItem instanceof JMenu) {
-            finishMenu((JMenu) menuItem, activationUpdateService);
+            finishMenu((JMenu) menuItem, actionUpdateService);
         } else {
             Action action = menuItem.getAction();
             if (action != null) {
-                finishMenuAction(action, activationUpdateService);
+                finishMenuAction(action, actionUpdateService);
             }
         }
     }
 
-    private static void finishMenu(JMenu menu, ActionContextService activationUpdateService) {
+    private static void finishMenu(JMenu menu, ActionContextManager actionUpdateService) {
         for (int i = 0; i < menu.getItemCount(); i++) {
             JMenuItem menuItem = menu.getItem(i);
             if (menuItem == null) {
@@ -231,10 +228,10 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
             }
             Action action = menuItem.getAction();
             if (action != null) {
-                finishMenuAction(action, activationUpdateService);
+                finishMenuAction(action, actionUpdateService);
             }
             if (menuItem instanceof JMenu) {
-                finishMenu((JMenu) menuItem, activationUpdateService);
+                finishMenu((JMenu) menuItem, actionUpdateService);
             }
         }
     }
@@ -243,19 +240,19 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
     private static class MenuWrapper implements TreeContributionSequenceOutput {
 
         private final JMenu menu;
-        private final ActionContextService activationUpdateService;
+        private final ActionContextManager actionUpdateService;
         private final Map<String, ButtonGroup> buttonGroups;
         private final boolean isPopup;
 
-        public MenuWrapper(JMenu menu, ActionContextService activationUpdateService, Map<String, ButtonGroup> buttonGroups, boolean isPopup) {
+        public MenuWrapper(JMenu menu, ActionContextManager actionUpdateService, Map<String, ButtonGroup> buttonGroups, boolean isPopup) {
             this.menu = menu;
-            this.activationUpdateService = activationUpdateService;
+            this.actionUpdateService = actionUpdateService;
             this.buttonGroups = buttonGroups;
             this.isPopup = isPopup;
         }
 
-        public MenuWrapper(JMenu menu, ActionContextService activationUpdateService, Map<String, ButtonGroup> buttonGroups) {
-            this(menu, activationUpdateService, buttonGroups, false);
+        public MenuWrapper(JMenu menu, ActionContextManager actionUpdateService, Map<String, ButtonGroup> buttonGroups) {
+            this(menu, actionUpdateService, buttonGroups, false);
         }
 
         @Override
@@ -323,7 +320,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
             if (contribution instanceof SubSequenceContribution) {
                 JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
                 menu.add(subMenu);
-                DefaultMenuManager.finishMenuItem(subMenu, activationUpdateService);
+                DefaultMenuManager.finishMenuItem(subMenu, actionUpdateService);
                 return;
             }
 
@@ -334,7 +331,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
 
             JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
             menu.add(menuItem);
-            DefaultMenuManager.finishMenuItem(menuItem, activationUpdateService);
+            DefaultMenuManager.finishMenuItem(menuItem, actionUpdateService);
         }
 
         @Override
@@ -350,7 +347,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         @Nonnull
         @Override
         public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), activationUpdateService, buttonGroups, isPopup);
+            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), actionUpdateService, buttonGroups, isPopup);
         }
 
         @Override
@@ -363,12 +360,12 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
     private static class MenuBarWrapper implements TreeContributionSequenceOutput {
 
         private final JMenuBar menuBar;
-        private final ActionContextService activationUpdateService;
+        private final ActionContextManager actionUpdateService;
         private final Map<String, ButtonGroup> buttonGroups;
 
-        public MenuBarWrapper(JMenuBar menuBar, ActionContextService activationUpdateService, Map<String, ButtonGroup> buttonGroups) {
+        public MenuBarWrapper(JMenuBar menuBar, ActionContextManager actionUpdateService, Map<String, ButtonGroup> buttonGroups) {
             this.menuBar = menuBar;
-            this.activationUpdateService = activationUpdateService;
+            this.actionUpdateService = actionUpdateService;
             this.buttonGroups = buttonGroups;
         }
 
@@ -397,7 +394,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
             if (contribution instanceof SubSequenceContribution) {
                 JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
                 menuBar.add(subMenu);
-                DefaultMenuManager.finishMenuItem(subMenu, activationUpdateService);
+                DefaultMenuManager.finishMenuItem(subMenu, actionUpdateService);
                 return;
             }
 
@@ -408,7 +405,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
 
             JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
             menuBar.add(menuItem);
-            DefaultMenuManager.finishMenuItem(menuItem, activationUpdateService);
+            DefaultMenuManager.finishMenuItem(menuItem, actionUpdateService);
         }
 
         @Override
@@ -418,7 +415,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         @Nonnull
         @Override
         public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), activationUpdateService, buttonGroups);
+            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), actionUpdateService, buttonGroups);
         }
 
         @Override
@@ -431,12 +428,12 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
     private static class PopupMenuWrapper implements TreeContributionSequenceOutput {
 
         private final JPopupMenu menu;
-        private final ActionContextService activationUpdateService;
+        private final ActionContextManager actionUpdateService;
         private final Map<String, ButtonGroup> buttonGroups;
 
-        public PopupMenuWrapper(JPopupMenu menu, ActionContextService activationUpdateService, Map<String, ButtonGroup> buttonGroups) {
+        public PopupMenuWrapper(JPopupMenu menu, ActionContextManager actionUpdateService, Map<String, ButtonGroup> buttonGroups) {
             this.menu = menu;
-            this.activationUpdateService = activationUpdateService;
+            this.actionUpdateService = actionUpdateService;
             this.buttonGroups = buttonGroups;
         }
 
@@ -506,7 +503,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
             if (contribution instanceof SubMenuContribution) {
                 JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
                 menu.add(subMenu);
-                DefaultMenuManager.finishMenuItem(subMenu, activationUpdateService);
+                DefaultMenuManager.finishMenuItem(subMenu, actionUpdateService);
                 return;
             }
 
@@ -517,7 +514,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
 
             JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
             menu.add(menuItem);
-            DefaultMenuManager.finishMenuItem(menuItem, activationUpdateService);
+            DefaultMenuManager.finishMenuItem(menuItem, actionUpdateService);
         }
 
         @Override
@@ -528,7 +525,7 @@ public class DefaultMenuManager extends TreeContributionsManager implements Menu
         @Nonnull
         @Override
         public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), activationUpdateService, buttonGroups, true);
+            return new MenuWrapper(((SubMenuContribution) subContribution).getSubMenu().get(), actionUpdateService, buttonGroups, true);
         }
 
         @Override

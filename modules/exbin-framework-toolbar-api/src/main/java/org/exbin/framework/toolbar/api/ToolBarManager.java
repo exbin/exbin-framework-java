@@ -20,10 +20,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Interface for tool bar manager.
@@ -38,18 +38,18 @@ public interface ToolBarManager {
      *
      * @param targetToolBar output tool bar
      * @param toolBarId tool bar definition id
-     * @param activationUpdateService activation update service
+     * @param actionUpdateService action update service
      */
-    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService);
+    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService);
 
     /**
      * Builds toolbar with icons only from given definition id.
      *
      * @param targetToolBar output tool bar
      * @param toolBarId tool bar definition id
-     * @param activationUpdateService activation update service
+     * @param actionUpdateService action update service
      */
-    void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService);
+    void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService);
 
     /**
      * Registers toolbar.

@@ -15,17 +15,7 @@
  */
 package org.exbin.framework.editor;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.ComponentActivationListener;
-import org.exbin.framework.action.api.ActionContextService;
-import org.exbin.framework.action.api.DefaultActionContextService;
-import org.exbin.framework.file.api.FileHandler;
 
 /**
  * Default multi editor component activation service.
@@ -33,7 +23,7 @@ import org.exbin.framework.file.api.FileHandler;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MultiEditorActionContextService extends DefaultActionContextService {
+public class MultiEditorActionContextService {} /*extends DefaultActionContextService {
 
     protected final Set<Class<?>> passActiveComponentState = new HashSet<>();
     protected final Map<FileHandler, ComponentActivationListener> fileActivationListeners = new HashMap<>();
@@ -47,7 +37,7 @@ public class MultiEditorActionContextService extends DefaultActionContextService
         }
     }
 
-    public void passRequestUpdate(@Nullable ActionContextService actionContextService) {
+    public void passRequestUpdate(@Nullable ActionContextManager actionContextService) {
         // TODO optimize later
         for (Class<?> instanceClass : passActiveComponentState) {
             for (ComponentActivationListener listener : listeners) {
@@ -79,4 +69,4 @@ public class MultiEditorActionContextService extends DefaultActionContextService
         }
         return listener;
     }
-}
+} */

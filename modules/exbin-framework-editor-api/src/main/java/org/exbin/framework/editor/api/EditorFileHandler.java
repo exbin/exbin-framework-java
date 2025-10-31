@@ -16,7 +16,7 @@
 package org.exbin.framework.editor.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.ComponentActivationListener;
+import org.exbin.framework.context.api.ApplicationContextManager;
 
 /**
  * Interface for file handler for editor.
@@ -29,14 +29,14 @@ public interface EditorFileHandler {
     /**
      * Notifies file handler activated as editor.
      *
-     * @param componentActivationListener component activation listener
+     * @param contextManager context manager
      */
-    void componentActivated(ComponentActivationListener componentActivationListener);
+    void componentActivated(ApplicationContextManager contextManager);
 
     /**
      * Notifies file handler deactivated as editor.
      *
-     * @param componentActivationListener component activation listener
+     * @param contextManager context manager
      */
-    void componentDeactivated(ComponentActivationListener componentActivationListener);
+    void componentDeactivated(ApplicationContextManager contextManager);
 }

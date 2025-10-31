@@ -19,29 +19,17 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
- * Service for action context handling.
+ * Manager for action context registration.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionContextService {
+public interface ActionContextManager {
 
     /**
-     * Registers component activation listener.
-     *
-     * @param listener listener
-     */
-    void registerListener(ComponentActivationListener listener);
-
-    /**
-     * Requests update of registered listeners.
-     */
-    void requestUpdate();
-
-    /**
-     * Requests update of registered listeners.
+     * Registers action context.
      *
      * @param action action
      */
-    void requestUpdate(Action action);
+    void registerActionContext(Action action);
 }

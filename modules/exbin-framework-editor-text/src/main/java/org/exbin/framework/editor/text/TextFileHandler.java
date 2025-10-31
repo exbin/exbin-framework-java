@@ -36,8 +36,8 @@ import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
-import org.exbin.framework.action.api.ComponentActivationListener;
 import org.exbin.framework.action.api.DialogParentComponent;
+import org.exbin.framework.context.api.ApplicationContextManager;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.text.font.TextFontController;
@@ -56,7 +56,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     protected URI fileUri = null;
     protected String title;
     protected FileType fileType = null;
-    protected ComponentActivationListener componentActivationListener;
+    protected ApplicationContextManager contextManager;
     protected DialogParentComponent dialogParentComponent;
     protected UndoRedoController undoRedoControl = null;
     protected EditorTextPanelComponent textPanelComponent;
@@ -67,8 +67,8 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     private void init() {
         textPanelComponent = new EditorTextPanelComponent(textPanel);
         textPanel.setUpdateListener(() -> {
-            if (componentActivationListener != null) {
-                componentActivationListener.updated(ActiveComponent.class, textPanelComponent);
+            if (contextManager != null) {
+                contextManager.changeActiveState(ActiveComponent.class, textPanelComponent);
             }
         });
     }
@@ -219,23 +219,23 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     }
 
     @Override
-    public void componentActivated(ComponentActivationListener componentActivationListener) {
-        this.componentActivationListener = componentActivationListener;
-        componentActivationListener.updated(ActiveComponent.class, textPanelComponent);
-        componentActivationListener.updated(TextFontController.class, textPanelComponent);
-        componentActivationListener.updated(TextEncodingController.class, textPanelComponent);
-        componentActivationListener.updated(UndoRedoState.class, undoRedoControl);
-        componentActivationListener.updated(DialogParentComponent.class, (DialogParentComponent) () -> textPanel);
+    public void componentActivated(ApplicationContextManager contextManager) {
+        this.contextManager = contextManager;
+        contextManager.changeActiveState(ActiveComponent.class, textPanelComponent);
+        contextManager.changeActiveState(TextFontController.class, textPanelComponent);
+        contextManager.changeActiveState(TextEncodingController.class, textPanelComponent);
+        contextManager.changeActiveState(UndoRedoState.class, undoRedoControl);
+        contextManager.changeActiveState(DialogParentComponent.class, (DialogParentComponent) () -> textPanel);
     }
 
     @Override
-    public void componentDeactivated(ComponentActivationListener componentActivationListener) {
-        this.componentActivationListener = null;
-        componentActivationListener.updated(ActiveComponent.class, null);
-        componentActivationListener.updated(TextFontController.class, null);
-        componentActivationListener.updated(TextEncodingController.class, null);
-        componentActivationListener.updated(UndoRedoState.class, null);
-        componentActivationListener.updated(DialogParentComponent.class, dialogParentComponent);
+    public void componentDeactivated(ApplicationContextManager contextManager) {
+        this.contextManager = null;
+        contextManager.changeActiveState(ActiveComponent.class, null);
+        contextManager.changeActiveState(TextFontController.class, null);
+        contextManager.changeActiveState(TextEncodingController.class, null);
+        contextManager.changeActiveState(UndoRedoState.class, null);
+        contextManager.changeActiveState(DialogParentComponent.class, dialogParentComponent);
     }
 
     @Override
@@ -245,8 +245,8 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
 
     public void notifyUndoChanged() {
         if (undoRedoControl != null) {
-            if (componentActivationListener != null) {
-                componentActivationListener.updated(UndoRedoState.class, undoRedoControl);
+            if (contextManager != null) {
+                contextManager.changeActiveState(UndoRedoState.class, undoRedoControl);
             }
         }
     }

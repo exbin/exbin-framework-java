@@ -34,7 +34,6 @@ import org.exbin.auxiliary.dropdownbutton.DropDownButtonVariant;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.toolbar.api.ActionToolBarContribution;
 import org.exbin.framework.action.api.ActionType;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.ContributionsManager;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
@@ -43,6 +42,7 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.toolbar.api.ToolBarManager;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Toolbar manager.
@@ -56,17 +56,15 @@ public class DefaultToolBarManager extends ContributionsManager implements ToolB
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService) {
         ContributionDefinition contributionDef = definitions.get(toolBarId);
-        buildSequence(new ToolBarWrapper(targetToolBar, activationUpdateService), contributionDef);
-        activationUpdateService.requestUpdate();
+        buildSequence(new ToolBarWrapper(targetToolBar, actionUpdateService), contributionDef);
     }
 
     @Override
-    public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextService activationUpdateService) {
+    public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService) {
         ContributionDefinition contributionDef = definitions.get(toolBarId);
-        buildSequence(new IconToolBarWrapper(targetToolBar, activationUpdateService), contributionDef);
-        activationUpdateService.requestUpdate();
+        buildSequence(new IconToolBarWrapper(targetToolBar, actionUpdateService), contributionDef);
     }
 
     @Override
@@ -173,23 +171,23 @@ public class DefaultToolBarManager extends ContributionsManager implements ToolB
         return button;
     }
 
-    protected static void finishToolBarAction(Action action, ActionContextService activationUpdateService) {
+    protected static void finishToolBarAction(Action action, ActionContextManager actionUpdateService) {
         if (action == null) {
             return;
         }
 
-        activationUpdateService.requestUpdate(action);
+        actionUpdateService.registerActionContext(action);
     }
 
     @ParametersAreNonnullByDefault
     private static class ToolBarWrapper implements ContributionSequenceOutput {
 
         private final JToolBar toolBar;
-        private final ActionContextService activationUpdateService;
+        private final ActionContextManager actionUpdateService;
 
-        public ToolBarWrapper(JToolBar menuBar, ActionContextService activationUpdateService) {
+        public ToolBarWrapper(JToolBar menuBar, ActionContextManager actionUpdateService) {
             this.toolBar = menuBar;
-            this.activationUpdateService = activationUpdateService;
+            this.actionUpdateService = actionUpdateService;
         }
 
         @Override
@@ -202,7 +200,7 @@ public class DefaultToolBarManager extends ContributionsManager implements ToolB
         @Override
         public void add(ItemSequenceContribution itemContribution) {
             toolBar.add(((ActionToolBarContribution) itemContribution).getComponent());
-            DefaultToolBarManager.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), activationUpdateService);
+            DefaultToolBarManager.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), actionUpdateService);
         }
 
         @Override
@@ -220,11 +218,11 @@ public class DefaultToolBarManager extends ContributionsManager implements ToolB
     private static class IconToolBarWrapper implements ContributionSequenceOutput {
 
         private final JToolBar toolBar;
-        private final ActionContextService activationUpdateService;
+        private final ActionContextManager actionUpdateService;
 
-        public IconToolBarWrapper(JToolBar menuBar, ActionContextService activationUpdateService) {
+        public IconToolBarWrapper(JToolBar menuBar, ActionContextManager actionUpdateService) {
             this.toolBar = menuBar;
-            this.activationUpdateService = activationUpdateService;
+            this.actionUpdateService = actionUpdateService;
         }
 
         @Override
@@ -241,7 +239,7 @@ public class DefaultToolBarManager extends ContributionsManager implements ToolB
                 ((AbstractButton) component).setText("");
             }
             toolBar.add(component);
-            DefaultToolBarManager.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), activationUpdateService);
+            DefaultToolBarManager.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), actionUpdateService);
         }
 
         @Override

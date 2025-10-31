@@ -22,10 +22,10 @@ import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
-import org.exbin.framework.action.api.ActionContextService;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
  * Interface for menu manager.
@@ -40,27 +40,27 @@ public interface MenuManager {
      *
      * @param outputMenu output menu
      * @param menuId menu definition id
-     * @param activationUpdateService activation update service
+     * @param actionUpdateService action update service
      */
-    void buildMenu(JMenu outputMenu, String menuId, ActionContextService activationUpdateService);
+    void buildMenu(JMenu outputMenu, String menuId, ActionContextManager actionUpdateService);
 
     /**
      * Builds menu from given definition id.
      *
      * @param outputMenu output popup menu
      * @param menuId menu definition id
-     * @param activationUpdateService activation update service
+     * @param actionUpdateService action update service
      */
-    void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextService activationUpdateService);
+    void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextManager actionUpdateService);
 
     /**
      * Builds menu from given definition id.
      *
      * @param outputMenuBar output menu bar
      * @param menuId menu definition id
-     * @param activationUpdateService activation update service
+     * @param actionUpdateService action update service
      */
-    void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextService activationUpdateService);
+    void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextManager actionUpdateService);
 
     /**
      * Checks whether menu group exists.
