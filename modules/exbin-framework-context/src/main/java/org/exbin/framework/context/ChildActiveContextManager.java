@@ -22,25 +22,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ApplicationContextChangeListener;
-import org.exbin.framework.context.api.ApplicationContextManager;
+import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.context.api.ActiveContextChangeListener;
 
 /**
- * Child application context manager.
+ * Child active context manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ChildApplicationContextManager implements ApplicationContextManager {
+public class ChildActiveContextManager implements ActiveContextManager {
 
-    protected final ApplicationContextManager parentContextManager;
+    protected final ActiveContextManager parentContextManager;
     protected final Map<Class<?>, Object> activeStates = new HashMap<>();
     protected final Set<Class<?>> childStates = new HashSet<>();
-    protected final List<ApplicationContextChangeListener> changeListeners = new ArrayList<>();
+    protected final List<ActiveContextChangeListener> changeListeners = new ArrayList<>();
 
-    public ChildApplicationContextManager(ApplicationContextManager parentContextManager) {
+    public ChildActiveContextManager(ActiveContextManager parentContextManager) {
         this.parentContextManager = parentContextManager;
-        parentContextManager.addChangeListener(new ApplicationContextChangeListener() {
+        parentContextManager.addChangeListener(new ActiveContextChangeListener() {
             @Override
             public <T> void activeStateChanged(Class<T> stateClass, T activeState) {
                 if (childStates.contains(stateClass)) {
@@ -73,17 +73,17 @@ public class ChildApplicationContextManager implements ApplicationContextManager
     }
 
     @Override
-    public void addChangeListener(ApplicationContextChangeListener changeListener) {
+    public void addChangeListener(ActiveContextChangeListener changeListener) {
         changeListeners.add(changeListener);
     }
 
     @Override
-    public void removeChangeListener(ApplicationContextChangeListener changeListener) {
+    public void removeChangeListener(ActiveContextChangeListener changeListener) {
         changeListeners.remove(changeListener);
     }
 
     protected <T> void notifyChanged(Class<T> stateClass, T activeState) {
-        for (ApplicationContextChangeListener changeListener : changeListeners) {
+        for (ActiveContextChangeListener changeListener : changeListeners) {
             changeListener.activeStateChanged(stateClass, activeState);
         }
     }

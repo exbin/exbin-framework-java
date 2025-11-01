@@ -504,7 +504,7 @@ public class EditorTextModule implements Module {
                 JPopupMenu popupMenu = UiUtils.createPopupMenu();
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-                menuModule.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, frameModule.getFrameHandler().getActionContextService());
+                menuModule.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, frameModule.getFrameHandler().getActionContextManager());
                 popupMenu.show(invoker, x, y);
             }
         };

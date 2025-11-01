@@ -29,7 +29,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.context.api.ApplicationContextProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.ui.theme.ThemeConfigurationAction;
@@ -41,6 +40,7 @@ import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * UI theme options panel.
@@ -75,7 +75,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         ThemeOptions options = settingsOptionsProvider.getSettingsOptions(ThemeOptions.class);
         visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
         iconSetComboBox.setSelectedIndex(findMatchingElement(iconSetComboBox.getModel(), options.getIconSet()));
@@ -99,7 +99,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         ThemeOptions options = settingsOptionsProvider.getSettingsOptions(ThemeOptions.class);
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         options.setIconSet((String) iconSetComboBox.getSelectedItem());

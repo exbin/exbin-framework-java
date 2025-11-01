@@ -27,7 +27,6 @@ import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.exbin.framework.App;
-import org.exbin.framework.context.api.ApplicationContextProvider;
 import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -39,6 +38,7 @@ import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
+import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * Text encoding settings panel.
@@ -83,7 +83,7 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
         encodingPanel.loadFromOptions(settingsOptionsProvider, applicationContextProvider);
         defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
@@ -91,7 +91,7 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
         encodingPanel.saveToOptions(settingsOptionsProvider, applicationContextProvider);
         options.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());

@@ -29,7 +29,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.context.api.ApplicationContextProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.ui.model.LanguageRecord;
@@ -39,6 +38,7 @@ import org.exbin.framework.ui.settings.LanguageOptions;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * Language settings panel.
@@ -67,7 +67,7 @@ public class LanguageSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         LanguageOptions options = settingsOptionsProvider.getSettingsOptions(LanguageOptions.class);
         Locale languageLocale = options.getLocale();
         ComboBoxModel<LanguageRecord> languageComboBoxModel = languageComboBox.getModel();
@@ -81,7 +81,7 @@ public class LanguageSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         LanguageOptions options = settingsOptionsProvider.getSettingsOptions(LanguageOptions.class);
         options.setLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
     }

@@ -36,7 +36,6 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.context.api.ApplicationContextManager;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
@@ -48,6 +47,7 @@ import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.context.api.ActiveContextManager;
 
 /**
  * Module frame handling.
@@ -135,7 +135,7 @@ public class FrameModule implements FrameModuleApi {
     @Override
     public void notifyFrameUpdated() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationContextManager contextManager = frameModule.getFrameHandler().getContextManager();
+        ActiveContextManager contextManager = frameModule.getFrameHandler().getContextManager();
         contextManager.changeActiveState(ApplicationFrame.class, applicationFrame);
     }
 
@@ -260,7 +260,7 @@ public class FrameModule implements FrameModuleApi {
             appIcon = applicationFrame.getIconImage();
 
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-            ApplicationContextManager contextManager = frameModule.getFrameHandler().getContextManager();
+            ActiveContextManager contextManager = frameModule.getFrameHandler().getContextManager();
             contextManager.changeActiveState(ApplicationFrame.class, applicationFrame);
         }
 

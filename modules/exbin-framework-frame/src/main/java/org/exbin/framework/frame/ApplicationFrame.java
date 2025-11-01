@@ -45,8 +45,8 @@ import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.action.api.ActionContextManager;
-import org.exbin.framework.context.api.ApplicationContextManager;
 import org.exbin.framework.context.api.ContextModuleApi;
+import org.exbin.framework.context.api.ActiveContextManager;
 
 /**
  * Basic appplication frame.
@@ -60,7 +60,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     private JPanel currentStatusBarPanel = null;
     private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
-    private ApplicationContextManager frameContextManager;
+    private ActiveContextManager frameContextManager;
     private ActionManager frameActionManager;
 
     public ApplicationFrame() {
@@ -360,13 +360,13 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
 
     @Nonnull
     @Override
-    public ApplicationContextManager getContextManager() {
+    public ActiveContextManager getContextManager() {
         return frameContextManager;
     }
 
     @Nonnull
     @Override
-    public ActionContextManager getActionContextService() {
+    public ActionContextManager getActionContextManager() {
         return frameActionManager;
     }
 

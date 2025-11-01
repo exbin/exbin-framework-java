@@ -23,12 +23,12 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
-import org.exbin.framework.context.api.ApplicationContextProvider;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * Options settings page record.
@@ -96,20 +96,20 @@ public class SettingsPage {
         }
     }
 
-    public void loadFromOptions(SettingsOptionsProvider settingsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         for (SettingsComponent component : components) {
             component.loadFromOptions(settingsProvider, applicationContextProvider);
         }
     }
 
-    public void saveToOptions(SettingsOptionsProvider settingsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         for (SettingsComponent component : components) {
             component.saveToOptions(settingsProvider, applicationContextProvider);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public void saveAndApply(SettingsOptionsProvider settingsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void saveAndApply(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
 //        for (int i = 0; i < pages.size(); i++) {
 //            SettingsPage page = pages.get(i);
 //            SettingsOptions options = page.createOptions();
@@ -121,7 +121,7 @@ public class SettingsPage {
     }
 
     @SuppressWarnings("unchecked")
-    public void applyPreferencesChanges(SettingsOptionsProvider settingsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void applyPreferencesChanges(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
 //        for (int i = 0; i < pages.size(); i++) {
 //            SettingsPage page = pages.get(i);
 //            SettingsOptions options = page.createOptions();

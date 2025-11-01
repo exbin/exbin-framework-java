@@ -20,19 +20,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ApplicationContextChangeListener;
-import org.exbin.framework.context.api.ApplicationContextManager;
+import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.context.api.ActiveContextChangeListener;
 
 /**
- * Default application context manager.
+ * Default active context manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultApplicationContextManager implements ApplicationContextManager {
+public class DefaultActiveContextManager implements ActiveContextManager {
 
     protected final Map<Class<?>, Object> activeStates = new HashMap<>();
-    protected final List<ApplicationContextChangeListener> changeListeners = new ArrayList<>();
+    protected final List<ActiveContextChangeListener> changeListeners = new ArrayList<>();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -47,17 +47,17 @@ public class DefaultApplicationContextManager implements ApplicationContextManag
     }
 
     @Override
-    public void addChangeListener(ApplicationContextChangeListener changeListener) {
+    public void addChangeListener(ActiveContextChangeListener changeListener) {
         changeListeners.add(changeListener);
     }
 
     @Override
-    public void removeChangeListener(ApplicationContextChangeListener changeListener) {
+    public void removeChangeListener(ActiveContextChangeListener changeListener) {
         changeListeners.remove(changeListener);
     }
 
     protected <T> void notifyChanged(Class<T> stateClass, T activeState) {
-        for (ApplicationContextChangeListener changeListener : changeListeners) {
+        for (ActiveContextChangeListener changeListener : changeListeners) {
             changeListener.activeStateChanged(stateClass, activeState);
         }
     }

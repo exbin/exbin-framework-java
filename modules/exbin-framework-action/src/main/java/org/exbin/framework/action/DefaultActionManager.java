@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeListener;
 import org.exbin.framework.action.api.ActionContextChangeManager;
-import org.exbin.framework.context.api.ApplicationContextManager;
+import org.exbin.framework.context.api.ActiveContextManager;
 
 /**
  * Action manager.
@@ -37,11 +37,11 @@ import org.exbin.framework.context.api.ApplicationContextManager;
 @ParametersAreNonnullByDefault
 public class DefaultActionManager implements ActionManager {
 
-    protected final ApplicationContextManager contextManager;
+    protected final ActiveContextManager contextManager;
     protected final Map<String, ActionRecord> actions = new HashMap<>();
     protected final Map<Class<?>, List<ActionContextChangeListener<?>>> actionContextChangeListeners = new HashMap<>();
 
-    public DefaultActionManager(ApplicationContextManager contextManager) {
+    public DefaultActionManager(ActiveContextManager contextManager) {
         this.contextManager = contextManager;
     }
 

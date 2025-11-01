@@ -26,7 +26,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.context.api.ApplicationContextProvider;
 import org.exbin.framework.file.settings.FileOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -35,6 +34,7 @@ import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * Data inspector options panel.
@@ -81,13 +81,13 @@ public class FileSettingsPanel extends javax.swing.JPanel implements SettingsCom
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         FileOptions options = settingsOptionsProvider.getSettingsOptions(FileOptions.class);
         fileDialogsComboBox.setSelectedIndex(findMatchingElement(fileDialogsComboBox.getModel(), options.getFileDialogs()));
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         FileOptions options = settingsOptionsProvider.getSettingsOptions(FileOptions.class);
         options.setFileDialogs((String) fileDialogsComboBox.getSelectedItem());
     }

@@ -28,7 +28,7 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
-import org.exbin.framework.context.api.ApplicationContextManager;
+import org.exbin.framework.context.api.ActiveContextManager;
 
 /**
  * Interface for action support module.
@@ -66,7 +66,7 @@ public interface ActionModuleApi extends Module {
      * @return action manager
      */
     @Nonnull
-    ActionManager createActionManager(ApplicationContextManager contextManager);
+    ActionManager createActionManager(ActiveContextManager contextManager);
 
     /**
      * Converts action to menu item.

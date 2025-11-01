@@ -3,8 +3,9 @@ rootProject.name = 'exbin-framework-sidebar-api'
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
     include ':modules:exbin-framework-utils'
-    include ':modules:exbin-framework-action-api'
     include ':modules:exbin-framework-contribution-api'
+    include ':modules:exbin-framework-context-api'
+    include ':modules:exbin-framework-action-api'
 }
 
 apply from: '../exbin-framework-java-modules-settings.gradle'

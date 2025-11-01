@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.context.api.ApplicationContextProvider;
 import org.exbin.framework.text.font.settings.TextFontOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
@@ -32,6 +31,7 @@ import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * Text font settings panel.
@@ -62,7 +62,7 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         boolean useDefaultFont = options.isUseDefaultFont();
         defaultFontCheckBox.setSelected(useDefaultFont);
@@ -73,7 +73,7 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ApplicationContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
         TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         options.setUseDefaultFont(defaultFontCheckBox.isSelected());
         options.setFontAttributes(codeFont != null ? codeFont.getAttributes() : null);

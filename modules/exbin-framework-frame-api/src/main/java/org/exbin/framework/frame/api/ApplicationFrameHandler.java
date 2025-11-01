@@ -21,7 +21,7 @@ import java.awt.Frame;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.action.api.ActionContextManager;
-import org.exbin.framework.context.api.ApplicationContextManager;
+import org.exbin.framework.context.api.ActiveContextManager;
 
 /**
  * Interface for application frame.
@@ -121,7 +121,7 @@ public interface ApplicationFrameHandler {
      * @return context manager
      */
     @Nonnull
-    ApplicationContextManager getContextManager();
+    ActiveContextManager getContextManager();
 
     /**
      * Returns action manager.
@@ -129,5 +129,5 @@ public interface ApplicationFrameHandler {
      * @return action manager
      */
     @Nonnull
-    ActionContextManager getActionContextService();
+    ActionContextManager getActionContextManager();
 }

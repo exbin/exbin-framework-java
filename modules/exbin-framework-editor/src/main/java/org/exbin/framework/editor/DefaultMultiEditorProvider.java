@@ -53,7 +53,7 @@ import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextManager;
-import org.exbin.framework.context.api.ApplicationContextManager;
+import org.exbin.framework.context.api.ActiveContextManager;
 
 /**
  * Default multi editor provider.
@@ -106,7 +106,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
                 }
 
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                ActionContextManager actionContextService = frameModule.getFrameHandler().getActionContextService();
+                ActionContextManager actionContextService = frameModule.getFrameHandler().getActionContextManager();
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
                 JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
                 menuModule.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, actionContextService);
@@ -120,14 +120,14 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     public void activeFileChanged() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationContextManager componentActivationListener = frameModule.getFrameHandler().getContextManager();
+        ActiveContextManager componentActivationListener = frameModule.getFrameHandler().getContextManager();
 
         if (activeFile instanceof EditorFileHandler) {
             ((EditorFileHandler) activeFile).componentDeactivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
         }
 
         updateActiveFile();
-//        ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getActionContextService() : null;
+//        ComponentActivationService fileComponentActivationService = activeFile instanceof ComponentActivationProvider ? ((ComponentActivationProvider) activeFile).getActionContextManager() : null;
 //        fileComponentActivationService.requestUpdate();
 //        fileComponentActivationService.passRequestUpdate(fileComponentActivationService);
         if (activeFile instanceof EditorFileHandler) {
@@ -205,7 +205,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     public void initFileHandler(FileHandler fileHandler) {
         if (fileHandler instanceof ComponentActivationProvider) {
-//            ComponentActivationService fileComponentActivationService = ((ComponentActivationProvider) fileHandler).getActionContextService();
+//            ComponentActivationService fileComponentActivationService = ((ComponentActivationProvider) fileHandler).getActionContextManager();
 //            fileComponentActivationService.registerListener(new ComponentActivationListener() {
 //                @Override
 //                public <T> void updated(Class<T> instanceClass, T instance) {

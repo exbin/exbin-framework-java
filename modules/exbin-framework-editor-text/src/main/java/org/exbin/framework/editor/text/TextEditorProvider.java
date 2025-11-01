@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.context.api.ApplicationContextManager;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
@@ -37,6 +36,7 @@ import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
+import org.exbin.framework.context.api.ActiveContextManager;
 
 /**
  * Text editor provider.
@@ -49,7 +49,7 @@ public class TextEditorProvider implements EditorProvider {
     private TextFileHandler activeFile;
     private FileTypes fileTypes;
 
-    private ApplicationContextManager contextManager;
+    private ActiveContextManager contextManager;
 
     private PropertyChangeListener propertyChangeListener;
     @Nullable

@@ -36,7 +36,7 @@ public interface ContextModuleApi extends Module {
      * @return context manager
      */
     @Nonnull
-    ApplicationContextManager getMainContextManager();
+    ActiveContextManager getMainContextManager();
 
     /**
      * Creates new default context manager.
@@ -44,7 +44,7 @@ public interface ContextModuleApi extends Module {
      * @return context manager
      */
     @Nonnull
-    ApplicationContextManager createContextManager();
+    ActiveContextManager createContextManager();
 
     /**
      * Creates new child context manager for given parent context manager.
@@ -53,5 +53,5 @@ public interface ContextModuleApi extends Module {
      * @return context manager
      */
     @Nonnull
-    ApplicationContextManager createChildContextManager(ApplicationContextManager parentContextManager);
+    ActiveContextManager createChildContextManager(ActiveContextManager parentContextManager);
 }

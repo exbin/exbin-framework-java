@@ -24,15 +24,28 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ApplicationContextProvider {
+public interface ActiveContextManager extends ActiveContextProvider {
 
     /**
-     * Returns state instance or null if not present.
+     * Changes active state.
      *
      * @param <T> state type
      * @param stateClass state class
-     * @return state instance or null
+     * @param activeState active state
      */
-    @Nullable
-    <T> T getActiveState(Class<T> stateClass);
+    <T> void changeActiveState(Class<T> stateClass, @Nullable T activeState);
+
+    /**
+     * Adds change listener.
+     *
+     * @param changeListener change listener
+     */
+    void addChangeListener(ActiveContextChangeListener changeListener);
+
+    /**
+     * Removes change listener.
+     *
+     * @param changeListener change listener
+     */
+    void removeChangeListener(ActiveContextChangeListener changeListener);
 }

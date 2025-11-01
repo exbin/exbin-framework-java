@@ -19,19 +19,20 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for context state change listener.
+ * Interface for context state provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ApplicationContextChangeListener {
+public interface ActiveContextProvider {
 
     /**
-     * Active state changed.
+     * Returns state instance or null if not present.
      *
      * @param <T> state type
      * @param stateClass state class
-     * @param activeState active state
+     * @return state instance or null
      */
-    <T> void activeStateChanged(Class<T> stateClass, @Nullable T activeState);
+    @Nullable
+    <T> T getActiveState(Class<T> stateClass);
 }

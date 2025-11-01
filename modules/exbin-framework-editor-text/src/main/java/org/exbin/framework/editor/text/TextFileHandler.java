@@ -37,11 +37,11 @@ import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.DialogParentComponent;
-import org.exbin.framework.context.api.ApplicationContextManager;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.text.font.TextFontController;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
+import org.exbin.framework.context.api.ActiveContextManager;
 
 /**
  * Text file handler.
@@ -56,7 +56,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     protected URI fileUri = null;
     protected String title;
     protected FileType fileType = null;
-    protected ApplicationContextManager contextManager;
+    protected ActiveContextManager contextManager;
     protected DialogParentComponent dialogParentComponent;
     protected UndoRedoController undoRedoControl = null;
     protected EditorTextPanelComponent textPanelComponent;
@@ -219,7 +219,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     }
 
     @Override
-    public void componentActivated(ApplicationContextManager contextManager) {
+    public void componentActivated(ActiveContextManager contextManager) {
         this.contextManager = contextManager;
         contextManager.changeActiveState(ActiveComponent.class, textPanelComponent);
         contextManager.changeActiveState(TextFontController.class, textPanelComponent);
@@ -229,7 +229,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     }
 
     @Override
-    public void componentDeactivated(ApplicationContextManager contextManager) {
+    public void componentDeactivated(ActiveContextManager contextManager) {
         this.contextManager = null;
         contextManager.changeActiveState(ActiveComponent.class, null);
         contextManager.changeActiveState(TextFontController.class, null);
