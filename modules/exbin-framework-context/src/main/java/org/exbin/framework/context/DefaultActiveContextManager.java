@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ActiveContextManager;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
@@ -41,7 +42,7 @@ public class DefaultActiveContextManager implements ActiveContextManager {
     }
 
     @Override
-    public <T> void changeActiveState(Class<T> stateClass, T activeState) {
+    public <T> void changeActiveState(Class<T> stateClass, @Nullable T activeState) {
         activeStates.put(stateClass, activeState);
         notifyChanged(stateClass, activeState);
     }

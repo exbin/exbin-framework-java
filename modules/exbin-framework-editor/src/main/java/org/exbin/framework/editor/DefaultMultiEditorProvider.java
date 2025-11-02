@@ -120,10 +120,10 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     public void activeFileChanged() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ActiveContextManager componentActivationListener = frameModule.getFrameHandler().getContextManager();
+        ActiveContextManager contextManager = frameModule.getFrameHandler().getContextManager();
 
         if (activeFile instanceof EditorFileHandler) {
-            ((EditorFileHandler) activeFile).componentDeactivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
+            ((EditorFileHandler) activeFile).componentDeactivated(contextManager); // componentActivationService.getFileActivationListener(activeFile));
         }
 
         updateActiveFile();
@@ -131,10 +131,10 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 //        fileComponentActivationService.requestUpdate();
 //        fileComponentActivationService.passRequestUpdate(fileComponentActivationService);
         if (activeFile instanceof EditorFileHandler) {
-            ((EditorFileHandler) activeFile).componentActivated(componentActivationListener); // componentActivationService.getFileActivationListener(activeFile));
+            ((EditorFileHandler) activeFile).componentActivated(contextManager); // componentActivationService.getFileActivationListener(activeFile));
         }
-        componentActivationListener.changeActiveState(FileHandler.class, activeFile);
-        componentActivationListener.changeActiveState(FileOperations.class, this);
+        contextManager.changeActiveState(FileHandler.class, activeFile);
+        contextManager.changeActiveState(FileOperations.class, this);
     }
 
     /**

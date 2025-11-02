@@ -32,10 +32,10 @@ import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.window.api.controller.OptionsControlController;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 
 /**
  * Text color action.
@@ -59,7 +59,7 @@ public class TextColorAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeManager manager) {
+            public void register(ActionContextChangeRegistrar manager) {
                 manager.registerUpdateListener(FileHandler.class, (instance) -> {
                     fileHandler = instance;
                     setEnabled(fileHandler != null && (fileHandler.getComponent() instanceof TextPanel));

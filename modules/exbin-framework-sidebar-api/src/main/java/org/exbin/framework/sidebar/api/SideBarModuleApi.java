@@ -75,9 +75,9 @@ public interface SideBarModuleApi extends Module {
      *
      * @param targetSideBar target sidebar
      * @param sideBarId sidebar id
-     * @param actionUpdateService action update service
+     * @param actionContextManager action context manager
      */
-    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionUpdateService);
+    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager);
 
     /**
      * Returns list of action managed by sidebar managers.

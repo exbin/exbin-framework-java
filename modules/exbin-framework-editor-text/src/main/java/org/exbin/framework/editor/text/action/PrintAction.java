@@ -24,12 +24,12 @@ import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.editor.text.EditorTextPanelComponent;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 
 /**
  * Print action.
@@ -53,7 +53,7 @@ public class PrintAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeManager manager) {
+            public void register(ActionContextChangeRegistrar manager) {
                 manager.registerUpdateListener(ActiveComponent.class, (instance) -> {
                     textPanelComponent = instance instanceof EditorTextPanelComponent ? (EditorTextPanelComponent) instance : null;
                     setEnabled(textPanelComponent != null);

@@ -277,24 +277,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, new ActionContextManager() {
-            /* @Override
-            public void registerListener(ComponentActivationListener listener) {
-                frameActionManager.registerListener(listener);
-            }
-
-            @Override
-            public void requestUpdate() {
-                frameActionManager.requestUpdate();
-            } */
-
-            @Override
-            public void registerActionContext(Action action) {
-                frameActionManager.registerAction(action);
-                frameActionManager.initAction(action);
-                frameActionManager.registerActionContext(action);
-            }
-        });
+        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, frameActionManager);
         menuBar.revalidate();
         menuBar.repaint();
     }
@@ -302,24 +285,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainToolBar() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, new ActionContextManager() {
-            /* @Override
-            public void registerListener(ComponentActivationListener listener) {
-                frameActionManager.registerListener(listener);
-            }
-
-            @Override
-            public void requestUpdate() {
-                frameActionManager.requestUpdate();
-            } */
-
-            @Override
-            public void registerActionContext(Action action) {
-                frameActionManager.registerAction(action);
-                frameActionManager.initAction(action);
-                frameActionManager.registerActionContext(action);
-            }
-        });
+        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, frameActionManager);
     }
 
     @Override

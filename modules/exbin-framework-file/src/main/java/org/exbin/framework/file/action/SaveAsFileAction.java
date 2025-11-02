@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 
 /**
  * Save as file action.
@@ -51,7 +51,7 @@ public class SaveAsFileAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeManager manager) {
+            public void register(ActionContextChangeRegistrar manager) {
                 manager.registerUpdateListener(FileOperations.class, (instance) -> {
                     fileOperations = instance;
                     setEnabled(instance != null && instance.canSave());

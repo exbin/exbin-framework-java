@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ActiveContextManager;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
@@ -42,7 +44,7 @@ public class ChildActiveContextManager implements ActiveContextManager {
         this.parentContextManager = parentContextManager;
         parentContextManager.addChangeListener(new ActiveContextChangeListener() {
             @Override
-            public <T> void activeStateChanged(Class<T> stateClass, T activeState) {
+            public <T> void activeStateChanged(@Nonnull Class<T> stateClass, @Nullable T activeState) {
                 if (childStates.contains(stateClass)) {
                     return;
                 }
@@ -52,8 +54,9 @@ public class ChildActiveContextManager implements ActiveContextManager {
         });
     }
 
-    @Override
+    @Nullable
     @SuppressWarnings("unchecked")
+    @Override
     public <T> T getActiveState(Class<T> stateClass) {
         if (childStates.contains(stateClass)) {
             return (T) activeStates.get(stateClass);
@@ -63,7 +66,7 @@ public class ChildActiveContextManager implements ActiveContextManager {
     }
 
     @Override
-    public <T> void changeActiveState(Class<T> stateClass, T activeState) {
+    public <T> void changeActiveState(Class<T> stateClass, @Nullable T activeState) {
         if (!childStates.contains(stateClass)) {
             childStates.add(stateClass);
         }

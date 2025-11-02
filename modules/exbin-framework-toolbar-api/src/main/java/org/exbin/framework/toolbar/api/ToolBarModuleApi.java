@@ -76,9 +76,9 @@ public interface ToolBarModuleApi extends Module {
      *
      * @param targetToolBar target toolbar
      * @param toolBarId toolbar id
-     * @param actionUpdateService action update service
+     * @param actionContextManager action context manager
      */
-    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService);
+    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager);
 
     /**
      * Registers tool bar clipboard actions.

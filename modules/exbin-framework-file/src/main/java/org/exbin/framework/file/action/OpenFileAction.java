@@ -23,10 +23,10 @@ import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 
 /**
  * Open file action.
@@ -50,7 +50,7 @@ public class OpenFileAction extends AbstractAction {
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeManager manager) {
+            public void register(ActionContextChangeRegistrar manager) {
                 manager.registerUpdateListener(FileOperations.class, (instance) -> {
                     fileOperations = instance;
                     setEnabled(instance != null);

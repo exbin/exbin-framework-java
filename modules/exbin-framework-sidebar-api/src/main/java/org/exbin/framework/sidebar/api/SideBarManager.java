@@ -37,9 +37,9 @@ public interface SideBarManager {
      *
      * @param targetSideBar output side bar
      * @param sideBarId side bar definition id
-     * @param actionUpdateService action update service
+     * @param actionContextManager action context manager
      */
-    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionUpdateService);
+    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager);
 
     /**
      * Registers side bar.

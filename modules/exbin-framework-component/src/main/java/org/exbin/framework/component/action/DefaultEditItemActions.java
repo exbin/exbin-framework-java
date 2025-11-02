@@ -23,13 +23,13 @@ import javax.swing.AbstractAction;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.component.ComponentModule;
 import org.exbin.framework.component.api.toolbar.EditItemActions;
 import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
 import org.exbin.framework.component.api.toolbar.SideToolBar;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 
 /**
  * Item edit default action set.
@@ -96,7 +96,7 @@ public class DefaultEditItemActions implements EditItemActions {
                 putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             }
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
                 manager.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.canAddItem());
@@ -124,7 +124,7 @@ public class DefaultEditItemActions implements EditItemActions {
                 putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             }
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
                 manager.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.canEditItem());
@@ -149,7 +149,7 @@ public class DefaultEditItemActions implements EditItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeManager manager) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
                 manager.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.canDeleteItem());

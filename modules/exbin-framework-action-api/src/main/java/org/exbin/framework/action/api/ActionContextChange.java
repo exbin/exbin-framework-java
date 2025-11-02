@@ -30,5 +30,5 @@ public interface ActionContextChange {
      *
      * @param manager activation manager
      */
-    void register(ActionContextChangeManager manager);
+    void register(ActionContextChangeRegistrar manager);
 }

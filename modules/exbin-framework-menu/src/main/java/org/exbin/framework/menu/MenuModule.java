@@ -179,13 +179,13 @@ public class MenuModule implements MenuModuleApi {
     }
 
     @Override
-    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextManager actionUpdateService) {
-        getMenuManager().buildMenu(targetMenu, menuId, actionUpdateService);
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextManager actionContextManager) {
+        getMenuManager().buildMenu(targetMenu, menuId, actionContextManager);
     }
 
     @Override
-    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextManager actionUpdateService) {
-        getMenuManager().buildMenu(targetMenuBar, menuId, actionUpdateService);
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextManager actionContextManager) {
+        getMenuManager().buildMenu(targetMenuBar, menuId, actionContextManager);
     }
 
     @Override

@@ -52,9 +52,9 @@ public class DefaultSideBarManager extends ContributionsManager implements SideB
     }
 
     @Override
-    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionUpdateService) {
+    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager) {
         ContributionDefinition definition = definitions.get(sideBarId);
-        buildSequence(new ToolBarWrapper(targetSideBar, actionUpdateService), definition);
+        buildSequence(new ToolBarWrapper(targetSideBar, actionContextManager), definition);
     }
 
     @Override
@@ -165,23 +165,23 @@ public class DefaultSideBarManager extends ContributionsManager implements SideB
         return newItem;
     }
 
-    protected static void finishSideBarAction(Action action, ActionContextManager actionUpdateService) {
+    protected static void finishSideBarAction(Action action, ActionContextManager actionContextManager) {
         if (action == null) {
             return;
         }
 
-        actionUpdateService.registerActionContext(action);
+        actionContextManager.registerActionContext(action);
     }
 
     @ParametersAreNonnullByDefault
     protected static class ToolBarWrapper implements ContributionSequenceOutput {
 
         private final JToolBar toolBar;
-        private final ActionContextManager actionUpdateService;
+        private final ActionContextManager actionContextManager;
 
-        public ToolBarWrapper(JToolBar menuBar, ActionContextManager actionUpdateService) {
+        public ToolBarWrapper(JToolBar menuBar, ActionContextManager actionContextManager) {
             this.toolBar = menuBar;
-            this.actionUpdateService = actionUpdateService;
+            this.actionContextManager = actionContextManager;
         }
 
         @Override
@@ -194,7 +194,7 @@ public class DefaultSideBarManager extends ContributionsManager implements SideB
         @Override
         public void add(ItemSequenceContribution itemContribution) {
             toolBar.add(((ActionSideBarContribution) itemContribution).getComponent());
-            DefaultSideBarManager.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionUpdateService);
+            DefaultSideBarManager.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextManager);
         }
 
         @Override

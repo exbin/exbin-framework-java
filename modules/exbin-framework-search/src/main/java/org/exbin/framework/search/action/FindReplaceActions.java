@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.search.api.SearchHandler;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeManager;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 
 /**
  * Find/replace actions for binary search.
@@ -93,7 +93,7 @@ public class FindReplaceActions {
         }
 
         @Override
-        public void register(ActionContextChangeManager manager) {
+        public void register(ActionContextChangeRegistrar manager) {
             manager.registerUpdateListener(SearchHandler.class, (instance) -> {
                 searchHandler = instance;
                 setEnabled(instance != null);
@@ -111,7 +111,7 @@ public class FindReplaceActions {
         }
 
         @Override
-        public void register(ActionContextChangeManager manager) {
+        public void register(ActionContextChangeRegistrar manager) {
             manager.registerUpdateListener(SearchHandler.class, (instance) -> {
                 searchHandler = instance;
                 setEnabled(instance != null);
@@ -129,7 +129,7 @@ public class FindReplaceActions {
         }
 
         @Override
-        public void register(ActionContextChangeManager manager) {
+        public void register(ActionContextChangeRegistrar manager) {
             manager.registerUpdateListener(SearchHandler.class, (instance) -> {
                 searchHandler = instance;
                 setEnabled(instance != null);

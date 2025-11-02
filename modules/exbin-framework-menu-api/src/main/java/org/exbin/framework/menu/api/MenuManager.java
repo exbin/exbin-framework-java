@@ -40,27 +40,27 @@ public interface MenuManager {
      *
      * @param outputMenu output menu
      * @param menuId menu definition id
-     * @param actionUpdateService action update service
+     * @param actionContextManager action context manager
      */
-    void buildMenu(JMenu outputMenu, String menuId, ActionContextManager actionUpdateService);
+    void buildMenu(JMenu outputMenu, String menuId, ActionContextManager actionContextManager);
 
     /**
      * Builds menu from given definition id.
      *
      * @param outputMenu output popup menu
      * @param menuId menu definition id
-     * @param actionUpdateService action update service
+     * @param actionContextManager action context manager
      */
-    void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextManager actionUpdateService);
+    void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextManager actionContextManager);
 
     /**
      * Builds menu from given definition id.
      *
      * @param outputMenuBar output menu bar
      * @param menuId menu definition id
-     * @param actionUpdateService action update service
+     * @param actionContextManager action context manager
      */
-    void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextManager actionUpdateService);
+    void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextManager actionContextManager);
 
     /**
      * Checks whether menu group exists.

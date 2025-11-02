@@ -37,9 +37,9 @@ import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
 import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 
 /**
  * Implementation of action module.
@@ -226,7 +226,7 @@ public class ActionModule implements ActionModuleApi {
         return customClipboardActions;
     }
      */
-    public void registerClipboardFlavorListener(ActionContextChangeManager activationManager) {
+    /* public void registerClipboardFlavorListener(ActionContextChangeRegistrar activationManager) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
 
             private final ClipboardFlavorState clipboardFlavorState = new ClipboardFlavorState();
@@ -236,5 +236,5 @@ public class ActionModule implements ActionModuleApi {
                 activationManager.updateActionsForComponent(ClipboardFlavorState.class, clipboardFlavorState);
             }
         });
-    }
+    } */
 }

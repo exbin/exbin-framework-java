@@ -38,18 +38,18 @@ public interface ToolBarManager {
      *
      * @param targetToolBar output tool bar
      * @param toolBarId tool bar definition id
-     * @param actionUpdateService action update service
+     * @param actionContextManager action context manager
      */
-    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService);
+    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager);
 
     /**
      * Builds toolbar with icons only from given definition id.
      *
      * @param targetToolBar output tool bar
      * @param toolBarId tool bar definition id
-     * @param actionUpdateService action update service
+     * @param actionContextManager action context manager
      */
-    void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService);
+    void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager);
 
     /**
      * Registers toolbar.

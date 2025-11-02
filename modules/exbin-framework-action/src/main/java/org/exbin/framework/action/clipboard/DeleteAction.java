@@ -24,10 +24,10 @@ import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.action.api.DeletionController;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 
 /**
  * Delete in document action.
@@ -60,7 +60,7 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
     }
 
     @Override
-    public void register(ActionContextChangeManager manager) {
+    public void register(ActionContextChangeRegistrar manager) {
         manager.registerUpdateListener(ActiveComponent.class, component -> {
             deletionSupport = component instanceof DeletionController ? (DeletionController) component : null;
             update();

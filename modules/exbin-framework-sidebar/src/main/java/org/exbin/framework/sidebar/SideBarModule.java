@@ -88,8 +88,8 @@ public class SideBarModule implements SideBarModuleApi {
     }
 
     @Override
-    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionUpdateService) {
-        getSideBarManager().buildSideBar(targetSideBar, sideBarId, actionUpdateService);
+    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager) {
+        getSideBarManager().buildSideBar(targetSideBar, sideBarId, actionContextManager);
     }
 
     @Override

@@ -93,8 +93,8 @@ public class ToolBarModule implements ToolBarModuleApi {
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionUpdateService) {
-        getToolBarManager().buildToolBar(targetToolBar, toolBarId, actionUpdateService);
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager) {
+        getToolBarManager().buildToolBar(targetToolBar, toolBarId, actionContextManager);
     }
 
     @Override

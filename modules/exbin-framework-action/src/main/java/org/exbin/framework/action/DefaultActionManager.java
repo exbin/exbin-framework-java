@@ -25,9 +25,9 @@ import javax.swing.Action;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeListener;
-import org.exbin.framework.action.api.ActionContextChangeManager;
 import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeListener;
 
 /**
  * Action manager.
@@ -63,19 +63,20 @@ public class DefaultActionManager implements ActionManager {
         if (actionContextChange != null) {
             String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
             ActionRecord actionRecord = actions.get(actionId);
-            actionContextChange.register(new ActivationManager(actionRecord));
-            for (Map.Entry<Class<?>, ActionContextChangeListener<?>> entry : actionRecord.updateComponents.entrySet()) {
-                Class<?> updateComponent = entry.getKey();
-                Object updateValue = contextManager.getActiveState(updateComponent);
+            actionContextChange.register(new DefaultActionContextChangeRegistrar(actionRecord));
+            for (Map.Entry<Class<?>, ActionContextChangeListener<?>> entry : actionRecord.contextChangeListeners.entrySet()) {
+                Class<?> stateClass = entry.getKey();
+                Object activeState = contextManager.getActiveState(stateClass);
                 ActionContextChangeListener listener = entry.getValue();
-                listener.stateChanged(updateValue);
+                listener.stateChanged(activeState);
             }
         }
     }
 
     @Override
     public void registerActionContext(Action action) {
-        // TODO throw new UnsupportedOperationException("Not supported yet.");
+        registerAction(action);
+        initAction(action);
     }
 
 /*    @SuppressWarnings("unchecked")
@@ -91,30 +92,17 @@ public class DefaultActionManager implements ActionManager {
     } */
 
     @ParametersAreNonnullByDefault
-    private class ActivationManager implements ActionContextChangeManager {
+    private class DefaultActionContextChangeRegistrar implements ActionContextChangeRegistrar {
 
         private final ActionRecord actionRecord;
 
-        public ActivationManager(ActionRecord actionRecord) {
+        public DefaultActionContextChangeRegistrar(ActionRecord actionRecord) {
             this.actionRecord = actionRecord;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
-            throw new UnsupportedOperationException("Not supported yet.");
-//            activeComponentState.put(componentClass, componentInstance);
-//            List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
-//            if (componentListeners != null) {
-//                for (ActionContextChangeListener componentListener : componentListeners) {
-//                    componentListener.stateChanged(componentInstance);
-//                }
-//            }
         }
 
         @Override
         public <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
-            actionRecord.updateComponents.put(componentClass, listener);
+            actionRecord.contextChangeListeners.put(componentClass, listener);
 
             List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
             if (componentListeners == null) {
@@ -129,12 +117,25 @@ public class DefaultActionManager implements ActionManager {
         public <T> void registerUpdateListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
             registerListener(componentClass, listener);
         }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
+            // TODO
+//            activeComponentState.put(componentClass, componentInstance);
+//            List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
+//            if (componentListeners != null) {
+//                for (ActionContextChangeListener componentListener : componentListeners) {
+//                    componentListener.stateChanged(componentInstance);
+//                }
+//            }
+        }
     }
 
     protected static class ActionRecord {
 
         List<Action> actionInstances = new ArrayList<>();
-        Map<Class<?>, ActionContextChangeListener<?>> updateComponents = new HashMap<>();
+        Map<Class<?>, ActionContextChangeListener<?>> contextChangeListeners = new HashMap<>();
     }
 
 /*
@@ -164,7 +165,7 @@ public class DefaultActionManager implements ActionManager {
         Object value = action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
         Map<Class<?>, ActionContextChangeListener<?>> actionListeners = new HashMap<>();
         if (value instanceof ActionContextChange) {
-            ((ActionContextChange) value).register(new ActionContextChangeManager() {
+            ((ActionContextChange) value).register(new ActionContextChangeRegistrar() {
                 @Override
                 public <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
                     actionListeners.put(componentClass, listener);
