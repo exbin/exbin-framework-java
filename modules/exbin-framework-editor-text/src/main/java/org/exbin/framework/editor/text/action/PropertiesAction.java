@@ -53,8 +53,8 @@ public class PropertiesAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistrar manager) {
-                manager.registerUpdateListener(FileHandler.class, (instance) -> {
+            public void register(ActionContextChangeRegistrar registrar) {
+                registrar.registerUpdateListener(FileHandler.class, (instance) -> {
                     fileHandler = instance;
                     setEnabled(fileHandler instanceof TextFileHandler);
                 });

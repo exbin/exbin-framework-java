@@ -62,8 +62,8 @@ public class RedoAction extends AbstractAction implements ActionContextChange {
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar manager) {
-        manager.registerUpdateListener(UndoRedoState.class, (instance) -> {
+    public void register(ActionContextChangeRegistrar registrar) {
+        registrar.registerUpdateListener(UndoRedoState.class, (instance) -> {
             undoRedo = instance;
             boolean canRedo = undoRedo != null && undoRedo.canRedo();
             setEnabled(canRedo);

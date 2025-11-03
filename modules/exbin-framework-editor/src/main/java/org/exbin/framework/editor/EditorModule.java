@@ -25,7 +25,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.EditorProviderChangeListener;
 import org.exbin.framework.editor.api.EditorProviderComponentListener;
@@ -47,6 +46,7 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Framework editor module.
@@ -252,7 +252,7 @@ public class EditorModule implements EditorModuleApi {
     @Override
     public void registerMenuFileCloseActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(FileModuleApi.FILE_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(createCloseFileAction());

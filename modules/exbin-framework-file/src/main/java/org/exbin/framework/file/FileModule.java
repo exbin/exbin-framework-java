@@ -35,8 +35,6 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.menu.api.MenuManagement;
-import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.file.action.FileActions;
 import org.exbin.framework.file.action.NewFileAction;
 import org.exbin.framework.file.action.OpenFileAction;
@@ -60,6 +58,8 @@ import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
+import org.exbin.framework.toolbar.api.ToolBarDefinitionManagement;
 
 /**
  * Framework file module.
@@ -129,7 +129,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerMenuFileHandlingActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(FILE_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(createNewFileAction());
@@ -145,7 +145,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerToolBarFileHandlingActions() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        ToolBarManagement mgmt = toolBarModule.getMainToolBarManagement(MODULE_ID);
+        ToolBarDefinitionManagement mgmt = toolBarModule.getMainToolBarManager(MODULE_ID);
         SequenceContribution contribution = mgmt.registerToolBarGroup(FILE_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerToolBarItem(createNewFileAction());
@@ -172,7 +172,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public void registerRecenFilesMenuActions() {
         getRecentFilesActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(() -> recentFilesActions.getOpenRecentMenu());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FILE_MENU_GROUP_ID));
         mgmt.registerMenuRule(contribution, new RelativeSequenceContributionRule(RelativeSequenceContributionRule.NextToMode.AFTER, OpenFileAction.ACTION_ID));

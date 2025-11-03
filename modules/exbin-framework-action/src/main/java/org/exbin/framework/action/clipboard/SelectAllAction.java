@@ -60,8 +60,8 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar manager) {
-        manager.registerUpdateListener(ActiveComponent.class, component -> {
+    public void register(ActionContextChangeRegistrar registrar) {
+        registrar.registerUpdateListener(ActiveComponent.class, component -> {
             selectionSupport = component instanceof SelectionController ? (SelectionController) component : null;
             update();
         });

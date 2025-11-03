@@ -52,12 +52,12 @@ public class CloseFileAction extends AbstractAction {
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistrar manager) {
-                manager.registerUpdateListener(FileHandler.class, (instance) -> {
+            public void register(ActionContextChangeRegistrar registrar) {
+                registrar.registerUpdateListener(FileHandler.class, (instance) -> {
                     fileHandler = instance;
                     setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
                 });
-                manager.registerUpdateListener(EditorProvider.class, (instance) -> {
+                registrar.registerUpdateListener(EditorProvider.class, (instance) -> {
                     editorProvider = instance;
                     setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
                 });

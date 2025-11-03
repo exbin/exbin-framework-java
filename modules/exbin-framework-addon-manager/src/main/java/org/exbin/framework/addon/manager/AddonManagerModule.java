@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.App;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.settings.AddonManagerOptions;
@@ -35,6 +34,7 @@ import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Addon manager module.
@@ -99,7 +99,7 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     @Override
     public void registerAddonManagerMenuItem() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(createAddonManagerAction());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE_LAST));
     }

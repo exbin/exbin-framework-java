@@ -23,7 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
-import org.exbin.framework.toolbar.api.ToolBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
@@ -32,8 +31,9 @@ import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule.PositionMode;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.toolbar.api.ToolBarManager;
 import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.toolbar.api.ToolBarDefinitionManagement;
+import org.exbin.framework.toolbar.api.ToolBarManagement;
 
 /**
  * Implementation of tool bar module.
@@ -43,7 +43,7 @@ import org.exbin.framework.action.api.ActionContextManager;
 @ParametersAreNonnullByDefault
 public class ToolBarModule implements ToolBarModuleApi {
 
-    private DefaultToolBarManager toolBarManager = null;
+    private ToolBarManager toolBarManager = null;
     private ResourceBundle resourceBundle;
 
     public ToolBarModule() {
@@ -71,16 +71,16 @@ public class ToolBarModule implements ToolBarModuleApi {
     @Override
     public List<Action> getToolBarManagedActions() {
         List<Action> actions = new ArrayList<>();
-        getToolBarManager();
+        ToolBarModule.this.getToolBarManager();
         actions.addAll(toolBarManager.getAllManagedActions());
 
         return actions;
     }
 
     @Nonnull
-    private DefaultToolBarManager getToolBarManager() {
+    private ToolBarManager getToolBarManager() {
         if (toolBarManager == null) {
-            toolBarManager = new DefaultToolBarManager();
+            toolBarManager = new ToolBarManager();
         }
 
         return toolBarManager;
@@ -88,37 +88,37 @@ public class ToolBarModule implements ToolBarModuleApi {
 
     @Nonnull
     @Override
-    public ToolBarManager createToolBarManager() {
-        return new DefaultToolBarManager();
+    public ToolBarManagement createToolBarManager() {
+        return new ToolBarManager();
     }
 
     @Override
     public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager) {
-        getToolBarManager().buildToolBar(targetToolBar, toolBarId, actionContextManager);
+        ToolBarModule.this.getToolBarManager().buildToolBar(targetToolBar, toolBarId, actionContextManager);
     }
 
     @Override
     public void registerToolBar(String toolBarId, String moduleId) {
-        getToolBarManager().registerToolBar(toolBarId, moduleId);
+        ToolBarModule.this.getToolBarManager().registerToolBar(toolBarId, moduleId);
     }
 
     @Nonnull
     @Override
-    public ToolBarManagement getToolBarManagement(String toolBarId, String moduleId) {
-        return new DefaultToolBarManagement(getToolBarManager(), toolBarId, moduleId);
+    public ToolBarDefinitionManagement getToolBarManager(String toolBarId, String moduleId) {
+        return new ToolBarDefinitionManager(ToolBarModule.this.getToolBarManager(), toolBarId, moduleId);
     }
 
     @Nonnull
     @Override
-    public ToolBarManagement getMainToolBarManagement(String moduleId) {
-        return getToolBarManagement(MAIN_TOOL_BAR_ID, moduleId);
+    public ToolBarDefinitionManagement getMainToolBarManager(String moduleId) {
+        return getToolBarManager(MAIN_TOOL_BAR_ID, moduleId);
     }
 
     @Override
     public void registerToolBarClipboardActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         ClipboardActionsApi clipboardActions = actionModule.getClipboardActions();
-        ToolBarManagement mgmt = getMainToolBarManagement(MODULE_ID);
+        ToolBarDefinitionManagement mgmt = getMainToolBarManager(MODULE_ID);
         SequenceContribution contribution = mgmt.registerToolBarGroup(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionMode.TOP));
         contribution = mgmt.registerToolBarItem(clipboardActions.createCutAction());

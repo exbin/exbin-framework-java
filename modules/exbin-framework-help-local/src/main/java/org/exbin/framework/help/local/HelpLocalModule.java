@@ -23,7 +23,7 @@ import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.help.local.action.HelpLocalAction;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.menu.api.MenuManagement;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Local help module.
@@ -47,7 +47,7 @@ public class HelpLocalModule {
 
     public void registerMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(createHelpLocalAction());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
     }

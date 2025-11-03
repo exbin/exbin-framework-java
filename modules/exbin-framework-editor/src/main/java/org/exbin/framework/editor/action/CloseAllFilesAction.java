@@ -47,8 +47,8 @@ public class CloseAllFilesAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistrar manager) {
-                manager.registerUpdateListener(EditorProvider.class, (instance) -> {
+            public void register(ActionContextChangeRegistrar registrar) {
+                registrar.registerUpdateListener(EditorProvider.class, (instance) -> {
                     editorProvider = instance;
                     setEnabled(editorProvider instanceof MultiEditorProvider);
                 });

@@ -23,12 +23,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
-import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
-import org.exbin.framework.sidebar.api.SideBarManager;
 import org.exbin.framework.sidebar.api.SideBarModuleApi;
 import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.sidebar.api.SideBarDefinitionManagement;
+import org.exbin.framework.sidebar.api.SideBarManagement;
 
 /**
  * Implementation of side bar module.
@@ -38,7 +38,7 @@ import org.exbin.framework.action.api.ActionContextManager;
 @ParametersAreNonnullByDefault
 public class SideBarModule implements SideBarModuleApi {
 
-    private DefaultSideBarManager sideBarManager = null;
+    private SideBarManager sideBarManager = null;
     private ResourceBundle resourceBundle;
 
     public SideBarModule() {
@@ -66,16 +66,16 @@ public class SideBarModule implements SideBarModuleApi {
     @Override
     public List<Action> getSideBarManagedActions() {
         List<Action> actions = new ArrayList<>();
-        getSideBarManager();
+        SideBarModule.this.getSideBarManager();
         actions.addAll(sideBarManager.getAllManagedActions());
 
         return actions;
     }
 
     @Nonnull
-    private DefaultSideBarManager getSideBarManager() {
+    private SideBarManager getSideBarManager() {
         if (sideBarManager == null) {
-            sideBarManager = new DefaultSideBarManager();
+            sideBarManager = new SideBarManager();
         }
 
         return sideBarManager;
@@ -83,32 +83,32 @@ public class SideBarModule implements SideBarModuleApi {
 
     @Nonnull
     @Override
-    public SideBarManager createSideBarManager() {
-        return new DefaultSideBarManager();
+    public SideBarManagement createSideBarManager() {
+        return new SideBarManager();
     }
 
     @Override
     public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager) {
-        getSideBarManager().buildSideBar(targetSideBar, sideBarId, actionContextManager);
+        SideBarModule.this.getSideBarManager().buildSideBar(targetSideBar, sideBarId, actionContextManager);
     }
 
     @Override
     public void registerSideBar(String sideBarId, String moduleId) {
-        getSideBarManager().registerSideBar(sideBarId, moduleId);
+        SideBarModule.this.getSideBarManager().registerSideBar(sideBarId, moduleId);
     }
 
     @Nonnull
     @Override
-    public SideBarManagement getMainSideBarManagement(String moduleId) {
-        return getSideBarManagement(MAIN_SIDE_BAR_ID, moduleId);
+    public SideBarDefinitionManagement getMainSideBarManager(String moduleId) {
+        return getSideBarManager(MAIN_SIDE_BAR_ID, moduleId);
     }
 
     @Nonnull
     @Override
-    public SideBarManagement getSideBarManagement(String sideBarId, String moduleId) {
-        return new DefaultSideBarManagement(getSideBarManager(), sideBarId, moduleId);
+    public SideBarDefinitionManagement getSideBarManager(String sideBarId, String moduleId) {
+        return new SideBarDefinitionManager(SideBarModule.this.getSideBarManager(), sideBarId, moduleId);
     }
-    
+
     @Override
     public void registerFrameSideBar() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);

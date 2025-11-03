@@ -95,8 +95,8 @@ public class DefaultMoveItemActions implements MoveItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
                 });
@@ -120,8 +120,8 @@ public class DefaultMoveItemActions implements MoveItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
                 });
@@ -145,8 +145,8 @@ public class DefaultMoveItemActions implements MoveItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
                 });
@@ -170,8 +170,8 @@ public class DefaultMoveItemActions implements MoveItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
                 });

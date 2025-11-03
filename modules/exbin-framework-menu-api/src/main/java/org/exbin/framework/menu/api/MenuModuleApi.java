@@ -77,7 +77,7 @@ public interface MenuModuleApi extends Module {
      * @return menu management interface
      */
     @Nonnull
-    MenuManagement getMainMenuManagement(String moduleId);
+    MenuDefinitionManagement getMainMenuManager(String moduleId);
 
     /**
      * Creates menu manager.
@@ -85,7 +85,7 @@ public interface MenuModuleApi extends Module {
      * @return menu manager
      */
     @Nonnull
-    MenuManager createMenuManager();
+    MenuManagement createMenuManager();
 
     /**
      * Returns menu management interface.
@@ -95,7 +95,7 @@ public interface MenuModuleApi extends Module {
      * @return menu management interface
      */
     @Nonnull
-    MenuManagement getMenuManagement(String menuId, String moduleId);
+    MenuDefinitionManagement getMenuManager(String menuId, String moduleId);
 
     /**
      * Registers menu associating it with given identificator.

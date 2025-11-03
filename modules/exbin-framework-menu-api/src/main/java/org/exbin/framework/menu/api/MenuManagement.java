@@ -15,15 +15,20 @@
  */
 package org.exbin.framework.menu.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JPopupMenu;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
- * Interface for registered menus management.
+ * Interface for menus management.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -31,59 +36,112 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 public interface MenuManagement {
 
     /**
-     * Registers menu as a child item for given menu.
+     * Builds menu from given definition id.
      *
-     * @param menuProvider menu provider
-     * @return menu contribution
+     * @param outputMenu output menu
+     * @param menuId menu definition id
+     * @param actionContextManager action context manager
      */
-    @Nonnull
-    DirectMenuContribution registerMenuItem(MenuItemProvider menuProvider);
+    void buildMenu(JMenu outputMenu, String menuId, ActionContextManager actionContextManager);
 
     /**
-     * Registers menu item as a child item for given menu.
+     * Builds menu from given definition id.
      *
-     * @param action action
-     * @return menu contribution
+     * @param outputMenu output popup menu
+     * @param menuId menu definition id
+     * @param actionContextManager action context manager
      */
-    @Nonnull
-    ActionMenuContribution registerMenuItem(Action action);
+    void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextManager actionContextManager);
 
     /**
-     * Registers menu item as a child item for given menu.
+     * Builds menu from given definition id.
      *
-     * @param subMenuId sub-menu id
-     * @param subMenuAction sub-menu action
-     * @return menu contribution
+     * @param outputMenuBar output menu bar
+     * @param menuId menu definition id
+     * @param actionContextManager action context manager
      */
-    @Nonnull
-    SubMenuContribution registerMenuItem(String subMenuId, Action subMenuAction);
+    void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextManager actionContextManager);
 
     /**
-     * Registers menu item as a child item for given menu.
+     * Checks whether menu group exists.
      *
-     * @param subMenuId sub-menu id
-     * @param subMenuName sub-menu name
-     * @return menu contribution
-     */
-    @Nonnull
-    SubMenuContribution registerMenuItem(String subMenuId, String subMenuName);
-
-    /**
-     * Registers menu item as a child item for given menu.
-     *
-     * @param groupId group id
-     * @return menu contribution
-     */
-    @Nonnull
-    GroupSequenceContribution registerMenuGroup(String groupId);
-
-    /**
-     * Returns true if given menu group exists.
-     *
+     * @param menuId menu id
      * @param groupId group id
      * @return true if group exists
      */
-    boolean menuGroupExists(String groupId);
+    boolean menuGroupExists(String menuId, String groupId);
+
+    /**
+     * Registers menu definition.
+     *
+     * @param menuId menu id
+     * @param moduleId module id
+     */
+    void registerMenu(String menuId, String moduleId);
+
+    /**
+     * Unregisters menu definition
+     *
+     * @param menuId menu id
+     */
+    void unregisterMenu(String menuId);
+
+    /**
+     * Registers menu item contribution.
+     *
+     * @param menuId menu id
+     * @param moduleId module id
+     * @param action action
+     * @return item contribution
+     */
+    @Nonnull
+    ActionMenuContribution registerMenuItem(String menuId, String moduleId, Action action);
+
+    /**
+     * Registers sub menu contribution.
+     *
+     * @param menuId menu id
+     * @param moduleId module id
+     * @param subMenuId sub menu id
+     * @param subMenuName sub menu name
+     * @return sub menu contribution
+     */
+    @Nonnull
+    SubMenuContribution registerMenuItem(String menuId, String moduleId, String subMenuId, String subMenuName);
+
+    /**
+     * Registers sub menu contribution.
+     *
+     * @param menuId menu id
+     * @param moduleId module id
+     * @param subMenuId sub menu id
+     * @param subMenuAction sub menu action
+     * @return sub menu contribution
+     */
+    @Nonnull
+    SubMenuContribution registerMenuItem(String menuId, String moduleId, String subMenuId, Action subMenuAction);
+
+    /**
+     * Registers direct menu contribution.
+     *
+     * @param menuId menu id
+     * @param moduleId module id
+     * @param menuProvider menu provider
+     * @return sub menu contribution
+     */
+    @Nonnull
+    DirectMenuContribution registerMenuItem(String menuId, String moduleId, MenuItemProvider menuProvider);
+
+    /**
+     * Registers menu group.
+     *
+     * @param menuId menu id
+     * @param moduleId module id
+     * @param groupId group id
+     * @return group contribution
+     */
+    @Nonnull
+    GroupSequenceContribution registerMenuGroup(String menuId, String moduleId, String groupId);
 
     /**
      * Registers menu contribution rule.
@@ -94,11 +152,10 @@ public interface MenuManagement {
     void registerMenuRule(SequenceContribution contribution, SequenceContributionRule rule);
 
     /**
-     * Returns submenu management.
+     * Returns list of managed actions.
      *
-     * @param subMenuId submenu id
-     * @return menu management
+     * @return list of actions
      */
     @Nonnull
-    MenuManagement getSubMenu(String subMenuId);
+    List<Action> getAllManagedActions();
 }

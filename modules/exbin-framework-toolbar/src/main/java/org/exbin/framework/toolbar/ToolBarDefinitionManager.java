@@ -22,21 +22,21 @@ import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.toolbar.api.ActionToolBarContribution;
-import org.exbin.framework.toolbar.api.ToolBarManagement;
+import org.exbin.framework.toolbar.api.ToolBarDefinitionManagement;
 
 /**
- * Default toolbar management.
+ * Default toolbar definition manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultToolBarManagement implements ToolBarManagement {
+public class ToolBarDefinitionManager implements ToolBarDefinitionManagement {
 
-    private final DefaultToolBarManager toolBarManager;
-    private final String toolBarId;
-    private final String moduleId;
+    protected final ToolBarManager toolBarManager;
+    protected final String toolBarId;
+    protected final String moduleId;
 
-    public DefaultToolBarManagement(DefaultToolBarManager toolBarManager, String toolBarId, String moduleId) {
+    public ToolBarDefinitionManager(ToolBarManager toolBarManager, String toolBarId, String moduleId) {
         this.toolBarManager = toolBarManager;
         this.toolBarId = toolBarId;
         this.moduleId = moduleId;

@@ -15,15 +15,18 @@
  */
 package org.exbin.framework.toolbar.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JToolBar;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
- * Interface for tool bar definition management.
+ * Interface for tool bar management.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -31,28 +34,66 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 public interface ToolBarManagement {
 
     /**
-     * Registers item as a child item for given tool bar.
+     * Builds toolbar from given definition id.
      *
-     * @param action action
-     * @return toolbar contribution
+     * @param targetToolBar output tool bar
+     * @param toolBarId tool bar definition id
+     * @param actionContextManager action context manager
      */
-    @Nonnull
-    ActionToolBarContribution registerToolBarItem(Action action);
+    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager);
 
     /**
-     * Registers group as a child item for given tool bar.
+     * Builds toolbar with icons only from given definition id.
      *
+     * @param targetToolBar output tool bar
+     * @param toolBarId tool bar definition id
+     * @param actionContextManager action context manager
+     */
+    void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager);
+
+    /**
+     * Registers toolbar.
+     *
+     * @param toolBarId tool bar id
+     * @param pluginId plugin id
+     */
+    void registerToolBar(String toolBarId, String pluginId);
+
+    /**
+     * Registers tool bar item contribution.
+     *
+     * @param toolBarId tool bar id
+     * @param pluginId plugin id
+     * @param action item action
+     * @return item contribution
+     */
+    @Nonnull
+    ActionToolBarContribution registerToolBarItem(String toolBarId, String pluginId, Action action);
+
+    /**
+     * Registers tool bar group.
+     *
+     * @param toolBarId tool bar id
+     * @param pluginId plugin id
      * @param groupId group id
-     * @return toolbar contribution
+     * @return group contribution
      */
     @Nonnull
-    GroupSequenceContribution registerToolBarGroup(String groupId);
+    GroupSequenceContribution registerToolBarGroup(String toolBarId, String pluginId, String groupId);
 
     /**
-     * Registers tool bar contribution rule.
+     * Register tool bar contribution rule.
      *
-     * @param toolBarContribution tool bar contribution
-     * @param rule tool bar contribution rule
+     * @param contribution tool bar contribution
+     * @param rule tool bar rule
      */
-    void registerToolBarRule(SequenceContribution toolBarContribution, SequenceContributionRule rule);
+    void registerToolBarRule(SequenceContribution contribution, SequenceContributionRule rule);
+
+    /**
+     * Returns list of managed actions.
+     *
+     * @return list of actions
+     */
+    @Nonnull
+    List<Action> getAllManagedActions();
 }

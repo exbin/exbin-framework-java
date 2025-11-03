@@ -53,8 +53,8 @@ public class SaveProjectAction extends AbstractAction {
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask() | InputEvent.SHIFT_DOWN_MASK));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistrar manager) {
-                manager.registerUpdateListener(FileOperations.class, (instance) -> {
+            public void register(ActionContextChangeRegistrar registrar) {
+                registrar.registerUpdateListener(FileOperations.class, (instance) -> {
                     fileOperations = instance;
                     setEnabled(instance != null && instance.canSave());
                 });

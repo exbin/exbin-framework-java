@@ -18,12 +18,14 @@ package org.exbin.framework.sidebar.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JToolBar;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.action.api.ActionContextManager;
 
 /**
- * Interface for registered side bars management.
+ * Interface for side bar management.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -31,28 +33,49 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 public interface SideBarManagement {
 
     /**
-     * Registers item as a child item for given side bar.
+     * Builds side bar from given síde bar id.
      *
-     * @param action action
-     * @return sidebar contribution
+     * @param targetSideBar output side bar
+     * @param sideBarId side bar definition id
+     * @param actionContextManager action context manager
      */
-    @Nonnull
-    ActionSideBarContribution registerSideBarItem(Action action);
+    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager);
 
     /**
-     * Registers group as a child item for given side bar.
+     * Registers side bar.
      *
+     * @param sideBarId side bar id
+     * @param pluginId plugin id
+     */
+    void registerSideBar(String sideBarId, String pluginId);
+
+    /**
+     * Registers side bar item contribution.
+     *
+     * @param sideBarId side bar id
+     * @param pluginId plugin id
+     * @param action item action
+     * @return item contribution
+     */
+    @Nonnull
+    ActionSideBarContribution registerSideBarItem(String sideBarId, String pluginId, Action action);
+
+    /**
+     * Registers side bar group.
+     *
+     * @param sideBarId side bar id
+     * @param pluginId plugin id
      * @param groupId group id
-     * @return sidebar contribution
+     * @return group contribution
      */
     @Nonnull
-    GroupSequenceContribution registerSideBarGroup(String groupId);
+    GroupSequenceContribution registerSideBarGroup(String sideBarId, String pluginId, String groupId);
 
     /**
-     * Registers side bar contribution rule.
+     * Register contribution rule.
      *
-     * @param sideBarContribution side bar contribution
-     * @param rule side bar contribution rule
+     * @param contribution contribution
+     * @param rule rule
      */
-    void registerSideBarRule(SequenceContribution sideBarContribution, SequenceContributionRule rule);
+    void registerSideBarRule(SequenceContribution contribution, SequenceContributionRule rule);
 }

@@ -96,8 +96,8 @@ public class DefaultEditItemActions implements EditItemActions {
                 putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             }
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.canAddItem());
                 });
@@ -124,8 +124,8 @@ public class DefaultEditItemActions implements EditItemActions {
                 putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             }
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.canEditItem());
                 });
@@ -149,8 +149,8 @@ public class DefaultEditItemActions implements EditItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.canDeleteItem());
                 });

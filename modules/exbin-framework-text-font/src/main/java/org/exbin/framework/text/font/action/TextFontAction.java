@@ -58,12 +58,12 @@ public class TextFontAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-            manager.registerUpdateListener(TextFontController.class, (instance) -> {
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            registrar.registerUpdateListener(TextFontController.class, (instance) -> {
                 textFontSupported = instance;
                 setEnabled(textFontSupported != null && dialogParentComponent != null);
             });
-            manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+            registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                 dialogParentComponent = instance;
                 setEnabled(textFontSupported != null && dialogParentComponent != null);
             });

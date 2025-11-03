@@ -33,8 +33,8 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 @ParametersAreNonnullByDefault
 public class ContributionDefinition {
 
-    protected List<SequenceContribution> contributions = new ArrayList<>();
-    protected Map<SequenceContribution, List<SequenceContributionRule>> rules = new HashMap<>();
+    protected final List<SequenceContribution> contributions = new ArrayList<>();
+    protected final Map<SequenceContribution, List<SequenceContributionRule>> rules = new HashMap<>();
 
     public ContributionDefinition() {
     }
@@ -45,7 +45,8 @@ public class ContributionDefinition {
     }
 
     public void setContributions(List<SequenceContribution> contributions) {
-        this.contributions = contributions;
+        this.contributions.clear();
+        this.contributions.addAll(contributions);
     }
 
     public void addContribution(SequenceContribution contribution) {
@@ -71,7 +72,8 @@ public class ContributionDefinition {
     }
 
     public void setRules(Map<SequenceContribution, List<SequenceContributionRule>> rules) {
-        this.rules = rules;
+        this.rules.clear();
+        this.rules.putAll(rules);
     }
 
     public void addRule(SequenceContribution contribution, SequenceContributionRule rule) {

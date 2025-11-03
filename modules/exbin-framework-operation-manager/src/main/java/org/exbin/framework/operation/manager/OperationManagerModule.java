@@ -24,10 +24,10 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.operation.manager.action.UndoManagerAction;
 import org.exbin.framework.operation.manager.api.OperationManagerModuleApi;
 import org.exbin.framework.operation.undo.api.OperationUndoModuleApi;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Implementation of operation manager module.
@@ -49,7 +49,7 @@ public class OperationManagerModule implements OperationManagerModuleApi {
     @Override
     public void registerOperationManagerInMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(OperationManagerModuleApi.MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(OperationManagerModuleApi.MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(createUndoManagerAction());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
     }

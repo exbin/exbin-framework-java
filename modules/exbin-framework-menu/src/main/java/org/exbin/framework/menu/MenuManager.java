@@ -37,21 +37,21 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.menu.api.DirectMenuContribution;
 import org.exbin.framework.menu.api.MenuItemProvider;
-import org.exbin.framework.menu.api.MenuManager;
 import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.contribution.TreeContributionSequenceBuilder;
+import org.exbin.framework.menu.api.MenuManagement;
 
 /**
- * Default menu manager.
+ * Default menus manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultMenuManager extends TreeContributionManager implements MenuManager {
+public class MenuManager extends TreeContributionManager implements MenuManagement {
 
     protected final TreeContributionSequenceBuilder builder = new TreeContributionSequenceBuilder();
 
-    public DefaultMenuManager() {
+    public MenuManager() {
     }
 
     @Override

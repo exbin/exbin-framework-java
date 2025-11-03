@@ -42,7 +42,7 @@ public interface SideBarModuleApi extends Module {
      * @return side bar management interface
      */
     @Nonnull
-    SideBarManagement getMainSideBarManagement(String moduleId);
+    SideBarDefinitionManagement getMainSideBarManager(String moduleId);
 
     /**
      * Returns side bar management interface.
@@ -52,7 +52,7 @@ public interface SideBarModuleApi extends Module {
      * @return side bar management interface
      */
     @Nonnull
-    SideBarManagement getSideBarManagement(String sideBarId, String moduleId);
+    SideBarDefinitionManagement getSideBarManager(String sideBarId, String moduleId);
 
     /**
      * Registers side bar associating it with given identificator.
@@ -68,7 +68,7 @@ public interface SideBarModuleApi extends Module {
      * @return side bar manager
      */
     @Nonnull
-    SideBarManager createSideBarManager();
+    SideBarManagement createSideBarManager();
 
     /**
      * Returns side bar using given identificator.

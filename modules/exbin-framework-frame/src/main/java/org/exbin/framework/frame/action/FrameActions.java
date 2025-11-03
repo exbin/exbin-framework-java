@@ -80,8 +80,8 @@ public class FrameActions {
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(ApplicationFrame.class, (instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
                     frame = instance;
                     setEnabled(frame != null);
                     if (frame != null) {
@@ -113,8 +113,8 @@ public class FrameActions {
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(ApplicationFrame.class, (instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
                     frame = instance;
                     setEnabled(frame != null);
                     if (frame != null) {
@@ -146,8 +146,8 @@ public class FrameActions {
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-                manager.registerUpdateListener(ApplicationFrame.class, (instance) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+                registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
                     frame = instance;
                     setEnabled(frame != null);
                     if (frame != null) {

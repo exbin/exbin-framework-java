@@ -34,7 +34,6 @@ import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.editor.api.EditorModuleApi;
@@ -53,6 +52,7 @@ import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Default multi editor provider.
@@ -84,7 +84,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         menuModule.registerMenu(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
-        MenuManagement mgmt = menuModule.getMenuManagement(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMenuManager(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(editorModule.createCloseFileAction());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(editorModule.createCloseAllFilesAction());

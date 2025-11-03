@@ -226,14 +226,14 @@ public class ActionModule implements ActionModuleApi {
         return customClipboardActions;
     }
      */
-    /* public void registerClipboardFlavorListener(ActionContextChangeRegistrar activationManager) {
+    /* public void registerClipboardFlavorListener(ActionContextChangeRegistrar registrar) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
 
             private final ClipboardFlavorState clipboardFlavorState = new ClipboardFlavorState();
 
             @Override
             public void flavorsChanged(FlavorEvent fe) {
-                activationManager.updateActionsForComponent(ClipboardFlavorState.class, clipboardFlavorState);
+                registrar.updateActionsForComponent(ClipboardFlavorState.class, clipboardFlavorState);
             }
         });
     } */

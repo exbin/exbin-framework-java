@@ -60,8 +60,8 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar manager) {
-        manager.registerUpdateListener(ActiveComponent.class, component -> {
+    public void register(ActionContextChangeRegistrar registrar) {
+        registrar.registerUpdateListener(ActiveComponent.class, component -> {
             deletionSupport = component instanceof DeletionController ? (DeletionController) component : null;
             update();
         });

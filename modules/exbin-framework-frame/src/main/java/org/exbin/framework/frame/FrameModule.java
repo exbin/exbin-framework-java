@@ -40,7 +40,6 @@ import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.frame.action.FrameActions;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.api.OptionsStorage;
@@ -48,6 +47,7 @@ import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Module frame handling.
@@ -106,7 +106,7 @@ public class FrameModule implements FrameModuleApi {
 
     private void initMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(MenuModuleApi.FILE_SUBMENU_ID, resourceBundle.getString("fileMenu.text"));
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(MenuModuleApi.EDIT_SUBMENU_ID, resourceBundle.getString("editMenu.text"));
@@ -240,7 +240,7 @@ public class FrameModule implements FrameModuleApi {
             exitActionRegistered = true;
         }
 
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(appClosingActionsGroup);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(exitActionRegistered ? SeparationSequenceContributionRule.SeparationMode.NONE : SeparationSequenceContributionRule.SeparationMode.ABOVE));
@@ -331,7 +331,7 @@ public class FrameModule implements FrameModuleApi {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(frameActions.createViewToolBarAction());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(VIEW_BARS_GROUP_ID));
         contribution = mgmt.registerMenuItem(frameActions.createViewToolBarCaptionsAction());
@@ -343,14 +343,14 @@ public class FrameModule implements FrameModuleApi {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         getFrameActions();
         createViewBarsMenuGroup();
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(frameActions.createViewStatusBarAction());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(VIEW_BARS_GROUP_ID));
     }
 
     private void createViewBarsMenuGroup() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
         if (!mgmt.menuGroupExists(VIEW_BARS_GROUP_ID)) {
             SequenceContribution contribution = mgmt.registerMenuGroup(VIEW_BARS_GROUP_ID);
             mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));

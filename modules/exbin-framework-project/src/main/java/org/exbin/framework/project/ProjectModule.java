@@ -26,7 +26,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.project.action.NewProjectAction;
 import org.exbin.framework.project.action.OpenProjectAction;
@@ -36,6 +35,7 @@ import org.exbin.framework.project.api.ProjectModuleApi;
 import org.exbin.framework.project.api.ProjectType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Implementation of framework project module.
@@ -107,7 +107,7 @@ public class ProjectModule implements ProjectModuleApi {
     @Override
     public void registerMenuFileHandlingActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMenuManagement(PROJECT_SUBMENU_ID, FrameModuleApi.MODULE_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMenuManager(PROJECT_SUBMENU_ID, FrameModuleApi.MODULE_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(PROJECT_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(getNewProjectAction());

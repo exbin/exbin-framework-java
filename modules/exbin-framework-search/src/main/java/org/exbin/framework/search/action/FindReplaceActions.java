@@ -93,8 +93,8 @@ public class FindReplaceActions {
         }
 
         @Override
-        public void register(ActionContextChangeRegistrar manager) {
-            manager.registerUpdateListener(SearchHandler.class, (instance) -> {
+        public void register(ActionContextChangeRegistrar registrar) {
+            registrar.registerUpdateListener(SearchHandler.class, (instance) -> {
                 searchHandler = instance;
                 setEnabled(instance != null);
             });
@@ -111,8 +111,8 @@ public class FindReplaceActions {
         }
 
         @Override
-        public void register(ActionContextChangeRegistrar manager) {
-            manager.registerUpdateListener(SearchHandler.class, (instance) -> {
+        public void register(ActionContextChangeRegistrar registrar) {
+            registrar.registerUpdateListener(SearchHandler.class, (instance) -> {
                 searchHandler = instance;
                 setEnabled(instance != null);
             });
@@ -129,8 +129,8 @@ public class FindReplaceActions {
         }
 
         @Override
-        public void register(ActionContextChangeRegistrar manager) {
-            manager.registerUpdateListener(SearchHandler.class, (instance) -> {
+        public void register(ActionContextChangeRegistrar registrar) {
+            registrar.registerUpdateListener(SearchHandler.class, (instance) -> {
                 searchHandler = instance;
                 setEnabled(instance != null);
             });

@@ -73,12 +73,12 @@ public class UndoManagerAction extends AbstractAction implements ActionContextCh
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar manager) {
-        manager.registerUpdateListener(UndoRedoState.class, (instance) -> {
+    public void register(ActionContextChangeRegistrar registrar) {
+        registrar.registerUpdateListener(UndoRedoState.class, (instance) -> {
             undoHandler = instance;
             setEnabled(instance != null);
         });
-        manager.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+        registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
             dialogParentComponent = instance;
         });
     }

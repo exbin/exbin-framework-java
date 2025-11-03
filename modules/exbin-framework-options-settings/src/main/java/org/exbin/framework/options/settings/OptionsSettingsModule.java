@@ -28,7 +28,6 @@ import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.options.settings.api.SettingsPanelType;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.settings.action.SettingsAction;
@@ -37,6 +36,7 @@ import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsOptionsOverrides;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Implementation of framework options settings module.
@@ -132,7 +132,7 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
             }); */
             optionsActionRegistered = true;
         }
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(TOOLS_OPTIONS_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(optionsActionRegistered ? SeparationSequenceContributionRule.SeparationMode.NONE : SeparationSequenceContributionRule.SeparationMode.AROUND));

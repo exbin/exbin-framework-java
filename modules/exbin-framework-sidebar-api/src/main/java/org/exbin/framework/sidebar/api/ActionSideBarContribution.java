@@ -32,7 +32,7 @@ import org.exbin.framework.contribution.api.ItemSequenceContribution;
 public class ActionSideBarContribution implements ItemSequenceContribution {
 
     protected final Action action;
-    protected  JComponent component;
+    protected JComponent component;
 
     public ActionSideBarContribution(Action action) {
         this.action = action;

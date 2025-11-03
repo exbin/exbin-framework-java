@@ -26,28 +26,28 @@ import org.exbin.framework.contribution.api.SubSequenceContributionRule;
 import org.exbin.framework.menu.api.ActionMenuContribution;
 import org.exbin.framework.menu.api.DirectMenuContribution;
 import org.exbin.framework.menu.api.MenuItemProvider;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.menu.api.SubMenuContribution;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
- * Default menu management.
+ * Default menu definition manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultMenuManagement implements MenuManagement {
+public class MenuDefinitionManager implements MenuDefinitionManagement {
 
-    private final DefaultMenuManager menuManager;
-    private final String menuId;
-    private final String moduleId;
+    protected final MenuManager menuManager;
+    protected final String menuId;
+    protected final String moduleId;
     @Nullable
-    private final String currentSubMenuId;
+    protected final String currentSubMenuId;
 
-    public DefaultMenuManagement(DefaultMenuManager menuManager, String menuId, String moduleId) {
+    public MenuDefinitionManager(MenuManager menuManager, String menuId, String moduleId) {
         this(menuManager, menuId, moduleId, null);
     }
 
-    public DefaultMenuManagement(DefaultMenuManager menuManager, String menuId, String moduleId, @Nullable String currentSubMenuId) {
+    public MenuDefinitionManager(MenuManager menuManager, String menuId, String moduleId, @Nullable String currentSubMenuId) {
         this.menuManager = menuManager;
         this.menuId = menuId;
         this.moduleId = moduleId;
@@ -116,7 +116,7 @@ public class DefaultMenuManagement implements MenuManagement {
 
     @Nonnull
     @Override
-    public MenuManagement getSubMenu(String subMenuId) {
-        return new DefaultMenuManagement(menuManager, menuId, moduleId, subMenuId);
+    public MenuDefinitionManagement getSubMenu(String subMenuId) {
+        return new MenuDefinitionManager(menuManager, menuId, moduleId, subMenuId);
     }
 }

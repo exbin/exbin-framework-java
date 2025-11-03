@@ -26,7 +26,6 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.text.encoding.settings.TextEncodingSettingsComponent;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
@@ -34,6 +33,7 @@ import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Text encoding module.
@@ -73,7 +73,7 @@ public class TextEncodingModule implements Module {
         encodingsHandler.rebuildEncodings();
 
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuManagement mgmt = menuModule.getMainMenuManagement(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(() -> encodingsHandler.getToolsEncodingMenu());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP_LAST));
     }

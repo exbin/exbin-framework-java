@@ -31,7 +31,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.framework.action.api.ActionType;
-import org.exbin.framework.menu.api.MenuManagement;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
@@ -39,9 +38,10 @@ import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.menu.api.MenuManager;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.menu.api.MenuDefinitionManagement;
+import org.exbin.framework.menu.api.MenuManagement;
 
 /**
  * Implementation of menu module.
@@ -51,7 +51,7 @@ import org.exbin.framework.action.api.ActionContextManager;
 @ParametersAreNonnullByDefault
 public class MenuModule implements MenuModuleApi {
 
-    private DefaultMenuManager menuManager = null;
+    private MenuManager menuManager = null;
     private ResourceBundle resourceBundle;
 
     public MenuModule() {
@@ -135,16 +135,16 @@ public class MenuModule implements MenuModuleApi {
     @Override
     public List<Action> getMenuManagedActions() {
         List<Action> actions = new ArrayList<>();
-        getMenuManager();
+        MenuModule.this.getMenuManager();
         actions.addAll(menuManager.getAllManagedActions());
 
         return actions;
     }
 
     @Nonnull
-    private DefaultMenuManager getMenuManager() {
+    private MenuManager getMenuManager() {
         if (menuManager == null) {
-            menuManager = new DefaultMenuManager();
+            menuManager = new MenuManager();
         }
 
         return menuManager;
@@ -152,40 +152,40 @@ public class MenuModule implements MenuModuleApi {
 
     @Nonnull
     @Override
-    public MenuManager createMenuManager() {
-        return new DefaultMenuManager();
+    public MenuManagement createMenuManager() {
+        return new MenuManager();
     }
 
     @Nonnull
     @Override
-    public MenuManagement getMenuManagement(String menuId, String moduleId) {
-        return new DefaultMenuManagement(getMenuManager(), menuId, moduleId);
+    public MenuDefinitionManagement getMenuManager(String menuId, String moduleId) {
+        return new MenuDefinitionManager(MenuModule.this.getMenuManager(), menuId, moduleId);
     }
 
     @Override
     public void registerMenu(String menuId, String moduleId) {
-        getMenuManager().registerMenu(menuId, moduleId);
+        MenuModule.this.getMenuManager().registerMenu(menuId, moduleId);
     }
 
     @Override
     public void unregisterMenu(String menuId) {
-        getMenuManager().unregisterMenu(menuId);
+        MenuModule.this.getMenuManager().unregisterMenu(menuId);
     }
 
     @Nonnull
     @Override
-    public MenuManagement getMainMenuManagement(String moduleId) {
-        return getMenuManagement(MAIN_MENU_ID, moduleId);
+    public MenuDefinitionManagement getMainMenuManager(String moduleId) {
+        return getMenuManager(MAIN_MENU_ID, moduleId);
     }
 
     @Override
     public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextManager actionContextManager) {
-        getMenuManager().buildMenu(targetMenu, menuId, actionContextManager);
+        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, actionContextManager);
     }
 
     @Override
     public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextManager actionContextManager) {
-        getMenuManager().buildMenu(targetMenuBar, menuId, actionContextManager);
+        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, actionContextManager);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class MenuModule implements MenuModuleApi {
 
     @Override
     public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, @Nullable String subMenuId, String moduleId, SeparationSequenceContributionRule.SeparationMode separationMode) {
-        MenuManagement mgmt = getMenuManagement(menuId, moduleId);
+        MenuDefinitionManagement mgmt = getMenuManager(menuId, moduleId);
         if (subMenuId != null) {
             mgmt = mgmt.getSubMenu(subMenuId);
         }

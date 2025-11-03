@@ -61,8 +61,8 @@ public class CutAction extends AbstractAction implements ActionContextChange {
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar manager) {
-        manager.registerUpdateListener(ActiveComponent.class, component -> {
+    public void register(ActionContextChangeRegistrar registrar) {
+        registrar.registerUpdateListener(ActiveComponent.class, component -> {
             clipboardSupport = component instanceof ClipboardController && component instanceof DeletionController ? (ClipboardController) component : null;
             update();
         });

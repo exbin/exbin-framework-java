@@ -26,9 +26,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface ActionContextChange {
 
     /**
-     * Registers context change listeners via provided manager.
+     * Registers context change listeners via provided registrar.
      *
-     * @param manager activation manager
+     * @param registrar change registration
      */
-    void register(ActionContextChangeRegistrar manager);
+    void register(ActionContextChangeRegistrar registrar);
 }

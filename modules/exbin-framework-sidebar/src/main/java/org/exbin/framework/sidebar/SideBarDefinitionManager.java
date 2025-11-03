@@ -22,21 +22,21 @@ import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
-import org.exbin.framework.sidebar.api.SideBarManagement;
+import org.exbin.framework.sidebar.api.SideBarDefinitionManagement;
 
 /**
- * Default side bar management.
+ * Default side bar definition manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultSideBarManagement implements SideBarManagement {
+public class SideBarDefinitionManager implements SideBarDefinitionManagement {
 
-    private final DefaultSideBarManager sideBarManager;
-    private final String sideBarId;
-    private final String moduleId;
+    protected final SideBarManager sideBarManager;
+    protected final String sideBarId;
+    protected final String moduleId;
 
-    public DefaultSideBarManagement(DefaultSideBarManager sideBarManager, String sideBarId, String moduleId) {
+    public SideBarDefinitionManager(SideBarManager sideBarManager, String sideBarId, String moduleId) {
         this.sideBarManager = sideBarManager;
         this.sideBarId = sideBarId;
         this.moduleId = moduleId;

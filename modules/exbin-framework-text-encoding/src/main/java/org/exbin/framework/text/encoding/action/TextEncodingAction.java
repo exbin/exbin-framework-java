@@ -28,7 +28,6 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController;
@@ -55,8 +54,8 @@ public class TextEncodingAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar manager) -> {
-            manager.registerUpdateListener(TextEncodingController.class, (instance) -> {
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            registrar.registerUpdateListener(TextEncodingController.class, (instance) -> {
                 textEncodingSupported = instance;
                 setEnabled(textEncodingSupported != null);
             });

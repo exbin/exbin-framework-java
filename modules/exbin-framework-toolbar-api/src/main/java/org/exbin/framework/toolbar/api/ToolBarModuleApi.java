@@ -52,7 +52,7 @@ public interface ToolBarModuleApi extends Module {
      * @return tool bar management interface
      */
     @Nonnull
-    ToolBarManagement getToolBarManagement(String toolBarId, String moduleId);
+    ToolBarDefinitionManagement getToolBarManager(String toolBarId, String moduleId);
 
     /**
      * Returns main tool bar management interface.
@@ -61,7 +61,7 @@ public interface ToolBarModuleApi extends Module {
      * @return tool bar management interface
      */
     @Nonnull
-    ToolBarManagement getMainToolBarManagement(String moduleId);
+    ToolBarDefinitionManagement getMainToolBarManager(String moduleId);
 
     /**
      * Creates tool bar manager.
@@ -69,7 +69,7 @@ public interface ToolBarModuleApi extends Module {
      * @return tool bar manager
      */
     @Nonnull
-    ToolBarManager createToolBarManager();
+    ToolBarManagement createToolBarManager();
 
     /**
      * Returns tool bar using given identificator.

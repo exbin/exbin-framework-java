@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.sidebar;
+package org.exbin.framework.toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,71 +21,78 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
+import org.exbin.framework.toolbar.api.ActionToolBarContribution;
 import org.exbin.framework.contribution.ContributionDefinition;
-import org.exbin.framework.sidebar.api.ActionSideBarContribution;
 import org.exbin.framework.contribution.ContributionManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
-import org.exbin.framework.sidebar.api.SideBarManager;
 import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.contribution.ContributionSequenceBuilder;
+import org.exbin.framework.toolbar.api.ToolBarManagement;
 
 /**
- * Sidebar manager.
+ * Default toolbar manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultSideBarManager extends ContributionManager implements SideBarManager {
+public class ToolBarManager extends ContributionManager implements ToolBarManagement {
 
     protected final ContributionSequenceBuilder builder = new ContributionSequenceBuilder();
 
-    public DefaultSideBarManager() {
+    public ToolBarManager() {
     }
 
     @Override
-    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager) {
-        ContributionDefinition definition = definitions.get(sideBarId);
-        builder.buildSequence(new SideToolBarSequenceOutput(targetSideBar, actionContextManager), definition);
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager) {
+        ContributionDefinition contributionDef = definitions.get(toolBarId);
+        builder.buildSequence(new ToolBarSequenceOutput(targetToolBar, actionContextManager), contributionDef);
     }
 
     @Override
-    public void registerSideBar(String sideBarId, String moduleId) {
-        registerDefinition(sideBarId, moduleId);
+    public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager) {
+        ContributionDefinition contributionDef = definitions.get(toolBarId);
+        builder.buildSequence(new IconToolBarSequenceOutput(targetToolBar, actionContextManager), contributionDef);
+    }
+
+    @Override
+    public void registerToolBar(String toolBarId, String moduleId) {
+        registerDefinition(toolBarId, moduleId);
     }
 
     @Nonnull
     @Override
-    public ActionSideBarContribution registerSideBarItem(String sideBarId, String moduleId, Action action) {
-        ContributionDefinition definition = definitions.get(sideBarId);
+    public ActionToolBarContribution registerToolBarItem(String toolBarId, String moduleId, Action action) {
+        ContributionDefinition definition = definitions.get(toolBarId);
         if (definition == null) {
-            throw new IllegalStateException("Definition with Id " + sideBarId + " doesn't exist");
+            throw new IllegalStateException("Definition with Id " + toolBarId + " doesn't exist");
         }
 
-        ActionSideBarContribution sideBarContribution = new ActionSideBarContribution(action);
-        definition.addContribution(sideBarContribution);
-        return sideBarContribution;
+        ActionToolBarContribution toolBarContribution = new ActionToolBarContribution(action);
+        definition.addContribution(toolBarContribution);
+        return toolBarContribution;
     }
 
     @Nonnull
     @Override
-    public GroupSequenceContribution registerSideBarGroup(String sideBarId, String moduleId, String groupId) {
-        return registerContributionGroup(sideBarId, moduleId, groupId);
+    public GroupSequenceContribution registerToolBarGroup(String toolBarId, String moduleId, String groupId) {
+        return registerContributionGroup(toolBarId, moduleId, groupId);
     }
 
     @Override
-    public void registerSideBarRule(SequenceContribution contribution, SequenceContributionRule rule) {
+    public void registerToolBarRule(SequenceContribution contribution, SequenceContributionRule rule) {
         registerContributionRule(contribution, rule);
     }
 
     @Nonnull
+    @Override
     public List<Action> getAllManagedActions() {
         List<Action> actions = new ArrayList<>();
         for (ContributionDefinition definition : definitions.values()) {
             for (SequenceContribution contribution : definition.getContributions()) {
-                if (contribution instanceof ActionSideBarContribution) {
-                    actions.add(((ActionSideBarContribution) contribution).getAction());
+                if (contribution instanceof ActionToolBarContribution) {
+                    actions.add(((ActionToolBarContribution) contribution).getAction());
                 }
             }
         }
