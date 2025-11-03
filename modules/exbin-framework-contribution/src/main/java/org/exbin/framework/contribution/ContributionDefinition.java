@@ -33,8 +33,8 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 @ParametersAreNonnullByDefault
 public class ContributionDefinition {
 
-    private List<SequenceContribution> contributions = new ArrayList<>();
-    private Map<SequenceContribution, List<SequenceContributionRule>> rules = new HashMap<>();
+    protected List<SequenceContribution> contributions = new ArrayList<>();
+    protected Map<SequenceContribution, List<SequenceContributionRule>> rules = new HashMap<>();
 
     public ContributionDefinition() {
     }

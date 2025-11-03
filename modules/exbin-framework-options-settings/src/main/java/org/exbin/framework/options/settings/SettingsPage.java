@@ -25,7 +25,6 @@ import javax.swing.GroupLayout;
 import javax.swing.JPanel;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.context.api.ActiveContextProvider;

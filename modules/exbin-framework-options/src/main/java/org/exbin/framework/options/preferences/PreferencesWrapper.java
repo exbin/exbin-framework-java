@@ -130,9 +130,6 @@ public class PreferencesWrapper implements OptionsStorage {
         }
     }
 
-    /**
-     * Makes any changes permanent (stores cached changes to permanent storage).
-     */
     @Override
     public void flush() {
         try {
@@ -142,9 +139,6 @@ public class PreferencesWrapper implements OptionsStorage {
         }
     }
 
-    /**
-     * Forces reloading of cache from permanent storage.
-     */
     @Override
     public void sync() {
         try {

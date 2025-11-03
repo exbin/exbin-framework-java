@@ -45,16 +45,25 @@ public class SeparationSequenceContributionRule implements SequenceContributionR
     }
 
     /**
-     * Enumeration of menu separator placement modes.
+     * Enumeration of separator placement modes.
      */
     public enum SeparationMode {
 
+        /**
+         * No separators around this contribution.
+         */
         NONE,
+        /**
+         * Include separator before this contribution.
+         */
         ABOVE,
         /**
-         * Includes separator both above and below
+         * Includes separator both above and below this contribution.
          */
         AROUND,
+        /**
+         * Include separator after this contribution.
+         */
         BELOW
     }
 }

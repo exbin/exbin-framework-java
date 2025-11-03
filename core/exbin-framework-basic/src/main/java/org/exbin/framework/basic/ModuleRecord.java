@@ -103,6 +103,7 @@ public interface ModuleRecord {
      *
      * @return list of dependecy libraries
      */
+    @Nonnull
     List<String> getDependencyLibraries();
 
     /**

@@ -11,6 +11,7 @@ if (rootProject.path == ':') {
     include ':modules:exbin-framework-frame-api'
     include ':modules:exbin-framework-language-api'
     include ':modules:exbin-framework-options-api'
+    include ':modules:exbin-framework-context-api'
     include ':modules:exbin-framework-contribution-api'
     include ':modules:exbin-framework-contribution'
     include ':modules:exbin-framework-utils'

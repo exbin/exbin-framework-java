@@ -28,7 +28,7 @@ public interface ClipboardActionsApi {
     /**
      * Creates cut to clipboard action.
      *
-     * @return action
+     * @return action instance
      */
     @Nonnull
     Action createCutAction();
@@ -36,7 +36,7 @@ public interface ClipboardActionsApi {
     /**
      * Creates copy to clipboard action.
      *
-     * @return action
+     * @return action instance
      */
     @Nonnull
     Action createCopyAction();
@@ -44,7 +44,7 @@ public interface ClipboardActionsApi {
     /**
      * Creates paste from clipboard action.
      *
-     * @return action
+     * @return action instance
      */
     @Nonnull
     Action createPasteAction();
@@ -52,7 +52,7 @@ public interface ClipboardActionsApi {
     /**
      * Creates delete selection action.
      *
-     * @return action
+     * @return action instance
      */
     @Nonnull
     Action createDeleteAction();
@@ -60,7 +60,7 @@ public interface ClipboardActionsApi {
     /**
      * Creates select all action.
      *
-     * @return action
+     * @return action instance
      */
     @Nonnull
     Action createSelectAllAction();

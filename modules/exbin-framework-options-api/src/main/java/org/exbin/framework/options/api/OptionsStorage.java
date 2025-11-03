@@ -28,8 +28,17 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface OptionsStorage {
 
+    /**
+     * Makes any changes permanent (stores cached changes to permanent storage).
+     */
     void flush();
 
+    /**
+     * Checks whether specific key exists.
+     *
+     * @param key options key
+     * @return true if exists
+     */
     boolean exists(String key);
 
     @Nonnull
@@ -65,7 +74,15 @@ public interface OptionsStorage {
 
     void putLong(String key, long value);
 
+    /**
+     * Removes options key.
+     *
+     * @param key options key
+     */
     void remove(String key);
 
+    /**
+     * Forces reloading of cache from permanent storage.
+     */
     void sync();
 }

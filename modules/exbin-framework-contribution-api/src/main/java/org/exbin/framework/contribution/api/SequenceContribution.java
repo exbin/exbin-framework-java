@@ -16,7 +16,7 @@
 package org.exbin.framework.contribution.api;
 
 /**
- * Interface for sequence contributions.
+ * Interface for sequence contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */

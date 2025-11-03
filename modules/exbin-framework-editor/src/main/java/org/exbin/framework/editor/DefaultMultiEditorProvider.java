@@ -32,7 +32,6 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ComponentActivationProvider;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.menu.api.MenuManagement;
@@ -204,7 +203,6 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     }
 
     public void initFileHandler(FileHandler fileHandler) {
-        if (fileHandler instanceof ComponentActivationProvider) {
 //            ComponentActivationService fileComponentActivationService = ((ComponentActivationProvider) fileHandler).getActionContextManager();
 //            fileComponentActivationService.registerListener(new ComponentActivationListener() {
 //                @Override
@@ -214,7 +212,6 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 //                    }
 //                }
 //            });
-        }
     }
 
     @Override
