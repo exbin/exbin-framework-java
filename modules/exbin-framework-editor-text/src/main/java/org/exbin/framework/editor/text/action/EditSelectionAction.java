@@ -36,7 +36,7 @@ import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.controller.DefaultControlController;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Edit selection action.
@@ -59,7 +59,7 @@ public class EditSelectionAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistrar registrar) {
+            public void register(ActionContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(ActiveComponent.class, (instance) -> {
                     if (instance instanceof JTextComponent) {
                         component = (JTextComponent) instance;

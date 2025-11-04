@@ -31,9 +31,9 @@ import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule.PositionMode;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.toolbar.api.ToolBarDefinitionManagement;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Implementation of tool bar module.
@@ -93,8 +93,8 @@ public class ToolBarModule implements ToolBarModuleApi {
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager) {
-        ToolBarModule.this.getToolBarManager().buildToolBar(targetToolBar, toolBarId, actionContextManager);
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextRegistration actionContextRegistration) {
+        ToolBarModule.this.getToolBarManager().buildToolBar(targetToolBar, toolBarId, actionContextRegistration);
     }
 
     @Override

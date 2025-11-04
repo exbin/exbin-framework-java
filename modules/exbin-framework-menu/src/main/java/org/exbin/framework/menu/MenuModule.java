@@ -39,9 +39,9 @@ import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.menu.api.MenuManagement;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Implementation of menu module.
@@ -179,13 +179,13 @@ public class MenuModule implements MenuModuleApi {
     }
 
     @Override
-    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextManager actionContextManager) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, actionContextManager);
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextRegistration actionContextRegistration) {
+        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, actionContextRegistration);
     }
 
     @Override
-    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextManager actionContextManager) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, actionContextManager);
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextRegistration actionContextRegistration) {
+        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, actionContextRegistration);
     }
 
     @Override

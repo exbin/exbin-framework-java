@@ -16,13 +16,15 @@
 package org.exbin.framework.context;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ActiveContextManager;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Default active context manager.
@@ -30,7 +32,7 @@ import org.exbin.framework.context.api.ActiveContextChangeListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultActiveContextManager implements ActiveContextManager {
+public class ActiveContextManager implements ActiveContextManagement {
 
     protected final Map<Class<?>, Object> activeStates = new HashMap<>();
     protected final List<ActiveContextChangeListener> changeListeners = new ArrayList<>();
@@ -39,6 +41,14 @@ public class DefaultActiveContextManager implements ActiveContextManager {
     @SuppressWarnings("unchecked")
     public <T> T getActiveState(Class<T> stateClass) {
         return (T) activeStates.get(stateClass);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Class<?>> getStateClasses() {
+        List<Class<?>> stateClasses = new ArrayList<>();
+        stateClasses.addAll(activeStates.keySet());
+        return stateClasses;
     }
 
     @Override

@@ -23,25 +23,25 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.context.api.ActiveContextManager;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
 import org.exbin.framework.action.api.ActionContextChangeListener;
+import org.exbin.framework.action.api.ActionManagement;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
- * Action manager.
+ * Default action manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultActionManager implements ActionManager {
+public class ActionManager implements ActionManagement {
 
-    protected final ActiveContextManager contextManager;
+    protected final ActiveContextManagement contextManager;
     protected final Map<String, ActionRecord> actions = new HashMap<>();
     protected final Map<Class<?>, List<ActionContextChangeListener<?>>> actionContextChangeListeners = new HashMap<>();
 
-    public DefaultActionManager(ActiveContextManager contextManager) {
+    public ActionManager(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
     }
 
@@ -73,12 +73,6 @@ public class DefaultActionManager implements ActionManager {
         }
     }
 
-    @Override
-    public void registerActionContext(Action action) {
-        registerAction(action);
-        initAction(action);
-    }
-
 /*    @SuppressWarnings("unchecked")
     @Override
     public <T> void updated(Class<T> componentClass, @Nullable T componentInstance) {
@@ -91,8 +85,24 @@ public class DefaultActionManager implements ActionManager {
         }
     } */
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void requestUpdateForAction(Action action) {
+        String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
+        ActionRecord actionRecord = actions.get(actionId);
+
+        // TODO Restrict to specific action listeners
+        for (Class<?> stateClass : contextManager.getStateClasses()) {
+            Object instance = contextManager.getActiveState(stateClass);
+            ActionContextChangeListener listener = actionRecord.contextChangeListeners.get(stateClass);
+            if (listener != null) {
+                listener.stateChanged(instance);
+            }
+        }
+    }
+
     @ParametersAreNonnullByDefault
-    private class DefaultActionContextChangeRegistrar implements ActionContextChangeRegistrar {
+    private class DefaultActionContextChangeRegistrar implements ActionContextChangeRegistration {
 
         private final ActionRecord actionRecord;
 
@@ -154,7 +164,7 @@ public class DefaultActionManager implements ActionManager {
             Class key = entry.getKey();
             Object instance = entry.getValue();
             for (ComponentActivationListener listener : listeners) {
-                listener.updated(key, instance);
+                listener.updated(key, instance);ApplicationFrame
             }
         }
     }
@@ -165,7 +175,7 @@ public class DefaultActionManager implements ActionManager {
         Object value = action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
         Map<Class<?>, ActionContextChangeListener<?>> actionListeners = new HashMap<>();
         if (value instanceof ActionContextChange) {
-            ((ActionContextChange) value).register(new ActionContextChangeRegistrar() {
+            ((ActionContextChange) value).register(new ActionContextChangeRegistration() {
                 @Override
                 public <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
                     actionListeners.put(componentClass, listener);

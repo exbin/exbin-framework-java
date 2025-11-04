@@ -23,7 +23,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SubSequenceContribution;
 import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
@@ -31,6 +30,7 @@ import org.exbin.framework.menu.api.ActionMenuContribution;
 import org.exbin.framework.menu.api.DirectMenuContribution;
 import org.exbin.framework.menu.api.SubMenuContribution;
 import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Menu bar sequence output.
@@ -41,12 +41,12 @@ import org.exbin.framework.utils.UiUtils;
 public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
 
     protected final JMenuBar menuBar;
-    protected final ActionContextManager actionContextManager;
+    protected final ActionContextRegistration actionContextRegistration;
     protected final Map<String, ButtonGroup> buttonGroups;
 
-    public MenuBarSequenceOutput(JMenuBar menuBar, ActionContextManager actionContextManager, Map<String, ButtonGroup> buttonGroups) {
+    public MenuBarSequenceOutput(JMenuBar menuBar, ActionContextRegistration actionContextRegistration, Map<String, ButtonGroup> buttonGroups) {
         this.menuBar = menuBar;
-        this.actionContextManager = actionContextManager;
+        this.actionContextRegistration = actionContextRegistration;
         this.buttonGroups = buttonGroups;
     }
 
@@ -75,7 +75,7 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
         if (contribution instanceof SubSequenceContribution) {
             JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
             menuBar.add(subMenu);
-            MenuSequenceOutput.finishMenuItem(subMenu, actionContextManager);
+            MenuSequenceOutput.finishMenuItem(subMenu, actionContextRegistration);
             return;
         }
 
@@ -86,7 +86,7 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
 
         JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
         menuBar.add(menuItem);
-        MenuSequenceOutput.finishMenuItem(menuItem, actionContextManager);
+        MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
     @Nonnull
     @Override
     public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), actionContextManager, buttonGroups);
+        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), actionContextRegistration, buttonGroups);
     }
 
     @Override

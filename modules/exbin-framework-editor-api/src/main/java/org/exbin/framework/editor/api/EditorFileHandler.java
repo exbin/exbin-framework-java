@@ -16,7 +16,7 @@
 package org.exbin.framework.editor.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Interface for file handler for editor.
@@ -31,12 +31,12 @@ public interface EditorFileHandler {
      *
      * @param contextManager context manager
      */
-    void componentActivated(ActiveContextManager contextManager);
+    void componentActivated(ActiveContextManagement contextManager);
 
     /**
      * Notifies file handler deactivated as editor.
      *
      * @param contextManager context manager
      */
-    void componentDeactivated(ActiveContextManager contextManager);
+    void componentDeactivated(ActiveContextManagement contextManager);
 }

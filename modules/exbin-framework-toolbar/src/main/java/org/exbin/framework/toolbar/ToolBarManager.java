@@ -27,9 +27,9 @@ import org.exbin.framework.contribution.ContributionManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.contribution.ContributionSequenceBuilder;
 import org.exbin.framework.toolbar.api.ToolBarManagement;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Default toolbar manager.
@@ -45,15 +45,17 @@ public class ToolBarManager extends ContributionManager implements ToolBarManage
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager) {
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextRegistration actionContextRegistration) {
         ContributionDefinition contributionDef = definitions.get(toolBarId);
-        builder.buildSequence(new ToolBarSequenceOutput(targetToolBar, actionContextManager), contributionDef);
+        builder.buildSequence(new ToolBarSequenceOutput(targetToolBar, actionContextRegistration), contributionDef);
+        actionContextRegistration.finish();
     }
 
     @Override
-    public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager) {
+    public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextRegistration actionContextRegistration) {
         ContributionDefinition contributionDef = definitions.get(toolBarId);
-        builder.buildSequence(new IconToolBarSequenceOutput(targetToolBar, actionContextManager), contributionDef);
+        builder.buildSequence(new IconToolBarSequenceOutput(targetToolBar, actionContextRegistration), contributionDef);
+        actionContextRegistration.finish();
     }
 
     @Override

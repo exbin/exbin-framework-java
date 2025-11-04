@@ -28,7 +28,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.SelectionController;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Select all action.
@@ -60,7 +60,7 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar registrar) {
+    public void register(ActionContextChangeRegistration registrar) {
         registrar.registerUpdateListener(ActiveComponent.class, component -> {
             selectionSupport = component instanceof SelectionController ? (SelectionController) component : null;
             update();

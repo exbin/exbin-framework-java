@@ -26,7 +26,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Close file action.
@@ -49,7 +49,7 @@ public class CloseOtherFilesAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistrar registrar) {
+            public void register(ActionContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(FileHandler.class, (instance) -> {
                     fileHandler = instance;
                     update();

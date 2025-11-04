@@ -16,6 +16,7 @@
 package org.exbin.framework.context;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,8 +25,8 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ActiveContextManager;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Child active context manager.
@@ -33,14 +34,14 @@ import org.exbin.framework.context.api.ActiveContextChangeListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ChildActiveContextManager implements ActiveContextManager {
+public class ChildActiveContextManager implements ActiveContextManagement {
 
-    protected final ActiveContextManager parentContextManager;
+    protected final ActiveContextManagement parentContextManager;
     protected final Map<Class<?>, Object> activeStates = new HashMap<>();
     protected final Set<Class<?>> childStates = new HashSet<>();
     protected final List<ActiveContextChangeListener> changeListeners = new ArrayList<>();
 
-    public ChildActiveContextManager(ActiveContextManager parentContextManager) {
+    public ChildActiveContextManager(ActiveContextManagement parentContextManager) {
         this.parentContextManager = parentContextManager;
         parentContextManager.addChangeListener(new ActiveContextChangeListener() {
             @Override
@@ -63,6 +64,15 @@ public class ChildActiveContextManager implements ActiveContextManager {
         }
 
         return parentContextManager.getActiveState(stateClass);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Class<?>> getStateClasses() {
+        List<Class<?>> stateClasses = new ArrayList<>();
+        stateClasses.addAll(activeStates.keySet());
+        stateClasses.addAll(parentContextManager.getStateClasses());
+        return stateClasses;
     }
 
     @Override

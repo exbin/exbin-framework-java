@@ -26,7 +26,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Save file action.
@@ -49,7 +49,7 @@ public class SaveFileAction extends AbstractAction {
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistrar registrar) {
+            public void register(ActionContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(FileOperations.class, (instance) -> {
                     fileOperations = instance;
                     setEnabled(instance != null && instance.canSave());

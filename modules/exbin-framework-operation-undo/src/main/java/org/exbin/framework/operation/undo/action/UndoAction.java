@@ -27,7 +27,7 @@ import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Undo action.
@@ -62,7 +62,7 @@ public class UndoAction extends AbstractAction implements ActionContextChange {
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar registrar) {
+    public void register(ActionContextChangeRegistration registrar) {
         registrar.registerUpdateListener(UndoRedoState.class, (instance) -> {
             undoRedo = instance;
             boolean canUndo = undoRedo != null && undoRedo.canUndo();

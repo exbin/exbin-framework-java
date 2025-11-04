@@ -34,6 +34,7 @@ import javax.swing.filechooser.FileFilter;
 import org.exbin.framework.App;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.action.api.ActionContextRegistration;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.text.gui.TextPanel;
@@ -504,7 +505,9 @@ public class EditorTextModule implements Module {
                 JPopupMenu popupMenu = UiUtils.createPopupMenu();
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-                menuModule.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, frameModule.getFrameHandler().getActionContextManager());
+                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+                ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameModule.getFrameHandler().getActionManager());
+                menuModule.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, actionContextRegistrar);
                 popupMenu.show(invoker, x, y);
             }
         };

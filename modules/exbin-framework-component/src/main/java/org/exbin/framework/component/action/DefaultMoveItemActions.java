@@ -29,7 +29,7 @@ import org.exbin.framework.component.api.toolbar.MoveItemActions;
 import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
 import org.exbin.framework.component.api.toolbar.SideToolBar;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Item movement default action set.
@@ -95,7 +95,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
                 registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
@@ -120,7 +120,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
                 registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
@@ -145,7 +145,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
                 registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
@@ -170,7 +170,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
                 registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
                     actionsHandler = instance;
                     setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());

@@ -32,7 +32,7 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.operation.manager.controller.UndoManagerControlController;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Undo manager action.
@@ -73,7 +73,7 @@ public class UndoManagerAction extends AbstractAction implements ActionContextCh
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar registrar) {
+    public void register(ActionContextChangeRegistration registrar) {
         registrar.registerUpdateListener(UndoRedoState.class, (instance) -> {
             undoHandler = instance;
             setEnabled(instance != null);

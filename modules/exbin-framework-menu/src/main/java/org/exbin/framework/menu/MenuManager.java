@@ -37,9 +37,9 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.menu.api.DirectMenuContribution;
 import org.exbin.framework.menu.api.MenuItemProvider;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.contribution.TreeContributionSequenceBuilder;
 import org.exbin.framework.menu.api.MenuManagement;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Default menus manager.
@@ -55,24 +55,27 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
     }
 
     @Override
-    public void buildMenu(JMenu outputMenu, String menuId, ActionContextManager actionContextManager) {
+    public void buildMenu(JMenu outputMenu, String menuId, ActionContextRegistration actionContextRegistration) {
         ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        builder.buildSequence(new MenuSequenceOutput(outputMenu, actionContextManager, buttonGroups), menuId, definition);
+        builder.buildSequence(new MenuSequenceOutput(outputMenu, actionContextRegistration, buttonGroups), menuId, definition);
+        actionContextRegistration.finish();
     }
 
     @Override
-    public void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextManager actionContextManager) {
+    public void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextRegistration actionContextRegistration) {
         ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        builder.buildSequence(new PopupMenuSequenceOutput(outputMenu, actionContextManager, buttonGroups), menuId, definition);
+        builder.buildSequence(new PopupMenuSequenceOutput(outputMenu, actionContextRegistration, buttonGroups), menuId, definition);
+        actionContextRegistration.finish();
     }
 
     @Override
-    public void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextManager actionContextManager) {
+    public void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextRegistration actionContextRegistration) {
         ContributionDefinition definition = definitions.get(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
-        builder.buildSequence(new MenuBarSequenceOutput(outputMenuBar, actionContextManager, buttonGroups), menuId, definition);
+        builder.buildSequence(new MenuBarSequenceOutput(outputMenuBar, actionContextRegistration, buttonGroups), menuId, definition);
+        actionContextRegistration.finish();
     }
 
     @Override

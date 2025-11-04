@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.action.api.DeletionController;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Delete in document action.
@@ -60,7 +60,7 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
     }
 
     @Override
-    public void register(ActionContextChangeRegistrar registrar) {
+    public void register(ActionContextChangeRegistration registrar) {
         registrar.registerUpdateListener(ActiveComponent.class, component -> {
             deletionSupport = component instanceof DeletionController ? (DeletionController) component : null;
             update();

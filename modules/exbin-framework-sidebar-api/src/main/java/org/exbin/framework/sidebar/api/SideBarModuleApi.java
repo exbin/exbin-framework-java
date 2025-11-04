@@ -22,7 +22,7 @@ import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Interface for side bar support module.
@@ -75,9 +75,9 @@ public interface SideBarModuleApi extends Module {
      *
      * @param targetSideBar target sidebar
      * @param sideBarId sidebar id
-     * @param actionContextManager action context manager
+     * @param actionContextRegistration action context registration
      */
-    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager);
+    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Returns list of action managed by sidebar managers.

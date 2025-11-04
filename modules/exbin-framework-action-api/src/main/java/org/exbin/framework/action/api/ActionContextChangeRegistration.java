@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionContextChangeRegistrar {
+public interface ActionContextChangeRegistration {
 
     /**
      * Registers listener to call once when menu is created for component or

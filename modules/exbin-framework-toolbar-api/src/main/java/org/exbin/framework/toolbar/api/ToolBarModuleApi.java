@@ -22,7 +22,7 @@ import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Interface for tool bar support module.
@@ -76,9 +76,9 @@ public interface ToolBarModuleApi extends Module {
      *
      * @param targetToolBar target toolbar
      * @param toolBarId toolbar id
-     * @param actionContextManager action context manager
+     * @param actionContextRegistration action context registration
      */
-    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextManager actionContextManager);
+    void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Registers tool bar clipboard actions.

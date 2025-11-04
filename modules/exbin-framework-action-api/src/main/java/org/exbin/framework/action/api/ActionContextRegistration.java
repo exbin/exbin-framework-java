@@ -13,39 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.context.api;
+package org.exbin.framework.action.api;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 
 /**
- * Interface for context state provider.
+ * Manager for action context registration.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActiveContextManager extends ActiveContextProvider {
+public interface ActionContextRegistration {
 
     /**
-     * Changes active state.
+     * Registers action context.
      *
-     * @param <T> state type
-     * @param stateClass state class
-     * @param activeState active state
+     * @param action action
      */
-    <T> void changeActiveState(Class<T> stateClass, @Nullable T activeState);
+    void registerActionContext(Action action);
 
     /**
-     * Adds change listener.
-     *
-     * @param changeListener change listener
+     * Finish registration process.
      */
-    void addChangeListener(ActiveContextChangeListener changeListener);
-
-    /**
-     * Removes change listener.
-     *
-     * @param changeListener change listener
-     */
-    void removeChangeListener(ActiveContextChangeListener changeListener);
+    void finish();
 }

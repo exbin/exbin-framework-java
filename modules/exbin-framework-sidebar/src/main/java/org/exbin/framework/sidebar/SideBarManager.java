@@ -27,9 +27,9 @@ import org.exbin.framework.contribution.ContributionManager;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.contribution.ContributionSequenceBuilder;
 import org.exbin.framework.sidebar.api.SideBarManagement;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Default sidebar manager.
@@ -45,9 +45,10 @@ public class SideBarManager extends ContributionManager implements SideBarManage
     }
 
     @Override
-    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager) {
+    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration) {
         ContributionDefinition definition = definitions.get(sideBarId);
-        builder.buildSequence(new SideToolBarSequenceOutput(targetSideBar, actionContextManager), definition);
+        builder.buildSequence(new SideToolBarSequenceOutput(targetSideBar, actionContextRegistration), definition);
+        actionContextRegistration.finish();
     }
 
     @Override

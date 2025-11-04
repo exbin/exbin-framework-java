@@ -23,7 +23,7 @@ import javax.swing.JToolBar;
 import org.exbin.framework.toolbar.api.ActionToolBarContribution;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
-import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Icon toolbar sequence output.
@@ -34,11 +34,11 @@ import org.exbin.framework.action.api.ActionContextManager;
 public class IconToolBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final JToolBar toolBar;
-    protected final ActionContextManager actionContextManager;
+    protected final ActionContextRegistration actionContextRegistration;
 
-    public IconToolBarSequenceOutput(JToolBar menuBar, ActionContextManager actionContextManager) {
+    public IconToolBarSequenceOutput(JToolBar menuBar, ActionContextRegistration actionContextRegistration) {
         this.toolBar = menuBar;
-        this.actionContextManager = actionContextManager;
+        this.actionContextRegistration = actionContextRegistration;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class IconToolBarSequenceOutput implements ContributionSequenceOutput {
             ((AbstractButton) component).setText("");
         }
         toolBar.add(component);
-        ToolBarSequenceOutput.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), actionContextManager);
+        ToolBarSequenceOutput.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), actionContextRegistration);
     }
 
     @Override

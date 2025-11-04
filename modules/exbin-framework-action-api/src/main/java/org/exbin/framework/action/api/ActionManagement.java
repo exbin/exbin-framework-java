@@ -19,17 +19,31 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 
 /**
- * Manager for action context registration.
+ * Action management.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionContextManager {
+public interface ActionManagement {
 
     /**
-     * Registers action context.
+     * Registers given action.
      *
      * @param action action
      */
-    void registerActionContext(Action action);
+    void registerAction(Action action);
+
+    /**
+     * Initializes given action.
+     *
+     * @param action action
+     */
+    void initAction(Action action);
+
+    /**
+     * Requests update for specific action.
+     *
+     * @param action action
+     */
+    void requestUpdateForAction(Action action);
 }

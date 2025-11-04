@@ -28,7 +28,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.frame.ApplicationFrame;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Basic frame actions.
@@ -80,7 +80,7 @@ public class FrameActions {
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
                 registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
                     frame = instance;
                     setEnabled(frame != null);
@@ -113,7 +113,7 @@ public class FrameActions {
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
                 registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
                     frame = instance;
                     setEnabled(frame != null);
@@ -146,7 +146,7 @@ public class FrameActions {
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistrar registrar) -> {
+            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
                 registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
                     frame = instance;
                     setEnabled(frame != null);

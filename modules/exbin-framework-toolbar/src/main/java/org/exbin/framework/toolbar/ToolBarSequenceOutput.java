@@ -32,8 +32,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.toolbar.api.ActionToolBarContribution;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.action.api.ActionType;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Toolbar sequence output.
@@ -44,11 +44,11 @@ import org.exbin.framework.action.api.ActionType;
 public class ToolBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final JToolBar toolBar;
-    protected final ActionContextManager actionContextManager;
+    protected final ActionContextRegistration actionContextRegistration;
 
-    public ToolBarSequenceOutput(JToolBar menuBar, ActionContextManager actionContextManager) {
+    public ToolBarSequenceOutput(JToolBar menuBar, ActionContextRegistration actionContextRegistration) {
         this.toolBar = menuBar;
-        this.actionContextManager = actionContextManager;
+        this.actionContextRegistration = actionContextRegistration;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ToolBarSequenceOutput implements ContributionSequenceOutput {
     @Override
     public void add(ItemSequenceContribution itemContribution) {
         toolBar.add(((ActionToolBarContribution) itemContribution).getComponent());
-        ToolBarSequenceOutput.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), actionContextManager);
+        ToolBarSequenceOutput.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), actionContextRegistration);
     }
 
     @Override
@@ -135,11 +135,11 @@ public class ToolBarSequenceOutput implements ContributionSequenceOutput {
         return button;
     }
 
-    protected static void finishToolBarAction(Action action, ActionContextManager actionContextManager) {
+    protected static void finishToolBarAction(Action action, ActionContextRegistration actionContextRegistration) {
         if (action == null) {
             return;
         }
 
-        actionContextManager.registerActionContext(action);
+        actionContextRegistration.registerActionContext(action);
     }
 }

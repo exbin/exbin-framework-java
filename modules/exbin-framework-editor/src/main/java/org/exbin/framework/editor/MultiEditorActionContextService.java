@@ -18,7 +18,7 @@ package org.exbin.framework.editor;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Default multi editor component activation service.
+ * TODO: Default multi editor component activation service.
  *
  * @author ExBin Project (https://exbin.org)
  */

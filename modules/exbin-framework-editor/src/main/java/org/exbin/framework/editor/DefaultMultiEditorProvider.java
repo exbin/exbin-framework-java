@@ -50,9 +50,10 @@ import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.action.api.ActionContextManager;
-import org.exbin.framework.context.api.ActiveContextManager;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
+import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Default multi editor provider.
@@ -105,10 +106,11 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
                 }
 
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                ActionContextManager actionContextService = frameModule.getFrameHandler().getActionContextManager();
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
                 JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
-                menuModule.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, actionContextService);
+                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+                ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameModule.getFrameHandler().getActionManager());
+                menuModule.buildMenu(fileContextPopupMenu, FILE_CONTEXT_MENU_ID, actionContextRegistrar);
                 fileContextPopupMenu.show(component, positionX, positionY);
                 // TODO dispose?
             }
@@ -119,7 +121,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     public void activeFileChanged() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ActiveContextManager contextManager = frameModule.getFrameHandler().getContextManager();
+        ActiveContextManagement contextManager = frameModule.getFrameHandler().getContextManager();
 
         if (activeFile instanceof EditorFileHandler) {
             ((EditorFileHandler) activeFile).componentDeactivated(contextManager); // componentActivationService.getFileActivationListener(activeFile));

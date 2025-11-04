@@ -21,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.context.api.ContextModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Implementation of context module.
@@ -33,7 +33,7 @@ public class ContextModule implements ContextModuleApi {
 
     private ResourceBundle resourceBundle;
 
-    private DefaultActiveContextManager applicationContextManager;
+    private ActiveContextManager applicationContextManager;
 
     public ContextModule() {
     }
@@ -58,22 +58,22 @@ public class ContextModule implements ContextModuleApi {
 
     @Nonnull
     @Override
-    public ActiveContextManager getMainContextManager() {
+    public ActiveContextManagement getMainContextManager() {
         if (applicationContextManager == null) {
-            applicationContextManager = new DefaultActiveContextManager();
+            applicationContextManager = new ActiveContextManager();
         }
         return applicationContextManager;
     }
 
     @Nonnull
     @Override
-    public ActiveContextManager createContextManager() {
-        return new DefaultActiveContextManager();
+    public ActiveContextManagement createContextManager() {
+        return new ActiveContextManager();
     }
 
     @Nonnull
     @Override
-    public ActiveContextManager createChildContextManager(ActiveContextManager parentContextManager) {
+    public ActiveContextManagement createChildContextManager(ActiveContextManagement parentContextManager) {
         return new ChildActiveContextManager(parentContextManager);
     }
 }

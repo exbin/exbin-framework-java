@@ -36,7 +36,7 @@ import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
-import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Text editor provider.
@@ -49,7 +49,7 @@ public class TextEditorProvider implements EditorProvider {
     private TextFileHandler activeFile;
     private FileTypes fileTypes;
 
-    private ActiveContextManager contextManager;
+    private ActiveContextManagement contextManager;
 
     private PropertyChangeListener propertyChangeListener;
     @Nullable

@@ -30,7 +30,7 @@ import javax.swing.JPopupMenu;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
-import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Interface for menu support module.
@@ -117,18 +117,18 @@ public interface MenuModuleApi extends Module {
      *
      * @param targetMenu target menu
      * @param menuId menu identificator
-     * @param actionContextService action context service
+     * @param actionContextRegistration action context registration
      */
-    void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextManager actionContextService);
+    void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Returns menu using given identificator.
      *
      * @param targetMenuBar target menu bar
      * @param menuId menu identificator
-     * @param actionContextService action context service
+     * @param actionContextRegistration action context registration
      */
-    void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextManager actionContextService);
+    void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Returns menu module resource bundle.

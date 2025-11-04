@@ -31,15 +31,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.ActionManager;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
-import org.exbin.framework.context.api.ActiveContextManager;
-import org.exbin.framework.action.api.ActionContextChangeRegistrar;
+import org.exbin.framework.action.api.ActionManagement;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Implementation of action module.
@@ -100,8 +101,14 @@ public class ActionModule implements ActionModuleApi {
 
     @Nonnull
     @Override
-    public ActionManager createActionManager(ActiveContextManager contextManager) {
-        return new DefaultActionManager(contextManager);
+    public ActionManagement createActionManager(ActiveContextManagement contextManager) {
+        return new ActionManager(contextManager);
+    }
+
+    @Nonnull
+    @Override
+    public ActionContextRegistration createActionContextRegistrar(ActionManagement actionManagement) {
+        return new ActionContextRegistrar(actionManagement);
     }
 
     @Override
@@ -226,7 +233,7 @@ public class ActionModule implements ActionModuleApi {
         return customClipboardActions;
     }
      */
-    /* public void registerClipboardFlavorListener(ActionContextChangeRegistrar registrar) {
+    /* public void registerClipboardFlavorListener(ActionContextChangeRegistration registrar) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
 
             private final ClipboardFlavorState clipboardFlavorState = new ClipboardFlavorState();

@@ -24,7 +24,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SubSequenceContribution;
 import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
@@ -33,6 +32,7 @@ import org.exbin.framework.menu.api.ActionMenuCreation;
 import org.exbin.framework.menu.api.DirectMenuContribution;
 import org.exbin.framework.menu.api.SubMenuContribution;
 import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Popup menu sequence output.
@@ -43,12 +43,12 @@ import org.exbin.framework.utils.UiUtils;
 public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
 
     protected final JPopupMenu menu;
-    protected final ActionContextManager actionContextManager;
+    protected final ActionContextRegistration actionContextRegistration;
     protected final Map<String, ButtonGroup> buttonGroups;
 
-    public PopupMenuSequenceOutput(JPopupMenu menu, ActionContextManager actionContextManager, Map<String, ButtonGroup> buttonGroups) {
+    public PopupMenuSequenceOutput(JPopupMenu menu, ActionContextRegistration actionContextRegistration, Map<String, ButtonGroup> buttonGroups) {
         this.menu = menu;
-        this.actionContextManager = actionContextManager;
+        this.actionContextRegistration = actionContextRegistration;
         this.buttonGroups = buttonGroups;
     }
 
@@ -118,7 +118,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
         if (contribution instanceof SubMenuContribution) {
             JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
             menu.add(subMenu);
-            MenuSequenceOutput.finishMenuItem(subMenu, actionContextManager);
+            MenuSequenceOutput.finishMenuItem(subMenu, actionContextRegistration);
             return;
         }
 
@@ -129,7 +129,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
 
         JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
         menu.add(menuItem);
-        MenuSequenceOutput.finishMenuItem(menuItem, actionContextManager);
+        MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
     @Nonnull
     @Override
     public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), actionContextManager, buttonGroups, true);
+        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), actionContextRegistration, buttonGroups, true);
     }
 
     @Override

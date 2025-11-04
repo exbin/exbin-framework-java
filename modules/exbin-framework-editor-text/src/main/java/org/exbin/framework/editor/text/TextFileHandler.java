@@ -41,7 +41,7 @@ import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.text.font.TextFontController;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
-import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Text file handler.
@@ -56,7 +56,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     protected URI fileUri = null;
     protected String title;
     protected FileType fileType = null;
-    protected ActiveContextManager contextManager;
+    protected ActiveContextManagement contextManager;
     protected DialogParentComponent dialogParentComponent;
     protected UndoRedoController undoRedoControl = null;
     protected EditorTextPanelComponent textPanelComponent;
@@ -219,7 +219,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     }
 
     @Override
-    public void componentActivated(ActiveContextManager contextManager) {
+    public void componentActivated(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
         contextManager.changeActiveState(ActiveComponent.class, textPanelComponent);
         contextManager.changeActiveState(TextFontController.class, textPanelComponent);
@@ -229,7 +229,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     }
 
     @Override
-    public void componentDeactivated(ActiveContextManager contextManager) {
+    public void componentDeactivated(ActiveContextManagement contextManager) {
         this.contextManager = null;
         contextManager.changeActiveState(ActiveComponent.class, null);
         contextManager.changeActiveState(TextFontController.class, null);

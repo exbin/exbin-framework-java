@@ -15,43 +15,47 @@
  */
 package org.exbin.framework.context.api;
 
+import java.util.Collection;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
 
 /**
- * Interface for context support module.
+ * Interface for context state management.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ContextModuleApi extends Module {
-
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(ContextModuleApi.class);
+public interface ActiveContextManagement extends ActiveContextProvider {
 
     /**
-     * Returns main application context manager.
+     * Returns state classes.
      *
-     * @return context manager
+     * @return state classes
      */
     @Nonnull
-    ActiveContextManagement getMainContextManager();
+    Collection<Class<?>> getStateClasses();
 
     /**
-     * Creates new default context manager.
+     * Changes active state.
      *
-     * @return context manager
+     * @param <T> state type
+     * @param stateClass state class
+     * @param activeState active state
      */
-    @Nonnull
-    ActiveContextManagement createContextManager();
+    <T> void changeActiveState(Class<T> stateClass, @Nullable T activeState);
 
     /**
-     * Creates new child context manager for given parent context manager.
+     * Adds change listener.
      *
-     * @param parentContextManager parent context manager
-     * @return context manager
+     * @param changeListener change listener
      */
-    @Nonnull
-    ActiveContextManagement createChildContextManager(ActiveContextManagement parentContextManager);
+    void addChangeListener(ActiveContextChangeListener changeListener);
+
+    /**
+     * Removes change listener.
+     *
+     * @param changeListener change listener
+     */
+    void removeChangeListener(ActiveContextChangeListener changeListener);
 }

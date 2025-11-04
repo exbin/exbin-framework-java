@@ -30,5 +30,5 @@ public interface ActionContextChange {
      *
      * @param registrar change registration
      */
-    void register(ActionContextChangeRegistrar registrar);
+    void register(ActionContextChangeRegistration registrar);
 }

@@ -24,7 +24,6 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -34,7 +33,7 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionManager;
+import org.exbin.framework.action.api.ActionContextRegistration;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.action.api.ActionModuleApi;
@@ -44,9 +43,9 @@ import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.context.api.ContextModuleApi;
-import org.exbin.framework.context.api.ActiveContextManager;
+import org.exbin.framework.action.api.ActionManagement;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Basic appplication frame.
@@ -60,8 +59,8 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     private JPanel currentStatusBarPanel = null;
     private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
-    private ActiveContextManager frameContextManager;
-    private ActionManager frameActionManager;
+    private ActiveContextManagement frameContextManager;
+    private ActionManagement frameActionManager;
 
     public ApplicationFrame() {
         this(true);
@@ -277,7 +276,9 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, frameActionManager);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameActionManager);
+        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, actionContextRegistrar);
         menuBar.revalidate();
         menuBar.repaint();
     }
@@ -285,7 +286,9 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
     @Override
     public void loadMainToolBar() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, frameActionManager);
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameActionManager);
+        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, actionContextRegistrar);
     }
 
     @Override
@@ -326,13 +329,13 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
 
     @Nonnull
     @Override
-    public ActiveContextManager getContextManager() {
+    public ActiveContextManagement getContextManager() {
         return frameContextManager;
     }
 
     @Nonnull
     @Override
-    public ActionContextManager getActionContextManager() {
+    public ActionManagement getActionManager() {
         return frameActionManager;
     }
 

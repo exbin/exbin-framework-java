@@ -22,7 +22,7 @@ import javax.swing.JToolBar;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
-import org.exbin.framework.action.api.ActionContextManager;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Interface for side bar management.
@@ -37,9 +37,9 @@ public interface SideBarManagement {
      *
      * @param targetSideBar output side bar
      * @param sideBarId side bar definition id
-     * @param actionContextManager action context manager
+     * @param actionContextRegistration action context registration
      */
-    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextManager actionContextManager);
+    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Registers side bar.

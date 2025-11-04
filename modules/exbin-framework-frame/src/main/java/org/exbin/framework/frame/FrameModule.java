@@ -46,8 +46,8 @@ import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.context.api.ActiveContextManager;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
+import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
  * Module frame handling.
@@ -135,7 +135,7 @@ public class FrameModule implements FrameModuleApi {
     @Override
     public void notifyFrameUpdated() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ActiveContextManager contextManager = frameModule.getFrameHandler().getContextManager();
+        ActiveContextManagement contextManager = frameModule.getFrameHandler().getContextManager();
         contextManager.changeActiveState(ApplicationFrame.class, applicationFrame);
     }
 
@@ -260,7 +260,7 @@ public class FrameModule implements FrameModuleApi {
             appIcon = applicationFrame.getIconImage();
 
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-            ActiveContextManager contextManager = frameModule.getFrameHandler().getContextManager();
+            ActiveContextManagement contextManager = frameModule.getFrameHandler().getContextManager();
             contextManager.changeActiveState(ApplicationFrame.class, applicationFrame);
         }
 

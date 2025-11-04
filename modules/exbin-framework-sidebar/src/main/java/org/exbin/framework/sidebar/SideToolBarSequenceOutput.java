@@ -29,8 +29,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
-import org.exbin.framework.action.api.ActionContextManager;
 import org.exbin.framework.action.api.ActionType;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Sidebar toolbar sequence output.
@@ -41,11 +41,11 @@ import org.exbin.framework.action.api.ActionType;
 public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final JToolBar toolBar;
-    protected final ActionContextManager actionContextManager;
+    protected final ActionContextRegistration actionContextRegistration;
 
-    public SideToolBarSequenceOutput(JToolBar menuBar, ActionContextManager actionContextManager) {
+    public SideToolBarSequenceOutput(JToolBar menuBar, ActionContextRegistration actionContextRegistration) {
         this.toolBar = menuBar;
-        this.actionContextManager = actionContextManager;
+        this.actionContextRegistration = actionContextRegistration;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
     @Override
     public void add(ItemSequenceContribution itemContribution) {
         toolBar.add(((ActionSideBarContribution) itemContribution).getComponent());
-        SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextManager);
+        SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextRegistration);
     }
 
     @Override
@@ -137,11 +137,11 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
         return newItem;
     }
 
-    protected static void finishSideBarAction(Action action, ActionContextManager actionContextManager) {
+    protected static void finishSideBarAction(Action action, ActionContextRegistration actionContextRegistration) {
         if (action == null) {
             return;
         }
 
-        actionContextManager.registerActionContext(action);
+        actionContextRegistration.registerActionContext(action);
     }
 }
