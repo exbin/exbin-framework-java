@@ -16,7 +16,10 @@
 package org.exbin.framework.options.settings.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import org.exbin.framework.App;
@@ -28,14 +31,14 @@ import org.exbin.framework.options.settings.api.SettingsPanelType;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.options.settings.gui.SettingsListPanel;
 import org.exbin.framework.options.settings.gui.SettingsTreePanel;
-import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
-import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.options.settings.SettingsPage;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Options settings action.
@@ -72,7 +75,6 @@ public class SettingsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
         SettingsPanelType settingsPanelType = optionsSettingsModule.getSettingsPanelType();
@@ -86,7 +88,7 @@ public class SettingsAction extends AbstractAction {
                 optionsPagesProvider.registerSettingsPages(optionsListPanel);
                 optionsListPanel.setSettingsOptionsProvider(settingsManagement.getSettingsOptionsProvider());
                 optionsListPanel.pagesFinished();
-                optionsListPanel.loadAllFromPreferences();
+                loadAll(optionsListPanel.getSettingsPages());
                 if (optionsRootCaption != null) {
                     optionsListPanel.setRootCaption(optionsRootCaption);
                 }
@@ -97,14 +99,14 @@ public class SettingsAction extends AbstractAction {
                 controlPanel.setController((actionType) -> {
                     switch (actionType) {
                         case SAVE: {
-                            optionsListPanel.saveAndApplyAll();
+                            saveAndApplyAll(optionsListPanel.getSettingsPages());
                             break;
                         }
                         case CANCEL: {
                             break;
                         }
                         case APPLY_ONCE: {
-                            optionsListPanel.applyPreferencesChanges();
+                            applyOnlyAll(optionsListPanel.getSettingsPages());
                             break;
                         }
                     }
@@ -117,7 +119,7 @@ public class SettingsAction extends AbstractAction {
                 optionsPagesProvider.registerSettingsPages(optionsTreePanel);
                 optionsTreePanel.setSettingsOptionsProvider(settingsManagement.getSettingsOptionsProvider());
                 optionsTreePanel.pagesFinished();
-                optionsTreePanel.loadAllFromPreferences();
+                loadAll(optionsTreePanel.getSettingsPages());
                 if (optionsRootCaption != null) {
                     optionsTreePanel.setRootCaption(optionsRootCaption);
                 }
@@ -128,14 +130,14 @@ public class SettingsAction extends AbstractAction {
                 controlPanel.setController((actionType) -> {
                     switch (actionType) {
                         case SAVE: {
-                            optionsTreePanel.saveAndApplyAll();
+                            saveAndApplyAll(optionsTreePanel.getSettingsPages());
                             break;
                         }
                         case CANCEL: {
                             break;
                         }
                         case APPLY_ONCE: {
-                            optionsTreePanel.applyPreferencesChanges();
+                            applyOnlyAll(optionsTreePanel.getSettingsPages());
                             break;
                         }
                     }
@@ -146,6 +148,49 @@ public class SettingsAction extends AbstractAction {
             default:
                 throw new IllegalStateException("Illegal options panel type " + settingsPanelType.name());
         }
+    }
+
+    private void loadAll(Collection<SettingsPage> pages) {
+        OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        SettingsOptionsProvider settingsOptionsProvider = optionsSettingsModule.getMainSettingsManager().getSettingsOptionsProvider();
+
+        for (SettingsPage page : pages) {
+            try {
+                page.loadFromOptions(settingsOptionsProvider, null);
+            } catch (Exception ex) {
+                Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private void saveAndApplyAll(Collection<SettingsPage> pages) {
+        OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        SettingsOptionsProvider settingsOptionsProvider = optionsSettingsModule.getMainSettingsManager().getSettingsOptionsProvider();
+
+        for (SettingsPage page : pages) {
+            try {
+                page.saveAndApply(settingsOptionsProvider, null);
+            } catch (Exception ex) {
+                Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        OptionsSettingsModuleApi optionsModule = App.getModule(OptionsSettingsModuleApi.class);
+        optionsModule.notifyOptionsChanged();
+    }
+
+    private void applyOnlyAll(Collection<SettingsPage> pages) {
+        throw new UnsupportedOperationException("Not supported yet.");
+//        for (SettingsPage page : pages) {
+//            try {
+//                page.applyPreferencesChanges(settingsOptionsProvider, null);
+//            } catch (Exception ex) {
+//                Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//
+//        OptionsSettingsModuleApi windowModule = App.getModule(OptionsSettingsModuleApi.class);
+//        windowModule.notifyOptionsChanged();
     }
 
     public void setDialogParentComponent(DialogParentComponent dialogParentComponent) {

@@ -69,19 +69,19 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         boolean defaultColor = options.isUseDefaultColors();
         defaultColorCheckBox.setSelected(defaultColor);
         colorPanel.setEnabled(!defaultColor);
-        colorPanel.loadFromOptions(settingsOptionsProvider, applicationContextProvider);
+        colorPanel.loadFromOptions(settingsOptionsProvider, contextProvider);
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         options.setUseDefaultColors(defaultColorCheckBox.isSelected());
-        colorPanel.saveToOptions(settingsOptionsProvider, applicationContextProvider);
+        colorPanel.saveToOptions(settingsOptionsProvider, contextProvider);
     }
 
     /**

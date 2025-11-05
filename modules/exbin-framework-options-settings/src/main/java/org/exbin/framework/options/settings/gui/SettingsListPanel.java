@@ -18,12 +18,11 @@ package org.exbin.framework.options.settings.gui;
 import org.exbin.framework.options.settings.SettingsPage;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,7 +39,6 @@ import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.OptionsSettingsModule;
-import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -234,41 +232,10 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
             pageRecord.setSettingsModifiedListener(settingsModifiedListener);
         }
     }
-
-    public void loadAllFromPreferences() {
-        settingsPages.forEach((pageRecord) -> {
-            try {
-                pageRecord.loadFromOptions(settingsOptionsProvider, null);
-            } catch (Exception ex) {
-                Logger.getLogger(SettingsListPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
-
-    public void saveAndApplyAll() {
-        settingsPages.forEach((pageRecord) -> {
-            try {
-                pageRecord.saveAndApply(settingsOptionsProvider, null);
-            } catch (Exception ex) {
-                Logger.getLogger(SettingsListPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        OptionsSettingsModuleApi optionsModule = App.getModule(OptionsSettingsModuleApi.class);
-        optionsModule.notifyOptionsChanged();
-    }
-
-    public void applyPreferencesChanges() {
-        settingsPages.forEach((settingsPage) -> {
-            try {
-                settingsPage.applyPreferencesChanges(settingsOptionsProvider, null);
-            } catch (Exception ex) {
-                Logger.getLogger(SettingsListPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        OptionsSettingsModuleApi windowModule = App.getModule(OptionsSettingsModuleApi.class);
-        windowModule.notifyOptionsChanged();
+    
+    @Nonnull
+    public Collection<SettingsPage> getSettingsPages() {
+        return settingsPages;
     }
 
     public void setSettingsOptionsProvider(SettingsOptionsProvider settingsOptionsProvider) {

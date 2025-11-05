@@ -17,9 +17,11 @@ package org.exbin.framework.options.settings.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
+import org.exbin.framework.options.api.OptionsStorage;
 
 /**
  * Interface for management of options settings.
@@ -81,6 +83,15 @@ public interface OptionsSettingsManagement {
     void registerSettingsRule(SequenceContribution contribution, SequenceContributionRule rule);
 
     /**
+     * Returns options settings builder.
+     *
+     * @param settingsClass settings class
+     * @return options settings builder
+     */
+    @Nonnull
+    SettingsOptionsBuilder getOptionsSettingsBuilder(Class<? extends SettingsOptions> settingsClass);
+
+    /**
      * Registers apply settings method.
      *
      * @param instanceClass instance class
@@ -95,6 +106,21 @@ public interface OptionsSettingsManagement {
      * @param applySettingsRule apply settings rule
      */
     void registerApplySettingRule(ApplySettingsContribution applySettingsContribution, ApplySettingsDependsOnRule applySettingsRule);
+
+    /**
+     * Applies options for specific instance and value.
+     *
+     * @param instanceClass instance class
+     * @param targetObject instance value
+     */
+    void applyOptions(Class<?> instanceClass, Object targetObject);
+
+    /**
+     * Appies all options.
+     *
+     * @param contextManager context manager
+     */
+    void applyAllOptions(ActiveContextManagement contextManager);
 
     /**
      * Returns settings options provider.

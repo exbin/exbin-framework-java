@@ -87,11 +87,11 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsC
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
     }
 
     private void notifyModified() {

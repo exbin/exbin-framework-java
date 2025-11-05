@@ -67,7 +67,7 @@ public class LanguageSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         LanguageOptions options = settingsOptionsProvider.getSettingsOptions(LanguageOptions.class);
         Locale languageLocale = options.getLocale();
         ComboBoxModel<LanguageRecord> languageComboBoxModel = languageComboBox.getModel();
@@ -81,7 +81,7 @@ public class LanguageSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         LanguageOptions options = settingsOptionsProvider.getSettingsOptions(LanguageOptions.class);
         options.setLocale(((LanguageRecord) languageComboBox.getSelectedItem()).getLocale());
     }

@@ -65,7 +65,7 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         setColorsFromArray(textColorService.getDefaultTextColors());
         Integer rgb;
@@ -107,7 +107,7 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         options.setTextColor(getTextColor().getRGB());
         options.setTextBackgroundColor(getTextBackgroundColor().getRGB());

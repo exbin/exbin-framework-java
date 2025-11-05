@@ -18,12 +18,11 @@ package org.exbin.framework.options.settings.gui;
 import org.exbin.framework.options.settings.SettingsPage;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -42,7 +41,6 @@ import org.exbin.framework.utils.LazyComponentListener;
 import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
-import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
@@ -239,40 +237,9 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
         optionsTree.setSelectionRow(0);
     }
 
-    public void loadAllFromPreferences() {
-        settingsPages.values().forEach((pageRecord) -> {
-            try {
-                pageRecord.loadFromOptions(settingsOptionsProvider, null);
-            } catch (Exception ex) {
-                Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
-
-    public void saveAndApplyAll() {
-        settingsPages.values().forEach((pageRecord) -> {
-            try {
-                pageRecord.saveAndApply(settingsOptionsProvider, null);
-            } catch (Exception ex) {
-                Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        OptionsSettingsModuleApi optionsModule = App.getModule(OptionsSettingsModuleApi.class);
-        optionsModule.notifyOptionsChanged();
-    }
-
-    public void applyPreferencesChanges() {
-        settingsPages.values().forEach((pageRecord) -> {
-            try {
-                pageRecord.applyPreferencesChanges(settingsOptionsProvider, null);
-            } catch (Exception ex) {
-                Logger.getLogger(SettingsTreePanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        OptionsSettingsModuleApi windowModule = App.getModule(OptionsSettingsModuleApi.class);
-        windowModule.notifyOptionsChanged();
+    @Nonnull
+    public Collection<SettingsPage> getSettingsPages() {
+        return settingsPages.values();
     }
 
     private void establishPath(List<SettingsPathItem> path) {

@@ -62,7 +62,7 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         boolean useDefaultFont = options.isUseDefaultFont();
         defaultFontCheckBox.setSelected(useDefaultFont);
@@ -73,7 +73,7 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         options.setUseDefaultFont(defaultFontCheckBox.isSelected());
         options.setFontAttributes(codeFont != null ? codeFont.getAttributes() : null);

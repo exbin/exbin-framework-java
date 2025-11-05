@@ -16,12 +16,14 @@
 package org.exbin.framework.options.settings;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.TreeContributionSequenceBuilder;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
@@ -29,7 +31,6 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.ApplySettingsDependsOnRule;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
@@ -40,6 +41,7 @@ import org.exbin.framework.options.settings.api.SettingsOptions;
 import org.exbin.framework.options.settings.api.SettingsOptionsBuilder;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.utils.ObjectUtils;
 
 /**
  * Options settings manager.
@@ -49,7 +51,8 @@ import org.exbin.framework.options.settings.api.SettingsPageContribution;
 @ParametersAreNonnullByDefault
 public class OptionsSettingsManager extends TreeContributionSequenceBuilder implements OptionsSettingsManagement {
 
-    protected final Map<Class<?>, SettingsOptionsBuilder> optionsSettings = new HashMap<>();
+    protected final Map<Class<? extends SettingsOptions>, SettingsOptionsBuilder> optionsSettings = new HashMap<>();
+
     protected final Map<Class<?>, List<ApplySettingsContribution>> applySettingsContributions = new HashMap<>();
     protected final Map<ApplySettingsContribution, List<ApplySettingsDependsOnRule>> applySettingsContributionRules = new HashMap<>();
     protected SettingsOptionsProvider settingsOptionsProvider;
@@ -105,6 +108,12 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
         settingsPage.finish();
     }
 
+    @Nonnull
+    @Override
+    public SettingsOptionsBuilder getOptionsSettingsBuilder(Class<? extends SettingsOptions> settingsClass) {
+        return ObjectUtils.requireNonNull(optionsSettings.get(settingsClass), "Missing options settings builder: " + settingsClass.getCanonicalName());
+    }
+
     @Override
     public void registerApplySetting(Class<?> instanceClass, ApplySettingsContribution applySetting) {
         List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
@@ -126,16 +135,38 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
         rules.add(applySettingsRule);
     }
 
-    public void applyOptions(Class<?> instanceClass, Object targetObject, OptionsStorage optionsStorage) {
+    @Override
+    public void applyOptions(Class<?> instanceClass, Object targetObject) {
         List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
         if (classApplySettings == null) {
             return;
         }
 
+        getSettingsOptionsProvider();
         for (ApplySettingsContribution applySettings : classApplySettings) {
             SettingsApplier settingsApplier = applySettings.getSettingsApplier();
-            // TODO
-            settingsApplier.applySettings(targetObject, null);
+            settingsApplier.applySettings(targetObject, settingsOptionsProvider);
+        }
+    }
+
+    @Override
+    public void applyAllOptions(ActiveContextManagement contextManager) {
+        Collection<Class<?>> stateClasses = contextManager.getStateClasses();
+        getSettingsOptionsProvider();
+        for (Map.Entry<Class<?>, List<ApplySettingsContribution>> entry : applySettingsContributions.entrySet()) {
+            Class<?> instanceClass = entry.getKey();
+            if (!stateClasses.contains(instanceClass)) {
+                continue;
+            }
+
+            Object activeState = contextManager.getActiveState(instanceClass);
+            if (activeState != null) {
+                List<ApplySettingsContribution> contributions = entry.getValue();
+                for (ApplySettingsContribution contribution : contributions) {
+                    SettingsApplier settingsApplier = contribution.getSettingsApplier();
+                    settingsApplier.applySettings(activeState, settingsOptionsProvider);
+                }
+            }
         }
     }
 

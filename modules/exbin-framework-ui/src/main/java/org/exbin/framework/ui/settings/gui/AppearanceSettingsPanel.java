@@ -53,7 +53,7 @@ public class AppearanceSettingsPanel extends javax.swing.JPanel implements Setti
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         AppearanceOptions options = settingsOptionsProvider.getSettingsOptions(AppearanceOptions.class);
         showToolbarCheckBox.setSelected(options.isShowToolBar());
         showCaptionsCheckBox.setSelected(options.isShowToolBarCaptions());
@@ -61,7 +61,7 @@ public class AppearanceSettingsPanel extends javax.swing.JPanel implements Setti
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         AppearanceOptions options = settingsOptionsProvider.getSettingsOptions(AppearanceOptions.class);
         options.setShowToolBar(showToolbarCheckBox.isSelected());
         options.setShowToolBarCaptions(showCaptionsCheckBox.isSelected());

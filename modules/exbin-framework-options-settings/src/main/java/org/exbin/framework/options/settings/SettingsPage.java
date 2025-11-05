@@ -95,20 +95,23 @@ public class SettingsPage {
         }
     }
 
-    public void loadFromOptions(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
         for (SettingsComponent component : components) {
-            component.loadFromOptions(settingsProvider, applicationContextProvider);
+            component.loadFromOptions(settingsProvider, contextProvider);
         }
     }
 
-    public void saveToOptions(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
         for (SettingsComponent component : components) {
-            component.saveToOptions(settingsProvider, applicationContextProvider);
+            component.saveToOptions(settingsProvider, contextProvider);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public void saveAndApply(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveAndApply(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
+        for (SettingsComponent component : components) {
+            component.saveToOptions(settingsProvider, contextProvider);
+        }
 //        for (int i = 0; i < pages.size(); i++) {
 //            SettingsPage page = pages.get(i);
 //            SettingsOptions options = page.createOptions();
@@ -120,7 +123,7 @@ public class SettingsPage {
     }
 
     @SuppressWarnings("unchecked")
-    public void applyPreferencesChanges(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void applyPreferencesChanges(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
 //        for (int i = 0; i < pages.size(); i++) {
 //            SettingsPage page = pages.get(i);
 //            SettingsOptions options = page.createOptions();

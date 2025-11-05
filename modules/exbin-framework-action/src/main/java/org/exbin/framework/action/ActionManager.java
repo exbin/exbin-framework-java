@@ -43,6 +43,7 @@ public class ActionManager implements ActionManagement {
 
     public ActionManager(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
+        contextManager.addChangeListener(this::activeStateChanged);
     }
 
     @Override
@@ -73,17 +74,15 @@ public class ActionManager implements ActionManagement {
         }
     }
 
-/*    @SuppressWarnings("unchecked")
-    @Override
-    public <T> void updated(Class<T> componentClass, @Nullable T componentInstance) {
-        super.updated(componentClass, componentInstance);
+    @SuppressWarnings("unchecked")
+    public <T> void activeStateChanged(Class<T> componentClass, @Nullable T componentInstance) {
         List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
         if (componentListeners != null) {
             for (ActionContextChangeListener componentListener : componentListeners) {
                 componentListener.stateChanged(componentInstance);
             }
         }
-    } */
+    }
 
     @SuppressWarnings("unchecked")
     @Override

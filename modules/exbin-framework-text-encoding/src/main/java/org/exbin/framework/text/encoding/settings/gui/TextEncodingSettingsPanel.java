@@ -83,17 +83,17 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
-        encodingPanel.loadFromOptions(settingsOptionsProvider, applicationContextProvider);
+        encodingPanel.loadFromOptions(settingsOptionsProvider, contextProvider);
         defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
         updateEncodings();
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
-        encodingPanel.saveToOptions(settingsOptionsProvider, applicationContextProvider);
+        encodingPanel.saveToOptions(settingsOptionsProvider, contextProvider);
         options.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());
     }
 

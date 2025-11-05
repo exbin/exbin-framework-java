@@ -32,17 +32,17 @@ public interface SettingsComponent extends ComponentResourceProvider {
      * Loads configuration from given settings options.
      *
      * @param settingsOptionsProvider settings options provider
-     * @param applicationContextProvider context provider
+     * @param contextProvider context provider
      */
-    void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider);
+    void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider);
 
     /**
      * Saves configuration from given settings options.
      *
      * @param settingsOptionsProvider settings options provider
-     * @param applicationContextProvider context provider
+     * @param contextProvider context provider
      */
-    void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider applicationContextProvider);
+    void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider);
 
     /**
      * Registers listener monitoring for settings changes.
