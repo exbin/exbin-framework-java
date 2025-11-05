@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.settings.gui;
+package org.exbin.framework.frame.settings.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -23,7 +23,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.ComponentResourceProvider;
-import org.exbin.framework.ui.settings.AppearanceOptions;
+import org.exbin.framework.frame.settings.AppearanceOptions;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;

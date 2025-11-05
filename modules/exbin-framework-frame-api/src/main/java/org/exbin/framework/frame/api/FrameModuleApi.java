@@ -35,12 +35,13 @@ public interface FrameModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(FrameModuleApi.class);
 
-    public static String DEFAULT_STATUS_BAR_ID = "default";
-    public static String MAIN_STATUS_BAR_ID = "main";
-    public static String PROGRESS_STATUS_BAR_ID = "progress";
-    public static String BUSY_STATUS_BAR_ID = "busy";
+    public static final String SETTINGS_PAGE_ID = "appearance";
+    public static final String DEFAULT_STATUS_BAR_ID = "default";
+    public static final String MAIN_STATUS_BAR_ID = "main";
+    public static final String PROGRESS_STATUS_BAR_ID = "progress";
+    public static final String BUSY_STATUS_BAR_ID = "busy";
 
-    public static String PREFERENCES_FRAME_RECTANGLE = "frameRectangle";
+    public static final String PREFERENCES_FRAME_RECTANGLE = "frameRectangle";
 
     /**
      * Returns frame handler.
@@ -54,11 +55,6 @@ public interface FrameModuleApi extends Module {
      * Creates and initializes main menu and toolbar.
      */
     void init();
-
-    /**
-     * Notifies frame was updated.
-     */
-    void notifyFrameUpdated();
 
     /**
      * Returns frame instance.
@@ -129,4 +125,9 @@ public interface FrameModuleApi extends Module {
 
     @Nonnull
     Optional<Image> getApplicationIcon();
+
+    /**
+     * Registers options panels.
+     */
+    void registerSettings();
 }

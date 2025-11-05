@@ -70,11 +70,6 @@ public interface OptionsSettingsModuleApi extends Module {
     void initialLoadFromPreferences();
 
     /**
-     * Invokes options changed event.
-     */
-    void notifyOptionsChanged();
-
-    /**
      * Returns options settings panel type.
      *
      * @return options settings panel type

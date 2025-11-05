@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.settings;
+package org.exbin.framework.frame.settings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.ui.settings.gui.AppearanceSettingsPanel;
+import org.exbin.framework.frame.settings.gui.AppearanceSettingsPanel;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 

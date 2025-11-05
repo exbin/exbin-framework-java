@@ -42,7 +42,6 @@ import org.exbin.framework.utils.LazyComponentsIssuable;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
-import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Panel for application options settings.
@@ -52,7 +51,6 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 @ParametersAreNonnullByDefault
 public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPageReceiver, LazyComponentsIssuable {
 
-    private SettingsOptionsProvider settingsOptionsProvider = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsTreePanel.class);
     private final Map<String, SettingsPage> settingsPages = new HashMap<>();
     private SettingsPage currentSettingsPanel = null;
@@ -90,20 +88,20 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
         optionsTree.setModel(new DefaultTreeModel(top, true));
         optionsTree.getSelectionModel().addTreeSelectionListener((TreeSelectionEvent e) -> {
             if (e.getPath() != null) {
-                String caption;
+                String panelKey;
                 OptionsMutableTreeNode node = ((OptionsMutableTreeNode) optionsTree.getLastSelectedPathComponent());
                 if (node == null) {
-                    caption = null;
+                    panelKey = null;
                     optionsAreaTitleLabel.setText("");
                 } else {
-                    caption = node.getName();
+                    panelKey = node.getName();
                     optionsAreaTitleLabel.setText(" " + (String) node.getUserObject());
                 }
                 if (currentSettingsPanel != null) {
                     optionsAreaScrollPane.remove(currentSettingsPanel.getPanel());
                 }
-                if (caption != null) {
-                    currentSettingsPanel = settingsPages.get(caption);
+                if (panelKey != null) {
+                    currentSettingsPanel = settingsPages.get(panelKey);
                     if (currentSettingsPanel != null) {
                         optionsAreaScrollPane.setViewportView(currentSettingsPanel.getPanel());
                     } else {
@@ -283,10 +281,6 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
         for (int i = 0; i < optionsTree.getRowCount(); i++) {
             optionsTree.expandRow(i);
         }
-    }
-
-    public void setSettingsOptionsProvider(SettingsOptionsProvider settingsOptionsProvider) {
-        this.settingsOptionsProvider = settingsOptionsProvider;
     }
 
     @Override

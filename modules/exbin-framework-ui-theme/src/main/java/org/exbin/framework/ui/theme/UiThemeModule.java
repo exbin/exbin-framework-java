@@ -25,6 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.exbin.framework.App;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.ui.api.UiModuleApi;
 import org.exbin.framework.ui.theme.api.LafProvider;
@@ -203,6 +204,6 @@ public class UiThemeModule implements UiThemeModuleApi {
         settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
 
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(ThemeSettingsComponent.COMPONENT_ID, new ThemeSettingsComponent());
-        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(UiModuleApi.SETTINGS_PAGE_ID));
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(FrameModuleApi.SETTINGS_PAGE_ID));
     }
 }

@@ -41,7 +41,6 @@ import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.OptionsSettingsModule;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
-import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Panel for application options settings.
@@ -51,7 +50,6 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 @ParametersAreNonnullByDefault
 public class SettingsListPanel extends javax.swing.JPanel implements SettingsPageReceiver, LazyComponentsIssuable {
 
-    private SettingsOptionsProvider settingsOptionsProvider = null;
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SettingsListPanel.class);
     private final List<SettingsPage> settingsPages = new ArrayList<>();
     private final Map<String, Integer> optionPageKeys = new HashMap<>();
@@ -232,14 +230,10 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
             pageRecord.setSettingsModifiedListener(settingsModifiedListener);
         }
     }
-    
+
     @Nonnull
     public Collection<SettingsPage> getSettingsPages() {
         return settingsPages;
-    }
-
-    public void setSettingsOptionsProvider(SettingsOptionsProvider settingsOptionsProvider) {
-        this.settingsOptionsProvider = settingsOptionsProvider;
     }
 
     @Override

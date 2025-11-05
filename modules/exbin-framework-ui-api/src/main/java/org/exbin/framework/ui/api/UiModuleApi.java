@@ -28,7 +28,6 @@ import org.exbin.framework.ModuleUtils;
 public interface UiModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(UiModuleApi.class);
-    public static final String SETTINGS_PAGE_ID = "appearance";
 
     /**
      * Initializes UI. Should be called before any GUI is created.

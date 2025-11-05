@@ -28,7 +28,6 @@ import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.options.settings.api.SettingsPanelType;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.settings.action.SettingsAction;
 import org.exbin.framework.utils.DesktopUtils;
@@ -94,13 +93,6 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
         });
 
         return optionsAction;
-    }
-
-    @Override
-    public void notifyOptionsChanged() {
-        // TODO Remove
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.notifyFrameUpdated();
     }
 
     @Override

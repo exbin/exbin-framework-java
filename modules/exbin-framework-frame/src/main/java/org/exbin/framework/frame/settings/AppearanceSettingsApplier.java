@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.settings;
+package org.exbin.framework.frame.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.frame.FrameState;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.settings.api.SettingsApplier;
@@ -41,6 +42,6 @@ public class AppearanceSettingsApplier implements SettingsApplier {
         frame.setToolBarVisible(options.isShowToolBar());
         frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
         frame.setStatusBarVisible(options.isShowStatusBar());
-        frameModule.notifyFrameUpdated();
+        frame.getContextManager().changeActiveState(FrameState.class, new FrameState() {});
     }
 }

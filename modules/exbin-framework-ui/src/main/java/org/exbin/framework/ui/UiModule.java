@@ -24,17 +24,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.ui.api.UiModuleApi;
-import org.exbin.framework.ui.settings.AppearanceSettingsComponent;
 import org.exbin.framework.ui.settings.LanguageOptions;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
-import org.exbin.framework.options.settings.api.SettingsComponentContribution;
-import org.exbin.framework.options.settings.api.SettingsPageContribution;
-import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
-import org.exbin.framework.ui.settings.AppearanceOptions;
-import org.exbin.framework.ui.settings.AppearanceSettingsApplier;
 import org.exbin.framework.ui.settings.LanguageSettingsComponent;
 
 /**
@@ -115,16 +108,8 @@ public class UiModule implements UiModuleApi {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(AppearanceOptions.class, (optionsStorage) -> new AppearanceOptions(optionsStorage));
         settingsManagement.registerOptionsSettings(LanguageOptions.class, (optionsStorage) -> new LanguageOptions(optionsStorage));
         
-        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(AppearanceSettingsApplier.APPLIER_ID, new AppearanceSettingsApplier()));
-
-        SettingsPageContribution pageContribution = new SettingsPageContribution(UiModuleApi.SETTINGS_PAGE_ID, getResourceBundle());
-        settingsManagement.registerPage(pageContribution);
-        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(AppearanceSettingsComponent.COMPONENT_ID, new AppearanceSettingsComponent());
-        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
-
         settingsManagement.registerComponent(LanguageSettingsComponent.COMPONENT_ID, new LanguageSettingsComponent());
     }
 }

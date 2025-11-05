@@ -112,15 +112,17 @@ public interface OptionsSettingsManagement {
      *
      * @param instanceClass instance class
      * @param targetObject instance value
+     * @param provider settings options provider
      */
-    void applyOptions(Class<?> instanceClass, Object targetObject);
+    void applyOptions(Class<?> instanceClass, Object targetObject, SettingsOptionsProvider provider);
 
     /**
      * Appies all options.
      *
      * @param contextManager context manager
+     * @param provider settings options provider
      */
-    void applyAllOptions(ActiveContextManagement contextManager);
+    void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider provider);
 
     /**
      * Returns settings options provider.

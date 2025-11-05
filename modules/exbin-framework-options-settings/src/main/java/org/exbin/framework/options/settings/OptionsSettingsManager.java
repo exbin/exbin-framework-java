@@ -136,23 +136,21 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
     }
 
     @Override
-    public void applyOptions(Class<?> instanceClass, Object targetObject) {
+    public void applyOptions(Class<?> instanceClass, Object targetObject, SettingsOptionsProvider provider) {
         List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
         if (classApplySettings == null) {
             return;
         }
 
-        getSettingsOptionsProvider();
         for (ApplySettingsContribution applySettings : classApplySettings) {
             SettingsApplier settingsApplier = applySettings.getSettingsApplier();
-            settingsApplier.applySettings(targetObject, settingsOptionsProvider);
+            settingsApplier.applySettings(targetObject, provider);
         }
     }
 
     @Override
-    public void applyAllOptions(ActiveContextManagement contextManager) {
+    public void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider provider) {
         Collection<Class<?>> stateClasses = contextManager.getStateClasses();
-        getSettingsOptionsProvider();
         for (Map.Entry<Class<?>, List<ApplySettingsContribution>> entry : applySettingsContributions.entrySet()) {
             Class<?> instanceClass = entry.getKey();
             if (!stateClasses.contains(instanceClass)) {
@@ -164,7 +162,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
                 List<ApplySettingsContribution> contributions = entry.getValue();
                 for (ApplySettingsContribution contribution : contributions) {
                     SettingsApplier settingsApplier = contribution.getSettingsApplier();
-                    settingsApplier.applySettings(activeState, settingsOptionsProvider);
+                    settingsApplier.applySettings(activeState, provider);
                 }
             }
         }
