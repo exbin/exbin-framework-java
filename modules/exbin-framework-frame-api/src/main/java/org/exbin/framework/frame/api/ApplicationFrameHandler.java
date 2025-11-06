@@ -29,7 +29,7 @@ import org.exbin.framework.context.api.ActiveContextManagement;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ApplicationFrameHandler {
+public interface ApplicationFrameHandler extends ActiveFrame {
 
     /**
      * Gets current frame.

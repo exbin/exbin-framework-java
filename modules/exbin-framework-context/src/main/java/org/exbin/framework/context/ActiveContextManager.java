@@ -58,6 +58,12 @@ public class ActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
+    public <T> void activeStateMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+        activeStates.put(stateClass, activeState);
+        sendMessage(stateClass, activeState, changeMessage);
+    }
+
+    @Override
     public void addChangeListener(ActiveContextChangeListener changeListener) {
         changeListeners.add(changeListener);
     }
@@ -70,6 +76,12 @@ public class ActiveContextManager implements ActiveContextManagement {
     protected <T> void notifyChanged(Class<T> stateClass, T activeState) {
         for (ActiveContextChangeListener changeListener : changeListeners) {
             changeListener.activeStateChanged(stateClass, activeState);
+        }
+    }
+
+    protected <T> void sendMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+        for (ActiveContextChangeListener changeListener : changeListeners) {
+            changeListener.activeStateMessage(stateClass, activeState, changeMessage);
         }
     }
 }

@@ -29,6 +29,8 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.frame.ApplicationFrame;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.frame.api.ActiveFrame;
+import org.exbin.framework.frame.api.ApplicationFrameHandler;
 
 /**
  * Basic frame actions.
@@ -73,23 +75,24 @@ public class FrameActions {
 
         public static final String ACTION_ID = "viewToolBarAction";
 
-        private ApplicationFrame frame;
+        protected ApplicationFrameHandler frame;
 
         public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
+            setEnabled(false);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
-                    frame = instance;
-                    setEnabled(frame != null);
-                    if (frame != null) {
-                        putValue(Action.SELECTED_KEY, frame.isToolBarVisible());
+                registrar.registerUpdateListener(ActiveFrame.class, (instance) -> {
+                    updateByContext(instance);
+                });
+                registrar.registerContextMessageListener(ActiveFrame.class, (instance, message) -> {
+                    if (ActiveFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                        updateByContext(instance);
                     }
                 });
             });
-            setEnabled(false);
         }
 
         @Override
@@ -99,6 +102,14 @@ public class FrameActions {
                 frame.setToolBarVisible(((JMenuItem) source).isSelected());
             }
         }
+
+        public void updateByContext(ActiveFrame context) {
+            this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
+            setEnabled(frame != null);
+            if (frame != null) {
+                putValue(Action.SELECTED_KEY, frame.isToolBarVisible());
+            }
+        }
     }
 
     @ParametersAreNonnullByDefault
@@ -106,23 +117,24 @@ public class FrameActions {
 
         public static final String ACTION_ID = "viewToolBarCaptionsAction";
 
-        private ApplicationFrame frame;
+        protected ApplicationFrameHandler frame;
 
         public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
+            setEnabled(false);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
-                    frame = instance;
-                    setEnabled(frame != null);
-                    if (frame != null) {
-                        putValue(Action.SELECTED_KEY, frame.isToolBarCaptionsVisible());
+                registrar.registerUpdateListener(ActiveFrame.class, (instance) -> {
+                    updateByContext(instance);
+                });
+                registrar.registerContextMessageListener(ActiveFrame.class, (instance, message) -> {
+                    if (ActiveFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                        updateByContext(instance);
                     }
                 });
             });
-            setEnabled(false);
         }
 
         @Override
@@ -132,6 +144,14 @@ public class FrameActions {
                 frame.setToolBarCaptionsVisible(((JMenuItem) source).isSelected());
             }
         }
+
+        public void updateByContext(ActiveFrame context) {
+            this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
+            setEnabled(frame != null);
+            if (frame != null) {
+                putValue(Action.SELECTED_KEY, frame.isToolBarCaptionsVisible());
+            }
+        }
     }
 
     @ParametersAreNonnullByDefault
@@ -139,23 +159,24 @@ public class FrameActions {
 
         public static final String ACTION_ID = "viewStatusBarAction";
 
-        private ApplicationFrame frame;
+        protected ApplicationFrameHandler frame;
 
         public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
+            setEnabled(false);
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ApplicationFrame.class, (instance) -> {
-                    frame = instance;
-                    setEnabled(frame != null);
-                    if (frame != null) {
-                        putValue(Action.SELECTED_KEY, frame.isStatusBarVisible());
+                registrar.registerUpdateListener(ActiveFrame.class, (instance) -> {
+                    updateByContext(instance);
+                });
+                registrar.registerContextMessageListener(ActiveFrame.class, (instance, message) -> {
+                    if (ActiveFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                        updateByContext(instance);
                     }
                 });
             });
-            setEnabled(false);
         }
 
         @Override
@@ -163,6 +184,14 @@ public class FrameActions {
             Object source = e.getSource();
             if (source instanceof JMenuItem) {
                 frame.setStatusBarVisible(((JMenuItem) source).isSelected());
+            }
+        }
+
+        public void updateByContext(ActiveFrame context) {
+            this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
+            setEnabled(frame != null);
+            if (frame != null) {
+                putValue(Action.SELECTED_KEY, frame.isStatusBarVisible());
             }
         }
     }

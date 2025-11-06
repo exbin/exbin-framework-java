@@ -16,10 +16,8 @@
 package org.exbin.framework.frame.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
-import org.exbin.framework.frame.FrameState;
+import org.exbin.framework.frame.api.ActiveFrame;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
@@ -35,13 +33,13 @@ public class AppearanceSettingsApplier implements SettingsApplier {
 
     @Override
     public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
-        AppearanceOptions options = settingsProvider.getSettingsOptions(AppearanceOptions.class);
-        // TODO Drop frame module dependency / move frame options to frame module
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationFrameHandler frame = frameModule.getFrameHandler();
-        frame.setToolBarVisible(options.isShowToolBar());
-        frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
-        frame.setStatusBarVisible(options.isShowStatusBar());
-        frame.getContextManager().changeActiveState(FrameState.class, new FrameState() {});
+        if (instance instanceof ApplicationFrameHandler) {
+            AppearanceOptions options = settingsProvider.getSettingsOptions(AppearanceOptions.class);
+            ApplicationFrameHandler frame = (ApplicationFrameHandler) instance;
+            frame.setToolBarVisible(options.isShowToolBar());
+            frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
+            frame.setStatusBarVisible(options.isShowStatusBar());
+            frame.getContextManager().activeStateMessage(ActiveFrame.class, (ActiveFrame) frame, ActiveFrame.ChangeMessage.BARS_LAYOUT_CHANGE);
+        }
     }
 }

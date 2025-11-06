@@ -119,7 +119,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
         List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
         if (classApplySettings == null) {
             classApplySettings = new ArrayList<>();
-            applySettingsContributions.put(instanceClass.getClass(), classApplySettings);
+            applySettingsContributions.put(instanceClass, classApplySettings);
         }
 
         classApplySettings.add(applySetting);

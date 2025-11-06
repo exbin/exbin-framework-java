@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.frame;
+package org.exbin.framework.action.api;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Frame state.
+ * Listener for action context change message.
  *
  * @author ExBin Project (https://exbin.org)
+ * @param <T> instance type
  */
-public interface FrameState {
+@ParametersAreNonnullByDefault
+public interface ActionContextMessageListener<T> {
+
+    /**
+     * Notifies active state instance changed.
+     *
+     * @param instance class instance
+     * @param changeMessage change message
+     */
+    void stateChanged(T instance, Object changeMessage);
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.frame;
+package org.exbin.framework.frame.api;
 
 /**
  * Active frame.
@@ -21,4 +21,8 @@ package org.exbin.framework.frame;
  * @author ExBin Project (https://exbin.org)
  */
 public interface ActiveFrame {
+    
+    public enum ChangeMessage {
+        BARS_LAYOUT_CHANGE
+    }
 }

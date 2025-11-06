@@ -27,6 +27,8 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeListener;
 import org.exbin.framework.action.api.ActionManagement;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.action.api.ActionContextMessageListener;
+import org.exbin.framework.context.api.ActiveContextChangeListener;
 import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
@@ -40,10 +42,21 @@ public class ActionManager implements ActionManagement {
     protected final ActiveContextManagement contextManager;
     protected final Map<String, ActionRecord> actions = new HashMap<>();
     protected final Map<Class<?>, List<ActionContextChangeListener<?>>> actionContextChangeListeners = new HashMap<>();
+    protected final Map<Class<?>, List<ActionContextMessageListener<?>>> actionContextMessageListeners = new HashMap<>();
 
     public ActionManager(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
-        contextManager.addChangeListener(this::activeStateChanged);
+        contextManager.addChangeListener(new ActiveContextChangeListener() {
+            @Override
+            public <T> void activeStateChanged(Class<T> stateClass, T activeState) {
+                ActionManager.this.activeStateChanged(stateClass, activeState);
+            }
+
+            @Override
+            public <T> void activeStateMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+                ActionManager.this.activeStateMessage(stateClass, activeState, changeMessage);
+            }
+        });
     }
 
     @Override
@@ -85,6 +98,16 @@ public class ActionManager implements ActionManagement {
     }
 
     @SuppressWarnings("unchecked")
+    public <T> void activeStateMessage(Class<T> componentClass, @Nullable T componentInstance, Object changeMessage) {
+        List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
+        if (componentListeners != null) {
+            for (ActionContextChangeListener componentListener : componentListeners) {
+                componentListener.stateChanged(componentInstance);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public void requestUpdateForAction(Action action) {
         String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
@@ -110,29 +133,43 @@ public class ActionManager implements ActionManagement {
         }
 
         @Override
-        public <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
-            actionRecord.contextChangeListeners.put(componentClass, listener);
+        public <T> void registerListener(Class<T> contextClass, ActionContextChangeListener<T> listener) {
+            actionRecord.contextChangeListeners.put(contextClass, listener);
 
-            List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
-            if (componentListeners == null) {
-                componentListeners = new ArrayList<>();
-                actionContextChangeListeners.put(componentClass, componentListeners);
+            List<ActionContextChangeListener<?>> contextChangeListeners = actionContextChangeListeners.get(contextClass);
+            if (contextChangeListeners == null) {
+                contextChangeListeners = new ArrayList<>();
+                actionContextChangeListeners.put(contextClass, contextChangeListeners);
             }
 
-            componentListeners.add(listener);
+            contextChangeListeners.add(listener);
         }
 
         @Override
-        public <T> void registerUpdateListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
-            registerListener(componentClass, listener);
+        public <T> void registerUpdateListener(Class<T> contextClass, ActionContextChangeListener<T> listener) {
+            // TODO
+            registerListener(contextClass, listener);
+        }
+
+        @Override
+        public <T> void registerContextMessageListener(Class<T> contextClass, ActionContextMessageListener<T> listener) {
+            actionRecord.contextMessageListeners.put(contextClass, listener);
+
+            List<ActionContextMessageListener<?>> contextMessageListener = actionContextMessageListeners.get(contextClass);
+            if (contextMessageListener == null) {
+                contextMessageListener = new ArrayList<>();
+                actionContextMessageListeners.put(contextClass, contextMessageListener);
+            }
+
+            contextMessageListener.add(listener);
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public <T> void updateActionsForComponent(Class<T> componentClass, @Nullable T componentInstance) {
+        public <T> void updateActionsForComponent(Class<T> contextClass, @Nullable T componentInstance) {
             // TODO
 //            activeComponentState.put(componentClass, componentInstance);
-//            List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
+//            List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(contextClass);
 //            if (componentListeners != null) {
 //                for (ActionContextChangeListener componentListener : componentListeners) {
 //                    componentListener.stateChanged(componentInstance);
@@ -145,9 +182,10 @@ public class ActionManager implements ActionManagement {
 
         List<Action> actionInstances = new ArrayList<>();
         Map<Class<?>, ActionContextChangeListener<?>> contextChangeListeners = new HashMap<>();
+        Map<Class<?>, ActionContextMessageListener<?>> contextMessageListeners = new HashMap<>();
     }
 
-/*
+    /*
     protected final List<ComponentActivationListener> listeners = new ArrayList<>();
     protected final Map<Class<?>, Object> activeComponentState = new HashMap<>();
 

@@ -52,6 +52,15 @@ public class ChildActiveContextManager implements ActiveContextManagement {
 
                 notifyChanged(stateClass, activeState);
             }
+
+            @Override
+            public <T> void activeStateMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+                if (childStates.contains(stateClass)) {
+                    return;
+                }
+
+                sendMessage(stateClass, activeState, changeMessage);
+            }
         });
     }
 
@@ -86,6 +95,15 @@ public class ChildActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
+    public <T> void activeStateMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+        if (!childStates.contains(stateClass)) {
+            childStates.add(stateClass);
+        }
+
+        sendMessage(stateClass, activeState, changeMessage);
+    }
+
+    @Override
     public void addChangeListener(ActiveContextChangeListener changeListener) {
         changeListeners.add(changeListener);
     }
@@ -98,6 +116,12 @@ public class ChildActiveContextManager implements ActiveContextManagement {
     protected <T> void notifyChanged(Class<T> stateClass, T activeState) {
         for (ActiveContextChangeListener changeListener : changeListeners) {
             changeListener.activeStateChanged(stateClass, activeState);
+        }
+    }
+
+    protected <T> void sendMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+        for (ActiveContextChangeListener changeListener : changeListeners) {
+            changeListener.activeStateMessage(stateClass, activeState, changeMessage);
         }
     }
 }

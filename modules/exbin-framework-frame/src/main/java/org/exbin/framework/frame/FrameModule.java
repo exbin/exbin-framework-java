@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.frame;
 
+import org.exbin.framework.frame.api.ActiveFrame;
 import com.formdev.flatlaf.extras.FlatDesktop;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
@@ -261,9 +262,12 @@ public class FrameModule implements FrameModuleApi {
             applicationFrame.setApplicationExitHandler(exitHandler);
             appIcon = applicationFrame.getIconImage();
 
+            OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
+            OptionsSettingsManagement mainSettingsManager = optionsSettingsModule.getMainSettingsManager();
+            mainSettingsManager.applyOptions(ActiveFrame.class, applicationFrame, mainSettingsManager.getSettingsOptionsProvider());
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             ActiveContextManagement contextManager = frameModule.getFrameHandler().getContextManager();
-            contextManager.changeActiveState(ApplicationFrame.class, applicationFrame);
+            contextManager.changeActiveState(ActiveFrame.class, applicationFrame);
         }
 
         return applicationFrame;
@@ -384,7 +388,7 @@ public class FrameModule implements FrameModuleApi {
 
         settingsManagement.registerOptionsSettings(AppearanceOptions.class, (optionsStorage) -> new AppearanceOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(AppearanceSettingsApplier.APPLIER_ID, new AppearanceSettingsApplier()));
+        settingsManagement.registerApplySetting(ActiveFrame.class, new ApplySettingsContribution(AppearanceSettingsApplier.APPLIER_ID, new AppearanceSettingsApplier()));
         
         SettingsPageContribution pageContribution = new SettingsPageContribution(FrameModuleApi.SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);

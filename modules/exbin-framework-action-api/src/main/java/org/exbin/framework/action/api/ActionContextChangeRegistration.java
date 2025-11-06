@@ -47,6 +47,16 @@ public interface ActionContextChangeRegistration {
     <T> void registerUpdateListener(Class<T> contextClass, ActionContextChangeListener<T> listener);
 
     /**
+     * Registers listener to call each time when component is activated or empty
+     * when deactivated.
+     *
+     * @param <T> monitored class type
+     * @param contextClass context class
+     * @param listener listener
+     */
+    <T> void registerContextMessageListener(Class<T> contextClass, ActionContextMessageListener<T> listener);
+
+    /**
      * Requests update for component class.
      *
      * @param <T> monitored class type
