@@ -93,10 +93,19 @@ public interface FrameModuleApi extends Module {
      */
     void removeExitListener(ApplicationExitListener listener);
 
+    /**
+     * Registers visibility actions for both status bar and tool bar.
+     */
     void registerBarsVisibilityActions();
 
+    /**
+     * Registers visibility actions for both tool bar.
+     */
     void registerToolBarVisibilityActions();
 
+    /**
+     * Registers visibility actions for both status bar.
+     */
     void registerStatusBarVisibilityActions();
 
     /**
@@ -119,10 +128,21 @@ public interface FrameModuleApi extends Module {
 
     void saveFramePosition();
 
+    /**
+     * Switches frame to full screen mode.
+     */
     void switchFrameToFullscreen();
 
+    /**
+     * Switches frame to undecorated mode.
+     */
     void switchFrameToUndecorated();
 
+    /**
+     * Returns icon for this frame.
+     *
+     * @return icon if assigned
+     */
     @Nonnull
     Optional<Image> getApplicationIcon();
 

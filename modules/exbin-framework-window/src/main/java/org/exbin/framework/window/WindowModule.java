@@ -57,17 +57,7 @@ public class WindowModule implements WindowModuleApi {
 
     public static final String FILE_EXIT_GROUP_ID = MODULE_ID + ".exit";
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
-    public static final String PREFERENCES_FRAME_PREFIX = "mainFrame.";
     public static final String RESOURCES_DIALOG_TITLE = "dialog.title";
-
-    public static final String PREFERENCES_SCREEN_INDEX = "screenIndex";
-    public static final String PREFERENCES_SCREEN_WIDTH = "screenWidth";
-    public static final String PREFERENCES_SCREEN_HEIGHT = "screenHeight";
-    public static final String PREFERENCES_POSITION_X = "positionX";
-    public static final String PREFERENCES_POSITION_Y = "positionY";
-    public static final String PREFERENCES_WIDTH = "width";
-    public static final String PREFERENCES_HEIGHT = "height";
-    public static final String PREFERENCES_MAXIMIZED = "maximized";
 
     private ResourceBundle resourceBundle;
     private boolean hideHeaderPanels = false;

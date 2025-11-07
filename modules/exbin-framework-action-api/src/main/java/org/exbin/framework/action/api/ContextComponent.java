@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.frame.api;
+package org.exbin.framework.action.api;
 
 /**
- * Active frame.
+ * Interface for context activable component.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ActiveFrame {
-    
-    public enum ChangeMessage {
-        BARS_LAYOUT_CHANGE
-    }
+public interface ContextComponent {
+
 }

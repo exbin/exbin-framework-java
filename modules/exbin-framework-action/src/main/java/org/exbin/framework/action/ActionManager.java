@@ -30,6 +30,7 @@ import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ActionContextMessageListener;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
 import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
  * Default action manager.
@@ -53,7 +54,7 @@ public class ActionManager implements ActionManagement {
             }
 
             @Override
-            public <T> void activeStateMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+            public <T> void activeStateMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
                 ActionManager.this.activeStateMessage(stateClass, activeState, changeMessage);
             }
         });
@@ -88,21 +89,23 @@ public class ActionManager implements ActionManagement {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> void activeStateChanged(Class<T> componentClass, @Nullable T componentInstance) {
-        List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
-        if (componentListeners != null) {
-            for (ActionContextChangeListener componentListener : componentListeners) {
-                componentListener.stateChanged(componentInstance);
+    public <T> void activeStateChanged(Class<T> stateClass, @Nullable T contextInstance) {
+        // TODO: Convert to thread
+        List<ActionContextChangeListener<?>> contextListeners = actionContextChangeListeners.get(stateClass);
+        if (contextListeners != null) {
+            for (ActionContextChangeListener contextListener : contextListeners) {
+                contextListener.stateChanged(contextInstance);
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    public <T> void activeStateMessage(Class<T> componentClass, @Nullable T componentInstance, Object changeMessage) {
-        List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(componentClass);
-        if (componentListeners != null) {
-            for (ActionContextChangeListener componentListener : componentListeners) {
-                componentListener.stateChanged(componentInstance);
+    public <T> void activeStateMessage(Class<T> stateClass, @Nullable T contextInstance, StateChangeMessage changeMessage) {
+        // TODO: Convert to thread
+        List<ActionContextMessageListener<?>> contextListeners = actionContextMessageListeners.get(stateClass);
+        if (contextListeners != null) {
+            for (ActionContextMessageListener contextListener : contextListeners) {
+                contextListener.stateChanged(stateClass, changeMessage);
             }
         }
     }
@@ -166,7 +169,7 @@ public class ActionManager implements ActionManagement {
 
         @SuppressWarnings("unchecked")
         @Override
-        public <T> void updateActionsForComponent(Class<T> contextClass, @Nullable T componentInstance) {
+        public <T> void updateActionsForComponent(Class<T> contextClass, @Nullable T contextInstance) {
             // TODO
 //            activeComponentState.put(componentClass, componentInstance);
 //            List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(contextClass);

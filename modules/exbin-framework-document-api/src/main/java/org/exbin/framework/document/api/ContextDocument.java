@@ -15,20 +15,11 @@
  */
 package org.exbin.framework.document.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
-
 /**
- * Interface for document support module.
+ * Interface for context activable document.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface DocumentModuleApi extends Module {
+public interface ContextDocument {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DocumentModuleApi.class);
-    
-    
 }

@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
 import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
  * Default active context manager.
@@ -58,7 +59,7 @@ public class ActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
-    public <T> void activeStateMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+    public <T> void activeStateMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
         activeStates.put(stateClass, activeState);
         sendMessage(stateClass, activeState, changeMessage);
     }
@@ -79,7 +80,7 @@ public class ActiveContextManager implements ActiveContextManagement {
         }
     }
 
-    protected <T> void sendMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+    protected <T> void sendMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
         for (ActiveContextChangeListener changeListener : changeListeners) {
             changeListener.activeStateMessage(stateClass, activeState, changeMessage);
         }

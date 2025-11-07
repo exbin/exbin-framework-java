@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
 import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
  * Child active context manager.
@@ -54,7 +55,7 @@ public class ChildActiveContextManager implements ActiveContextManagement {
             }
 
             @Override
-            public <T> void activeStateMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+            public <T> void activeStateMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
                 if (childStates.contains(stateClass)) {
                     return;
                 }
@@ -95,7 +96,7 @@ public class ChildActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
-    public <T> void activeStateMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+    public <T> void activeStateMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
         if (!childStates.contains(stateClass)) {
             childStates.add(stateClass);
         }
@@ -119,7 +120,7 @@ public class ChildActiveContextManager implements ActiveContextManagement {
         }
     }
 
-    protected <T> void sendMessage(Class<T> stateClass, T activeState, Object changeMessage) {
+    protected <T> void sendMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
         for (ActiveContextChangeListener changeListener : changeListeners) {
             changeListener.activeStateMessage(stateClass, activeState, changeMessage);
         }

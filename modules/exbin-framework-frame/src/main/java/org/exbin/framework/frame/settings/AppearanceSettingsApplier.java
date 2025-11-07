@@ -16,10 +16,10 @@
 package org.exbin.framework.frame.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.frame.api.ActiveFrame;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.frame.api.ContextFrame;
 
 /**
  * Appearance settings applier.
@@ -39,7 +39,7 @@ public class AppearanceSettingsApplier implements SettingsApplier {
             frame.setToolBarVisible(options.isShowToolBar());
             frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
             frame.setStatusBarVisible(options.isShowStatusBar());
-            frame.getContextManager().activeStateMessage(ActiveFrame.class, (ActiveFrame) frame, ActiveFrame.ChangeMessage.BARS_LAYOUT_CHANGE);
+            frame.getContextManager().activeStateMessage(ContextFrame.class, (ContextFrame) frame, ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE);
         }
     }
 }

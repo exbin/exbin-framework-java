@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultEditorKit;
-import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.utils.ClipboardUtils;
@@ -32,6 +31,7 @@ import org.exbin.framework.text.font.TextFontController;
 import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
 import org.exbin.framework.utils.ActionUtils;
+import org.exbin.framework.action.api.ContextComponent;
 
 /**
  * Text panel component.
@@ -39,7 +39,7 @@ import org.exbin.framework.utils.ActionUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorTextPanelComponent implements ActiveComponent, TextPanelComponent, TextClipboardController, TextEncodingController, TextFontController {
+public class EditorTextPanelComponent implements ContextComponent, TextPanelComponent, TextClipboardController, TextEncodingController, TextFontController {
 
     private final TextPanel textPanel;
 

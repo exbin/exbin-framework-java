@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
@@ -42,6 +41,7 @@ import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.text.font.TextFontController;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
 import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.action.api.ContextComponent;
 
 /**
  * Text file handler.
@@ -68,7 +68,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         textPanelComponent = new EditorTextPanelComponent(textPanel);
         textPanel.setUpdateListener(() -> {
             if (contextManager != null) {
-                contextManager.changeActiveState(ActiveComponent.class, textPanelComponent);
+                contextManager.changeActiveState(ContextComponent.class, textPanelComponent);
             }
         });
     }
@@ -221,7 +221,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     @Override
     public void componentActivated(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
-        contextManager.changeActiveState(ActiveComponent.class, textPanelComponent);
+        contextManager.changeActiveState(ContextComponent.class, textPanelComponent);
         contextManager.changeActiveState(TextFontController.class, textPanelComponent);
         contextManager.changeActiveState(TextEncodingController.class, textPanelComponent);
         contextManager.changeActiveState(UndoRedoState.class, undoRedoControl);
@@ -231,7 +231,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     @Override
     public void componentDeactivated(ActiveContextManagement contextManager) {
         this.contextManager = null;
-        contextManager.changeActiveState(ActiveComponent.class, null);
+        contextManager.changeActiveState(ContextComponent.class, null);
         contextManager.changeActiveState(TextFontController.class, null);
         contextManager.changeActiveState(TextEncodingController.class, null);
         contextManager.changeActiveState(UndoRedoState.class, null);

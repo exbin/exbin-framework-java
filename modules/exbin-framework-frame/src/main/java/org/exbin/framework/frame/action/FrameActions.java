@@ -29,8 +29,8 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.frame.ApplicationFrame;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
-import org.exbin.framework.frame.api.ActiveFrame;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.frame.api.ContextFrame;
 
 /**
  * Basic frame actions.
@@ -84,11 +84,11 @@ public class FrameActions {
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ActiveFrame.class, (instance) -> {
+                registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerContextMessageListener(ActiveFrame.class, (instance, message) -> {
-                    if (ActiveFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
+                    if (ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });
@@ -103,7 +103,7 @@ public class FrameActions {
             }
         }
 
-        public void updateByContext(ActiveFrame context) {
+        public void updateByContext(ContextFrame context) {
             this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
             setEnabled(frame != null);
             if (frame != null) {
@@ -126,11 +126,11 @@ public class FrameActions {
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ActiveFrame.class, (instance) -> {
+                registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerContextMessageListener(ActiveFrame.class, (instance, message) -> {
-                    if (ActiveFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
+                    if (ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });
@@ -145,7 +145,7 @@ public class FrameActions {
             }
         }
 
-        public void updateByContext(ActiveFrame context) {
+        public void updateByContext(ContextFrame context) {
             this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
             setEnabled(frame != null);
             if (frame != null) {
@@ -168,11 +168,11 @@ public class FrameActions {
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ActiveFrame.class, (instance) -> {
+                registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerContextMessageListener(ActiveFrame.class, (instance, message) -> {
-                    if (ActiveFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
+                    if (ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });
@@ -187,7 +187,7 @@ public class FrameActions {
             }
         }
 
-        public void updateByContext(ActiveFrame context) {
+        public void updateByContext(ContextFrame context) {
             this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
             setEnabled(frame != null);
             if (frame != null) {

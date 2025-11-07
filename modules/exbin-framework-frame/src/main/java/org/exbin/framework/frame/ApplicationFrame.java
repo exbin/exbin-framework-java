@@ -311,8 +311,8 @@ public class ApplicationFrame extends javax.swing.JFrame implements ApplicationF
 
     @Override
     public void setDefaultSize(Dimension windowSize) {
-        OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-        String rectangleString = preferencesModule.getAppOptions().get(FrameModuleApi.PREFERENCES_FRAME_RECTANGLE, "");
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        String rectangleString = optionsModule.getAppOptions().get(FrameModuleApi.PREFERENCES_FRAME_RECTANGLE, "");
         if (!rectangleString.isEmpty()) {
             String[] split = rectangleString.split("[,]");
             Rectangle rect = new Rectangle(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));

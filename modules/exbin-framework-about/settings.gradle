@@ -2,11 +2,12 @@ rootProject.name = 'exbin-framework-about'
 
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
+    include ':modules:exbin-framework-contribution-api'
+    include ':modules:exbin-framework-context-api'
     include ':modules:exbin-framework-about-api'
     include ':modules:exbin-framework-action-api'
     include ':modules:exbin-framework-help-api'
     include ':modules:exbin-framework-menu-api'
-    include ':modules:exbin-framework-contribution-api'
     include ':modules:exbin-framework-menu-popup-api'
     include ':modules:exbin-framework-frame-api'
     include ':modules:exbin-framework-language-api'

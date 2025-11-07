@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.frame;
 
-import org.exbin.framework.frame.api.ActiveFrame;
 import com.formdev.flatlaf.extras.FlatDesktop;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
@@ -43,7 +42,6 @@ import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.frame.action.FrameActions;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.api.OptionsModuleApi;
@@ -58,6 +56,9 @@ import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
+import org.exbin.framework.frame.api.ContextFrame;
+import org.exbin.framework.options.api.PrefixOptionsStorage;
+import org.exbin.framework.window.settings.WindowPositionOptions;
 
 /**
  * Module frame handling.
@@ -71,15 +72,6 @@ public class FrameModule implements FrameModuleApi {
     public static final String VIEW_BARS_GROUP_ID = MODULE_ID + ".view";
     public static final String PREFERENCES_FRAME_PREFIX = "mainFrame.";
     public static final String RESOURCES_DIALOG_TITLE = "dialog.title";
-
-    public static final String PREFERENCES_SCREEN_INDEX = "screenIndex";
-    public static final String PREFERENCES_SCREEN_WIDTH = "screenWidth";
-    public static final String PREFERENCES_SCREEN_HEIGHT = "screenHeight";
-    public static final String PREFERENCES_POSITION_X = "positionX";
-    public static final String PREFERENCES_POSITION_Y = "positionY";
-    public static final String PREFERENCES_WIDTH = "width";
-    public static final String PREFERENCES_HEIGHT = "height";
-    public static final String PREFERENCES_MAXIMIZED = "maximized";
 
     private ResourceBundle resourceBundle;
     private ApplicationFrame applicationFrame;
@@ -146,9 +138,11 @@ public class FrameModule implements FrameModuleApi {
     public void loadFramePosition() {
         getFrameHandler();
         WindowPosition framePosition = new WindowPosition();
-        OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-        if (preferencesFramePositionExists(preferencesModule.getAppOptions(), PREFERENCES_FRAME_PREFIX)) {
-            loadFramePositionFromPreferences(framePosition, preferencesModule.getAppOptions(), PREFERENCES_FRAME_PREFIX);
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        PrefixOptionsStorage frameOptionsStorage = new PrefixOptionsStorage(optionsModule.getAppOptions(), PREFERENCES_FRAME_PREFIX);
+        WindowPositionOptions windowPositionOptions = new WindowPositionOptions(frameOptionsStorage);
+        if (windowPositionOptions.preferencesFramePositionExists()) {
+            windowPositionOptions.getWindowPosition(framePosition);
             WindowUtils.setWindowPosition(applicationFrame, framePosition);
         }
     }
@@ -156,34 +150,10 @@ public class FrameModule implements FrameModuleApi {
     @Override
     public void saveFramePosition() {
         WindowPosition windowPosition = WindowUtils.getWindowPosition(applicationFrame);
-        OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-        saveFramePositionToPreferences(windowPosition, preferencesModule.getAppOptions(), PREFERENCES_FRAME_PREFIX);
-    }
-
-    static private void saveFramePositionToPreferences(WindowPosition windowPosition, OptionsStorage pref, String prefix) {
-        pref.putInt(prefix + PREFERENCES_SCREEN_INDEX, windowPosition.getScreenIndex());
-        pref.putInt(prefix + PREFERENCES_SCREEN_WIDTH, windowPosition.getScreenWidth());
-        pref.putInt(prefix + PREFERENCES_SCREEN_HEIGHT, windowPosition.getScreenHeight());
-        pref.putInt(prefix + PREFERENCES_POSITION_X, windowPosition.getRelativeX());
-        pref.putInt(prefix + PREFERENCES_POSITION_Y, windowPosition.getRelativeY());
-        pref.putInt(prefix + PREFERENCES_WIDTH, windowPosition.getWidth());
-        pref.putInt(prefix + PREFERENCES_HEIGHT, windowPosition.getHeight());
-        pref.putBoolean(prefix + PREFERENCES_MAXIMIZED, windowPosition.isMaximized());
-    }
-
-    static private void loadFramePositionFromPreferences(WindowPosition windowPosition, OptionsStorage pref, String prefix) {
-        windowPosition.setScreenIndex(pref.getInt(prefix + PREFERENCES_SCREEN_INDEX, 0));
-        windowPosition.setScreenWidth(pref.getInt(prefix + PREFERENCES_SCREEN_WIDTH, 0));
-        windowPosition.setScreenHeight(pref.getInt(prefix + PREFERENCES_SCREEN_HEIGHT, 0));
-        windowPosition.setRelativeX(pref.getInt(prefix + PREFERENCES_POSITION_X, 0));
-        windowPosition.setRelativeY(pref.getInt(prefix + PREFERENCES_POSITION_Y, 0));
-        windowPosition.setWidth(pref.getInt(prefix + PREFERENCES_WIDTH, 0));
-        windowPosition.setHeight(pref.getInt(prefix + PREFERENCES_HEIGHT, 0));
-        windowPosition.setMaximized(pref.getBoolean(prefix + PREFERENCES_MAXIMIZED, false));
-    }
-
-    static private boolean preferencesFramePositionExists(OptionsStorage pref, String prefix) {
-        return pref.exists(prefix + PREFERENCES_SCREEN_INDEX);
+        OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+        PrefixOptionsStorage frameOptionsStorage = new PrefixOptionsStorage(optionsModule.getAppOptions(), PREFERENCES_FRAME_PREFIX);
+        WindowPositionOptions windowPositionOptions = new WindowPositionOptions(frameOptionsStorage);
+        windowPositionOptions.setWindowPosition(windowPosition);
     }
 
     @Nonnull
@@ -264,10 +234,10 @@ public class FrameModule implements FrameModuleApi {
 
             OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
             OptionsSettingsManagement mainSettingsManager = optionsSettingsModule.getMainSettingsManager();
-            mainSettingsManager.applyOptions(ActiveFrame.class, applicationFrame, mainSettingsManager.getSettingsOptionsProvider());
+            mainSettingsManager.applyOptions(ContextFrame.class, applicationFrame, mainSettingsManager.getSettingsOptionsProvider());
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             ActiveContextManagement contextManager = frameModule.getFrameHandler().getContextManager();
-            contextManager.changeActiveState(ActiveFrame.class, applicationFrame);
+            contextManager.changeActiveState(ContextFrame.class, applicationFrame);
         }
 
         return applicationFrame;
@@ -388,8 +358,8 @@ public class FrameModule implements FrameModuleApi {
 
         settingsManagement.registerOptionsSettings(AppearanceOptions.class, (optionsStorage) -> new AppearanceOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(ActiveFrame.class, new ApplySettingsContribution(AppearanceSettingsApplier.APPLIER_ID, new AppearanceSettingsApplier()));
-        
+        settingsManagement.registerApplySetting(ContextFrame.class, new ApplySettingsContribution(AppearanceSettingsApplier.APPLIER_ID, new AppearanceSettingsApplier()));
+
         SettingsPageContribution pageContribution = new SettingsPageContribution(FrameModuleApi.SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(AppearanceSettingsComponent.COMPONENT_ID, new AppearanceSettingsComponent());

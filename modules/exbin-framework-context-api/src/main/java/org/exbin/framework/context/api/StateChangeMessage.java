@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
+package org.exbin.framework.context.api;
 
 /**
- * Interface for currently active document.
- * <p>
- * Should report active document per window / frame with separate menubar /
- * toolbars.
+ * Interface for context state change message.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ActiveDocument {
-
+public interface StateChangeMessage {
 }

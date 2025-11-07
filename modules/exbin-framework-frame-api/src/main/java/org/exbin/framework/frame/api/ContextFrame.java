@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.frame.api;
+
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
- * Interface for currently active component.
- * <p>
- * Should report active component per window / frame with separate menubar /
- * toolbars.
+ * Interface for context activable frame.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ActiveComponent {
+public interface ContextFrame {
 
+    public enum ChangeMessage implements StateChangeMessage {
+        BARS_LAYOUT_CHANGE
+    }
 }

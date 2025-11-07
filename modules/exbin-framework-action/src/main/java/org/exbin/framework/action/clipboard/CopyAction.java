@@ -25,10 +25,10 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.ActiveComponent;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardController;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.action.api.ContextComponent;
 
 /**
  * Copy to clipboard action.
@@ -61,7 +61,7 @@ public class CopyAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void register(ActionContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ActiveComponent.class, component -> {
+        registrar.registerUpdateListener(ContextComponent.class, component -> {
             clipboardSupport = component instanceof ClipboardController ? (ClipboardController) component : null;
             update();
         });
