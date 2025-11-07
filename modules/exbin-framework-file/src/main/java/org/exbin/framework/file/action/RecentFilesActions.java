@@ -48,11 +48,11 @@ import org.exbin.framework.utils.UiUtils;
 @ParametersAreNonnullByDefault
 public class RecentFilesActions {
 
-    private ResourceBundle resourceBundle;
-    private FilesController filesController;
-    private OptionsStorage preferences;
+    protected ResourceBundle resourceBundle;
+    protected FilesController filesController;
+    protected OptionsStorage optionsStorage;
 
-    private List<RecentItem> recentFiles = null;
+    protected List<RecentItem> recentFiles = null;
 
     public RecentFilesActions() {
     }
@@ -79,14 +79,14 @@ public class RecentFilesActions {
         JMenu fileOpenRecentMenu = UiUtils.createMenu();
         fileOpenRecentMenu.setAction(fileOpenRecentAction);
         recentFiles = new ArrayList<>();
-        if (preferences != null) {
+        if (optionsStorage != null) {
             loadState(fileOpenRecentMenu);
         }
         return fileOpenRecentMenu;
     }
 
     private void loadState(JMenu fileOpenRecentMenu) {
-        RecentFilesOptions recentFilesOptions = new RecentFilesOptions(preferences);
+        RecentFilesOptions recentFilesOptions = new RecentFilesOptions(optionsStorage);
         recentFiles.clear();
         int recent = 1;
         while (recent < 14) {
@@ -107,14 +107,14 @@ public class RecentFilesActions {
             return;
         }
 
-        RecentFilesOptions recentFilesParameters = new RecentFilesOptions(preferences);
+        RecentFilesOptions recentFilesParameters = new RecentFilesOptions(optionsStorage);
         for (int i = 0; i < recentFiles.size(); i++) {
             recentFilesParameters.setFilePath(recentFiles.get(i).getFileName(), i + 1);
             recentFilesParameters.setModuleName(recentFiles.get(i).getModuleName(), i + 1);
             recentFilesParameters.setFileMode(recentFiles.get(i).getFileMode(), i + 1);
         }
         recentFilesParameters.remove(recentFiles.size() + 1);
-        preferences.flush();
+        optionsStorage.flush();
     }
 
     private void rebuildRecentFilesMenu(JMenu fileOpenRecentMenu) {
@@ -178,12 +178,12 @@ public class RecentFilesActions {
     }
 
     @Nullable
-    public OptionsStorage getPreferences() {
-        return preferences;
+    public OptionsStorage getOptionsStorage() {
+        return optionsStorage;
     }
 
-    public void setPreferences(OptionsStorage preferences) {
-        this.preferences = preferences;
+    public void setOptionsStorage(OptionsStorage optionsStorage) {
+        this.optionsStorage = optionsStorage;
     }
 
     public void updateRecentFilesList(URI fileUri, @Nullable FileType fileType) {

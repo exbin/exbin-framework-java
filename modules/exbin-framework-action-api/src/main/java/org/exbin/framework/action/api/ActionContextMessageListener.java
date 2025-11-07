@@ -16,6 +16,7 @@
 package org.exbin.framework.action.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
  * Listener for action context change message.
@@ -32,5 +33,5 @@ public interface ActionContextMessageListener<T> {
      * @param instance class instance
      * @param changeMessage change message
      */
-    void stateChanged(T instance, Object changeMessage);
+    void activeStateMessage(T instance, StateChangeMessage changeMessage);
 }

@@ -16,14 +16,10 @@
 package org.exbin.framework.language;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -74,8 +70,8 @@ public class LanguageModule implements LanguageModuleApi {
         if (languageClassLoader == null && iconSetProvider == null) {
             return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass), getLanguageBundleLocale());
         } else {
-            String baseName = getResourceBaseNameBundleByClass(targetClass);
-            LanguageResourceBundle bundle = new LanguageResourceBundle(baseName);
+            String bundleName = getResourceBaseNameBundleByClass(targetClass);
+            LanguageResourceBundle bundle = new LanguageResourceBundle(bundleName, getResourceBundleForLanguage(bundleName));
             if (iconSetProvider != null) {
                 bundle.setIconSet(iconSetProvider);
             }
@@ -89,8 +85,13 @@ public class LanguageModule implements LanguageModuleApi {
         if (languageClassLoader == null) {
             return ResourceBundle.getBundle(bundleName, getLanguageBundleLocale());
         } else {
-            return new LanguageResourceBundle(bundleName);
+            return new LanguageResourceBundle(bundleName, getResourceBundleForLanguage(bundleName));
         }
+    }
+
+    @Nonnull
+    private ResourceBundle getResourceBundleForLanguage(String bundleName) {
+        return languageClassLoader == null ? ResourceBundle.getBundle(bundleName, getLanguageBundleLocale()) : ResourceBundle.getBundle(bundleName, getLanguageBundleLocale(), languageClassLoader);
     }
 
     @Nonnull
@@ -275,51 +276,5 @@ public class LanguageModule implements LanguageModuleApi {
     @Nonnull
     public Locale getLanguageBundleLocale() {
         return languageLocale == null ? Locale.getDefault() : languageLocale;
-    }
-
-    /**
-     * Resource bundle which looks for language resources first and main
-     * resources as fallback.
-     */
-    @ParametersAreNonnullByDefault
-    private class LanguageResourceBundle extends ResourceBundle {
-
-        private final ResourceBundle mainResourceBundle;
-        private final ResourceBundle languageResourceBundle;
-        private IconSetProvider iconSetProvider = null;
-        private String prefix;
-
-        public LanguageResourceBundle(String baseName) {
-            this.prefix = baseName.replace("/", ".") + ".";
-            mainResourceBundle = ResourceBundle.getBundle(baseName, Locale.ROOT);
-            languageResourceBundle = languageClassLoader == null ? ResourceBundle.getBundle(baseName, getLanguageBundleLocale()) : ResourceBundle.getBundle(baseName, getLanguageBundleLocale(), languageClassLoader);
-        }
-
-        public void setIconSet(@Nullable IconSetProvider iconSetProvider) {
-            this.iconSetProvider = iconSetProvider;
-        }
-
-        @Nullable
-        @Override
-        protected Object handleGetObject(String key) {
-            Object object = iconSetProvider != null ? iconSetProvider.getIconKey(prefix + key) : null;
-            if (object == null) {
-                object = languageResourceBundle.getObject(key);
-            }
-            if (object == null) {
-                object = mainResourceBundle.getObject(key);
-            }
-
-            return object;
-        }
-
-        @Nonnull
-        @Override
-        public Enumeration<String> getKeys() {
-            Set<String> keys = new HashSet<>();
-            keys.addAll(Collections.list(languageResourceBundle.getKeys()));
-            keys.addAll(Collections.list(mainResourceBundle.getKeys()));
-            return Collections.enumeration(keys);
-        }
     }
 }

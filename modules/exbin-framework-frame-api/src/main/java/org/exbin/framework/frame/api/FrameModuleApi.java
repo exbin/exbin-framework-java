@@ -41,7 +41,7 @@ public interface FrameModuleApi extends Module {
     public static final String PROGRESS_STATUS_BAR_ID = "progress";
     public static final String BUSY_STATUS_BAR_ID = "busy";
 
-    public static final String PREFERENCES_FRAME_RECTANGLE = "frameRectangle";
+    public static final String OPTIONS_KEY_FRAME_RECTANGLE = "frameRectangle";
 
     /**
      * Returns frame handler.

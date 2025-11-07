@@ -25,9 +25,9 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.search.api.SearchHandler;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.search.api.ContextSearch;
 
 /**
  * Find/replace actions for binary search.
@@ -51,7 +51,7 @@ public class FindReplaceActions {
     }
 
     @Nonnull
-    public Action getEditFindAction() {
+    public Action createEditFindAction() {
         EditFindAction editFindAction = new EditFindAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(editFindAction, resourceBundle, FIND_ACTION_ID);
@@ -62,7 +62,7 @@ public class FindReplaceActions {
     }
 
     @Nonnull
-    public Action getEditFindAgainAction() {
+    public Action createEditFindAgainAction() {
         EditFindAgainAction editFindAgainAction = new EditFindAgainAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(editFindAgainAction, resourceBundle, FIND_AGAIN_ACTION_ID);
@@ -72,7 +72,7 @@ public class FindReplaceActions {
     }
 
     @Nonnull
-    public Action getEditReplaceAction() {
+    public Action createEditReplaceAction() {
         EditFindAgainAction editReplaceAction = new EditFindAgainAction();
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(editReplaceAction, resourceBundle, REPLACE_ACTION_ID);
@@ -85,7 +85,7 @@ public class FindReplaceActions {
     @ParametersAreNonnullByDefault
     public class EditFindAction extends AbstractAction implements ActionContextChange {
 
-        private SearchHandler searchHandler;
+        private ContextSearch contextSearch;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -94,8 +94,8 @@ public class FindReplaceActions {
 
         @Override
         public void register(ActionContextChangeRegistration registrar) {
-            registrar.registerUpdateListener(SearchHandler.class, (instance) -> {
-                searchHandler = instance;
+            registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
+                contextSearch = instance;
                 setEnabled(instance != null);
             });
         }
@@ -104,7 +104,7 @@ public class FindReplaceActions {
     @ParametersAreNonnullByDefault
     public class EditFindAgainAction extends AbstractAction implements ActionContextChange {
 
-        private SearchHandler searchHandler;
+        private ContextSearch contextSearch;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -112,8 +112,8 @@ public class FindReplaceActions {
 
         @Override
         public void register(ActionContextChangeRegistration registrar) {
-            registrar.registerUpdateListener(SearchHandler.class, (instance) -> {
-                searchHandler = instance;
+            registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
+                contextSearch = instance;
                 setEnabled(instance != null);
             });
         }
@@ -122,7 +122,7 @@ public class FindReplaceActions {
     @ParametersAreNonnullByDefault
     public class EditReplaceAction extends AbstractAction implements ActionContextChange {
 
-        private SearchHandler searchHandler;
+        private ContextSearch contextSearch;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -130,8 +130,8 @@ public class FindReplaceActions {
 
         @Override
         public void register(ActionContextChangeRegistration registrar) {
-            registrar.registerUpdateListener(SearchHandler.class, (instance) -> {
-                searchHandler = instance;
+            registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
+                contextSearch = instance;
                 setEnabled(instance != null);
             });
         }

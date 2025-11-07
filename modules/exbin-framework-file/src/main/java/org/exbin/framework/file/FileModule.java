@@ -231,7 +231,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
                 }
             });
             OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-            recentFilesActions.setPreferences(preferencesModule.getAppOptions());
+            recentFilesActions.setOptionsStorage(preferencesModule.getAppOptions());
         }
         return recentFilesActions;
     }

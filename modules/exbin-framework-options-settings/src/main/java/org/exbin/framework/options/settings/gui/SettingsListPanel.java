@@ -43,7 +43,7 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
 
 /**
- * Panel for application options settings.
+ * Panel for settings list options.
  *
  * @author ExBin Project (https://exbin.org)
  */

@@ -49,6 +49,7 @@ public class OnlineHelpAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
+        setEnabled(false);
     }
 
     @Nonnull
@@ -58,6 +59,7 @@ public class OnlineHelpAction extends AbstractAction {
 
     public void setOnlineHelpUrl(@Nullable URL helpUrl) {
         this.helpUrl = helpUrl;
+        setEnabled(helpUrl != null);
     }
 
     @Override

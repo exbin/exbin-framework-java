@@ -18,11 +18,11 @@ package org.exbin.framework.search.api;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Search handler.
+ * Interface for context activable search.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface SearchHandler {
+public interface ContextSearch {
 
 }

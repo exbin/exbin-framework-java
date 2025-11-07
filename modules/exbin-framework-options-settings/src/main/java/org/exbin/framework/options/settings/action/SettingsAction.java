@@ -54,15 +54,15 @@ public class SettingsAction extends AbstractAction {
     public static final String ACTION_ID = "settingsAction";
 
     private ResourceBundle resourceBundle;
-    private SettingsPagesProvider optionsPagesProvider;
+    private SettingsPagesProvider settingsPagesProvider;
     private DialogParentComponent dialogParentComponent;
 
     public SettingsAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle, SettingsPagesProvider optionsPagesProvider) {
+    public void setup(ResourceBundle resourceBundle, SettingsPagesProvider settingsPagesProvider) {
         this.resourceBundle = resourceBundle;
-        this.optionsPagesProvider = optionsPagesProvider;
+        this.settingsPagesProvider = settingsPagesProvider;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
@@ -86,28 +86,28 @@ public class SettingsAction extends AbstractAction {
         WindowHandler dialog;
         switch (settingsPanelType) {
             case LIST:
-                SettingsListPanel optionsListPanel = new SettingsListPanel();
-                optionsPagesProvider.registerSettingsPages(optionsListPanel);
-                optionsListPanel.pagesFinished();
-                loadAll(optionsListPanel.getSettingsPages());
+                SettingsListPanel settingsListPanel = new SettingsListPanel();
+                settingsPagesProvider.registerSettingsPages(settingsListPanel);
+                settingsListPanel.pagesFinished();
+                loadAll(settingsListPanel.getSettingsPages());
                 if (optionsRootCaption != null) {
-                    optionsListPanel.setRootCaption(optionsRootCaption);
+                    settingsListPanel.setRootCaption(optionsRootCaption);
                 }
 
-                dialog = windowModule.createDialog(optionsListPanel, controlPanel);
+                dialog = windowModule.createDialog(settingsListPanel, controlPanel);
                 dialog.getWindow().setSize(780, 500);
-                windowModule.setWindowTitle(dialog, optionsListPanel.getResourceBundle());
+                windowModule.setWindowTitle(dialog, settingsListPanel.getResourceBundle());
                 controlPanel.setController((actionType) -> {
                     switch (actionType) {
                         case SAVE: {
-                            saveAndApplyAll(optionsListPanel.getSettingsPages());
+                            saveAndApplyAll(settingsListPanel.getSettingsPages());
                             break;
                         }
                         case CANCEL: {
                             break;
                         }
                         case APPLY_ONCE: {
-                            applyOnlyAll(optionsListPanel.getSettingsPages());
+                            applyOnlyAll(settingsListPanel.getSettingsPages());
                             break;
                         }
                     }
@@ -116,28 +116,28 @@ public class SettingsAction extends AbstractAction {
                 dialog.showCentered(dialogParentComponent.getComponent());
                 break;
             case TREE:
-                SettingsTreePanel optionsTreePanel = new SettingsTreePanel();
-                optionsPagesProvider.registerSettingsPages(optionsTreePanel);
-                optionsTreePanel.pagesFinished();
-                loadAll(optionsTreePanel.getSettingsPages());
+                SettingsTreePanel settingsTreePanel = new SettingsTreePanel();
+                settingsPagesProvider.registerSettingsPages(settingsTreePanel);
+                settingsTreePanel.pagesFinished();
+                loadAll(settingsTreePanel.getSettingsPages());
                 if (optionsRootCaption != null) {
-                    optionsTreePanel.setRootCaption(optionsRootCaption);
+                    settingsTreePanel.setRootCaption(optionsRootCaption);
                 }
 
-                dialog = windowModule.createDialog(optionsTreePanel, controlPanel);
+                dialog = windowModule.createDialog(settingsTreePanel, controlPanel);
                 dialog.getWindow().setSize(780, 500);
-                windowModule.setWindowTitle(dialog, optionsTreePanel.getResourceBundle());
+                windowModule.setWindowTitle(dialog, settingsTreePanel.getResourceBundle());
                 controlPanel.setController((actionType) -> {
                     switch (actionType) {
                         case SAVE: {
-                            saveAndApplyAll(optionsTreePanel.getSettingsPages());
+                            saveAndApplyAll(settingsTreePanel.getSettingsPages());
                             break;
                         }
                         case CANCEL: {
                             break;
                         }
                         case APPLY_ONCE: {
-                            applyOnlyAll(optionsTreePanel.getSettingsPages());
+                            applyOnlyAll(settingsTreePanel.getSettingsPages());
                             break;
                         }
                     }

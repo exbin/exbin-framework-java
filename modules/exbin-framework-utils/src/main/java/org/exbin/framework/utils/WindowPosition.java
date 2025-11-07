@@ -25,14 +25,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class WindowPosition {
 
-    private int screenIndex;
-    private int screenWidth;
-    private int screenHeight;
-    private int relativeX;
-    private int relativeY;
-    private int width;
-    private int height;
-    private boolean maximized = false;
+    protected int screenIndex;
+    protected int screenWidth;
+    protected int screenHeight;
+    protected int relativeX;
+    protected int relativeY;
+    protected int width;
+    protected int height;
+    protected boolean maximized = false;
 
     public int getScreenIndex() {
         return screenIndex;

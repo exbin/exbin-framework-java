@@ -75,16 +75,18 @@ public class ActionManager implements ActionManagement {
     @Override
     public void initAction(Action action) {
         ActionContextChange actionContextChange = (ActionContextChange) action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
-        if (actionContextChange != null) {
-            String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
-            ActionRecord actionRecord = actions.get(actionId);
-            actionContextChange.register(new DefaultActionContextChangeRegistrar(actionRecord));
-            for (Map.Entry<Class<?>, ActionContextChangeListener<?>> entry : actionRecord.contextChangeListeners.entrySet()) {
-                Class<?> stateClass = entry.getKey();
-                Object activeState = contextManager.getActiveState(stateClass);
-                ActionContextChangeListener listener = entry.getValue();
-                listener.stateChanged(activeState);
-            }
+        if (actionContextChange == null) {
+            return;
+        }
+
+        String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
+        ActionRecord actionRecord = actions.get(actionId);
+        actionContextChange.register(new DefaultActionContextChangeRegistrar(actionRecord));
+        for (Map.Entry<Class<?>, ActionContextChangeListener<?>> entry : actionRecord.contextChangeListeners.entrySet()) {
+            Class<?> stateClass = entry.getKey();
+            Object activeState = contextManager.getActiveState(stateClass);
+            ActionContextChangeListener listener = entry.getValue();
+            listener.stateChanged(activeState);
         }
     }
 
@@ -92,10 +94,12 @@ public class ActionManager implements ActionManagement {
     public <T> void activeStateChanged(Class<T> stateClass, @Nullable T contextInstance) {
         // TODO: Convert to thread
         List<ActionContextChangeListener<?>> contextListeners = actionContextChangeListeners.get(stateClass);
-        if (contextListeners != null) {
-            for (ActionContextChangeListener contextListener : contextListeners) {
-                contextListener.stateChanged(contextInstance);
-            }
+        if (contextListeners == null) {
+            return;
+        }
+
+        for (ActionContextChangeListener contextListener : contextListeners) {
+            contextListener.stateChanged(contextInstance);
         }
     }
 
@@ -103,10 +107,12 @@ public class ActionManager implements ActionManagement {
     public <T> void activeStateMessage(Class<T> stateClass, @Nullable T contextInstance, StateChangeMessage changeMessage) {
         // TODO: Convert to thread
         List<ActionContextMessageListener<?>> contextListeners = actionContextMessageListeners.get(stateClass);
-        if (contextListeners != null) {
-            for (ActionContextMessageListener contextListener : contextListeners) {
-                contextListener.stateChanged(stateClass, changeMessage);
-            }
+        if (contextListeners == null) {
+            return;
+        }
+
+        for (ActionContextMessageListener contextListener : contextListeners) {
+            contextListener.activeStateMessage(stateClass, changeMessage);
         }
     }
 
@@ -115,6 +121,9 @@ public class ActionManager implements ActionManagement {
     public void requestUpdateForAction(Action action) {
         String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
         ActionRecord actionRecord = actions.get(actionId);
+        if (actionRecord == null) {
+            return;
+        }
 
         // TODO Restrict to specific action listeners
         for (Class<?> stateClass : contextManager.getStateClasses()) {
@@ -175,7 +184,7 @@ public class ActionManager implements ActionManagement {
 //            List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(contextClass);
 //            if (componentListeners != null) {
 //                for (ActionContextChangeListener componentListener : componentListeners) {
-//                    componentListener.stateChanged(componentInstance);
+//                    componentListener.activeStateMessage(componentInstance);
 //                }
 //            }
         }
@@ -238,7 +247,7 @@ public class ActionManager implements ActionManagement {
             Object instance = entry.getValue();
             ActionContextChangeListener listener = actionListeners.get(key);
             if (listener != null) {
-                listener.stateChanged(instance);
+                listener.activeStateMessage(instance);
             }
         }
     }
