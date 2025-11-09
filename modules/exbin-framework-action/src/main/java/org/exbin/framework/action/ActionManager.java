@@ -112,7 +112,7 @@ public class ActionManager implements ActionManagement {
         }
 
         for (ActionContextMessageListener contextListener : contextListeners) {
-            contextListener.activeStateMessage(stateClass, changeMessage);
+            contextListener.activeStateMessage(contextInstance, changeMessage);
         }
     }
 
