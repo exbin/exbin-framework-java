@@ -48,7 +48,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.text.encoding.EncodingsHandler;
+import org.exbin.framework.text.encoding.EncodingsManager;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
@@ -83,7 +83,7 @@ public class TextPanel extends javax.swing.JPanel {
     private void init() {
         highlight = null;
         foundTextBackgroundColor = Color.YELLOW;
-        charset = Charset.forName(EncodingsHandler.ENCODING_UTF8);
+        charset = Charset.forName(EncodingsManager.ENCODING_UTF8);
         defaultFont = textArea.getFont();
         defaultColors = new Color[5];
         defaultColors[0] = new Color(textArea.getForeground().getRGB());

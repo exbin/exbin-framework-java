@@ -70,6 +70,11 @@ public class TextFontPanel extends javax.swing.JPanel {
         fontSizeInputList.setChangeListener(changeListener);
     }
 
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     private void updatePreview() {
         previewTextField.setFont(getStoredFont());
         previewTextField.repaint();
@@ -341,8 +346,4 @@ public class TextFontPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox underlineCheckBox;
     // End of variables declaration//GEN-END:variables
 
-    @Nonnull
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
-    }
 }

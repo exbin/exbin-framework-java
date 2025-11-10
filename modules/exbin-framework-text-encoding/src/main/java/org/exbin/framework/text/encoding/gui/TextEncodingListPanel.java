@@ -44,7 +44,7 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingListPanel.class);
-    private AddEncodingsOperation addEncodingsOperation = null;
+    private Controller controller = null;
 
     public TextEncodingListPanel() {
         initComponents();
@@ -85,6 +85,10 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
                 }
             }
         });
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     @Nonnull
@@ -228,8 +232,8 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        if (addEncodingsOperation != null) {
-            addEncodingsOperation.run(((EncodingsListModel) encodingsList.getModel()).getCharsets(), (List<String> encodings) -> {
+        if (controller != null) {
+            controller.addEncodings(((EncodingsListModel) encodingsList.getModel()).getCharsets(), (List<String> encodings) -> {
                 if (encodings != null) {
                     ((EncodingsListModel) encodingsList.getModel()).addAll(encodings, encodingsList.getSelectedIndex());
                     encodingsList.clearSelection();
@@ -334,23 +338,19 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
         }
     }
 
-    public void setAddEncodingsOperation(AddEncodingsOperation addEncodingsOperation) {
-        this.addEncodingsOperation = addEncodingsOperation;
-    }
-
     public void addEncodings(List<String> encodings) {
         ((EncodingsListModel) encodingsList.getModel()).addAll(encodings, encodingsList.isSelectionEmpty() ? -1 : encodingsList.getSelectedIndex());
-    }
-
-    @ParametersAreNonnullByDefault
-    public static interface AddEncodingsOperation {
-
-        void run(List<String> usedEncodings, EncodingsUpdate encodingsUpdate);
     }
 
     @ParametersAreNonnullByDefault
     public static interface EncodingsUpdate {
 
         void update(List<String> encodings);
+    }
+
+    @ParametersAreNonnullByDefault
+    public static interface Controller {
+
+        void addEncodings(List<String> usedEncodings, EncodingsUpdate encodingsUpdate);
     }
 }

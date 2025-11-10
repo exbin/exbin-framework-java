@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.text.encoding.EncodingsHandler;
+import org.exbin.framework.text.encoding.EncodingsManager;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.SettingsOptions;
 
@@ -44,7 +44,7 @@ public class TextEncodingOptions implements SettingsOptions {
 
     @Nonnull
     public String getDefaultEncoding() {
-        return storage.get(KEY_TEXT_ENCODING_DEFAULT, EncodingsHandler.ENCODING_UTF8);
+        return storage.get(KEY_TEXT_ENCODING_DEFAULT, EncodingsManager.ENCODING_UTF8);
     }
 
     public void setDefaultEncoding(String encodingName) {
@@ -53,7 +53,7 @@ public class TextEncodingOptions implements SettingsOptions {
 
     @Nonnull
     public String getSelectedEncoding() {
-        return storage.get(KEY_TEXT_ENCODING_SELECTED, EncodingsHandler.ENCODING_UTF8);
+        return storage.get(KEY_TEXT_ENCODING_SELECTED, EncodingsManager.ENCODING_UTF8);
     }
 
     public void setSelectedEncoding(String encodingName) {

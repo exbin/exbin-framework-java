@@ -30,7 +30,7 @@ import javax.swing.AbstractListModel;
 @ParametersAreNonnullByDefault
 public class EncodingsListModel extends AbstractListModel<String> {
 
-    private final List<String> charsets = new ArrayList<>();
+    protected final List<String> charsets = new ArrayList<>();
 
     @Override
     public int getSize() {
@@ -43,17 +43,11 @@ public class EncodingsListModel extends AbstractListModel<String> {
         return charsets.get(index);
     }
 
-    /**
-     * @return the charsets
-     */
     @Nonnull
     public List<String> getCharsets() {
         return charsets;
     }
 
-    /**
-     * @param charsets the charsets to set
-     */
     public void setCharsets(@Nullable List<String> charsets) {
         this.charsets.clear();
         if (charsets != null) {

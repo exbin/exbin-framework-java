@@ -20,10 +20,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.TextPositionStatusApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.text.encoding.TextEncodingStatusApi;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
+import org.exbin.framework.text.encoding.CharsetEncodingState;
 
 /**
  * Text editor status panel.
@@ -31,7 +31,7 @@ import org.exbin.framework.utils.WindowUtils;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, TextEncodingStatusApi {
+public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, CharsetEncodingState {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextStatusPanel.class);
 

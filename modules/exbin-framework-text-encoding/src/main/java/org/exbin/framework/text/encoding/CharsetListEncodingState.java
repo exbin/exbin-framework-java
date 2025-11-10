@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.encoding.service;
+package org.exbin.framework.text.encoding;
 
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.text.encoding.TextEncodingStatusApi;
-import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 
 /**
- * Text encoding panel API.
+ * Charset encoding list state interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextEncodingService {
+public interface CharsetListEncodingState {
 
     /**
      * Returns current encodings used in application frame.
@@ -38,37 +36,9 @@ public interface TextEncodingService {
     List<String> getEncodings();
 
     /**
-     * Gets selected encoding.
-     *
-     * @return selected encoding
-     */
-    @Nonnull
-    String getSelectedEncoding();
-
-    /**
      * Sets current encodings used in application frame.
      *
      * @param encodings list of encodings
      */
     void setEncodings(List<String> encodings);
-
-    /**
-     * Sets selected encoding.
-     *
-     * @param encoding encoding
-     */
-    void setSelectedEncoding(String encoding);
-
-    void setTextEncodingStatus(TextEncodingStatusApi textEncodingStatus);
-
-    void loadFromOptions(TextEncodingOptions preferences);
-
-    void setEncodingChangeListener(EncodingChangeListener listener);
-
-    public interface EncodingChangeListener {
-
-        void encodingListChanged();
-
-        void selectedEncodingChanged();
-    }
 }

@@ -13,40 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.font;
+package org.exbin.framework.text.encoding;
 
-import java.awt.Font;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Text font panel controller interface.
+ * Charset encoding state interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextFontController {
+public interface CharsetEncodingState extends ContextEncoding {
 
     /**
-     * Returns current font used in application frame.
+     * Returns current encoding.
      *
-     * @return font font value
+     * @return encoding
      */
     @Nonnull
-    Font getCurrentFont();
+    String getEncoding();
 
     /**
-     * Returns default colors used in application frame.
+     * Reports currently active encoding.
      *
-     * @return font font value
+     * @param encodingName encoding name
      */
-    @Nonnull
-    Font getDefaultFont();
-
-    /**
-     * Sets current colors used in application frame.
-     *
-     * @param font font to set
-     */
-    void setCurrentFont(Font font);
+    void setEncoding(String encodingName);
 }

@@ -25,13 +25,14 @@ import org.exbin.framework.App;
 import org.exbin.framework.text.font.settings.TextFontOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.text.font.service.TextFontService;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.context.api.ActiveContextProvider;
+import org.exbin.framework.text.font.ContextFont;
+import org.exbin.framework.text.font.TextFontState;
 
 /**
  * Text font settings panel.
@@ -42,10 +43,10 @@ import org.exbin.framework.context.api.ActiveContextProvider;
 public class TextFontSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     private SettingsModifiedListener settingsModifiedListener;
-    private FontChangeAction fontChangeAction;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextFontSettingsPanel.class);
-    private TextFontService textFontService;
+    private TextFontState textFontState = null;
     private Font codeFont;
+    protected Controller controller;
 
     public TextFontSettingsPanel() {
         initComponents();
@@ -57,8 +58,13 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
         return resourceBundle;
     }
 
-    public void setTextFontService(TextFontService textFontService) {
-        this.textFontService = textFontService;
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
+    public void setTextFontState(TextFontState textFontState) {
+        this.textFontState = textFontState;
+        updateForState();
     }
 
     @Override
@@ -66,9 +72,15 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
         TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         boolean useDefaultFont = options.isUseDefaultFont();
         defaultFontCheckBox.setSelected(useDefaultFont);
-        setEnabled(!useDefaultFont);
 
-        codeFont = textFontService == null ? options.getFont(new Font(Font.MONOSPACED, Font.PLAIN, 12)) : textFontService.getDefaultFont().deriveFont(options.getFontAttributes());
+        textFontState = null;
+        if (contextProvider != null) {
+            ContextFont contextFont = contextProvider.getActiveState(ContextFont.class);
+            textFontState = contextFont instanceof TextFontState ? (TextFontState) contextFont : null;
+        }
+
+        codeFont = textFontState == null ? options.getFont(new Font(Font.MONOSPACED, Font.PLAIN, 12)) : textFontState.getDefaultFont().deriveFont(options.getFontAttributes());
+        setEnabled(!useDefaultFont);
         updateFontFields();
     }
 
@@ -83,9 +95,14 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         fontPreviewLabel.setEnabled(enabled);
-        fillDefaultFontButton.setEnabled(enabled && textFontService != null);
-        fillCurrentFontButton.setEnabled(enabled && textFontService != null);
+        updateForState();
         changeFontButton.setEnabled(enabled);
+    }
+
+    private void updateForState() {
+        boolean enabled = isEnabled();
+        fillDefaultFontButton.setEnabled(enabled && textFontState != null);
+        fillCurrentFontButton.setEnabled(enabled && textFontState != null);
     }
 
     /**
@@ -203,14 +220,14 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     }//GEN-LAST:event_defaultFontCheckBoxItemStateChanged
 
     private void fillDefaultFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultFontButtonActionPerformed
-        codeFont = textFontService.getDefaultFont();
+        codeFont = textFontState.getDefaultFont();
         updateFontFields();
         notifyModified();
     }//GEN-LAST:event_fillDefaultFontButtonActionPerformed
 
     private void changeFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeFontButtonActionPerformed
-        if (fontChangeAction != null) {
-            Font resultFont = fontChangeAction.changeFont(fontPreviewLabel.getFont());
+        if (controller != null) {
+            Font resultFont = controller.changeFont(fontPreviewLabel.getFont());
             if (resultFont != null) {
                 codeFont = resultFont;
                 updateFontFields();
@@ -220,7 +237,7 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     }//GEN-LAST:event_changeFontButtonActionPerformed
 
     private void fillCurrentFontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentFontButtonActionPerformed
-        codeFont = textFontService.getCurrentFont();
+        codeFont = textFontState.getCurrentFont();
         updateFontFields();
         notifyModified();
     }//GEN-LAST:event_fillCurrentFontButtonActionPerformed
@@ -275,12 +292,8 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
         settingsModifiedListener = listener;
     }
 
-    public void setFontChangeAction(FontChangeAction fontChangeAction) {
-        this.fontChangeAction = fontChangeAction;
-    }
-
     @ParametersAreNonnullByDefault
-    public static interface FontChangeAction {
+    public interface Controller {
 
         @Nullable
         Font changeFont(Font currentFont);

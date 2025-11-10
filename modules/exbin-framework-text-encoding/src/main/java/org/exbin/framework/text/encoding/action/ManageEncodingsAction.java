@@ -25,14 +25,14 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpModuleApi;
-import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
 import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
-import org.exbin.framework.text.encoding.service.TextEncodingService;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
@@ -40,9 +40,11 @@ import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController;
 import org.exbin.framework.window.api.controller.OptionsControlController;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.text.encoding.CharsetListEncodingState;
+import org.exbin.framework.text.encoding.ContextEncoding;
 
 /**
- * Find/replace actions.
+ * Manage encodings action.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -52,8 +54,7 @@ public class ManageEncodingsAction extends AbstractAction {
     public static final String ACTION_ID = "manageEncodingsAction"; //NOI18N
     public static final String HELP_ID = "encoding"; //NOI18N
 
-    private TextEncodingService textEncodingService;
-    private EncodingsHandler encodingsHandler;
+    private CharsetListEncodingState charsetEncodingState;
 
     public ManageEncodingsAction() {
     }
@@ -61,15 +62,17 @@ public class ManageEncodingsAction extends AbstractAction {
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
+        setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-    }
-
-    public void setTextEncodingService(TextEncodingService textEncodingService) {
-        this.textEncodingService = textEncodingService;
-    }
-
-    public void setEncodingsHandler(EncodingsHandler encodingsHandler) {
-        this.encodingsHandler = encodingsHandler;
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
+            @Override
+            public void register(ActionContextChangeRegistration registrar) {
+                registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
+                    charsetEncodingState = instance instanceof CharsetListEncodingState ? (CharsetListEncodingState) instance : null;
+                    setEnabled(charsetEncodingState != null);
+                });
+            }
+        });
     }
 
     @Override
@@ -77,7 +80,7 @@ public class ManageEncodingsAction extends AbstractAction {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextEncodingListPanel textEncodingPanel = new TextEncodingListPanel();
         textEncodingPanel.setPreferredSize(new Dimension(536, 358));
-        textEncodingPanel.setEncodingList(textEncodingService.getEncodings());
+        textEncodingPanel.setEncodingList(charsetEncodingState.getEncodings());
         HelpLink helpLink = new HelpLink(HELP_ID);
         final OptionsControlPanel optionsControlPanel = new OptionsControlPanel();
         HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
@@ -88,8 +91,7 @@ public class ManageEncodingsAction extends AbstractAction {
         windowModule.setWindowTitle(dialog, textEncodingPanel.getResourceBundle());
         optionsControlPanel.setController((OptionsControlController.ControlActionType actionType) -> {
             if (actionType != OptionsControlController.ControlActionType.CANCEL) {
-                textEncodingService.setEncodings(textEncodingPanel.getEncodingList());
-                encodingsHandler.rebuildEncodings();
+                charsetEncodingState.setEncodings(textEncodingPanel.getEncodingList());
                 if (actionType == OptionsControlController.ControlActionType.SAVE) {
                     OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
                     TextEncodingOptions textEncodingPreferences = new TextEncodingOptions(preferencesModule.getAppOptions());
@@ -100,7 +102,7 @@ public class ManageEncodingsAction extends AbstractAction {
             dialog.close();
             dialog.dispose();
         });
-        textEncodingPanel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingListPanel.EncodingsUpdate encodingsUpdate) -> {
+        textEncodingPanel.setController((List<String> usedEncodings, TextEncodingListPanel.EncodingsUpdate encodingsUpdate) -> {
             final TextEncodingPanel addEncodingPanel = new TextEncodingPanel();
             ResourceBundle addEncodingResourceBundle = addEncodingPanel.getResourceBundle();
             addEncodingPanel.setUsedEncodings(usedEncodings);

@@ -16,9 +16,9 @@
 package org.exbin.framework.text.encoding.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.text.encoding.CharsetEncodingState;
 
 /**
  * Text encoding settings applier.
@@ -32,9 +32,11 @@ public class TextEncodingSettingsApplier implements SettingsApplier {
 
     @Override
     public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
-        EncodingsHandler encodingsHandler = null;
+        if (!(instance instanceof CharsetEncodingState)) {
+            return;
+        }
+
         TextEncodingOptions options = settingsProvider.getSettingsOptions(TextEncodingOptions.class);
-        encodingsHandler.setSelectedEncoding(options.getSelectedEncoding());
-        encodingsHandler.setEncodings(options.getEncodings());
+        ((CharsetEncodingState) instance).setEncoding(options.getSelectedEncoding());
     }
 }

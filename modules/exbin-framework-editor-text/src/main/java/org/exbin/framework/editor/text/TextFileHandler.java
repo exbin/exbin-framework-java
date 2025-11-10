@@ -37,11 +37,11 @@ import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.editor.api.EditorFileHandler;
-import org.exbin.framework.text.encoding.TextEncodingController;
-import org.exbin.framework.text.font.TextFontController;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
 import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.text.encoding.ContextEncoding;
+import org.exbin.framework.text.font.TextFontState;
 
 /**
  * Text file handler.
@@ -222,8 +222,8 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     public void componentActivated(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
         contextManager.changeActiveState(ContextComponent.class, textPanelComponent);
-        contextManager.changeActiveState(TextFontController.class, textPanelComponent);
-        contextManager.changeActiveState(TextEncodingController.class, textPanelComponent);
+        contextManager.changeActiveState(TextFontState.class, textPanelComponent);
+        contextManager.changeActiveState(ContextEncoding.class, textPanelComponent);
         contextManager.changeActiveState(UndoRedoState.class, undoRedoControl);
         contextManager.changeActiveState(DialogParentComponent.class, (DialogParentComponent) () -> textPanel);
     }
@@ -232,8 +232,8 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     public void componentDeactivated(ActiveContextManagement contextManager) {
         this.contextManager = null;
         contextManager.changeActiveState(ContextComponent.class, null);
-        contextManager.changeActiveState(TextFontController.class, null);
-        contextManager.changeActiveState(TextEncodingController.class, null);
+        contextManager.changeActiveState(TextFontState.class, null);
+        contextManager.changeActiveState(ContextEncoding.class, null);
         contextManager.changeActiveState(UndoRedoState.class, null);
         contextManager.changeActiveState(DialogParentComponent.class, dialogParentComponent);
     }

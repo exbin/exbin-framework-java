@@ -19,7 +19,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.text.encoding.settings.gui.TextEncodingSettingsPanel;
 import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
@@ -39,18 +38,11 @@ public class TextEncodingSettingsComponent implements SettingsComponentProvider 
 
     public static final String COMPONENT_ID = "textEncoding";
 
-    private EncodingsHandler encodingsHandler;
-
-    public void setEncodingsHandler(EncodingsHandler encodingsHandler) {
-        this.encodingsHandler = encodingsHandler;
-    }
-
     @Nonnull
     @Override
     public TextEncodingSettingsPanel createComponent() {
         TextEncodingSettingsPanel panel = new TextEncodingSettingsPanel();
-        panel.setTextEncodingService(encodingsHandler.getTextEncodingService());
-        panel.setAddEncodingsOperation((List<String> usedEncodings, TextEncodingListPanel.EncodingsUpdate encodingsUpdate) -> {
+        panel.setListPanelController((List<String> usedEncodings, TextEncodingListPanel.EncodingsUpdate encodingsUpdate) -> {
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             final TextEncodingPanel addEncodingPanel = new TextEncodingPanel();
             addEncodingPanel.setUsedEncodings(usedEncodings);

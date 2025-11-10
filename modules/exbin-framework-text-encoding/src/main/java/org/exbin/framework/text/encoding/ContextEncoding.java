@@ -15,28 +15,16 @@
  */
 package org.exbin.framework.text.encoding;
 
-import java.nio.charset.Charset;
-import javax.annotation.Nonnull;
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
- * Text encoding controller interface.
+ * Context encoding interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface TextEncodingController {
+public interface ContextEncoding {
 
-    /**
-     * Returns encoding.
-     *
-     * @return charset
-     */
-    @Nonnull
-    Charset getCharset();
-
-    /**
-     * Sets encoding.
-     *
-     * @param charset charset
-     */
-    void setCharset(Charset charset);
+    public enum ChangeMessage implements StateChangeMessage {
+        ENCODING_CHANGE, ENCODING_LIST_CHANGE
+    }
 }

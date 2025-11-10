@@ -27,13 +27,14 @@ import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.text.encoding.settings.TextEncodingSettingsComponent;
-import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
+import org.exbin.framework.options.settings.api.ApplySettingsContribution;
+import org.exbin.framework.text.encoding.settings.TextEncodingSettingsApplier;
 
 /**
  * Text encoding module.
@@ -48,7 +49,7 @@ public class TextEncodingModule implements Module {
 
     private ResourceBundle resourceBundle;
 
-    private EncodingsHandler encodingsHandler;
+    private EncodingsManager encodingsManager;
 
     public TextEncodingModule() {
     }
@@ -69,12 +70,12 @@ public class TextEncodingModule implements Module {
     }
 
     public void registerOptionsMenuPanels() {
-        getEncodingsHandler();
-        encodingsHandler.rebuildEncodings();
+        getEncodingsManager();
+        encodingsManager.rebuildEncodings();
 
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(() -> encodingsHandler.getToolsEncodingMenu());
+        SequenceContribution contribution = mgmt.registerMenuItem(() -> encodingsManager.getToolsEncodingMenu());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP_LAST));
     }
 
@@ -84,25 +85,22 @@ public class TextEncodingModule implements Module {
 
         settingsManagement.registerOptionsSettings(TextEncodingOptions.class, (optionsStorage) -> new TextEncodingOptions(optionsStorage));
 
+        settingsManagement.registerApplySetting(ContextEncoding.class, new ApplySettingsContribution(TextEncodingSettingsApplier.APPLIER_ID, new TextEncodingSettingsApplier()));
+
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);
         TextEncodingSettingsComponent settingsComponent = new TextEncodingSettingsComponent();
-        settingsComponent.setEncodingsHandler(getEncodingsHandler());
         SettingsComponentContribution settingsComponentContribution = settingsManagement.registerComponent(TextEncodingSettingsComponent.COMPONENT_ID, settingsComponent);
         settingsManagement.registerSettingsRule(settingsComponentContribution, new SettingsPageContributionRule(pageContribution));
     }
 
     @Nonnull
-    private EncodingsHandler getEncodingsHandler() {
-        if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler();
-            encodingsHandler.init();
+    private EncodingsManager getEncodingsManager() {
+        if (encodingsManager == null) {
+            encodingsManager = new EncodingsManager();
+            encodingsManager.init();
         }
 
-        return encodingsHandler;
-    }
-
-    public void loadFromPreferences(OptionsStorage preferences) {
-        getEncodingsHandler().loadFromOptions(new TextEncodingOptions(preferences));
+        return encodingsManager;
     }
 }

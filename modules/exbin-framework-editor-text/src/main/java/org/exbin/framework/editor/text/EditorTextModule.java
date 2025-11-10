@@ -45,8 +45,7 @@ import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.text.encoding.EncodingsHandler;
-import org.exbin.framework.text.encoding.service.TextEncodingService;
+import org.exbin.framework.text.encoding.EncodingsManager;
 import org.exbin.framework.text.font.TextFontModule;
 import org.exbin.framework.text.font.action.TextFontAction;
 import org.exbin.framework.toolbar.api.ToolBarModuleApi;
@@ -93,7 +92,7 @@ public class EditorTextModule implements Module {
     private TextStatusPanel textStatusPanel;
 
     private FindReplaceActions findReplaceActions;
-    private EncodingsHandler encodingsHandler;
+    private EncodingsManager encodingsManager;
 
     public EditorTextModule() {
     }
@@ -132,18 +131,18 @@ public class EditorTextModule implements Module {
         if (editorComponent instanceof TextPanel) {
             ((TextPanel) editorComponent).registerTextStatus(textStatusPanel);
         }
-        if (encodingsHandler != null) {
-            encodingsHandler.setTextEncodingStatus(textStatusPanel);
+        if (encodingsManager != null) {
+            // TODO encodingsManager.setTextEncodingStatus(textStatusPanel);
         }
     }
 
     public void registerOptionsMenuPanels() {
-        getEncodingsHandler();
-        encodingsHandler.rebuildEncodings();
+        getEncodingsManager();
+        encodingsManager.rebuildEncodings();
 
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(() -> encodingsHandler.getToolsEncodingMenu());
+        SequenceContribution contribution = mgmt.registerMenuItem(() -> encodingsManager.getToolsEncodingMenu());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP_LAST));
     }
 
@@ -383,29 +382,29 @@ public class EditorTextModule implements Module {
     }
 
     @Nonnull
-    private EncodingsHandler getEncodingsHandler() {
-        if (encodingsHandler == null) {
-            encodingsHandler = new EncodingsHandler();
-            encodingsHandler.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
+    private EncodingsManager getEncodingsManager() {
+        if (encodingsManager == null) {
+            encodingsManager = new EncodingsManager();
+            /* encodingsManager.setEncodingChangeListener(new TextEncodingService.EncodingChangeListener() {
                 @Override
                 public void encodingListChanged() {
-                    encodingsHandler.rebuildEncodings();
+                    encodingsManager.rebuildEncodings();
                 }
 
                 @Override
                 public void selectedEncodingChanged() {
                     if (editorProvider instanceof TextEditorProvider) {
-                        ((TextEditorProvider) editorProvider).getEditorComponent().setCharset(Charset.forName(encodingsHandler.getSelectedEncoding()));
+                        ((TextEditorProvider) editorProvider).getEditorComponent().setCharset(Charset.forName(encodingsManager.getSelectedEncoding()));
                     }
                 }
             });
             if (textStatusPanel != null) {
-                encodingsHandler.setTextEncodingStatus(textStatusPanel);
-            }
-            encodingsHandler.init();
+                encodingsManager.setTextEncodingStatus(textStatusPanel);
+            } */
+            encodingsManager.init();
         }
 
-        return encodingsHandler;
+        return encodingsManager;
     }
 
     @Nonnull

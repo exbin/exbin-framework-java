@@ -26,11 +26,11 @@ import javax.swing.text.DefaultEditorKit;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.utils.ClipboardUtils;
-import org.exbin.framework.text.font.TextFontController;
-import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.text.encoding.CharsetEncodingState;
+import org.exbin.framework.text.font.TextFontState;
 
 /**
  * Text panel component.
@@ -38,7 +38,7 @@ import org.exbin.framework.action.api.ContextComponent;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorTextPanelComponent implements ContextComponent, TextPanelComponent, TextClipboardController, TextEncodingController, TextFontController {
+public class EditorTextPanelComponent implements ContextComponent, TextPanelComponent, TextClipboardController, CharsetEncodingState, TextFontState {
 
     private final TextPanel textPanel;
 
@@ -116,13 +116,13 @@ public class EditorTextPanelComponent implements ContextComponent, TextPanelComp
 
     @Nonnull
     @Override
-    public Charset getCharset() {
-        return textPanel.getCharset();
+    public String getEncoding() {
+        return textPanel.getCharset().name();
     }
 
     @Override
-    public void setCharset(Charset charset) {
-        textPanel.setCharset(charset);
+    public void setEncoding(String encoding) {
+        textPanel.setCharset(Charset.forName(encoding));
     }
 
     @Nonnull

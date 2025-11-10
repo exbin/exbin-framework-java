@@ -169,7 +169,7 @@ public class EncodingsTableModel extends AbstractTableModel {
         usedEncodings.add(encoding.toLowerCase());
         rebuildFiltered();
     }
-    
+
     public void setNameFilter(String nameFilter) {
         this.nameFilter = nameFilter;
         rebuildFiltered();

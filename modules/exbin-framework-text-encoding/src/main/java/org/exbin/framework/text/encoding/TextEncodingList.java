@@ -13,40 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.font.service;
+package org.exbin.framework.text.encoding;
 
-import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Text font panel frame interface.
+ * Text encoding.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextFontService {
+public class TextEncodingList implements CharsetListEncodingState {
 
-    /**
-     * Returns current font used in application frame.
-     *
-     * @return font font value
-     */
+    protected final List<String> encodings = new ArrayList<>();
+
     @Nonnull
-    Font getCurrentFont();
+    @Override
+    public List<String> getEncodings() {
+        return encodings;
+    }
 
-    /**
-     * Returns default colors used in application frame.
-     *
-     * @return font font value
-     */
-    @Nonnull
-    Font getDefaultFont();
-
-    /**
-     * Sets current colors used in application frame.
-     *
-     * @param font font to set
-     */
-    void setCurrentFont(Font font);
+    @Override
+    public void setEncodings(List<String> encodings) {
+        this.encodings.clear();
+        this.encodings.addAll(encodings);
+    }
 }

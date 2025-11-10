@@ -13,31 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.encoding;
+package org.exbin.framework.text.font;
 
+import java.awt.Font;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Text encoding status interface.
+ * Text font state interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextEncodingStatusApi {
+public interface TextFontState extends ContextFont {
 
     /**
-     * Returns current encoding.
+     * Returns current used font.
      *
-     * @return encoding
+     * @return font value
      */
     @Nonnull
-    String getEncoding();
+    Font getCurrentFont();
 
     /**
-     * Reports currently active encoding.
+     * Returns default font.
      *
-     * @param encodingName encoding name
+     * @return font value
      */
-    void setEncoding(String encodingName);
+    @Nonnull
+    Font getDefaultFont();
+
+    /**
+     * Sets current font.
+     *
+     * @param font font to set
+     */
+    void setCurrentFont(Font font);
 }

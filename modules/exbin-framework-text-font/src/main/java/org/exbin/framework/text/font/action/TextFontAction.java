@@ -33,9 +33,10 @@ import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.window.api.controller.OptionsControlController;
-import org.exbin.framework.text.font.TextFontController;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.text.font.ContextFont;
+import org.exbin.framework.text.font.TextFontState;
 
 /**
  * Text font action.
@@ -48,7 +49,7 @@ public class TextFontAction extends AbstractAction {
     public static final String ACTION_ID = "textFontAction";
     public static final String HELP_ID = "choose-font";
 
-    private TextFontController textFontSupported;
+    private TextFontState textFontSupported;
     private DialogParentComponent dialogParentComponent;
 
     public TextFontAction() {
@@ -57,9 +58,10 @@ public class TextFontAction extends AbstractAction {
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
+        setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(TextFontController.class, (instance) -> {
+            registrar.registerUpdateListener(TextFontState.class, (instance) -> {
                 textFontSupported = instance;
                 setEnabled(textFontSupported != null && dialogParentComponent != null);
             });
@@ -68,9 +70,12 @@ public class TextFontAction extends AbstractAction {
                 setEnabled(textFontSupported != null && dialogParentComponent != null);
             });
         });
-        setEnabled(false);
     }
 
+    public void updateByContext(ContextFont instance) {
+        setEnabled(textFontSupported != null && dialogParentComponent != null);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);

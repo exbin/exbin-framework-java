@@ -17,21 +17,14 @@ package org.exbin.framework.text.encoding.settings.gui;
 
 import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.ComboBoxModel;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import org.exbin.framework.App;
-import org.exbin.framework.text.encoding.EncodingsHandler;
 import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.text.encoding.service.TextEncodingService;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
@@ -39,6 +32,9 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
 import org.exbin.framework.context.api.ActiveContextProvider;
+import org.exbin.framework.text.encoding.ContextEncoding;
+import org.exbin.framework.text.encoding.CharsetEncodingState;
+import org.exbin.framework.text.encoding.CharsetListEncodingState;
 
 /**
  * Text encoding settings panel.
@@ -50,9 +46,9 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingSettingsPanel.class);
-    private TextEncodingService textEncodingService;
     private final TextEncodingListPanel encodingPanel;
     private final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
+    private ContextEncoding contextEncoding = null;
 
     public TextEncodingSettingsPanel() {
         encodingPanel = new TextEncodingListPanel();
@@ -76,10 +72,8 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
         return resourceBundle;
     }
 
-    public void setTextEncodingService(TextEncodingService textEncodingService) {
-        this.textEncodingService = textEncodingService;
-        fillCurrentEncodingButton.setEnabled(true);
-        fillCurrentEncodingsButton.setEnabled(true);
+    public void setListPanelController(TextEncodingListPanel.Controller listPanelController) {
+        encodingPanel.setController(listPanelController);
     }
 
     @Override
@@ -87,6 +81,23 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
         encodingPanel.loadFromOptions(settingsOptionsProvider, contextProvider);
         defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
+
+        boolean fillCurrentEncoding = false;
+        boolean fillCurrentEncodings = false;
+        if (contextProvider != null) {
+            ContextEncoding currentContextEncoding = contextProvider.getActiveState(ContextEncoding.class);
+            if (currentContextEncoding != null) {
+                contextEncoding = currentContextEncoding;
+                if (currentContextEncoding instanceof CharsetEncodingState) {
+                    fillCurrentEncoding = true;
+                }
+                if (currentContextEncoding instanceof CharsetListEncodingState) {
+                    fillCurrentEncodings = true;
+                }
+            }
+        }
+        fillCurrentEncodingButton.setEnabled(fillCurrentEncoding);
+        fillCurrentEncodingsButton.setEnabled(fillCurrentEncodings);
         updateEncodings();
     }
 
@@ -196,14 +207,14 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }// </editor-fold>//GEN-END:initComponents
 
     private void fillCurrentEncodingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingsButtonActionPerformed
-        encodingPanel.setEncodingList(textEncodingService.getEncodings());
+        encodingPanel.setEncodingList(((CharsetListEncodingState) contextEncoding).getEncodings());
         encodingPanel.repaint();
         updateEncodings();
         notifyModified();
     }//GEN-LAST:event_fillCurrentEncodingsButtonActionPerformed
 
     private void fillCurrentEncodingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingButtonActionPerformed
-        defaultEncodingComboBox.setSelectedItem(textEncodingService.getSelectedEncoding());
+        defaultEncodingComboBox.setSelectedItem(((CharsetEncodingState) contextEncoding).getEncoding());
         defaultEncodingComboBox.repaint();
         notifyModified();
     }//GEN-LAST:event_fillCurrentEncodingButtonActionPerformed
@@ -248,82 +259,5 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     private void updateEncodings() {
         encodingComboBoxModel.setAvailableEncodings(encodingPanel.getEncodingList());
         defaultEncodingComboBox.repaint();
-    }
-
-    public void setAddEncodingsOperation(TextEncodingListPanel.AddEncodingsOperation addEncodingsOperation) {
-        encodingPanel.setAddEncodingsOperation(addEncodingsOperation);
-    }
-
-    @ParametersAreNonnullByDefault
-    public class DefaultEncodingComboBoxModel implements ComboBoxModel<String> {
-
-        private List<String> availableEncodings = new ArrayList<>();
-        private String selectedEncoding = null;
-        private final List<ListDataListener> dataListeners = new ArrayList<>();
-
-        public DefaultEncodingComboBoxModel() {
-        }
-
-        @Override
-        public void setSelectedItem(Object anItem) {
-            selectedEncoding = (String) anItem;
-        }
-
-        @Nullable
-        @Override
-        public Object getSelectedItem() {
-            return selectedEncoding;
-        }
-
-        @Override
-        public int getSize() {
-            return availableEncodings.size();
-        }
-
-        @Nonnull
-        @Override
-        public String getElementAt(int index) {
-            return availableEncodings.get(index);
-        }
-
-        @Override
-        public void addListDataListener(ListDataListener listener) {
-            dataListeners.add(listener);
-        }
-
-        @Override
-        public void removeListDataListener(ListDataListener listener) {
-            dataListeners.remove(listener);
-        }
-
-        @Nonnull
-        public List<String> getAvailableEncodings() {
-            return availableEncodings;
-        }
-
-        public void setAvailableEncodings(List<String> encodings) {
-            availableEncodings = new ArrayList<>();
-            if (encodings.isEmpty()) {
-                availableEncodings.add(EncodingsHandler.ENCODING_UTF8);
-            } else {
-                availableEncodings.addAll(encodings);
-            }
-            int position = availableEncodings.indexOf(selectedEncoding);
-            selectedEncoding = availableEncodings.get(position > 0 ? position : 0);
-
-            for (int index = 0; index < dataListeners.size(); index++) {
-                ListDataListener listDataListener = dataListeners.get(index);
-                listDataListener.contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, availableEncodings.size()));
-            }
-        }
-
-        @Nonnull
-        public String getSelectedEncoding() {
-            return selectedEncoding;
-        }
-
-        public void setSelectedEncoding(String selectedEncoding) {
-            this.selectedEncoding = selectedEncoding;
-        }
     }
 }

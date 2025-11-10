@@ -21,7 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.text.font.gui.TextFontPanel;
 import org.exbin.framework.text.font.settings.gui.TextFontSettingsPanel;
-import org.exbin.framework.text.font.service.TextFontService;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
@@ -40,55 +39,40 @@ public class TextFontSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "textFont";
 
-    private TextFontSettingsPanel panel;
-    private TextFontService textFontService;
-
-    public void setTextFontService(TextFontService textFontService) {
-        this.textFontService = textFontService;
-    }
-
     @Nonnull
     @Override
     public SettingsComponent createComponent() {
-        if (panel == null) {
-            panel = new TextFontSettingsPanel();
-            panel.setTextFontService(textFontService);
-            panel.setFontChangeAction(new TextFontSettingsPanel.FontChangeAction() {
-                @Override
-                public Font changeFont(Font currentFont) {
-                    final Result result = new Result();
-                    WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-                    final TextFontPanel fontPanel = new TextFontPanel();
-                    fontPanel.setStoredFont(currentFont);
-                    DefaultControlPanel controlPanel = new DefaultControlPanel();
-                    final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
-                    windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
-                    windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
-                    controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
-                        if (actionType != DefaultControlController.ControlActionType.CANCEL) {
-                            if (actionType == DefaultControlController.ControlActionType.OK) {
-                                OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-                                TextFontOptions textFontParameters = new TextFontOptions(preferencesModule.getAppOptions());
-                                textFontParameters.setUseDefaultFont(true);
-                                textFontParameters.setFont(fontPanel.getStoredFont());
-                            }
-                            result.font = fontPanel.getStoredFont();
+        TextFontSettingsPanel panel = new TextFontSettingsPanel();
+        panel.setController(new TextFontSettingsPanel.Controller() {
+            @Override
+            public Font changeFont(Font currentFont) {
+                final Font[] result = new Font[1];
+                WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+                final TextFontPanel fontPanel = new TextFontPanel();
+                fontPanel.setStoredFont(currentFont);
+                DefaultControlPanel controlPanel = new DefaultControlPanel();
+                final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
+                windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
+                windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
+                controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
+                    if (actionType != DefaultControlController.ControlActionType.CANCEL) {
+                        if (actionType == DefaultControlController.ControlActionType.OK) {
+                            OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+                            TextFontOptions textFontParameters = new TextFontOptions(preferencesModule.getAppOptions());
+                            textFontParameters.setUseDefaultFont(true);
+                            textFontParameters.setFont(fontPanel.getStoredFont());
                         }
+                        result[0] = fontPanel.getStoredFont();
+                    }
 
-                        dialog.close();
-                        dialog.dispose();
-                    });
-                    dialog.showCentered(panel);
+                    dialog.close();
+                    dialog.dispose();
+                });
+                dialog.showCentered(panel);
 
-                    return result.font;
-                }
-
-                class Result {
-
-                    Font font;
-                }
-            });
-        }
+                return result[0];
+            }
+        });
         return panel;
     }
 }

@@ -17,7 +17,6 @@ package org.exbin.framework.text.encoding.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,8 +30,10 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController;
-import org.exbin.framework.text.encoding.TextEncodingController;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.text.encoding.ContextEncoding;
+import org.exbin.framework.text.encoding.CharsetEncodingState;
 
 /**
  * Text encoding action.
@@ -44,7 +45,7 @@ public class TextEncodingAction extends AbstractAction {
 
     public static final String ACTION_ID = "textEncodingAction";
 
-    private TextEncodingController textEncodingSupported;
+    private CharsetEncodingState textEncodingState;
     private Component component;
 
     public TextEncodingAction() {
@@ -53,20 +54,30 @@ public class TextEncodingAction extends AbstractAction {
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
+        setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(TextEncodingController.class, (instance) -> {
-                textEncodingSupported = instance;
-                setEnabled(textEncodingSupported != null);
+            registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
+                updateByContext(instance);
+            });
+            registrar.registerContextMessageListener(ContextEncoding.class, (ContextEncoding instance, StateChangeMessage changeMessage) -> {
+                if (ContextEncoding.ChangeMessage.ENCODING_CHANGE.equals(changeMessage)) {
+                    updateByContext(instance);
+                }
             });
         });
+    }
+
+    public void updateByContext(ContextEncoding instance) {
+        textEncodingState = instance instanceof CharsetEncodingState ? (CharsetEncodingState) instance : null;
+        setEnabled(textEncodingState != null);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextEncodingPanel encodingPanel = new TextEncodingPanel();
-        encodingPanel.setCurrentEncoding(textEncodingSupported.getCharset().name());
+        encodingPanel.setCurrentEncoding(textEncodingState.getEncoding());
         DefaultControlPanel controlPanel = new DefaultControlPanel();
         final WindowHandler dialog = windowModule.createDialog(encodingPanel, controlPanel);
         windowModule.addHeaderPanel(dialog.getWindow(), encodingPanel.getClass(), encodingPanel.getResourceBundle());
@@ -75,7 +86,7 @@ public class TextEncodingAction extends AbstractAction {
             if (actionType != DefaultControlController.ControlActionType.CANCEL) {
                 Optional<String> encoding = encodingPanel.getCurrentEncoding();
                 if (encoding.isPresent()) {
-                    textEncodingSupported.setCharset(Charset.forName(encoding.get()));
+                    textEncodingState.setEncoding(encoding.get());
                 }
             }
 

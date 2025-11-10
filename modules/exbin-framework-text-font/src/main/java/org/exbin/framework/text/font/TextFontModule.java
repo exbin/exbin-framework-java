@@ -22,12 +22,10 @@ import org.exbin.framework.App;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.text.font.action.TextFontAction;
-import org.exbin.framework.text.font.service.TextFontService;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.text.font.settings.TextFontSettingsComponent;
-import org.exbin.framework.utils.ObjectUtils;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
@@ -48,8 +46,6 @@ public class TextFontModule implements Module {
 
     private ResourceBundle resourceBundle;
 
-    private TextFontService textFontService;
-
     public TextFontModule() {
     }
 
@@ -68,28 +64,18 @@ public class TextFontModule implements Module {
         return resourceBundle;
     }
 
-    @Nonnull
-    public TextFontService getTextFontService() {
-        return ObjectUtils.requireNonNull(textFontService);
-    }
-
-    public void setTextFontService(TextFontService textFontService) {
-        this.textFontService = textFontService;
-    }
-
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
-        
+
         settingsManagement.registerOptionsSettings(TextFontOptions.class, (optionsStorage) -> new TextFontOptions(optionsStorage));
-        
-        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
+
+        settingsManagement.registerApplySetting(ContextFont.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);
 
         TextFontSettingsComponent textFontSettingsComponent = new TextFontSettingsComponent();
-        textFontSettingsComponent.setTextFontService(textFontService);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(textFontSettingsComponent.COMPONENT_ID, textFontSettingsComponent);
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
