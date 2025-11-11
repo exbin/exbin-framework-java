@@ -45,6 +45,7 @@ public class BasicApplication {
     public static final String PLUGINS_DIRECTORY = "plugins";
     public static final String ADDONS_DIRECTORY = "addons";
     public static final String ADDONS_UPDATE_DIRECTORY = "addons_update";
+    public static final String ADDONS_CONFIG_FILE = "changes.cfg";
 
     private Preferences appPreferences;
 
@@ -138,7 +139,7 @@ public class BasicApplication {
         File addonsDirectory = new File(configDirectory.getAbsolutePath(), ADDONS_DIRECTORY);
         File updateDirectory = new File(configDirectory.getAbsolutePath(), ADDONS_UPDATE_DIRECTORY);
         if (updateDirectory.exists()) {
-            File changesConfig = new File(updateDirectory, "changes.cfg");
+            File changesConfig = new File(updateDirectory, ADDONS_CONFIG_FILE);
 
             if (changesConfig.exists()) {
                 if (!addonsDirectory.exists()) {

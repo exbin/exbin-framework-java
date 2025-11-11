@@ -18,15 +18,8 @@ package org.exbin.framework.component.gui;
 import java.awt.BorderLayout;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JToolBar;
-import org.exbin.framework.action.ActionModule;
-import org.exbin.framework.action.api.clipboard.EmptyTextClipboardSupport;
-import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.UndoActions;
-import org.exbin.framework.operation.undo.api.EmptyUndoRedo;
 import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
-import org.exbin.framework.utils.UtilsModule;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
@@ -58,29 +51,6 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            OperationUndoModule operationUndoModule = new OperationUndoModule();
-            testApplication.addModule(OperationUndoModule.MODULE_ID, operationUndoModule);
-            ActionModule actionModule = new ActionModule();
-            testApplication.addModule(ActionModule.MODULE_ID, actionModule);
-
-            ToolBarEditorPanel toolBarEditorPanel = new ToolBarEditorPanel();
-            UndoRedoState undoRedoHandler = new EmptyUndoRedo();
-            toolBarEditorPanel.setUndoHandler(undoRedoHandler, operationUndoModule.createUndoActions());
-            TextClipboardController clipboardActionsHandler = new EmptyTextClipboardSupport();
-            toolBarEditorPanel.setClipboardHandler(clipboardActionsHandler, actionModule.getClipboardActions());
-            WindowUtils.invokeWindow(toolBarEditorPanel);
-        });
-    }
 
     public void setUndoHandler(UndoRedoState undoRedo, UndoActions undoActions) {
         this.undoRedo = undoRedo;

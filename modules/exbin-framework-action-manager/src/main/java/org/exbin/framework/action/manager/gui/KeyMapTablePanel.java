@@ -20,8 +20,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.KeyStroke;
 import org.exbin.framework.action.manager.model.KeyMapRecord;
 import org.exbin.framework.action.manager.model.KeyMapTableModel;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Keymap table panel.
@@ -80,16 +78,6 @@ public class KeyMapTablePanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new KeyMapTablePanel()));
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable keyMapTable;

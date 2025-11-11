@@ -13,41 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.component.api.toolbar;
+package org.exbin.framework.component.api.action;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.component.api.ContextEditItem;
 
 /**
- * Empty class for clipboard handler for visual component / context menu.
+ * Empty implementation for clipboard handler for visual component / context
+ * menu.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class MoveItemActionsHandlerEmpty implements MoveItemActionsHandler {
+public class EditItemActionsHandlerEmpty implements ContextEditItem {
 
     @Override
-    public void performMoveUp() {
+    public void performAddItem() {
     }
 
     @Override
-    public void performMoveDown() {
+    public void performEditItem() {
     }
 
     @Override
-    public void performMoveTop() {
+    public void performDeleteItem() {
     }
 
     @Override
-    public void performMoveBottom() {
-    }
-
-    @Override
-    public boolean isSelection() {
+    public boolean canAddItem() {
         return false;
     }
 
     @Override
-    public boolean isEditable() {
+    public boolean canEditItem() {
+        return false;
+    }
+
+    @Override
+    public boolean canDeleteItem() {
         return false;
     }
 }

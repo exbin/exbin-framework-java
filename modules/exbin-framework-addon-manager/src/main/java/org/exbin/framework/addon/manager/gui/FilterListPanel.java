@@ -29,9 +29,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.FilterListModel;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Panel for list of packs / addon suites.
@@ -43,7 +40,7 @@ public class FilterListPanel extends javax.swing.JPanel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FilterListPanel.class);
     private Controller controller;
-    private FilterListModel filterListModel = new FilterListModel();
+    private final FilterListModel filterListModel = new FilterListModel();
 
     public FilterListPanel() {
         initComponents();
@@ -53,7 +50,7 @@ public class FilterListPanel extends javax.swing.JPanel {
     private void init() {
         itemsList.setCellRenderer(new DefaultListCellRenderer() {
 
-            private AddonItemPanel addonItemPanel = new AddonItemPanel();
+            private final AddonItemPanel addonItemPanel = new AddonItemPanel();
 
             @Nonnull
             @Override
@@ -116,7 +113,10 @@ public class FilterListPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
-        filterListModel.setController(controller);
+    }
+
+    public void setRecordProvider(FilterListModel.RecordsProvider recordsProvider) {
+        filterListModel.setProvider(recordsProvider);
     }
 
     public void notifyItemsChanged() {
@@ -170,19 +170,6 @@ public class FilterListPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new FilterListPanel());
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
     private javax.swing.JTextField filterTextField;
@@ -194,11 +181,6 @@ public class FilterListPanel extends javax.swing.JPanel {
     public interface Controller {
 
         void setFilter(String filter, Runnable finished);
-
-        int getItemsCount();
-
-        @Nonnull
-        ItemRecord getItem(int index);
 
         void notifyItemSelected(@Nullable ItemRecord itemRecord);
     }

@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.component.api.toolbar;
+package org.exbin.framework.component.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
- * Interface for clipboard handler for visual component / context menu.
+ * Interface for edit item context.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditItemActionsHandler {
+public interface ContextEditItem {
 
     /**
      * Adds new item.
@@ -48,16 +49,20 @@ public interface EditItemActionsHandler {
     boolean canAddItem();
 
     /**
+     * Returns true if it is allowed to edit currently selected item.
+     *
+     * @return true if item can be edited
+     */
+    boolean canEditItem();
+
+    /**
      * Returns true if it is allowed to delete currently selected item.
      *
      * @return true if item can be deleted
      */
     boolean canDeleteItem();
 
-    /**
-     * Returns true if it is allowed to edit currently selected item.
-     *
-     * @return true if item can be edited
-     */
-    boolean canEditItem();
+    public enum ChangeMessage implements StateChangeMessage {
+        EDIT_STATE
+    }
 }

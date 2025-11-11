@@ -15,21 +15,14 @@
  */
 package org.exbin.framework.component.action;
 
-import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.component.ComponentModule;
-import org.exbin.framework.component.api.toolbar.MoveItemActions;
-import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
+import org.exbin.framework.component.api.action.MoveItemActions;
 import org.exbin.framework.component.api.toolbar.SideToolBar;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Item movement default action set.
@@ -82,105 +75,5 @@ public class DefaultMoveItemActions implements MoveItemActions {
         sideToolBar.addAction(createMoveUpAction());
         sideToolBar.addAction(createMoveDownAction());
         sideToolBar.addAction(createMoveBottomAction());
-    }
-
-    @ParametersAreNonnullByDefault
-    public class MoveUpAction extends AbstractAction {
-
-        public static final String ACTION_ID = "moveItemUpAction";
-
-        private MoveItemActionsHandler actionsHandler;
-
-        public void setup(ResourceBundle resourceBundle) {
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, ACTION_ID);
-            setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
-                    actionsHandler = instance;
-                    setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
-                });
-            });
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            actionsHandler.performMoveUp();
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    public class MoveDownAction extends AbstractAction {
-
-        public static final String ACTION_ID = "moveItemDownAction";
-
-        private MoveItemActionsHandler actionsHandler;
-
-        public void setup(ResourceBundle resourceBundle) {
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, ACTION_ID);
-            setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
-                    actionsHandler = instance;
-                    setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
-                });
-            });
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            actionsHandler.performMoveDown();
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    public class MoveTopAction extends AbstractAction {
-
-        public static final String ACTION_ID = "moveItemTopAction";
-
-        private MoveItemActionsHandler actionsHandler;
-
-        public void setup(ResourceBundle resourceBundle) {
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, ACTION_ID);
-            setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
-                    actionsHandler = instance;
-                    setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
-                });
-            });
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            actionsHandler.performMoveTop();
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    public class MoveBottomAction extends AbstractAction {
-
-        public static final String ACTION_ID = "moveItemBottomAction";
-
-        private MoveItemActionsHandler actionsHandler;
-
-        public void setup(ResourceBundle resourceBundle) {
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, ACTION_ID);
-            setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(MoveItemActionsHandler.class, (MoveItemActionsHandler instance) -> {
-                    actionsHandler = instance;
-                    setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
-                });
-            });
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            actionsHandler.performMoveBottom();
-        }
     }
 }

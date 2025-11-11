@@ -57,6 +57,7 @@ public class AddonManagerAction extends AbstractAction {
     private void init() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
+        setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
             registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
@@ -64,7 +65,6 @@ public class AddonManagerAction extends AbstractAction {
                 setEnabled(instance != null);
             });
         });
-        setEnabled(false);
     }
 
     @Override

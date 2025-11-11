@@ -19,11 +19,11 @@ import org.exbin.framework.component.action.DefaultEditItemActions;
 import org.exbin.framework.component.action.DefaultMoveItemActions;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.component.api.toolbar.EditItemActions;
-import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
+import org.exbin.framework.component.api.action.EditItemActions;
 import org.exbin.framework.component.api.ComponentModuleApi;
-import org.exbin.framework.component.api.toolbar.MoveItemActions;
-import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
+import org.exbin.framework.component.api.action.MoveItemActions;
+import org.exbin.framework.component.api.ContextEditItem;
+import org.exbin.framework.component.api.ContextMoveItem;
 
 /**
  * Implementation of framework component module.
@@ -41,14 +41,14 @@ public class ComponentModule implements ComponentModuleApi {
 
     @Nonnull
     @Override
-    public EditItemActions createEditItemActions(EditItemActionsHandler editItemActionsHandler) {
+    public EditItemActions createEditItemActions(ContextEditItem editItemActionsHandler) {
         DefaultEditItemActions editActions = new DefaultEditItemActions();
         return editActions;
     }
 
     @Nonnull
     @Override
-    public MoveItemActions createMoveItemActions(MoveItemActionsHandler moveItemActionsHandler) {
+    public MoveItemActions createMoveItemActions(ContextMoveItem moveItemActionsHandler) {
         DefaultMoveItemActions moveActions = new DefaultMoveItemActions();
         return moveActions;
     }

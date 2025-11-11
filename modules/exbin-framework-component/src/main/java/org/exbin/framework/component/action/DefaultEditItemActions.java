@@ -15,21 +15,14 @@
  */
 package org.exbin.framework.component.action;
 
-import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.component.ComponentModule;
-import org.exbin.framework.component.api.toolbar.EditItemActions;
-import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
+import org.exbin.framework.component.api.action.EditItemActions;
 import org.exbin.framework.component.api.toolbar.SideToolBar;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 
 /**
  * Item edit default action set.
@@ -39,22 +32,22 @@ import org.exbin.framework.action.api.ActionContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class DefaultEditItemActions implements EditItemActions {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ComponentModule.class);
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ComponentModule.class);
 
-    private final Mode mode;
+    protected final EditItemMode mode;
 
     public DefaultEditItemActions() {
-        this(Mode.NORMAL);
+        this(EditItemMode.NORMAL);
     }
 
-    public DefaultEditItemActions(Mode mode) {
+    public DefaultEditItemActions(EditItemMode mode) {
         this.mode = mode;
     }
 
     @Nonnull
     @Override
     public AddItemAction createAddItemAction() {
-        AddItemAction addItemAction = new AddItemAction();
+        AddItemAction addItemAction = new AddItemAction(mode);
         addItemAction.setup(resourceBundle);
         return addItemAction;
     }
@@ -62,7 +55,7 @@ public class DefaultEditItemActions implements EditItemActions {
     @Nonnull
     @Override
     public EditItemAction createEditItemAction() {
-        EditItemAction editItemAction = new EditItemAction();
+        EditItemAction editItemAction = new EditItemAction(mode);
         editItemAction.setup(resourceBundle);
         return editItemAction;
     }
@@ -80,90 +73,5 @@ public class DefaultEditItemActions implements EditItemActions {
         sideToolBar.addAction(createAddItemAction());
         sideToolBar.addAction(createEditItemAction());
         sideToolBar.addAction(createDeleteItemAction());
-    }
-
-    @ParametersAreNonnullByDefault
-    public class AddItemAction extends AbstractAction {
-
-        public static final String ACTION_ID = "addItemAction";
-
-        private EditItemActionsHandler actionsHandler;
-
-        public void setup(ResourceBundle resourceBundle) {
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, ACTION_ID);
-            if (mode == Mode.DIALOG) {
-                putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-            }
-            setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
-                    actionsHandler = instance;
-                    setEnabled(actionsHandler.canAddItem());
-                });
-            });
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            actionsHandler.performAddItem();
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    public class EditItemAction extends AbstractAction {
-
-        public static final String ACTION_ID = "editItemAction";
-
-        private EditItemActionsHandler actionsHandler;
-
-        public void setup(ResourceBundle resourceBundle) {
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, ACTION_ID);
-            if (mode == Mode.DIALOG) {
-                putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-            }
-            setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
-                    actionsHandler = instance;
-                    setEnabled(actionsHandler.canEditItem());
-                });
-            });
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            actionsHandler.performEditItem();
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    public class DeleteItemAction extends AbstractAction {
-
-        public static final String ACTION_ID = "deleteItemAction";
-
-        private EditItemActionsHandler actionsHandler;
-
-        public void setup(ResourceBundle resourceBundle) {
-            ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-            actionModule.initAction(this, resourceBundle, ACTION_ID);
-            setEnabled(false);
-            putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(EditItemActionsHandler.class, (EditItemActionsHandler instance) -> {
-                    actionsHandler = instance;
-                    setEnabled(actionsHandler.canDeleteItem());
-                });
-            });
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            actionsHandler.performEditItem();
-        }
-    }
-
-    public enum Mode {
-        NORMAL, DIALOG
     }
 }

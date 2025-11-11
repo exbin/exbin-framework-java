@@ -344,6 +344,7 @@ public class AddonManager {
                                     break;
                                 } // no break
                             case LICENSE:
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, true);
                                 List<DownloadItemRecord> downloadRecords = addonUpdateOperation.getDownloadRecords();
                                 if (!downloadRecords.isEmpty()) {
                                     goToDownload(downloadRecords);
@@ -365,6 +366,7 @@ public class AddonManager {
                         switch (step) {
                             case LICENSE:
                                 step = AddonOperationPanel.Step.OVERVIEW;
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, false);
                                 operationPanel.goToStep(step);
                                 break;
                             default:

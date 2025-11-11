@@ -15,10 +15,8 @@
  */
 package org.exbin.framework.component.api;
 
-import org.exbin.framework.component.api.toolbar.MoveItemActions;
-import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
-import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
-import org.exbin.framework.component.api.toolbar.EditItemActions;
+import org.exbin.framework.component.api.action.MoveItemActions;
+import org.exbin.framework.component.api.action.EditItemActions;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
@@ -41,7 +39,7 @@ public interface ComponentModuleApi extends Module {
      * @return edit item actions set
      */
     @Nonnull
-    EditItemActions createEditItemActions(EditItemActionsHandler editItemActionsHandler);
+    EditItemActions createEditItemActions(ContextEditItem editItemActionsHandler);
 
     /**
      * Creates new instance of the move item actions set.
@@ -50,5 +48,5 @@ public interface ComponentModuleApi extends Module {
      * @return move item actions set
      */
     @Nonnull
-    MoveItemActions createMoveItemActions(MoveItemActionsHandler moveItemActionsHandler);
+    MoveItemActions createMoveItemActions(ContextMoveItem moveItemActionsHandler);
 }

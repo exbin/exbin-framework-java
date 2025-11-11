@@ -13,40 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.component.api.toolbar;
+package org.exbin.framework.component.action;
 
 /**
- * Empty implementation for clipboard handler for visual component / context
- * menu.
+ * Item edit mode.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class EditItemActionsHandlerEmpty implements EditItemActionsHandler {
-
-    @Override
-    public void performAddItem() {
-    }
-
-    @Override
-    public void performEditItem() {
-    }
-
-    @Override
-    public void performDeleteItem() {
-    }
-
-    @Override
-    public boolean canAddItem() {
-        return false;
-    }
-
-    @Override
-    public boolean canEditItem() {
-        return false;
-    }
-
-    @Override
-    public boolean canDeleteItem() {
-        return false;
-    }
+public enum EditItemMode {
+    NORMAL, DIALOG
 }

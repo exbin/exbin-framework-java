@@ -55,13 +55,4 @@ public interface ActionContextChangeRegistration {
      * @param listener listener
      */
     <T> void registerContextMessageListener(Class<T> contextClass, ActionContextMessageListener<T> listener);
-
-    /**
-     * Requests update for component class.
-     *
-     * @param <T> monitored class type
-     * @param contextClass context class
-     * @param componentInstance component instance
-     */
-    <T> void updateActionsForComponent(Class<T> contextClass, @Nullable T componentInstance);
 }

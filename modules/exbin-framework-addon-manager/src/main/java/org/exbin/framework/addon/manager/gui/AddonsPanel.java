@@ -21,12 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.AddonManagerModule;
+import org.exbin.framework.addon.manager.model.FilterListModel;
 import org.exbin.framework.addon.manager.model.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Addons list with details panel.
@@ -56,17 +53,6 @@ public class AddonsPanel extends javax.swing.JPanel {
         this.controller = controller;
         filterListPanel.setController(new FilterListPanel.Controller() {
             @Override
-            public int getItemsCount() {
-                return controller.getItemsCount();
-            }
-
-            @Nonnull
-            @Override
-            public ItemRecord getItem(int index) {
-                return controller.getItem(index);
-            }
-
-            @Override
             public void setFilter(String filter, Runnable finished) {
                 controller.setFilter(filter, finished);
             }
@@ -90,6 +76,18 @@ public class AddonsPanel extends javax.swing.JPanel {
                     }
                     activeRecord = itemRecord;
                 }
+            }
+        });
+        filterListPanel.setRecordProvider(new FilterListModel.RecordsProvider() {
+            @Override
+            public int getItemsCount() {
+                return controller.getItemsCount();
+            }
+
+            @Nonnull
+            @Override
+            public ItemRecord getItem(int index) {
+                return controller.getItem(index);
             }
         });
         addonDetailsPanel.setController(new AddonDetailsPanel.Controller() {
@@ -135,7 +133,7 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
         });
     }
-    
+
     public void notifyItemChanged() {
         if (activeRecord != null) {
             addonDetailsPanel.setRecord(activeRecord, controller.isItemSelectedForOperation(activeRecord));
@@ -174,20 +172,6 @@ public class AddonsPanel extends javax.swing.JPanel {
 
         add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            testApplication.addModule(AddonManagerModule.MODULE_ID, new AddonManagerModule());
-            WindowUtils.invokeWindow(new AddonsPanel());
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel infoPanel;

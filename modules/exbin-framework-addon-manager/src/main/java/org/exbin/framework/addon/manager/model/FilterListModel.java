@@ -18,7 +18,6 @@ package org.exbin.framework.addon.manager.model;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractListModel;
-import org.exbin.framework.addon.manager.gui.FilterListPanel;
 
 /**
  * Filter list model.
@@ -28,18 +27,18 @@ import org.exbin.framework.addon.manager.gui.FilterListPanel;
 @ParametersAreNonnullByDefault
 public class FilterListModel extends AbstractListModel<ItemRecord> {
 
-    private FilterListPanel.Controller controller;
+    private RecordsProvider provider;
     private int size = 0;
 
-    public void setController(FilterListPanel.Controller controller) {
-        this.controller = controller;
+    public void setProvider(RecordsProvider provider) {
+        this.provider = provider;
     }
 
     public void notifyItemsChanged() {
         if (size > 0) {
             fireIntervalRemoved(this, 0, size - 1);
         }
-        size = controller.getItemsCount();
+        size = provider.getItemsCount();
         if (size > 0) {
             fireIntervalAdded(this, 0, size - 1);
         }
@@ -54,9 +53,17 @@ public class FilterListModel extends AbstractListModel<ItemRecord> {
     @Override
     public ItemRecord getElementAt(int index) {
         try {
-            return controller.getItem(index);
+            return provider.getItem(index);
         } catch (IndexOutOfBoundsException ex) {
             return new ItemRecord();
         }
+    }
+
+    public interface RecordsProvider {
+
+        int getItemsCount();
+
+        @Nonnull
+        ItemRecord getItem(int index);
     }
 }

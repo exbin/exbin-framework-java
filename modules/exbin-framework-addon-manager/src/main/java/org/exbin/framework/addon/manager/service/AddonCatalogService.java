@@ -41,7 +41,7 @@ public interface AddonCatalogService {
     int checkStatus(String version) throws AddonCatalogServiceException;
 
     /**
-     * Request search for addons with option to specifi search condition for
+     * Requests search for addons with option to specific search condition for
      * name.
      *
      * @param searchCondition search condition

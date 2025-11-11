@@ -17,14 +17,12 @@ package org.exbin.framework.addon.manager.api;
 
 import java.awt.Component;
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Addon manager tab.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface AddonManagerTab {
 
     /**

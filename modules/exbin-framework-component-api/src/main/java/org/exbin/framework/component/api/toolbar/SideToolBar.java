@@ -17,7 +17,7 @@ package org.exbin.framework.component.api.toolbar;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.framework.component.api.ActionsProvider;
+import org.exbin.framework.component.api.action.ActionsProvider;
 
 /**
  * Interface for side tool bar.

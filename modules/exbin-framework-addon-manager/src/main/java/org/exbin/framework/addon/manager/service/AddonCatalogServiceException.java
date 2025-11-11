@@ -40,7 +40,7 @@ public class AddonCatalogServiceException extends Exception {
         super(thrwbl);
     }
 
-    public AddonCatalogServiceException(String string, Throwable thrwbl, boolean bln, boolean bln1) {
-        super(string, thrwbl, bln, bln1);
+    public AddonCatalogServiceException(String string, Throwable thrwbl, boolean enableSuppression, boolean writableStackTrace) {
+        super(string, thrwbl, enableSuppression, writableStackTrace);
     }
 }

@@ -15,23 +15,13 @@
  */
 package org.exbin.framework.component.gui;
 
-import org.exbin.framework.component.api.ActionsProvider;
+import org.exbin.framework.component.api.action.ActionsProvider;
 import org.exbin.framework.component.api.toolbar.SideToolBar;
 import java.awt.BorderLayout;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JToolBar;
-import org.exbin.framework.component.ComponentModule;
-import org.exbin.framework.component.api.toolbar.EditItemActions;
-import org.exbin.framework.component.api.toolbar.EditItemActionsHandler;
-import org.exbin.framework.component.api.toolbar.EditItemActionsHandlerEmpty;
-import org.exbin.framework.component.api.toolbar.MoveItemActions;
-import org.exbin.framework.component.api.toolbar.MoveItemActionsHandler;
-import org.exbin.framework.component.api.toolbar.MoveItemActionsHandlerEmpty;
-import org.exbin.framework.utils.UtilsModule;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Panel with side toolbar.
@@ -61,32 +51,6 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            testApplication.addModule(org.exbin.framework.action.api.ActionModuleApi.MODULE_ID, new org.exbin.framework.action.ActionModule());
-            ComponentModule guiComponentModule = new ComponentModule();
-            testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
-
-            ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel();
-            MoveItemActionsHandler moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
-            MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
-            toolBarSidePanel.addActions(moveItemActions);
-            toolBarSidePanel.addSeparator();
-
-            EditItemActionsHandler editItemActionsHandler = new EditItemActionsHandlerEmpty();
-            EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
-            toolBarSidePanel.addActions(editItemActions);
-            WindowUtils.invokeWindow(toolBarSidePanel);
-        });
-    }
 
     @Nonnull
     public JToolBar getToolBar() {

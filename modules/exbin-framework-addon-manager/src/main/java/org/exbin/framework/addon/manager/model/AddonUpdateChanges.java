@@ -38,12 +38,12 @@ import org.exbin.framework.App;
 @ParametersAreNonnullByDefault
 public class AddonUpdateChanges {
 
-    private static final String ADDON_UPDATES_DIR = "addons_update";
-    private static final String CHANGES_FILE = "changes.cfg";
-    private final List<String> installAddons = new ArrayList<>();
-    private final List<String> removeAddons = new ArrayList<>();
-    private final List<String> updateFiles = new ArrayList<>();
-    private final List<String> removeFiles = new ArrayList<>();
+    public static final String ADDON_UPDATES_DIR = "addons_update";
+    public static final String CHANGES_FILE = "changes.cfg";
+    protected final List<String> installAddons = new ArrayList<>();
+    protected final List<String> removeAddons = new ArrayList<>();
+    protected final List<String> updateFiles = new ArrayList<>();
+    protected final List<String> removeFiles = new ArrayList<>();
 
     @Nonnull
     public List<String> getInstallAddons() {

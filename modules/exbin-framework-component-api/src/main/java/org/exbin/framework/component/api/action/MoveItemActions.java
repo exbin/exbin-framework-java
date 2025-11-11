@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.component.api.toolbar;
+package org.exbin.framework.component.api.action;
 
 import javax.annotation.Nonnull;
 import javax.swing.Action;
-import org.exbin.framework.component.api.ActionsProvider;
 
 /**
  * Interface for item movement action set.

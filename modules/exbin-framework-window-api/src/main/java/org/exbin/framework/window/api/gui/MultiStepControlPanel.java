@@ -49,7 +49,7 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
 
     private void init() {
         finishButton = new javax.swing.JButton();
-
+        finishButton.setEnabled(false);
         finishButton.setText(resourceBundle.getString("finishButton.text"));
         finishButton.addActionListener((java.awt.event.ActionEvent evt) -> {
             if (controller != null) {
@@ -67,17 +67,9 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
         });
         addButton(cancelButton, ButtonPosition.LAST_RIGHT);
 
-        previousButton = new javax.swing.JButton();
-        previousButton.setText(resourceBundle.getString("previousButton.text"));
-        previousButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            if (controller != null) {
-                controller.controlActionPerformed(MultiStepControlController.ControlActionType.PREVIOUS);
-            }
-        });
-        addButton(nextButton, ButtonPosition.FIRST_RIGHT);
-
         nextButton = new javax.swing.JButton();
-        nextButton.setText(resourceBundle.getString("applyOnceButton.text"));
+        nextButton.setEnabled(false);
+        nextButton.setText(resourceBundle.getString("nextButton.text"));
         nextButton.addActionListener((java.awt.event.ActionEvent evt) -> {
             if (controller != null) {
                 controller.controlActionPerformed(MultiStepControlController.ControlActionType.NEXT);
@@ -85,6 +77,15 @@ public class MultiStepControlPanel extends FooterControlPanel implements MultiSt
         });
         addButton(nextButton, ButtonPosition.FIRST_RIGHT);
 
+        previousButton = new javax.swing.JButton();
+        previousButton.setEnabled(false);
+        previousButton.setText(resourceBundle.getString("previousButton.text"));
+        previousButton.addActionListener((java.awt.event.ActionEvent evt) -> {
+            if (controller != null) {
+                controller.controlActionPerformed(MultiStepControlController.ControlActionType.PREVIOUS);
+            }
+        });
+        addButton(previousButton, ButtonPosition.FIRST_RIGHT);
     }
 
     public void setController(MultiStepControlController controller) {

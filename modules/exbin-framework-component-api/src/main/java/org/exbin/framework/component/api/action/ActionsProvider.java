@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.component.api;
+package org.exbin.framework.component.api.action;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.component.api.toolbar.SideToolBar;

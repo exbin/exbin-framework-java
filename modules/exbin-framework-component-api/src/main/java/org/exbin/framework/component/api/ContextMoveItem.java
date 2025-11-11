@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.component.api.toolbar;
+package org.exbin.framework.component.api;
+
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
  * Interface item movement action set.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MoveItemActionsHandler {
+public interface ContextMoveItem {
 
     /**
      * Moves selected items one level up.
@@ -55,4 +57,8 @@ public interface MoveItemActionsHandler {
      * @return true if component is editable
      */
     boolean isEditable();
+
+    public enum ChangeMessage implements StateChangeMessage {
+        MOVE_STATE
+    }
 }

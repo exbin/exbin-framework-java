@@ -175,19 +175,6 @@ public class ActionManager implements ActionManagement {
 
             contextMessageListener.add(listener);
         }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public <T> void updateActionsForComponent(Class<T> contextClass, @Nullable T contextInstance) {
-            // TODO
-//            activeComponentState.put(componentClass, componentInstance);
-//            List<ActionContextChangeListener<?>> componentListeners = actionContextChangeListeners.get(contextClass);
-//            if (componentListeners != null) {
-//                for (ActionContextChangeListener componentListener : componentListeners) {
-//                    componentListener.activeStateMessage(componentInstance);
-//                }
-//            }
-        }
     }
 
     protected static class ActionRecord {
@@ -233,11 +220,6 @@ public class ActionManager implements ActionManagement {
                 @Override
                 public <T> void registerUpdateListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
                     registerListener(componentClass, listener);
-                }
-
-                @Override
-                public <T> void updateActionsForComponent(Class<T> componentClass, T componentInstance) {
-                    updated(componentClass, componentInstance);
                 }
             });
         }

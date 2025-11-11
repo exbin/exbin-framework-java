@@ -29,8 +29,6 @@ import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
@@ -42,7 +40,7 @@ import org.exbin.framework.context.api.ActiveContextProvider;
 public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsComponent, VerticallyExpandable {
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(KeyMapSettingsPanel.class);
-    
+
     private final KeyMapTablePanel keyMap = new KeyMapTablePanel();
     private SettingsModifiedListener settingsModifiedListener;
 
@@ -60,7 +58,7 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsC
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
     }
-    
+
     public void setRecords(List<KeyMapRecord> records) {
         keyMap.setRecords(records);
     }
@@ -76,15 +74,6 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsC
 
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new KeyMapSettingsPanel()));
-    }
 
     @Override
     public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
