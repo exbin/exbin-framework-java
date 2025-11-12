@@ -26,9 +26,6 @@ import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.App;
 import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -301,19 +298,6 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
     @Nonnull
     public List<String> getEncodingList() {
         return ((EncodingsListModel) encodingsList.getModel()).getCharsets();
-    }
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new TextEncodingListPanel());
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

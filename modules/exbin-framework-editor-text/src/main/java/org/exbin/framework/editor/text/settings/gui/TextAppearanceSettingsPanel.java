@@ -22,9 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.settings.TextAppearanceOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -105,19 +102,6 @@ public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements S
     private void wordWrapCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_wordWrapCheckBoxjCheckBoxItemStateChanged
         notifyModified();
     }//GEN-LAST:event_wordWrapCheckBoxjCheckBoxItemStateChanged
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new TextAppearanceSettingsPanel());
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox wordWrapCheckBox;

@@ -21,11 +21,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.ComponentResourceProvider;
 import org.exbin.framework.frame.settings.AppearanceOptions;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -145,19 +142,6 @@ public class AppearanceSettingsPanel extends javax.swing.JPanel implements Setti
     private void showStatusbarCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showStatusbarCheckBoxjCheckBoxItemStateChanged
         notifyModified();
     }//GEN-LAST:event_showStatusbarCheckBoxjCheckBoxItemStateChanged
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new AppearanceSettingsPanel());
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox showCaptionsCheckBox;

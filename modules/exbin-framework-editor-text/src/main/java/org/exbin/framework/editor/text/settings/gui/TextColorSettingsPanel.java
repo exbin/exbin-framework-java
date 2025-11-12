@@ -24,10 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.settings.TextColorOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.editor.text.service.TextColorService;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -43,7 +40,6 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
 
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorSettingsPanel.class);
-    private TextColorService textColorService;
     private final TextColorPanel colorPanel;
 
     public TextColorSettingsPanel() {
@@ -58,7 +54,6 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
     }
 
     public void setTextColorService(TextColorService textColorService) {
-        this.textColorService = textColorService;
         colorPanel.setTextColorService(textColorService);
     }
 
@@ -138,19 +133,6 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
         colorPanel.setEnabled(checked);
         notifyModified();
     }//GEN-LAST:event_defaultColorCheckBoxItemStateChanged
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new TextColorSettingsPanel());
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox defaultColorCheckBox;

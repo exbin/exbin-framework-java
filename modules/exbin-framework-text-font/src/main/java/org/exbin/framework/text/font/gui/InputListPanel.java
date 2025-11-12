@@ -16,15 +16,12 @@
 package org.exbin.framework.text.font.gui;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractListModel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.WindowUtils;
 
 /**
  * Item list with text input.
@@ -34,7 +31,6 @@ import org.exbin.framework.utils.WindowUtils;
 @ParametersAreNonnullByDefault
 public class InputListPanel extends javax.swing.JPanel {
 
-    private ActionListener actionListener;
     private ChangeListener changeListener;
     private String[] items;
     private boolean textUpdating = false;
@@ -157,15 +153,6 @@ public class InputListPanel extends javax.swing.JPanel {
                 .addComponent(scrollPane))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new InputListPanel()));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> itemList;

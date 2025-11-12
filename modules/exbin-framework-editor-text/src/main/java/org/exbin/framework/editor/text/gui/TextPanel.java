@@ -19,10 +19,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.SystemColor;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.nio.charset.Charset;
 import java.util.Optional;
@@ -44,15 +41,11 @@ import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.JTextComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.service.impl.TextServiceImpl;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.text.encoding.EncodingsManager;
-import org.exbin.framework.utils.ClipboardUtils;
-import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
-import org.exbin.framework.action.api.clipboard.TextClipboardController;
 
 /**
  * Text editor panel.
@@ -285,15 +278,6 @@ public class TextPanel extends javax.swing.JPanel {
 
         add(textAreaScrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new TextPanel()));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea textArea;

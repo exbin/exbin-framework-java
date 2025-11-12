@@ -28,9 +28,6 @@ import javax.swing.JList;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 
 /**
  * Addons operation file downloads panel.
@@ -184,19 +181,6 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
                 .addComponent(overallStatusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new AddonOperationDownloadPanel());
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel downloadItemsLabel;

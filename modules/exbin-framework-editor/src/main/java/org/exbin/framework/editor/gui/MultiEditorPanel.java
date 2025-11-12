@@ -17,9 +17,7 @@ package org.exbin.framework.editor.gui;
 
 import java.awt.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UiUtils;
 
 /**
@@ -126,15 +124,6 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
         add(tabbedPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new MultiEditorPanel()));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane tabbedPane;

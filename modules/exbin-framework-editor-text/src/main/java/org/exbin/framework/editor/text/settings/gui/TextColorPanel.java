@@ -26,10 +26,7 @@ import javax.swing.JDialog;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.settings.TextColorOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.editor.text.service.TextColorService;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -53,6 +50,7 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     }
 
     public void setTextColorService(TextColorService textColorService) {
+        // TODO Drop
         this.textColorService = textColorService;
         fillCurrentButton.setEnabled(true);
         fillDefaultButton.setEnabled(true);
@@ -534,19 +532,6 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         setColorsFromArray(defaultColors);
         notifyModified();
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new TextColorPanel());
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JColorChooser colorChooser;

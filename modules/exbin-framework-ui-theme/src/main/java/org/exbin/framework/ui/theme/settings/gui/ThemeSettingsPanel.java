@@ -30,13 +30,10 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.ui.theme.ThemeConfigurationAction;
 import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
 import org.exbin.framework.ui.theme.settings.ThemeOptions;
 import org.exbin.framework.utils.DesktopUtils;
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -479,19 +476,6 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
             themeConfigurationListener.configureTheme(lafProvider);
         }
     }//GEN-LAST:event_visualThemeOptionsButtonActionPerformed
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new ThemeSettingsPanel());
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> fontAntialiasingComboBox;
