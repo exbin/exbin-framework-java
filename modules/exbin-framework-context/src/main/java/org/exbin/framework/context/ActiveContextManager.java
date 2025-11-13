@@ -65,6 +65,14 @@ public class ActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
+    public <T> void notifyStateChange(Class<T> stateClass, StateChangeMessage changeMessage) {
+        Object activeState = getActiveState(stateClass);
+        if (activeState != null) {
+            activeStateMessage(stateClass, stateClass.cast(activeState), changeMessage);
+        }
+    }
+
+    @Override
     public void addChangeListener(ActiveContextChangeListener changeListener) {
         changeListeners.add(changeListener);
     }

@@ -28,7 +28,6 @@ import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.settings.TextColorOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
-import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
@@ -36,6 +35,7 @@ import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.window.api.controller.OptionsControlController;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.editor.text.TextColorState;
 
 /**
  * Text color action.
@@ -80,7 +80,7 @@ public class TextColorAction extends AbstractAction {
         TextPanel textPanel = (TextPanel) fileHandler.getComponent();
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        final TextColorService textColorService = new TextColorService() {
+        final TextColorState textColorService = new TextColorState() {
             @Override
             public Color[] getCurrentTextColors() {
                 return textPanel.getCurrentColors();
@@ -97,9 +97,6 @@ public class TextColorAction extends AbstractAction {
             }
         };
         final TextColorPanel colorPanel = new TextColorPanel();
-
-        colorPanel.setTextColorService(textColorService);
-
         colorPanel.setColorsFromArray(textColorService.getCurrentTextColors());
         OptionsControlPanel controlPanel = new OptionsControlPanel();
         final WindowHandler dialog = windowModule.createDialog(colorPanel, controlPanel);

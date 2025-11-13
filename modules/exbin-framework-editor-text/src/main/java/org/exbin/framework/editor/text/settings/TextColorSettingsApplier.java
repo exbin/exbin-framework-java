@@ -18,7 +18,7 @@ package org.exbin.framework.editor.text.settings;
 import java.awt.Color;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.service.TextColorService;
+import org.exbin.framework.editor.text.TextColorState;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
@@ -32,10 +32,14 @@ public class TextColorSettingsApplier implements SettingsApplier {
 
     @Override
     public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+        if (!(instance instanceof TextColorState)) {
+            return;
+        }
+
         TextColorOptions options = settingsProvider.getSettingsOptions(TextColorOptions.class);
-        TextColorService textColorService = null;
+        TextColorState textColorState = (TextColorState) instance;
         if (options.isUseDefaultColors()) {
-            textColorService.setCurrentTextColors(textColorService.getDefaultTextColors());
+            textColorState.setCurrentTextColors(textColorState.getDefaultTextColors());
         } else {
             Color[] colors = new Color[5];
             colors[0] = intToColor(options.getTextColor());
@@ -43,7 +47,7 @@ public class TextColorSettingsApplier implements SettingsApplier {
             colors[2] = intToColor(options.getSelectionTextColor());
             colors[3] = intToColor(options.getSelectionBackgroundColor());
             colors[4] = intToColor(options.getFoundBackgroundColor());
-            textColorService.setCurrentTextColors(colors);
+            textColorState.setCurrentTextColors(colors);
         }
     }
 

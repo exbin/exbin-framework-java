@@ -25,5 +25,5 @@ public interface SettingsModifiedListener {
     /**
      * Notifies that options were modified.
      */
-    void wasModified();
+    void notifyModified();
 }

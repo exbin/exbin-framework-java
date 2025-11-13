@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.editor.text;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -38,7 +39,7 @@ import org.exbin.framework.text.font.TextFontState;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class EditorTextPanelComponent implements ContextComponent, TextPanelComponent, TextClipboardController, CharsetEncodingState, TextFontState {
+public class EditorTextPanelComponent implements ContextComponent, TextPanelComponent, TextClipboardController, CharsetEncodingState, TextAppearanceState, TextColorState, TextFontState {
 
     private final TextPanel textPanel;
 
@@ -140,5 +141,32 @@ public class EditorTextPanelComponent implements ContextComponent, TextPanelComp
     @Override
     public void setCurrentFont(Font font) {
         textPanel.setCurrentFont(font);
+    }
+
+    @Override
+    public boolean getWordWrapMode() {
+        return textPanel.getWordWrapMode();
+    }
+
+    @Override
+    public void setWordWrapMode(boolean mode) {
+        textPanel.setWordWrapMode(mode);
+    }
+
+    @Nonnull
+    @Override
+    public Color[] getCurrentTextColors() {
+        return textPanel.getCurrentColors();
+    }
+
+    @Nonnull
+    @Override
+    public Color[] getDefaultTextColors() {
+        return textPanel.getDefaultColors();
+    }
+
+    @Override
+    public void setCurrentTextColors(Color[] colors) {
+        textPanel.setCurrentColors(colors);
     }
 }

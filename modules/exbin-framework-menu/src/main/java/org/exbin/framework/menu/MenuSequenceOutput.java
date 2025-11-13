@@ -64,7 +64,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
     public boolean initItem(SequenceContribution contribution, String definitionId, String subId) {
         if (contribution instanceof SubSequenceContribution) {
             Action action = ((SubMenuContribution) contribution).getAction();
-            if (isPopup && action != null) {
+            if (isPopup) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                 if (menuCreation != null) {
                     if (!menuCreation.shouldCreate(definitionId, subId)) {
@@ -77,7 +77,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
             subMenu.setAction(action);
             ((SubMenuContribution) contribution).setSubMenu(subMenu);
 
-            if (isPopup && action != null) {
+            if (isPopup) {
                 ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
                 if (menuCreation != null) {
                     menuCreation.onCreate(subMenu, definitionId, subId);
@@ -92,9 +92,11 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
         if (contribution instanceof ActionMenuContribution) {
             menuItem = null;
             action = ((ActionMenuContribution) contribution).getAction();
-        } else {
+        } else if (contribution instanceof DirectMenuContribution) {
             menuItem = ((DirectMenuContribution) contribution).getMenuItem();
             action = menuItem.getAction();
+        } else {
+            throw new IllegalStateException();
         }
         if (isPopup && action != null) {
             ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
@@ -134,9 +136,14 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
             return;
         }
 
-        JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
-        menu.add(menuItem);
-        MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
+        if (contribution instanceof ActionMenuContribution) {
+            JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
+            menu.add(menuItem);
+            MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
+            return;
+        }
+        
+        throw new IllegalStateException();
     }
 
     @Override

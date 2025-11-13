@@ -16,19 +16,20 @@
 package org.exbin.framework.ui.theme.api;
 
 import javax.annotation.Nonnull;
+import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 
 /**
- * Look&amp;feel provider with support for additional options.
+ * Look&amp;feel provider with support for additional settings.
  *
  * @author ExBin Project (https://exbin.org)
  */
 public interface ConfigurableLafProvider extends LafProvider {
 
     /**
-     * Returns look and feel options handler.
+     * Returns look and feel settings component provider.
      *
-     * @return options handler
+     * @return component provider
      */
     @Nonnull
-    LafOptionsHandler getOptionsHandler();
+    SettingsComponentProvider getSettingsComponentProvider();
 }

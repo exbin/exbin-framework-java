@@ -109,7 +109,7 @@ public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implement
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

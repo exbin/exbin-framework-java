@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text.service;
+package org.exbin.framework.editor.text;
 
 /**
  * Word wrapping options interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface TextAppearanceService {
+public interface TextAppearanceState {
 
     /**
      * Returns text word wrapping mode.

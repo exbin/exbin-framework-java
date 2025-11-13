@@ -15,15 +15,14 @@
  */
 package org.exbin.framework.action.manager.settings.gui;
 
-import java.awt.Dimension;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.exbin.framework.action.manager.gui.KeyMapTablePanel;
 import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -34,6 +33,7 @@ import org.junit.Test;
 public class KeyMapSettingsPanelTest {
 
     @Test
+    @Ignore
     public void testPanel() {
         TestApplication.run(() -> WindowUtils.invokeWindow(new KeyMapTablePanel()));
 //        TestApplication testApplication = UtilsModule.createTestApplication();

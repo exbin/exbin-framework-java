@@ -24,7 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.editor.text.settings.TextColorOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -51,10 +50,6 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
     private void init() {
         colorPanel.setEnabled(false);
         super.add(colorPanel, BorderLayout.CENTER);
-    }
-
-    public void setTextColorService(TextColorService textColorService) {
-        colorPanel.setTextColorService(textColorService);
     }
 
     @Nonnull
@@ -142,7 +137,7 @@ public class TextColorSettingsPanel extends javax.swing.JPanel implements Settin
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

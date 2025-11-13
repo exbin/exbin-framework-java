@@ -85,7 +85,7 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsC
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

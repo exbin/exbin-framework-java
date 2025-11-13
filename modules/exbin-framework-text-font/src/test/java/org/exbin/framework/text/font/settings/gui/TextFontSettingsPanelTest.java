@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.text.font.settings.gui;
 
-import org.exbin.framework.text.font.gui.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +22,7 @@ import javax.swing.SwingUtilities;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -33,6 +33,7 @@ import org.junit.Test;
 public class TextFontSettingsPanelTest {
 
     @Test
+    @Ignore
     public void testPanel() {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {

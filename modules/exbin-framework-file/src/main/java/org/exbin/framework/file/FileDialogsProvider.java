@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.frame.settings;
+package org.exbin.framework.file;
 
+import java.io.File;
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.frame.settings.gui.AppearanceSettingsPanel;
-import org.exbin.framework.options.settings.api.SettingsComponent;
-import org.exbin.framework.options.settings.api.SettingsComponentProvider;
+import javax.annotation.Nullable;
+import org.exbin.framework.file.api.FileActionsApi;
+import org.exbin.framework.file.api.FileTypes;
+import org.exbin.framework.file.api.UsedDirectoryApi;
 
 /**
- * Appearance settings component.
+ * File dialogs provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class AppearanceSettingsComponent implements SettingsComponentProvider {
-
-    public static final String COMPONENT_ID = "appearance";
-
+public interface FileDialogsProvider {
+    
     @Nonnull
-    @Override
-    public SettingsComponent createComponent() {
-        return new AppearanceSettingsPanel();
-    }
+    FileActionsApi.OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory);
 }

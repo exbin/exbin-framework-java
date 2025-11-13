@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Enumeration of rendering methods.
- *
+ * <p>
  * @see
  * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/2d/flags.html">JavaSE
  * 8 2D Technology</a>

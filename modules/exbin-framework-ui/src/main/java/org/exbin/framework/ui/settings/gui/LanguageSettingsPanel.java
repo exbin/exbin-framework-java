@@ -173,7 +173,7 @@ public class LanguageSettingsPanel extends javax.swing.JPanel implements Setting
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

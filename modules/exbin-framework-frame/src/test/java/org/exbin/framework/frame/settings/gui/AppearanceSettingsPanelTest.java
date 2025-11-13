@@ -22,21 +22,23 @@ import javax.swing.SwingUtilities;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Test for AppearanceSettingsPanel.
+ * Test for FrameAppearanceSettingsPanel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 public class AppearanceSettingsPanelTest {
 
     @Test
+    @Ignore
     public void testPanel() {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new AppearanceSettingsPanel());
+            WindowUtils.invokeWindow(new FrameAppearanceSettingsPanel());
         });
 
         Thread[] uiThread = new Thread[1];

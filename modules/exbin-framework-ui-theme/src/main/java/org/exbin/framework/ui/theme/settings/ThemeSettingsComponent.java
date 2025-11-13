@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
@@ -34,7 +35,6 @@ import org.exbin.framework.ui.theme.GuiMacOsAppearance;
 import org.exbin.framework.ui.theme.GuiRenderingMethod;
 import org.exbin.framework.ui.theme.GuiScaling;
 import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
-import org.exbin.framework.ui.theme.api.LafOptionsHandler;
 import org.exbin.framework.ui.theme.api.LafProvider;
 import org.exbin.framework.ui.theme.api.UiThemeModuleApi;
 import org.exbin.framework.ui.theme.settings.gui.ThemeSettingsPanel;
@@ -42,13 +42,13 @@ import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
-import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
+import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.ui.theme.UiThemeModule;
 
 /**
- * UI theme settings.
+ * UI theme settings component.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -57,7 +57,7 @@ public class ThemeSettingsComponent implements SettingsComponentProvider {
 
     public static final String COMPONENT_ID = "theme";
 
-    private Map<String, LafOptionsHandler> themeOptionsHandlers = new HashMap<>();
+    private Map<String, SettingsComponent> themeOptionsComponents = new HashMap<>();
 
     private boolean valuesInitialized = false;
     private List<String> themes;
@@ -192,26 +192,27 @@ public class ThemeSettingsComponent implements SettingsComponentProvider {
         if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             themeOptionsPanel.setMacOsAppearances(guiMacOsAppearanceKeys, guiMacOsAppearanceNames);
         }
-        themeOptionsPanel.setThemeConfigurationListener((ConfigurableLafProvider lafProvider) -> {
-            LafOptionsHandler optionsHandler = themeOptionsHandlers.get(lafProvider.getLafId());
-            if (optionsHandler == null) {
-                OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-                optionsHandler = lafProvider.getOptionsHandler();
-                optionsHandler.loadFromPreferences(preferencesModule.getAppOptions());
+        themeOptionsPanel.setController((ConfigurableLafProvider lafProvider, SettingsOptionsProvider settingsOptionsProvider) -> {
+            SettingsComponent settingsComponent = themeOptionsComponents.get(lafProvider.getLafId());
+            if (settingsComponent == null) {
+                SettingsComponentProvider settingsComponentProvider = lafProvider.getSettingsComponentProvider();
+                settingsComponent = settingsComponentProvider.createComponent();
+                settingsComponent.loadFromOptions(settingsOptionsProvider, null);
             }
-            final LafOptionsHandler finalOptionsHandler = optionsHandler;
+            final SettingsComponent finalSettingsComponent = settingsComponent;
 
             DefaultControlPanel controlPanel = new DefaultControlPanel();
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-            final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, optionsHandler.createOptionsComponent(), controlPanel);
+
+            final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, (JComponent) settingsComponent, controlPanel);
             UiThemeModule themeModule = (UiThemeModule) App.getModule(UiThemeModuleApi.class);
             ResourceBundle resourceBundle = themeModule.getResourceBundle();
             ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString("theme.optionsWindow.title"));
             controlPanel.setController((actionType) -> {
                 switch (actionType) {
                     case OK: {
-                        themeOptionsHandlers.put(lafProvider.getLafId(), finalOptionsHandler);
+                        themeOptionsComponents.put(lafProvider.getLafId(), finalSettingsComponent);
                         break;
                     }
                     case CANCEL: {

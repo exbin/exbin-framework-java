@@ -53,53 +53,32 @@ public class MenuPopupModule implements MenuPopupModuleApi {
         return resourceBundle;
     }
 
-    /**
-     * Registers popup menu show for various supported components accross all
-     * AWT popup menu events.
-     */
-    @Nonnull
     @Override
     public void registerDefaultClipboardPopupMenu() {
         DefaultPopupMenu.register();
     }
 
-    /**
-     * Registers popup menu show for various supported components accross all
-     * AWT popup menu events.
-     */
-    @Nonnull
     @Override
     public void registerDefaultClipboardPopupMenuWithIcons() {
         DefaultPopupMenu.register();
         DefaultPopupMenu.getInstance().inheritClipboardActionsIcons();
     }
 
-    /**
-     * Registers popup menu show for various supported components accross all
-     * AWT popup menu events.
-     *
-     * @param resourceBundle resource bundle
-     * @param resourceClass resource class
-     */
-    @Nonnull
     @Override
     public void registerDefaultClipboardPopupMenu(ResourceBundle resourceBundle, Class resourceClass) {
         DefaultPopupMenu.register(resourceBundle, resourceClass);
     }
 
-    @Nonnull
     @Override
     public void addComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
         DefaultPopupMenu.getInstance().addClipboardEventDispatcher(dispatcher);
     }
 
-    @Nonnull
     @Override
     public void removeComponentPopupEventDispatcher(ComponentPopupEventDispatcher dispatcher) {
         DefaultPopupMenu.getInstance().removeClipboardEventDispatcher(dispatcher);
     }
 
-    @Nonnull
     @Override
     public void fillDefaultEditPopupMenu(JPopupMenu popupMenu, int position) {
         DefaultPopupMenu.getInstance().fillDefaultEditPopupMenu(popupMenu, position);

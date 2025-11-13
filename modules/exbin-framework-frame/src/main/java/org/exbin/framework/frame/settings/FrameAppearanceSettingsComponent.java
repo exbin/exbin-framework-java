@@ -13,40 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.ui.theme.api;
+package org.exbin.framework.frame.settings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
-import org.exbin.framework.options.api.OptionsStorage;
+import org.exbin.framework.frame.settings.gui.FrameAppearanceSettingsPanel;
+import org.exbin.framework.options.settings.api.SettingsComponent;
+import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 
 /**
- * Look&amp;feel provider with options handler.
+ * Frame appearance settings component.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface LafOptionsHandler {
+public class FrameAppearanceSettingsComponent implements SettingsComponentProvider {
 
-    /**
-     * Returns options component.
-     *
-     * @return component
-     */
+    public static final String COMPONENT_ID = "appearance";
+
     @Nonnull
-    JComponent createOptionsComponent();
-
-    /**
-     * Loads options from preferences.
-     *
-     * @param preferences preferences
-     */
-    void loadFromPreferences(OptionsStorage preferences);
-
-    /**
-     * Saves options to preferences.
-     *
-     * @param preferences preferences
-     */
-    void saveToPreferences(OptionsStorage preferences);
+    @Override
+    public SettingsComponent createComponent() {
+        return new FrameAppearanceSettingsPanel();
+    }
 }

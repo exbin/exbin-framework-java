@@ -35,4 +35,13 @@ public interface ActiveContextProvider {
      */
     @Nullable
     <T> T getActiveState(Class<T> stateClass);
+
+    /**
+     * Notifies change for the current active state.
+     *
+     * @param <T> state type
+     * @param stateClass state class
+     * @param changeMessage change message
+     */
+    <T> void notifyStateChange(Class<T> stateClass, StateChangeMessage changeMessage);
 }

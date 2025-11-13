@@ -318,7 +318,7 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
 
     public void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

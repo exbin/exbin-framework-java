@@ -36,6 +36,7 @@ import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.settings.SettingsOptionsStorage;
@@ -154,9 +155,14 @@ public class SettingsAction extends AbstractAction {
         OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
         SettingsOptionsProvider settingsOptionsProvider = optionsSettingsModule.getMainSettingsManager().getSettingsOptionsProvider();
 
+        // TODO Run in top context
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ApplicationFrameHandler frameHandler = frameModule.getFrameHandler();
+        ActiveContextManagement contextManager = frameHandler.getContextManager();
+        
         for (SettingsPage page : pages) {
             try {
-                page.loadFromOptions(settingsOptionsProvider, null);
+                page.loadAll(settingsOptionsProvider, contextManager);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -168,37 +174,34 @@ public class SettingsAction extends AbstractAction {
         OptionsSettingsManagement mainSettingsManager = optionsSettingsModule.getMainSettingsManager();
         SettingsOptionsProvider settingsOptionsProvider = mainSettingsManager.getSettingsOptionsProvider();
 
+        // TODO Run in top context
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ApplicationFrameHandler frameHandler = frameModule.getFrameHandler();
+        ActiveContextManagement contextManager = frameHandler.getContextManager();
+        
         for (SettingsPage page : pages) {
             try {
-                page.saveAndApply(settingsOptionsProvider, null);
+                page.saveAll(settingsOptionsProvider, contextManager);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        // TODO Run in top context
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationFrameHandler frameHandler = frameModule.getFrameHandler();
-        mainSettingsManager.applyAllOptions(frameHandler.getContextManager(), mainSettingsManager.getSettingsOptionsProvider());
     }
 
     private void applyOnlyAll(Collection<SettingsPage> pages) {
-        OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
-        OptionsSettingsManagement mainSettingsManager = optionsSettingsModule.getMainSettingsManager();
-
+        // TODO Run in top context
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ApplicationFrameHandler frameHandler = frameModule.getFrameHandler();
+        ActiveContextManagement contextManager = frameHandler.getContextManager();
+        
         SettingsOptionsStorage settingsOptionsStorage = new SettingsOptionsStorage();
         for (SettingsPage page : pages) {
             try {
-                page.saveAndApply(settingsOptionsStorage, null);
+                page.saveAll(settingsOptionsStorage, contextManager);
             } catch (Exception ex) {
                 Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        // TODO Run in top context
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationFrameHandler frameHandler = frameModule.getFrameHandler();
-        mainSettingsManager.applyAllOptions(frameHandler.getContextManager(), settingsOptionsStorage);
     }
 
     public void setDialogParentComponent(DialogParentComponent dialogParentComponent) {

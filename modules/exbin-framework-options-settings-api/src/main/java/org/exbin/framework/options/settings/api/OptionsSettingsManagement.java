@@ -21,7 +21,6 @@ import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
-import org.exbin.framework.options.api.OptionsStorage;
 
 /**
  * Interface for management of options settings.
@@ -122,7 +121,7 @@ public interface OptionsSettingsManagement {
      * @param contextManager context manager
      * @param provider settings options provider
      */
-    void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider provider);
+//    void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider provider);
 
     /**
      * Returns settings options provider.

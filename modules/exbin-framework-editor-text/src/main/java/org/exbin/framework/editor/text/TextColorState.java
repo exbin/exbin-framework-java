@@ -13,27 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text.settings;
+package org.exbin.framework.editor.text;
 
+import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.settings.gui.TextAppearanceSettingsPanel;
-import org.exbin.framework.options.settings.api.SettingsComponent;
-import org.exbin.framework.options.settings.api.SettingsComponentProvider;
+import org.exbin.framework.context.api.StateChangeMessage;
 
 /**
- * Text appearance settings component.
+ * Text color panel API.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceSettingsComponent implements SettingsComponentProvider {
+public interface TextColorState {
 
-    public static final String COMPONENT_ID = "text.appearance";
-
+    /**
+     * Returns current colors used in application frame.
+     *
+     * @return array of 5 colors
+     */
     @Nonnull
-    @Override
-    public SettingsComponent createComponent() {
-        return new TextAppearanceSettingsPanel();
+    Color[] getCurrentTextColors();
+
+    /**
+     * Returns default colors used in application frame.
+     *
+     * @return array of 5 colors
+     */
+    @Nonnull
+    Color[] getDefaultTextColors();
+
+    /**
+     * Sets current colors used in application frame.
+     *
+     * @param colors colors
+     */
+    void setCurrentTextColors(Color[] colors);
+
+    public enum ChangeMessage implements StateChangeMessage {
+        TEXT_COLOR_STATE
     }
 }

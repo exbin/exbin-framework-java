@@ -47,9 +47,9 @@ import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.context.api.ActiveContextManagement;
-import org.exbin.framework.frame.settings.AppearanceOptions;
-import org.exbin.framework.frame.settings.AppearanceSettingsApplier;
-import org.exbin.framework.frame.settings.AppearanceSettingsComponent;
+import org.exbin.framework.frame.settings.FrameAppearanceOptions;
+import org.exbin.framework.frame.settings.FrameAppearanceSettingsApplier;
+import org.exbin.framework.frame.settings.FrameAppearanceSettingsComponent;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
@@ -356,13 +356,13 @@ public class FrameModule implements FrameModuleApi {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(AppearanceOptions.class, (optionsStorage) -> new AppearanceOptions(optionsStorage));
+        settingsManagement.registerOptionsSettings(FrameAppearanceOptions.class, (optionsStorage) -> new FrameAppearanceOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(ContextFrame.class, new ApplySettingsContribution(AppearanceSettingsApplier.APPLIER_ID, new AppearanceSettingsApplier()));
+        settingsManagement.registerApplySetting(ContextFrame.class, new ApplySettingsContribution(FrameAppearanceSettingsApplier.APPLIER_ID, new FrameAppearanceSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(FrameModuleApi.SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);
-        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(AppearanceSettingsComponent.COMPONENT_ID, new AppearanceSettingsComponent());
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(FrameAppearanceSettingsComponent.COMPONENT_ID, new FrameAppearanceSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 }

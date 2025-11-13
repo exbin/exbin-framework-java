@@ -13,33 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.frame.settings;
+package org.exbin.framework.text.encoding.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
-import org.exbin.framework.frame.api.ContextFrame;
+import org.exbin.framework.text.encoding.CharsetListEncodingState;
 
 /**
- * Appearance settings applier.
+ * Text encoding settings applier.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceSettingsApplier implements SettingsApplier {
+public class TextEncodingListSettingsApplier implements SettingsApplier {
 
-    public static final String APPLIER_ID = "appearance";
+    public static final String APPLIER_ID = "textEncoding";
 
     @Override
     public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
-        if (instance instanceof ApplicationFrameHandler) {
-            AppearanceOptions options = settingsProvider.getSettingsOptions(AppearanceOptions.class);
-            ApplicationFrameHandler frame = (ApplicationFrameHandler) instance;
-            frame.setToolBarVisible(options.isShowToolBar());
-            frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
-            frame.setStatusBarVisible(options.isShowStatusBar());
-            frame.getContextManager().activeStateMessage(ContextFrame.class, (ContextFrame) frame, ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE);
+        if (!(instance instanceof CharsetListEncodingState)) {
+            return;
         }
+
+        TextEncodingOptions options = settingsProvider.getSettingsOptions(TextEncodingOptions.class);
+        ((CharsetListEncodingState) instance).setEncodings(options.getEncodings());
     }
 }

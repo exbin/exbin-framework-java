@@ -124,8 +124,14 @@ public interface FrameModuleApi extends Module {
      */
     void switchStatusBar(String statusBarId);
 
+    /**
+     * Loads frame position.
+     */
     void loadFramePosition();
 
+    /**
+     * Saves frame position.
+     */
     void saveFramePosition();
 
     /**

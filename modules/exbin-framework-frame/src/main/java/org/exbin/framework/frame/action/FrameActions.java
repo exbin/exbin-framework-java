@@ -71,7 +71,7 @@ public class FrameActions {
     }
 
     @ParametersAreNonnullByDefault
-    public class ViewToolBarAction extends AbstractAction {
+    public static class ViewToolBarAction extends AbstractAction {
 
         public static final String ACTION_ID = "viewToolBarAction";
 
@@ -113,7 +113,7 @@ public class FrameActions {
     }
 
     @ParametersAreNonnullByDefault
-    public class ViewToolBarCaptionsAction extends AbstractAction {
+    public static class ViewToolBarCaptionsAction extends AbstractAction {
 
         public static final String ACTION_ID = "viewToolBarCaptionsAction";
 
@@ -155,7 +155,7 @@ public class FrameActions {
     }
 
     @ParametersAreNonnullByDefault
-    public class ViewStatusBarAction extends AbstractAction {
+    public static class ViewStatusBarAction extends AbstractAction {
 
         public static final String ACTION_ID = "viewStatusBarAction";
 

@@ -54,7 +54,6 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     private SettingsModifiedListener settingsModifiedListener;
     private final List<LazyComponentListener> listeners = new ArrayList<>();
 
-    private boolean modified;
     private OptionsMutableTreeNode top;
 
     public SettingsTreePanel() {
@@ -63,14 +62,13 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     }
 
     private void init() {
-        modified = false;
         settingsModifiedListener = () -> {
-            setModified(true);
+            notifyModified();
         };
 
         addPropertyChangeListener((PropertyChangeEvent evt) -> {
             if ("modified".equals(evt.getPropertyName())) {
-                modified = true;
+                notifyModified();
             }
         });
 
@@ -187,11 +185,7 @@ public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPag
     private javax.swing.JSeparator separator;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * @param modified the modified to set
-     */
-    public void setModified(boolean modified) {
-        this.modified = modified;
+    public void notifyModified() {
         // applyButton.setEnabled(modified);
     }
 

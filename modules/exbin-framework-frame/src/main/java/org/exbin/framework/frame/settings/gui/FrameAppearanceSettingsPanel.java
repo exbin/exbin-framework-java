@@ -22,24 +22,28 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.ComponentResourceProvider;
-import org.exbin.framework.frame.settings.AppearanceOptions;
+import org.exbin.framework.frame.settings.FrameAppearanceOptions;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.context.api.ActiveContextProvider;
+import org.exbin.framework.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.frame.api.ContextFrame;
+import org.exbin.framework.frame.settings.FrameAppearanceSettingsApplier;
+import org.exbin.framework.options.settings.api.SettingsPanelUpdater;
 
 /**
- * Appearance settings panel.
+ * Frame appearance settings panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent, ComponentResourceProvider {
+public class FrameAppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent, ComponentResourceProvider {
 
-    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AppearanceSettingsPanel.class);
+    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FrameAppearanceSettingsPanel.class);
     private SettingsModifiedListener settingsModifiedListener;
 
-    public AppearanceSettingsPanel() {
+    public FrameAppearanceSettingsPanel() {
         initComponents();
     }
 
@@ -51,18 +55,38 @@ public class AppearanceSettingsPanel extends javax.swing.JPanel implements Setti
 
     @Override
     public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
-        AppearanceOptions options = settingsOptionsProvider.getSettingsOptions(AppearanceOptions.class);
+        FrameAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(FrameAppearanceOptions.class);
         showToolbarCheckBox.setSelected(options.isShowToolBar());
         showCaptionsCheckBox.setSelected(options.isShowToolBarCaptions());
         showStatusbarCheckBox.setSelected(options.isShowStatusBar());
+
+        if (contextProvider != null) {
+            ContextFrame contextFrame = contextProvider.getActiveState(ContextFrame.class);
+            if (contextFrame instanceof ApplicationFrameHandler) {
+                SettingsPanelUpdater updater = new SettingsPanelUpdater(this::notifyModified);
+                ApplicationFrameHandler frame = (ApplicationFrameHandler) contextFrame;
+                updater.setCheckBoxSelected(showToolbarCheckBox, frame.isToolBarVisible());
+                updater.setCheckBoxSelected(showCaptionsCheckBox, frame.isToolBarCaptionsVisible());
+                updater.setCheckBoxSelected(showStatusbarCheckBox, frame.isStatusBarVisible());
+            }
+        }
     }
 
     @Override
     public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
-        AppearanceOptions options = settingsOptionsProvider.getSettingsOptions(AppearanceOptions.class);
+        FrameAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(FrameAppearanceOptions.class);
         options.setShowToolBar(showToolbarCheckBox.isSelected());
         options.setShowToolBarCaptions(showCaptionsCheckBox.isSelected());
         options.setShowStatusBar(showStatusbarCheckBox.isSelected());
+
+        if (contextProvider != null) {
+            ContextFrame contextFrame = contextProvider.getActiveState(ContextFrame.class);
+            if (contextFrame instanceof ApplicationFrameHandler) {
+                FrameAppearanceSettingsApplier applier = new FrameAppearanceSettingsApplier();
+                applier.applySettings(contextFrame, settingsOptionsProvider);
+                contextProvider.notifyStateChange(ContextFrame.class, ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE);
+            }
+        }
     }
 
     /**
@@ -74,12 +98,9 @@ public class AppearanceSettingsPanel extends javax.swing.JPanel implements Setti
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        toolBarsOptionsPanel = new javax.swing.JPanel();
         showToolbarCheckBox = new javax.swing.JCheckBox();
         showCaptionsCheckBox = new javax.swing.JCheckBox();
         showStatusbarCheckBox = new javax.swing.JCheckBox();
-
-        setLayout(new java.awt.BorderLayout());
 
         showToolbarCheckBox.setSelected(true);
         showToolbarCheckBox.setText(resourceBundle.getString("showToolbarCheckBox.text")); // NOI18N
@@ -105,30 +126,29 @@ public class AppearanceSettingsPanel extends javax.swing.JPanel implements Setti
             }
         });
 
-        javax.swing.GroupLayout toolBarsOptionsPanelLayout = new javax.swing.GroupLayout(toolBarsOptionsPanel);
-        toolBarsOptionsPanel.setLayout(toolBarsOptionsPanelLayout);
-        toolBarsOptionsPanelLayout.setHorizontalGroup(
-            toolBarsOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, toolBarsOptionsPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(toolBarsOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(showCaptionsCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(showStatusbarCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(showToolbarCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        toolBarsOptionsPanelLayout.setVerticalGroup(
-            toolBarsOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(toolBarsOptionsPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(showToolbarCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showCaptionsCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(showStatusbarCheckBox))
+                .addComponent(showStatusbarCheckBox)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        add(toolBarsOptionsPanel, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
 
     private void showToolbarCheckBoxjCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showToolbarCheckBoxjCheckBoxItemStateChanged
@@ -147,12 +167,11 @@ public class AppearanceSettingsPanel extends javax.swing.JPanel implements Setti
     private javax.swing.JCheckBox showCaptionsCheckBox;
     private javax.swing.JCheckBox showStatusbarCheckBox;
     private javax.swing.JCheckBox showToolbarCheckBox;
-    private javax.swing.JPanel toolBarsOptionsPanel;
     // End of variables declaration//GEN-END:variables
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

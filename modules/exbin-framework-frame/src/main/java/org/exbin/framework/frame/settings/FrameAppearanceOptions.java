@@ -20,12 +20,12 @@ import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Appearance options.
+ * Frame appearance options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AppearanceOptions implements SettingsOptions {
+public class FrameAppearanceOptions implements SettingsOptions {
 
     public static final String KEY_TOOLBAR_VISIBLE = "toolBar.visible";
     public static final String KEY_TOOLBAR_CAPTIONS = "toolBar.captions";
@@ -33,7 +33,7 @@ public class AppearanceOptions implements SettingsOptions {
 
     private final OptionsStorage storage;
 
-    public AppearanceOptions(OptionsStorage storage) {
+    public FrameAppearanceOptions(OptionsStorage storage) {
         this.storage = storage;
     }
 
@@ -63,7 +63,7 @@ public class AppearanceOptions implements SettingsOptions {
 
     @Override
     public void copyTo(SettingsOptions options) {
-        AppearanceOptions with = (AppearanceOptions) options;
+        FrameAppearanceOptions with = (FrameAppearanceOptions) options;
         with.setShowStatusBar(isShowStatusBar());
         with.setShowToolBar(isShowToolBar());
         with.setShowToolBarCaptions(isShowToolBarCaptions());

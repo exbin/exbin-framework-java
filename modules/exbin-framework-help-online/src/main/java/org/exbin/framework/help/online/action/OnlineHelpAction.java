@@ -48,8 +48,8 @@ public class OnlineHelpAction extends AbstractAction {
     private void init() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
-        putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         setEnabled(false);
+        putValue(ActionConsts.ACTION_DIALOG_MODE, true);
     }
 
     @Nonnull

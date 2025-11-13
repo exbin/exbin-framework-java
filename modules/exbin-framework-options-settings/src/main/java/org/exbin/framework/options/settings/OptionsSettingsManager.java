@@ -148,7 +148,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
         }
     }
 
-    @Override
+/*    @Override
     public void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider provider) {
         Collection<Class<?>> stateClasses = contextManager.getStateClasses();
         for (Map.Entry<Class<?>, List<ApplySettingsContribution>> entry : applySettingsContributions.entrySet()) {
@@ -166,7 +166,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
                 }
             }
         }
-    }
+    } */
 
     @Nonnull
     @Override

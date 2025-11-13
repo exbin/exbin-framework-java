@@ -17,6 +17,7 @@ package org.exbin.framework.editor.text.settings.gui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,13 +25,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ContextComponent;
 import org.exbin.framework.editor.text.settings.TextColorOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.context.api.ActiveContextProvider;
+import org.exbin.framework.editor.text.TextColorState;
+import org.exbin.framework.editor.text.settings.TextColorSettingsApplier;
 
 /**
  * Text color selection panel.
@@ -43,17 +46,10 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorPanel.class);
     private static final String RESOURCE_COLOR_CHOOSER_TITLE = "JColorChooser.title";
-    private TextColorService textColorService;
+    private TextColorState currentState;
 
     public TextColorPanel() {
         initComponents();
-    }
-
-    public void setTextColorService(TextColorService textColorService) {
-        // TODO Drop
-        this.textColorService = textColorService;
-        fillCurrentButton.setEnabled(true);
-        fillDefaultButton.setEnabled(true);
     }
 
     @Nonnull
@@ -65,7 +61,6 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     @Override
     public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
         TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
-        setColorsFromArray(textColorService.getDefaultTextColors());
         Integer rgb;
         try {
             rgb = options.getTextColor();
@@ -102,6 +97,23 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
             }
         } catch (NumberFormatException e) {
         }
+
+        if (contextProvider != null) {
+            ContextComponent contextComponent = contextProvider.getActiveState(ContextComponent.class);
+            if (contextComponent instanceof TextColorState) {
+                TextColorState state = (TextColorState) contextComponent;
+                Color[] arrayFromColors = getArrayFromColors();
+                Color[] currentTextColors = state.getCurrentTextColors();
+                if (!Arrays.equals(arrayFromColors, currentTextColors)) {
+                    setColorsFromArray(currentTextColors);
+                    notifyModified();
+                }
+
+                currentState = (TextColorState) contextComponent;
+                fillCurrentButton.setEnabled(true);
+                fillDefaultButton.setEnabled(true);
+            }
+        }
     }
 
     @Override
@@ -112,6 +124,15 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         options.setSelectionTextColor(getSelectionTextColor().getRGB());
         options.setSelectionBackgroundColor(getSelectionBackgroundColor().getRGB());
         options.setFoundBackgroundColor(getFoundBackgroundColor().getRGB());
+
+        if (contextProvider != null) {
+            ContextComponent contextComponent = contextProvider.getActiveState(ContextComponent.class);
+            if (contextComponent instanceof TextColorState) {
+                TextColorSettingsApplier applier = new TextColorSettingsApplier();
+                applier.applySettings(contextComponent, settingsOptionsProvider);
+                contextProvider.notifyStateChange(ContextComponent.class, TextColorState.ChangeMessage.TEXT_COLOR_STATE);
+            }
+        }
     }
 
     public Color getTextColor() {
@@ -171,8 +192,8 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         selectSelectionBackgroundColorButton.setEnabled(enabled);
         selectTextColorButton.setEnabled(enabled);
         selectFoundBackgroundColorButton.setEnabled(enabled);
-        fillCurrentButton.setEnabled(enabled && textColorService != null);
-        fillDefaultButton.setEnabled(enabled && textColorService != null);
+        fillCurrentButton.setEnabled(enabled && currentState != null);
+        fillDefaultButton.setEnabled(enabled && currentState != null);
     }
 
     /**
@@ -522,13 +543,13 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     }//GEN-LAST:event_selectFoundBackgroundColorButtonActionPerformed
 
     private void fillCurrentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentButtonActionPerformed
-        Color[] currentColors = textColorService.getCurrentTextColors();
+        Color[] currentColors = currentState.getCurrentTextColors();
         setColorsFromArray(currentColors);
         notifyModified();
     }//GEN-LAST:event_fillCurrentButtonActionPerformed
 
     private void fillDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultButtonActionPerformed
-        Color[] defaultColors = textColorService.getDefaultTextColors();
+        Color[] defaultColors = currentState.getDefaultTextColors();
         setColorsFromArray(defaultColors);
         notifyModified();
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
@@ -580,7 +601,7 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

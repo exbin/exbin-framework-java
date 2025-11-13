@@ -55,22 +55,19 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     private final List<LazyComponentListener> listeners = new ArrayList<>();
     private String rootCaption;
 
-    private boolean modified;
-
     public SettingsListPanel() {
         initComponents();
         init();
     }
 
     private void init() {
-        modified = false;
         settingsModifiedListener = () -> {
-            setModified(true);
+            notifyModified();
         };
 
         addPropertyChangeListener((PropertyChangeEvent evt) -> {
             if ("modified".equals(evt.getPropertyName())) {
-                modified = true;
+                notifyModified();
             }
         });
 
@@ -181,11 +178,7 @@ public class SettingsListPanel extends javax.swing.JPanel implements SettingsPag
     private javax.swing.JSeparator separator;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * @param modified the modified to set
-     */
-    public void setModified(boolean modified) {
-        this.modified = modified;
+    public void notifyModified() {
         // applyButton.setEnabled(modified);
     }
 

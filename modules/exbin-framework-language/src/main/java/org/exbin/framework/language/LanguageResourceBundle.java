@@ -37,10 +37,10 @@ import org.exbin.framework.language.api.IconSetProvider;
 @ParametersAreNonnullByDefault
 public class LanguageResourceBundle extends ResourceBundle {
 
-    private final ResourceBundle mainResourceBundle;
-    private final ResourceBundle languageResourceBundle;
-    private IconSetProvider iconSetProvider = null;
-    private String prefix;
+    protected final ResourceBundle mainResourceBundle;
+    protected final ResourceBundle languageResourceBundle;
+    protected IconSetProvider iconSetProvider = null;
+    protected final String prefix;
 
     public LanguageResourceBundle(String baseName, ResourceBundle languageResourceBundle) {
         this.prefix = baseName.replace("/", ".") + ".";

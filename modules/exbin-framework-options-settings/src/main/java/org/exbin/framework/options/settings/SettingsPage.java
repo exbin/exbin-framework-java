@@ -17,7 +17,9 @@ package org.exbin.framework.options.settings;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -39,9 +41,12 @@ public class SettingsPage {
 
     protected final String pageId;
     protected final List<SettingsComponent> components = new ArrayList<>();
+    protected final Set<SettingsComponent> modified = new HashSet<>();
     protected final JPanel panel = new JPanel();
     protected final GroupLayout.ParallelGroup horizontalGroup;
     protected final GroupLayout.SequentialGroup verticalGroup;
+
+    protected SettingsModifiedListener settingsModifiedListener;
 
     public SettingsPage(String pageId) {
         this.pageId = pageId;
@@ -62,28 +67,34 @@ public class SettingsPage {
     public String getPageId() {
         return pageId;
     }
-    
+
     public int getComponentsCount() {
         return components.size();
     }
-    
+
     public void addComponent(SettingsComponent settingsComponent) {
         if (!components.isEmpty()) {
             appendLast(false);
         }
 
         components.add(settingsComponent);
+        settingsComponent.setSettingsModifiedListener(() -> {
+            modified.add(settingsComponent);
+            if (settingsModifiedListener != null) {
+                settingsModifiedListener.notifyModified();
+            }
+        });
     }
-    
+
     public void finish() {
         if (!components.isEmpty()) {
             appendLast(true);
         }
-        
+
         panel.revalidate();
         panel.repaint();
     }
-    
+
     private void appendLast(boolean last) {
         SettingsComponent settingsComponent = components.get(components.size() - 1);
         panel.add((Component) settingsComponent);
@@ -95,47 +106,19 @@ public class SettingsPage {
         }
     }
 
-    public void loadFromOptions(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadAll(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
         for (SettingsComponent component : components) {
             component.loadFromOptions(settingsProvider, contextProvider);
         }
     }
 
-    public void saveToOptions(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
-        for (SettingsComponent component : components) {
+    public void saveAll(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
+        for (SettingsComponent component : modified) {
             component.saveToOptions(settingsProvider, contextProvider);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void saveAndApply(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
-        for (SettingsComponent component : components) {
-            component.saveToOptions(settingsProvider, contextProvider);
-        }
-//        for (int i = 0; i < pages.size(); i++) {
-//            SettingsPage page = pages.get(i);
-//            SettingsOptions options = page.createOptions();
-//            SettingsComponent component = components.get(i);
-//            component.saveToOptions(options);
-////            page.saveToPreferences(preferences, options);
-////            page.applyPreferencesChanges(options);
-//        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public void applyPreferencesChanges(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
-//        for (int i = 0; i < pages.size(); i++) {
-//            SettingsPage page = pages.get(i);
-//            SettingsOptions options = page.createOptions();
-//            SettingsComponent component = components.get(i);
-//            component.saveToOptions(options);
-////            page.applyPreferencesChanges(options);
-//        }
-    }
-
-    public void setSettingsModifiedListener(SettingsModifiedListener listener) {
-        for (SettingsComponent component : components) {
-            component.setSettingsModifiedListener(listener);
-        }
+    public void setSettingsModifiedListener(SettingsModifiedListener settingsModifiedListener) {
+        this.settingsModifiedListener = settingsModifiedListener;
     }
 }

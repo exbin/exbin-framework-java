@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text.settings;
+package org.exbin.framework.frame.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.text.TextAppearanceState;
+import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
- * Text appearance settings applier.
+ * Frame appearance settings applier.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextAppearanceSettingsApplier implements SettingsApplier {
+public class FrameAppearanceSettingsApplier implements SettingsApplier {
+
+    public static final String APPLIER_ID = "frameAppearance";
 
     @Override
     public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
-        if (!(instance instanceof TextAppearanceState)) {
-            return;
+        if (instance instanceof ApplicationFrameHandler) {
+            FrameAppearanceOptions options = settingsProvider.getSettingsOptions(FrameAppearanceOptions.class);
+            ApplicationFrameHandler frame = (ApplicationFrameHandler) instance;
+            frame.setToolBarVisible(options.isShowToolBar());
+            frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
+            frame.setStatusBarVisible(options.isShowStatusBar());
         }
-
-        TextAppearanceOptions options = settingsProvider.getSettingsOptions(TextAppearanceOptions.class);
-        ((TextAppearanceState) instance).setWordWrapMode(options.isWordWrapping());
     }
 }

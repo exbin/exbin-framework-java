@@ -18,7 +18,6 @@ package org.exbin.framework.editor.text.settings;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.settings.gui.TextColorSettingsPanel;
-import org.exbin.framework.editor.text.service.TextColorService;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 
@@ -30,20 +29,11 @@ import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 @ParametersAreNonnullByDefault
 public class TextColorSettingsComponent implements SettingsComponentProvider {
 
-    private TextColorSettingsPanel panel;
-    private TextColorService textColorService;
-
-    public void setTextColorService(TextColorService textColorService) {
-        this.textColorService = textColorService;
-    }
+    public static final String COMPONENT_ID = "text.color";
 
     @Nonnull
     @Override
     public SettingsComponent createComponent() {
-        if (panel == null) {
-            panel = new TextColorSettingsPanel();
-            panel.setTextColorService(textColorService);
-        }
-        return panel;
+        return new TextColorSettingsPanel();
     }
 }

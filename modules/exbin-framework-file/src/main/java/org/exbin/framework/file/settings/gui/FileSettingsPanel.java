@@ -148,7 +148,7 @@ public class FileSettingsPanel extends javax.swing.JPanel implements SettingsCom
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

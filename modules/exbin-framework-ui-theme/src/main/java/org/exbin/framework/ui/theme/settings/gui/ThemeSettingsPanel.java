@@ -30,7 +30,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.ui.theme.ThemeConfigurationAction;
 import org.exbin.framework.ui.theme.api.ConfigurableLafProvider;
 import org.exbin.framework.ui.theme.settings.ThemeOptions;
 import org.exbin.framework.utils.DesktopUtils;
@@ -49,8 +48,8 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ThemeSettingsPanel.class);
     private SettingsModifiedListener settingsModifiedListener;
-    private ThemeConfigurationAction themeConfigurationListener;
-    private SettingsComponent extendedOptionsPanel = null;
+    private Controller controller;
+    private SettingsOptionsProvider settingsOptionsProvider;
     private Map<String, ConfigurableLafProvider> themeOptions = null;
 
     public ThemeSettingsPanel() {
@@ -73,6 +72,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
 
     @Override
     public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+        this.settingsOptionsProvider = settingsOptionsProvider;
         ThemeOptions options = settingsOptionsProvider.getSettingsOptions(ThemeOptions.class);
         visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
         iconSetComboBox.setSelectedIndex(findMatchingElement(iconSetComboBox.getModel(), options.getIconSet()));
@@ -470,10 +470,10 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }//GEN-LAST:event_iconSetComboBoxItemStateChanged
 
     private void visualThemeOptionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualThemeOptionsButtonActionPerformed
-        if (themeConfigurationListener != null) {
+        if (controller != null) {
             String selectedTheme = (String) visualThemeComboBox.getSelectedItem();
             ConfigurableLafProvider lafProvider = themeOptions.get(selectedTheme);
-            themeConfigurationListener.configureTheme(lafProvider);
+            controller.configureTheme(lafProvider, settingsOptionsProvider);
         }
     }//GEN-LAST:event_visualThemeOptionsButtonActionPerformed
 
@@ -502,7 +502,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 
@@ -511,16 +511,19 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
         settingsModifiedListener = listener;
     }
 
-    public void setThemeConfigurationListener(ThemeConfigurationAction themeConfigurationListener) {
-        this.themeConfigurationListener = themeConfigurationListener;
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
-    public void addExtendedPanel(SettingsComponent optionsPanel) {
-        if (extendedOptionsPanel != null) {
-            remove((Component) extendedOptionsPanel);
-        }
-        extendedOptionsPanel = optionsPanel;
-        add((Component) extendedOptionsPanel, BorderLayout.CENTER);
-        extendedOptionsPanel.setSettingsModifiedListener(settingsModifiedListener);
+    @ParametersAreNonnullByDefault
+    public interface Controller {
+
+        /**
+         * Invokes theme configuration action.
+         *
+         * @param lafProvider theme provider
+         * @param settingsOptionsProvider settings options provider
+         */
+        void configureTheme(ConfigurableLafProvider lafProvider, SettingsOptionsProvider settingsOptionsProvider);
     }
 }

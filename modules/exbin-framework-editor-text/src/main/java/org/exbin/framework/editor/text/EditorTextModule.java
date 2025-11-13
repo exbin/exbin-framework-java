@@ -54,10 +54,20 @@ import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.editor.text.settings.TextAppearanceOptions;
+import org.exbin.framework.editor.text.settings.TextAppearanceSettingsApplier;
+import org.exbin.framework.editor.text.settings.TextAppearanceSettingsComponent;
+import org.exbin.framework.editor.text.settings.TextColorOptions;
+import org.exbin.framework.editor.text.settings.TextColorSettingsApplier;
+import org.exbin.framework.editor.text.settings.TextColorSettingsComponent;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
+import org.exbin.framework.options.settings.api.ApplySettingsContribution;
+import org.exbin.framework.options.settings.api.SettingsComponentContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContribution;
+import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 import org.exbin.framework.toolbar.api.ToolBarDefinitionManagement;
 
 /**
@@ -150,6 +160,20 @@ public class EditorTextModule implements Module {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
+        settingsManagement.registerOptionsSettings(TextAppearanceOptions.class, (optionsStorage) -> new TextAppearanceOptions(optionsStorage));
+        settingsManagement.registerOptionsSettings(TextColorOptions.class, (optionsStorage) -> new TextColorOptions(optionsStorage));
+        
+        settingsManagement.registerApplySetting(EditorTextPanelComponent.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new TextAppearanceSettingsApplier()));
+        settingsManagement.registerApplySetting(EditorTextPanelComponent.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new TextColorSettingsApplier()));
+
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
+        settingsManagement.registerPage(pageContribution);
+        SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(TextAppearanceSettingsComponent.COMPONENT_ID, new TextAppearanceSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
+
+        settingsComponent = settingsManagement.registerComponent(TextColorSettingsComponent.COMPONENT_ID, new TextColorSettingsComponent());
+        settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
+        
         /* OptionsGroup textEditorGroup = optionsModule.createOptionsGroup("textEditor", resourceBundle);
         optionsPageManagement.registerGroup(textEditorGroup);
         optionsPageManagement.registerGroupRule(textEditorGroup, new ParentOptionsGroupRule("editor"));
@@ -157,52 +181,7 @@ public class EditorTextModule implements Module {
         OptionsGroup textEditorColorGroup = optionsModule.createOptionsGroup("textEditorColor", resourceBundle);
         optionsPageManagement.registerGroup(textEditorColorGroup);
         optionsPageManagement.registerGroupRule(textEditorColorGroup, new ParentOptionsGroupRule(textEditorGroup));
-        TextColorSettingsComponent textColorsOptionsPage = new TextColorSettingsComponent();
-        textColorsOptionsPage.setTextColorService(new TextColorService() {
-            @Nonnull
-            @Override
-            public Color[] getCurrentTextColors() {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                FileHandler fileHandler = activeFile.orElse(null);
-                if (fileHandler instanceof TextFileHandler) {
-                    return ((TextFileHandler) fileHandler).getComponent().getCurrentColors();
-                }
 
-                return createDefaultColors();
-            }
-
-            @Nonnull
-            @Override
-            public Color[] getDefaultTextColors() {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                FileHandler fileHandler = activeFile.orElse(null);
-                if (fileHandler instanceof TextFileHandler) {
-                    return ((TextFileHandler) fileHandler).getComponent().getDefaultColors();
-                }
-
-                return createDefaultColors();
-            }
-
-            @Override
-            public void setCurrentTextColors(Color[] colors) {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                FileHandler fileHandler = activeFile.orElse(null);
-                if (fileHandler instanceof TextFileHandler) {
-                    ((TextFileHandler) fileHandler).getComponent().setCurrentColors(colors);
-                }
-            }
-            
-            @Nonnull
-            private Color[] createDefaultColors() {
-                Color[] result = new Color[5];
-                result[0] = Color.BLACK;
-                result[1] = Color.BLACK;
-                result[2] = Color.BLACK;
-                result[3] = Color.BLACK;
-                result[4] = Color.BLACK;
-                return result;
-            }
-        });
         optionsPageManagement.registerPage(textColorsOptionsPage);
         optionsPageManagement.registerPageRule(textColorsOptionsPage, new GroupOptionsPageRule(textEditorColorGroup));
 
@@ -247,28 +226,6 @@ public class EditorTextModule implements Module {
         optionsPageManagement.registerPage(textFontOptionsPage);
         optionsPageManagement.registerPageRule(textFontOptionsPage, new GroupOptionsPageRule(textEditorFontGroup));
 
-        TextAppearanceSettingsComponent textAppearanceOptionsPage = new TextAppearanceSettingsComponent();
-        textAppearanceOptionsPage.setTextAppearanceService(new TextAppearanceService() {
-            @Override
-            public boolean getWordWrapMode() {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                FileHandler fileHandler = activeFile.orElse(null);
-                if (fileHandler instanceof TextFileHandler) {
-                    return ((TextFileHandler) fileHandler).getComponent().getWordWrapMode();
-                }
-
-                return false;
-            }
-
-            @Override
-            public void setWordWrapMode(boolean mode) {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                FileHandler fileHandler = activeFile.orElse(null);
-                if (fileHandler instanceof TextFileHandler) {
-                    ((TextFileHandler) fileHandler).getComponent().setWordWrapMode(mode);
-                }
-            }
-        });
         optionsPageManagement.registerPage(textAppearanceOptionsPage);
         optionsPageManagement.registerPageRule(textAppearanceOptionsPage, new GroupOptionsPageRule(textEditorGroup));
 

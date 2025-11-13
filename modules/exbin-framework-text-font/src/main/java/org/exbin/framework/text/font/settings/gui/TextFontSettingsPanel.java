@@ -30,6 +30,7 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.context.api.ActiveContextProvider;
 import org.exbin.framework.text.font.ContextFont;
 import org.exbin.framework.text.font.TextFontState;
+import org.exbin.framework.text.font.settings.TextFontSettingsApplier;
 
 /**
  * Text font settings panel.
@@ -77,6 +78,18 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
         }
 
         codeFont = textFontState == null ? options.getFont(new Font(Font.MONOSPACED, Font.PLAIN, 12)) : textFontState.getDefaultFont().deriveFont(options.getFontAttributes());
+
+        if (contextProvider != null) {
+            ContextFont contextFont = contextProvider.getActiveState(ContextFont.class);
+            if (contextFont instanceof TextFontState) {
+                TextFontState state = (TextFontState) contextFont;
+                if (!codeFont.equals(state.getCurrentFont())) {
+                    codeFont = state.getCurrentFont();
+                    notifyModified();
+                }
+            }
+        }
+
         setEnabled(!useDefaultFont);
         updateFontFields();
     }
@@ -86,6 +99,15 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
         TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         options.setUseDefaultFont(defaultFontCheckBox.isSelected());
         options.setFontAttributes(codeFont != null ? codeFont.getAttributes() : null);
+
+        if (contextProvider != null) {
+            ContextFont contextFont = contextProvider.getActiveState(ContextFont.class);
+            if (contextFont instanceof TextFontState) {
+                TextFontSettingsApplier applier = new TextFontSettingsApplier();
+                applier.applySettings(contextFont, settingsOptionsProvider);
+                contextProvider.notifyStateChange(ContextFont.class, ContextFont.ChangeMessage.FONT_CHANGE);
+            }
+        }
     }
 
     @Override
@@ -267,7 +289,7 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
 
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

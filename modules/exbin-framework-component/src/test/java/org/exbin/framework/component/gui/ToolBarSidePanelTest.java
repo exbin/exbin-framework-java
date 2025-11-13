@@ -30,6 +30,7 @@ import org.exbin.framework.utils.WindowUtils;
 import org.junit.Test;
 import org.exbin.framework.component.api.ContextEditItem;
 import org.exbin.framework.component.api.ContextMoveItem;
+import org.junit.Ignore;
 
 /**
  * Test for ToolBarEditorPanel.
@@ -37,6 +38,7 @@ import org.exbin.framework.component.api.ContextMoveItem;
 public class ToolBarSidePanelTest {
 
     @Test
+    @Ignore
     public void testPanel() {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {

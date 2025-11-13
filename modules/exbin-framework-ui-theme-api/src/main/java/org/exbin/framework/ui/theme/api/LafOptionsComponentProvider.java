@@ -13,40 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text.service;
+package org.exbin.framework.ui.theme.api;
 
-import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
+import org.exbin.framework.options.api.OptionsStorage;
 
 /**
- * Text color panel API.
+ * Look&amp;feel provider with options component provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextColorService {
+public interface LafOptionsComponentProvider {
 
     /**
-     * Returns current colors used in application frame.
+     * Returns options component.
      *
-     * @return array of 5 colors
+     * @return component
      */
     @Nonnull
-    Color[] getCurrentTextColors();
+    JComponent createOptionsComponent();
 
     /**
-     * Returns default colors used in application frame.
+     * Loads options from options.
      *
-     * @return array of 5 colors
+     * @param options options
      */
-    @Nonnull
-    Color[] getDefaultTextColors();
+    void loadFromOptions(OptionsStorage options);
 
     /**
-     * Sets current colors used in application frame.
+     * Saves options to options.
      *
-     * @param colors colors
+     * @param options options
      */
-    void setCurrentTextColors(Color[] colors);
+    void saveToOptions(OptionsStorage options);
 }

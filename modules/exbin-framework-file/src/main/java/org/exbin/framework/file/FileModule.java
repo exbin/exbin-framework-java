@@ -76,7 +76,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     private RecentFilesActions recentFilesActions;
     private FileActions fileActions;
     private final List<FileType> registeredFileTypes = new ArrayList<>();
-    private boolean useAwtDialogs = false;
+    private FileDialogsProvider fileDialogsProvider = null;
 
     public FileModule() {
     }
@@ -117,6 +117,8 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     public Collection<FileType> getFileTypes() {
         return Collections.unmodifiableCollection(registeredFileTypes);
     }
+
+    boolean useAwtDialogs = false;
 
     public boolean isUseAwtDialogs() {
         return useAwtDialogs;
@@ -283,11 +285,11 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
         settingsManagement.registerOptionsSettings(FileOptions.class, (optionsStorage) -> new FileOptions(optionsStorage));
         settingsManagement.registerOptionsSettings(RecentFilesOptions.class, (optionsStorage) -> new RecentFilesOptions(optionsStorage));
 
+        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new FileSettingsApplier()));
+
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(FileSettingsComponent.COMPONENT_ID, new FileSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
-
-        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new FileSettingsApplier()));
     }
 }

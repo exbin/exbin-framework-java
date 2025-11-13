@@ -84,7 +84,7 @@ public class AddonManagerSettingsPanel extends javax.swing.JPanel implements Set
     // End of variables declaration//GEN-END:variables
     private void notifyModified() {
         if (settingsModifiedListener != null) {
-            settingsModifiedListener.wasModified();
+            settingsModifiedListener.notifyModified();
         }
     }
 

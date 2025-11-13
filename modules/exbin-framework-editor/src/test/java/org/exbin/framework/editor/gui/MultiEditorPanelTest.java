@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.WindowUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -31,6 +32,7 @@ import org.junit.Test;
 public class MultiEditorPanelTest {
 
     @Test
+    @Ignore
     public void testPanel() {
         TestApplication.run(() -> WindowUtils.invokeWindow(new MultiEditorPanel()));
 

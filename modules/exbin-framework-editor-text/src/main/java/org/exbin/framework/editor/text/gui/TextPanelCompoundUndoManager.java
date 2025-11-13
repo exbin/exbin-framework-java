@@ -139,7 +139,7 @@ public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implement
         }
     }
 
-    class MyCompoundEdit extends CompoundEdit {
+    static class MyCompoundEdit extends CompoundEdit {
 
         boolean isUnDone = false;
 
