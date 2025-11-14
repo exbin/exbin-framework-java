@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MoveItemActionsHandlerEmpty implements ContextMoveItem {
+public class EmptyContextMoveItem implements ContextMoveItem {
 
     @Override
     public void performMoveUp() {

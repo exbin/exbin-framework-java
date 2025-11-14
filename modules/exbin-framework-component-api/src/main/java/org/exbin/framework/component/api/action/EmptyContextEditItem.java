@@ -23,7 +23,7 @@ import org.exbin.framework.component.api.ContextEditItem;
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class EditItemActionsHandlerEmpty implements ContextEditItem {
+public class EmptyContextEditItem implements ContextEditItem {
 
     @Override
     public void performAddItem() {

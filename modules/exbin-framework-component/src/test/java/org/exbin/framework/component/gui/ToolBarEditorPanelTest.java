@@ -15,10 +15,6 @@
  */
 package org.exbin.framework.component.gui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import org.exbin.framework.action.ActionModule;
 import org.exbin.framework.action.api.clipboard.EmptyTextClipboardSupport;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
@@ -26,6 +22,7 @@ import org.exbin.framework.operation.undo.OperationUndoModule;
 import org.exbin.framework.operation.undo.api.EmptyUndoRedo;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.utils.TestApplication;
+import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
 import org.junit.Ignore;
@@ -55,14 +52,6 @@ public class ToolBarEditorPanelTest {
             WindowUtils.invokeWindow(toolBarEditorPanel);
         });
 
-        Thread[] uiThread = new Thread[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                uiThread[0] = Thread.currentThread();
-            });
-            uiThread[0].join();
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(ToolBarEditorPanelTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        UiUtils.waitForUiThread();
     }
 }

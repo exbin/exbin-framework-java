@@ -15,21 +15,18 @@
  */
 package org.exbin.framework.component.gui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import org.exbin.framework.component.ComponentModule;
 import org.exbin.framework.component.api.action.EditItemActions;
-import org.exbin.framework.component.api.action.EditItemActionsHandlerEmpty;
+import org.exbin.framework.component.api.action.EmptyContextEditItem;
 import org.exbin.framework.component.api.action.MoveItemActions;
-import org.exbin.framework.component.api.action.MoveItemActionsHandlerEmpty;
+import org.exbin.framework.component.api.action.EmptyContextMoveItem;
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
 import org.junit.Test;
 import org.exbin.framework.component.api.ContextEditItem;
 import org.exbin.framework.component.api.ContextMoveItem;
+import org.exbin.framework.utils.UiUtils;
 import org.junit.Ignore;
 
 /**
@@ -48,25 +45,17 @@ public class ToolBarSidePanelTest {
             testApplication.addModule(ComponentModule.MODULE_ID, guiComponentModule);
 
             ToolBarSidePanel toolBarSidePanel = new ToolBarSidePanel();
-            ContextMoveItem moveItemActionsHandler = new MoveItemActionsHandlerEmpty();
+            ContextMoveItem moveItemActionsHandler = new EmptyContextMoveItem();
             MoveItemActions moveItemActions = guiComponentModule.createMoveItemActions(moveItemActionsHandler);
             toolBarSidePanel.addActions(moveItemActions);
             toolBarSidePanel.addSeparator();
 
-            ContextEditItem editItemActionsHandler = new EditItemActionsHandlerEmpty();
+            ContextEditItem editItemActionsHandler = new EmptyContextEditItem();
             EditItemActions editItemActions = guiComponentModule.createEditItemActions(editItemActionsHandler);
             toolBarSidePanel.addActions(editItemActions);
             WindowUtils.invokeWindow(toolBarSidePanel);
         });
 
-        Thread[] uiThread = new Thread[1];
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                uiThread[0] = Thread.currentThread();
-            });
-            uiThread[0].join();
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(ToolBarSidePanelTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        UiUtils.waitForUiThread();
     }
 }

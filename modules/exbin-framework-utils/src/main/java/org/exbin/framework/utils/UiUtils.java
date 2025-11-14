@@ -290,6 +290,18 @@ public class UiUtils {
         button.doClick(BUTTON_CLICK_TIME);
     }
 
+    public static void waitForUiThread() {
+        Thread[] uiThread = new Thread[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                uiThread[0] = Thread.currentThread();
+            });
+            uiThread[0].join();
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public interface MenuShowMethod {
 
         void show(@Nullable Component invoker, int x, int y);
