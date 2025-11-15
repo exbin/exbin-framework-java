@@ -16,9 +16,9 @@
 package org.exbin.framework.context.api;
 
 /**
- * Interface for context state change message.
+ * Interface for context state change type.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface StateChangeMessage {
+public interface StateChangeType {
 }

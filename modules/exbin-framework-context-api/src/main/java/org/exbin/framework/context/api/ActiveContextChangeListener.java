@@ -41,7 +41,7 @@ public interface ActiveContextChangeListener {
      * @param <T> state type
      * @param stateClass state class
      * @param activeState active state
-     * @param changeMessage change message
+     * @param changeType change type
      */
-    <T> void activeStateMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage);
+    <T> void notifyStateChange(Class<T> stateClass, T activeState, StateChangeType changeType);
 }

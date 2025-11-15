@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
 import org.exbin.framework.context.api.ActiveContextManagement;
-import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Child active context manager.
@@ -55,12 +55,12 @@ public class ChildActiveContextManager implements ActiveContextManagement {
             }
 
             @Override
-            public <T> void activeStateMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
+            public <T> void notifyStateChange(Class<T> stateClass, T activeState, StateChangeType changeType) {
                 if (childStates.contains(stateClass)) {
                     return;
                 }
 
-                sendMessage(stateClass, activeState, changeMessage);
+                notifyStateChanged(stateClass, activeState, changeType);
             }
         });
     }
@@ -96,19 +96,19 @@ public class ChildActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
-    public <T> void activeStateMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
+    public <T> void notifyStateChange(Class<T> stateClass, T activeState, StateChangeType changeType) {
         if (!childStates.contains(stateClass)) {
             childStates.add(stateClass);
         }
 
-        sendMessage(stateClass, activeState, changeMessage);
+        notifyStateChanged(stateClass, activeState, changeType);
     }
 
     @Override
-    public <T> void notifyStateChange(Class<T> stateClass, StateChangeMessage changeMessage) {
+    public <T> void notifyActiveStateChange(Class<T> stateClass, StateChangeType changeType) {
         Object activeState = getActiveState(stateClass);
         if (activeState != null) {
-            activeStateMessage(stateClass, stateClass.cast(activeState), changeMessage);
+            notifyStateChange(stateClass, stateClass.cast(activeState), changeType);
         }
     }
 
@@ -128,9 +128,9 @@ public class ChildActiveContextManager implements ActiveContextManagement {
         }
     }
 
-    protected <T> void sendMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
+    protected <T> void notifyStateChanged(Class<T> stateClass, T activeState, StateChangeType changeType) {
         for (ActiveContextChangeListener changeListener : changeListeners) {
-            changeListener.activeStateMessage(stateClass, activeState, changeMessage);
+            changeListener.notifyStateChange(stateClass, activeState, changeType);
         }
     }
 }

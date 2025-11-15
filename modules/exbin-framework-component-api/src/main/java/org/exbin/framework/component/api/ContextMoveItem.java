@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.component.api;
 
-import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Interface item movement action set.
@@ -58,7 +58,7 @@ public interface ContextMoveItem {
      */
     boolean isEditable();
 
-    public enum ChangeMessage implements StateChangeMessage {
+    public enum ChangeType implements StateChangeType {
         MOVE_STATE
     }
 }

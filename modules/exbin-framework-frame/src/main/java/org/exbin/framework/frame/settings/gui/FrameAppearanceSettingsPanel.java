@@ -84,7 +84,7 @@ public class FrameAppearanceSettingsPanel extends javax.swing.JPanel implements 
             if (contextFrame instanceof ApplicationFrameHandler) {
                 FrameAppearanceSettingsApplier applier = new FrameAppearanceSettingsApplier();
                 applier.applySettings(contextFrame, settingsOptionsProvider);
-                contextProvider.notifyStateChange(ContextFrame.class, ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE);
+                contextProvider.notifyActiveStateChange(ContextFrame.class, ContextFrame.ChangeType.BARS_LAYOUT_CHANGE);
             }
         }
     }

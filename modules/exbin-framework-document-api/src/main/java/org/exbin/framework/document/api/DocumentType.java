@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.document.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.StateChangeType;
+import javax.annotation.Nonnull;
 
 /**
- * Listener for action context change.
+ * Interface for document types.
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> instance type
  */
-@ParametersAreNonnullByDefault
-public interface ActionContextMessageListener<T> {
+public interface DocumentType {
 
     /**
-     * Notifies active state instance changed.
+     * Returns document type Id.
      *
-     * @param instance class instance
-     * @param changeType change type
+     * @return document type ID
      */
-    void notifyStateChange(T instance, StateChangeType changeType);
+    @Nonnull
+    String getTypeId();
 }

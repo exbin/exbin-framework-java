@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.text.font;
 
-import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Context font interface.
@@ -24,7 +24,7 @@ import org.exbin.framework.context.api.StateChangeMessage;
  */
 public interface ContextFont {
 
-    public enum ChangeMessage implements StateChangeMessage {
+    public enum ChangeType implements StateChangeType {
         FONT_CHANGE
     }
 }

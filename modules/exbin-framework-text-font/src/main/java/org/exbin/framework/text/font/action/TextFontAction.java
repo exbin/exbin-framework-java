@@ -61,21 +61,21 @@ public class TextFontAction extends AbstractAction {
         setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(TextFontState.class, (instance) -> {
-                textFontSupported = instance;
-                setEnabled(textFontSupported != null && dialogParentComponent != null);
+            registrar.registerUpdateListener(ContextFont.class, (instance) -> {
+                textFontSupported = instance instanceof TextFontState ? (TextFontState) instance : null;
+                updateByContext();
             });
             registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                 dialogParentComponent = instance;
-                setEnabled(textFontSupported != null && dialogParentComponent != null);
+                updateByContext();
             });
         });
     }
 
-    public void updateByContext(ContextFont instance) {
+    public void updateByContext() {
         setEnabled(textFontSupported != null && dialogParentComponent != null);
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);

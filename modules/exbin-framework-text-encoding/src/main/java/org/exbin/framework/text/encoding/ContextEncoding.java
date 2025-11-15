@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.text.encoding;
 
-import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Context encoding interface.
@@ -24,7 +24,8 @@ import org.exbin.framework.context.api.StateChangeMessage;
  */
 public interface ContextEncoding {
 
-    public enum ChangeMessage implements StateChangeMessage {
-        ENCODING_CHANGE, ENCODING_LIST_CHANGE
+    public enum ChangeType implements StateChangeType {
+        ENCODING_CHANGE,
+        ENCODING_LIST_CHANGE
     }
 }

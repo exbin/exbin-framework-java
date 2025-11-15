@@ -18,7 +18,7 @@ package org.exbin.framework.editor.text;
 import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Text color panel API.
@@ -51,7 +51,7 @@ public interface TextColorState {
      */
     void setCurrentTextColors(Color[] colors);
 
-    public enum ChangeMessage implements StateChangeMessage {
+    public enum ChangeType implements StateChangeType {
         TEXT_COLOR_STATE
     }
 }

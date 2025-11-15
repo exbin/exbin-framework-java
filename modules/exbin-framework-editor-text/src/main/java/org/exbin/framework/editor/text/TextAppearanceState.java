@@ -27,7 +27,7 @@ public interface TextAppearanceState {
      *
      * @return true if wrapping enabled
      */
-    boolean getWordWrapMode();
+    boolean isWordWrapMode();
 
     /**
      * Sets text word wrapping mode.

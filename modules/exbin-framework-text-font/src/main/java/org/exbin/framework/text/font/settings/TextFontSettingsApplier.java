@@ -32,7 +32,7 @@ public class TextFontSettingsApplier implements SettingsApplier {
 
     @Override
     public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
-        if (instance instanceof TextFontState) {
+        if (!(instance instanceof TextFontState)) {
             return;
         }
 

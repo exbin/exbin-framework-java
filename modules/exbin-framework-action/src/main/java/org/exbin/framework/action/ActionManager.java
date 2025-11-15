@@ -30,7 +30,7 @@ import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ActionContextMessageListener;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
 import org.exbin.framework.context.api.ActiveContextManagement;
-import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Default action manager.
@@ -54,7 +54,7 @@ public class ActionManager implements ActionManagement {
             }
 
             @Override
-            public <T> void activeStateMessage(Class<T> stateClass, T activeState, StateChangeMessage changeMessage) {
+            public <T> void notifyStateChange(Class<T> stateClass, T activeState, StateChangeType changeMessage) {
                 ActionManager.this.activeStateMessage(stateClass, activeState, changeMessage);
             }
         });
@@ -104,7 +104,7 @@ public class ActionManager implements ActionManagement {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> void activeStateMessage(Class<T> stateClass, @Nullable T contextInstance, StateChangeMessage changeMessage) {
+    public <T> void activeStateMessage(Class<T> stateClass, @Nullable T contextInstance, StateChangeType changeType) {
         // TODO: Convert to thread
         List<ActionContextMessageListener<?>> contextListeners = actionContextMessageListeners.get(stateClass);
         if (contextListeners == null) {
@@ -112,7 +112,7 @@ public class ActionManager implements ActionManagement {
         }
 
         for (ActionContextMessageListener contextListener : contextListeners) {
-            contextListener.activeStateMessage(contextInstance, changeMessage);
+            contextListener.notifyStateChange(contextInstance, changeType);
         }
     }
 
@@ -229,7 +229,7 @@ public class ActionManager implements ActionManagement {
             Object instance = entry.getValue();
             ActionContextChangeListener listener = actionListeners.get(key);
             if (listener != null) {
-                listener.activeStateMessage(instance);
+                listener.notifyActiveStateChange(instance);
             }
         }
     }

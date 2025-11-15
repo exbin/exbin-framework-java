@@ -144,7 +144,7 @@ public class EditorTextPanelComponent implements ContextComponent, TextPanelComp
     }
 
     @Override
-    public boolean getWordWrapMode() {
+    public boolean isWordWrapMode() {
         return textPanel.getWordWrapMode();
     }
 

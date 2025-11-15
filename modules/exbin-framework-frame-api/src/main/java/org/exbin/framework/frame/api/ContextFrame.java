@@ -15,7 +15,7 @@
  */
 package org.exbin.framework.frame.api;
 
-import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Interface for context activable frame.
@@ -24,7 +24,7 @@ import org.exbin.framework.context.api.StateChangeMessage;
  */
 public interface ContextFrame {
 
-    public enum ChangeMessage implements StateChangeMessage {
+    public enum ChangeType implements StateChangeType {
         BARS_LAYOUT_CHANGE
     }
 }

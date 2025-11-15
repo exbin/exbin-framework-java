@@ -31,9 +31,9 @@ import org.exbin.framework.text.encoding.gui.TextEncodingPanel;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.controller.DefaultControlController;
 import org.exbin.framework.action.api.ActionContextChangeRegistration;
-import org.exbin.framework.context.api.StateChangeMessage;
 import org.exbin.framework.text.encoding.ContextEncoding;
 import org.exbin.framework.text.encoding.CharsetEncodingState;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Text encoding action.
@@ -60,8 +60,8 @@ public class TextEncodingAction extends AbstractAction {
             registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
                 updateByContext(instance);
             });
-            registrar.registerContextMessageListener(ContextEncoding.class, (ContextEncoding instance, StateChangeMessage changeMessage) -> {
-                if (ContextEncoding.ChangeMessage.ENCODING_CHANGE.equals(changeMessage)) {
+            registrar.registerContextMessageListener(ContextEncoding.class, (ContextEncoding instance, StateChangeType changeType) -> {
+                if (ContextEncoding.ChangeType.ENCODING_CHANGE.equals(changeType)) {
                     updateByContext(instance);
                 }
             });

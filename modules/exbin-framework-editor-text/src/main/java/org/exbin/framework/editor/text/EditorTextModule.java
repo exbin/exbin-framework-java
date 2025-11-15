@@ -23,7 +23,6 @@ import org.exbin.framework.editor.text.action.PropertiesAction;
 import org.exbin.framework.editor.text.action.GoToLineAction;
 import java.awt.Component;
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -80,8 +79,8 @@ public class EditorTextModule implements Module {
 
     public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(EditorTextModule.class);
 
-    private static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
-    private static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
+    public static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
+    public static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
 
     public static final String TEXT_POPUP_MENU_ID = MODULE_ID + ".textPopupMenu";
     public static final String TEXT_POPUP_VIEW_GROUP_ID = MODULE_ID + ".viewPopupMenuGroup";
@@ -91,7 +90,6 @@ public class EditorTextModule implements Module {
     public static final String TEXT_POPUP_TOOLS_GROUP_ID = MODULE_ID + ".toolsPopupMenuGroup";
     public static final String SETTINGS_PAGE_ID = "textAppearance";
     public static final String SETTINGS_COLOR_PAGE_ID = "textColor";
-
 
     public static final String TXT_FILE_TYPE = "XBTextEditor.TXTFileType";
 
@@ -162,7 +160,7 @@ public class EditorTextModule implements Module {
 
         settingsManagement.registerOptionsSettings(TextAppearanceOptions.class, (optionsStorage) -> new TextAppearanceOptions(optionsStorage));
         settingsManagement.registerOptionsSettings(TextColorOptions.class, (optionsStorage) -> new TextColorOptions(optionsStorage));
-        
+
         settingsManagement.registerApplySetting(EditorTextPanelComponent.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new TextAppearanceSettingsApplier()));
         settingsManagement.registerApplySetting(EditorTextPanelComponent.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new TextColorSettingsApplier()));
 
@@ -173,69 +171,6 @@ public class EditorTextModule implements Module {
 
         settingsComponent = settingsManagement.registerComponent(TextColorSettingsComponent.COMPONENT_ID, new TextColorSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
-        
-        /* OptionsGroup textEditorGroup = optionsModule.createOptionsGroup("textEditor", resourceBundle);
-        optionsPageManagement.registerGroup(textEditorGroup);
-        optionsPageManagement.registerGroupRule(textEditorGroup, new ParentOptionsGroupRule("editor"));
-
-        OptionsGroup textEditorColorGroup = optionsModule.createOptionsGroup("textEditorColor", resourceBundle);
-        optionsPageManagement.registerGroup(textEditorColorGroup);
-        optionsPageManagement.registerGroupRule(textEditorColorGroup, new ParentOptionsGroupRule(textEditorGroup));
-
-        optionsPageManagement.registerPage(textColorsOptionsPage);
-        optionsPageManagement.registerPageRule(textColorsOptionsPage, new GroupOptionsPageRule(textEditorColorGroup));
-
-        OptionsGroup textEditorFontGroup = optionsModule.createOptionsGroup("textEditorFont", resourceBundle);
-        optionsPageManagement.registerGroup(textEditorFontGroup);
-        optionsPageManagement.registerGroupRule(textEditorFontGroup, new ParentOptionsGroupRule(textEditorGroup));
-        TextFontSettingsComponent textFontOptionsPage = new TextFontSettingsComponent();
-        textFontOptionsPage.setTextFontService(new TextFontService() {
-            @Nonnull
-            @Override
-            public Font getCurrentFont() {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                FileHandler fileHandler = activeFile.orElse(null);
-                if (fileHandler instanceof TextFileHandler) {
-                    return ((TextFileHandler) fileHandler).getComponent().getCurrentFont();
-                }
-
-                return new JLabel().getFont();
-            }
-
-            @Nonnull
-            @Override
-            public Font getDefaultFont() {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                FileHandler fileHandler = activeFile.orElse(null);
-                if (fileHandler instanceof TextFileHandler) {
-                    return ((TextFileHandler) fileHandler).getComponent().getDefaultFont();
-                }
-
-                return new JLabel().getFont();
-            }
-
-            @Override
-            public void setCurrentFont(Font font) {
-                Optional<FileHandler> activeFile = editorProvider.getActiveFile();
-                FileHandler fileHandler = activeFile.orElse(null);
-                if (fileHandler instanceof TextFileHandler) {
-                    ((TextFileHandler) fileHandler).getComponent().setCurrentFont(font);
-                }
-            }
-        });
-        optionsPageManagement.registerPage(textFontOptionsPage);
-        optionsPageManagement.registerPageRule(textFontOptionsPage, new GroupOptionsPageRule(textEditorFontGroup));
-
-        optionsPageManagement.registerPage(textAppearanceOptionsPage);
-        optionsPageManagement.registerPageRule(textAppearanceOptionsPage, new GroupOptionsPageRule(textEditorGroup));
-
-        OptionsGroup textEditorEncodingGroup = optionsModule.createOptionsGroup("textEditorEncoding", resourceBundle);
-        optionsPageManagement.registerGroup(textEditorEncodingGroup);
-        optionsPageManagement.registerGroupRule(textEditorEncodingGroup, new ParentOptionsGroupRule(textEditorGroup));
-        TextEncodingSettingsComponent textEncodingOptionsPage = new TextEncodingSettingsComponent();
-        textEncodingOptionsPage.setEncodingsHandler(getEncodingsHandler());
-        optionsPageManagement.registerPage(textEncodingOptionsPage);
-        optionsPageManagement.registerPageRule(textEncodingOptionsPage, new GroupOptionsPageRule(textEditorEncodingGroup)); */
     }
 
     public void registerUndoHandler() {

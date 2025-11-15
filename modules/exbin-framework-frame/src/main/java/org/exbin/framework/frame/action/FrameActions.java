@@ -88,7 +88,7 @@ public class FrameActions {
                     updateByContext(instance);
                 });
                 registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
-                    if (ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                    if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });
@@ -130,7 +130,7 @@ public class FrameActions {
                     updateByContext(instance);
                 });
                 registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
-                    if (ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                    if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });
@@ -172,7 +172,7 @@ public class FrameActions {
                     updateByContext(instance);
                 });
                 registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
-                    if (ContextFrame.ChangeMessage.BARS_LAYOUT_CHANGE.equals(message)) {
+                    if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });

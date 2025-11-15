@@ -16,15 +16,13 @@
 package org.exbin.framework.editor.text;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.gui.TextPanel;
 
 /**
- * Text panel supported.
+ * Text panel component.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface TextPanelComponent {
 
     /**

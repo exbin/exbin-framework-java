@@ -41,7 +41,7 @@ public interface ActiveContextProvider {
      *
      * @param <T> state type
      * @param stateClass state class
-     * @param changeMessage change message
+     * @param changeType change type
      */
-    <T> void notifyStateChange(Class<T> stateClass, StateChangeMessage changeMessage);
+    <T> void notifyActiveStateChange(Class<T> stateClass, StateChangeType changeType);
 }

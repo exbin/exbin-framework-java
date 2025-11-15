@@ -16,7 +16,7 @@
 package org.exbin.framework.component.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.StateChangeMessage;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Interface for edit item context.
@@ -62,7 +62,7 @@ public interface ContextEditItem {
      */
     boolean canDeleteItem();
 
-    public enum ChangeMessage implements StateChangeMessage {
+    public enum ChangeType implements StateChangeType {
         EDIT_STATE
     }
 }
