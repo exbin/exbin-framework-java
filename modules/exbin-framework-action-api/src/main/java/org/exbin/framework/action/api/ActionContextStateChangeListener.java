@@ -19,16 +19,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.StateChangeType;
 
 /**
- * Listener for action context change.
+ * Listener for action context state change.
  *
  * @author ExBin Project (https://exbin.org)
  * @param <T> instance type
  */
 @ParametersAreNonnullByDefault
-public interface ActionContextMessageListener<T> {
+public interface ActionContextStateChangeListener<T> {
 
     /**
-     * Notifies active state instance changed.
+     * Notifies active state changed.
      *
      * @param instance class instance
      * @param changeType change type

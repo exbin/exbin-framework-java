@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.action.api;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -47,12 +46,11 @@ public interface ActionContextChangeRegistration {
     <T> void registerUpdateListener(Class<T> contextClass, ActionContextChangeListener<T> listener);
 
     /**
-     * Registers listener to call each time when component is activated or empty
-     * when deactivated.
+     * Registers listener to change of the context state.
      *
      * @param <T> monitored class type
      * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerContextMessageListener(Class<T> contextClass, ActionContextMessageListener<T> listener);
+    <T> void registerStateChangeListener(Class<T> contextClass, ActionContextStateChangeListener<T> listener);
 }

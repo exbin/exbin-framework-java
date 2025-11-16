@@ -36,7 +36,7 @@ public interface ActiveContextChangeListener {
     <T> void activeStateChanged(Class<T> stateClass, @Nullable T activeState);
 
     /**
-     * Sends active state change message.
+     * Sends active state change notification.
      *
      * @param <T> state type
      * @param stateClass state class

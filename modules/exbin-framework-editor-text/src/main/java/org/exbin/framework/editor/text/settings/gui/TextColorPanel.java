@@ -130,7 +130,7 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
             if (contextComponent instanceof TextColorState) {
                 TextColorSettingsApplier applier = new TextColorSettingsApplier();
                 applier.applySettings(contextComponent, settingsOptionsProvider);
-                contextProvider.notifyActiveStateChange(ContextComponent.class, TextColorState.ChangeType.TEXT_COLOR_STATE);
+                contextProvider.notifyStateChange(ContextComponent.class, TextColorState.ChangeType.TEXT_COLOR_STATE);
             }
         }
     }

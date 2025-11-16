@@ -96,7 +96,7 @@ public class ChildActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
-    public <T> void notifyStateChange(Class<T> stateClass, T activeState, StateChangeType changeType) {
+    public <T> void notifyActiveStateChange(Class<T> stateClass, T activeState, StateChangeType changeType) {
         if (!childStates.contains(stateClass)) {
             childStates.add(stateClass);
         }
@@ -105,10 +105,10 @@ public class ChildActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
-    public <T> void notifyActiveStateChange(Class<T> stateClass, StateChangeType changeType) {
+    public <T> void notifyStateChange(Class<T> stateClass, StateChangeType changeType) {
         Object activeState = getActiveState(stateClass);
         if (activeState != null) {
-            notifyStateChange(stateClass, stateClass.cast(activeState), changeType);
+            notifyActiveStateChange(stateClass, stateClass.cast(activeState), changeType);
         }
     }
 

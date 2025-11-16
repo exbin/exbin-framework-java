@@ -60,7 +60,7 @@ public class TextEncodingAction extends AbstractAction {
             registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
                 updateByContext(instance);
             });
-            registrar.registerContextMessageListener(ContextEncoding.class, (ContextEncoding instance, StateChangeType changeType) -> {
+            registrar.registerStateChangeListener(ContextEncoding.class, (ContextEncoding instance, StateChangeType changeType) -> {
                 if (ContextEncoding.ChangeType.ENCODING_CHANGE.equals(changeType)) {
                     updateByContext(instance);
                 }

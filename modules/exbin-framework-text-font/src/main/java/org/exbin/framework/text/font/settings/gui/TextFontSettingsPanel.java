@@ -105,7 +105,7 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
             if (contextFont instanceof TextFontState) {
                 TextFontSettingsApplier applier = new TextFontSettingsApplier();
                 applier.applySettings(contextFont, settingsOptionsProvider);
-                contextProvider.notifyActiveStateChange(ContextFont.class, ContextFont.ChangeType.FONT_CHANGE);
+                contextProvider.notifyStateChange(ContextFont.class, ContextFont.ChangeType.FONT_CHANGE);
             }
         }
     }

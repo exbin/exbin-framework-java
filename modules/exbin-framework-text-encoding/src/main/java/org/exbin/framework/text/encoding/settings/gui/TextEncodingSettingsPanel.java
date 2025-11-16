@@ -130,12 +130,12 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
             if (contextEncoding instanceof CharsetEncodingState) {
                 TextEncodingSettingsApplier applier = new TextEncodingSettingsApplier();
                 applier.applySettings(contextEncoding, settingsOptionsProvider);
-                contextProvider.notifyActiveStateChange(ContextEncoding.class, ContextEncoding.ChangeType.ENCODING_CHANGE);
+                contextProvider.notifyStateChange(ContextEncoding.class, ContextEncoding.ChangeType.ENCODING_CHANGE);
             }
             if (contextEncoding instanceof CharsetListEncodingState) {
                 TextEncodingListSettingsApplier applier = new TextEncodingListSettingsApplier();
                 applier.applySettings(contextEncoding, settingsOptionsProvider);
-                contextProvider.notifyActiveStateChange(ContextEncoding.class, ContextEncoding.ChangeType.ENCODING_LIST_CHANGE);
+                contextProvider.notifyStateChange(ContextEncoding.class, ContextEncoding.ChangeType.ENCODING_LIST_CHANGE);
             }
         }
     }

@@ -46,14 +46,14 @@ public interface ActiveContextManagement extends ActiveContextProvider {
     <T> void changeActiveState(Class<T> stateClass, @Nullable T activeState);
 
     /**
-     * Sends active state change message.
+     * Sends active state change notification.
      *
      * @param <T> state type
      * @param stateClass state class
      * @param activeState active state
-     * @param changeType change tpye
+     * @param changeType change type
      */
-    <T> void notifyStateChange(Class<T> stateClass, T activeState, StateChangeType changeType);
+    <T> void notifyActiveStateChange(Class<T> stateClass, T activeState, StateChangeType changeType);
 
     /**
      * Adds change listener.

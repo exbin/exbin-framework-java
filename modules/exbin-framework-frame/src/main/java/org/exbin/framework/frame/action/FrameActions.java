@@ -87,7 +87,7 @@ public class FrameActions {
                 registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
+                registrar.registerStateChangeListener(ContextFrame.class, (instance, message) -> {
                     if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
@@ -129,7 +129,7 @@ public class FrameActions {
                 registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
+                registrar.registerStateChangeListener(ContextFrame.class, (instance, message) -> {
                     if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
@@ -171,7 +171,7 @@ public class FrameActions {
                 registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerContextMessageListener(ContextFrame.class, (instance, message) -> {
+                registrar.registerStateChangeListener(ContextFrame.class, (instance, message) -> {
                     if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
