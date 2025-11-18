@@ -18,6 +18,7 @@ package org.exbin.framework.text.font;
 import java.awt.Font;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Text font state interface.
@@ -49,4 +50,8 @@ public interface TextFontState extends ContextFont {
      * @param font font to set
      */
     void setCurrentFont(Font font);
+
+    public enum ChangeType implements StateChangeType {
+        FONT
+    }
 }

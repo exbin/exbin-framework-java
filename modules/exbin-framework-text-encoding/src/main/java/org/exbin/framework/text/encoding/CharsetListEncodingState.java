@@ -18,6 +18,7 @@ package org.exbin.framework.text.encoding;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Charset encoding list state interface.
@@ -41,4 +42,8 @@ public interface CharsetListEncodingState {
      * @param encodings list of encodings
      */
     void setEncodings(List<String> encodings);
+
+    public enum ChangeType implements StateChangeType {
+        ENCODING_LIST
+    }
 }

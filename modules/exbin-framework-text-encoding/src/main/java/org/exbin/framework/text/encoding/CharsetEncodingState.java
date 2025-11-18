@@ -17,6 +17,7 @@ package org.exbin.framework.text.encoding;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.StateChangeType;
 
 /**
  * Charset encoding state interface.
@@ -40,4 +41,8 @@ public interface CharsetEncodingState extends ContextEncoding {
      * @param encodingName encoding name
      */
     void setEncoding(String encodingName);
+
+    public enum ChangeType implements StateChangeType {
+        ENCODING
+    }
 }

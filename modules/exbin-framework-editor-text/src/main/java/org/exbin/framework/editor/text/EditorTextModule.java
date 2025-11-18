@@ -146,7 +146,6 @@ public class EditorTextModule implements Module {
 
     public void registerOptionsMenuPanels() {
         getEncodingsManager();
-        encodingsManager.rebuildEncodings();
 
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
