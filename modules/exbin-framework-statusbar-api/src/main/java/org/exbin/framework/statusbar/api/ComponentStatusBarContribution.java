@@ -13,45 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text;
+package org.exbin.framework.statusbar.api;
 
-import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.StateChangeType;
+import org.exbin.framework.contribution.api.ItemSequenceContribution;
 
 /**
- * Text color panel API.
+ * Status bar item contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface TextColorState {
+public class ComponentStatusBarContribution implements ItemSequenceContribution {
 
-    /**
-     * Returns current colors used in application frame.
-     *
-     * @return array of 5 colors
-     */
+    protected final StatusBarComponent component;
+
+    public ComponentStatusBarContribution(StatusBarComponent component) {
+        this.component = component;
+    }
+
     @Nonnull
-    Color[] getCurrentTextColors();
+    @Override
+    public String getContributionId() {
+        return (String) component.getValue(StatusBarComponent.KEY_ID);
+    }
 
-    /**
-     * Returns default colors used in application frame.
-     *
-     * @return array of 5 colors
-     */
     @Nonnull
-    Color[] getDefaultTextColors();
-
-    /**
-     * Sets current colors used in application frame.
-     *
-     * @param colors colors
-     */
-    void setCurrentTextColors(Color[] colors);
-
-    public enum ChangeType implements StateChangeType {
-        TEXT_COLOR
+    public StatusBarComponent getComponent() {
+        return component;
     }
 }

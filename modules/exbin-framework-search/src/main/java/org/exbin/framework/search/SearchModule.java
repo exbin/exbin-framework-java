@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.search.action.FindReplaceActions;
 import org.exbin.framework.search.api.SearchModuleApi;
 
 /**
@@ -31,6 +32,8 @@ import org.exbin.framework.search.api.SearchModuleApi;
 public class SearchModule implements SearchModuleApi {
 
     private java.util.ResourceBundle resourceBundle = null;
+
+    private FindReplaceActions findReplaceActions = null;
 
     public SearchModule() {
     }
@@ -48,5 +51,14 @@ public class SearchModule implements SearchModuleApi {
         if (resourceBundle == null) {
             getResourceBundle();
         }
+    }
+
+    @Nonnull
+    public FindReplaceActions getFindReplaceActions() {
+        if (findReplaceActions == null) {
+            findReplaceActions = new FindReplaceActions();
+        }
+
+        return findReplaceActions;
     }
 }

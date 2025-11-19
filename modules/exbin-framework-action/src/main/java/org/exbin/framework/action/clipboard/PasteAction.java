@@ -28,8 +28,8 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.clipboard.ClipboardController;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Paste from clipboard action.
@@ -61,7 +61,7 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
     }
 
     @Override
-    public void register(ActionContextChangeRegistration registrar) {
+    public void register(ContextChangeRegistration registrar) {
         registrar.registerUpdateListener(ContextComponent.class, component -> {
             clipboardSupport = component instanceof ClipboardController ? (ClipboardController) component : null;
             update();

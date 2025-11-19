@@ -27,8 +27,8 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.EditorTextPanelComponent;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Print action.
@@ -52,7 +52,7 @@ public class PrintAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistration registrar) {
+            public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
                     textPanelComponent = instance instanceof EditorTextPanelComponent ? (EditorTextPanelComponent) instance : null;
                     setEnabled(textPanelComponent != null);

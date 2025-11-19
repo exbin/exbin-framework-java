@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.action.api;
 
+import org.exbin.framework.context.api.ContextChangeRegistration;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -30,5 +31,5 @@ public interface ActionContextChange {
      *
      * @param registrar change registration
      */
-    void register(ActionContextChangeRegistration registrar);
+    void register(ContextChangeRegistration registrar);
 }

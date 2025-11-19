@@ -35,8 +35,8 @@ import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.editor.text.service.TextSearchService;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.controller.DefaultControlController;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Find/replace actions.
@@ -122,7 +122,7 @@ public class FindReplaceActions {
             putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
                 @Override
-                public void register(ActionContextChangeRegistration registrar) {
+                public void register(ContextChangeRegistration registrar) {
                     registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
                         setEnabled(textPanel != null && dialogParentComponent != null);
@@ -158,7 +158,7 @@ public class FindReplaceActions {
             putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
                 @Override
-                public void register(ActionContextChangeRegistration registrar) {
+                public void register(ContextChangeRegistration registrar) {
                     registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
                         setEnabled(textPanel != null && dialogParentComponent != null);
@@ -195,7 +195,7 @@ public class FindReplaceActions {
             putValue(ActionConsts.ACTION_DIALOG_MODE, true);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
                 @Override
-                public void register(ActionContextChangeRegistration registrar) {
+                public void register(ContextChangeRegistration registrar) {
                     registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
                         setEnabled(textPanel != null && dialogParentComponent != null);

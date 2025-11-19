@@ -26,7 +26,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Save all file action.
@@ -50,7 +50,7 @@ public class SaveAllFileAction extends AbstractAction {
         setEnabled(false);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistration registrar) {
+            public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(FileHandler.class, (instance) -> {
                     fileHandler = instance;
                     setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));

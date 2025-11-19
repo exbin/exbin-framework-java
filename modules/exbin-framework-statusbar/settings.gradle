@@ -3,7 +3,9 @@ rootProject.name = 'exbin-framework-statusbar'
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
     include ':modules:exbin-framework-statusbar-api'
-    include ':modules:exbin-framework-operation-api'
+    include ':modules:exbin-framework-context-api'
+    include ':modules:exbin-framework-contribution-api'
+    include ':modules:exbin-framework-action-api'
     include ':modules:exbin-framework-utils'
 }
 

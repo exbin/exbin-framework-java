@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.operation.undo.action;
+package org.exbin.framework.search.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -23,50 +23,49 @@ import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.operation.undo.api.UndoRedoState;
-import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.operation.undo.api.UndoRedoController;
+import org.exbin.framework.search.api.ContextSearch;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.search.api.FindSearchState;
 
 /**
- * Undo action.
+ * Search find previous action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class UndoAction extends AbstractAction implements ActionContextChange {
+public class EditFindPreviousAction extends AbstractAction implements ActionContextChange {
 
-    public static final String EDIT_UNDO_ACTION_ID = "editUndoAction";
-
-    private ResourceBundle resourceBundle;
-    private UndoRedoState undoRedo = null;
-
-    public UndoAction() {
-    }
+    public static final String ACTION_ID = "searchFindPreviousAction";
+    protected FindSearchState findSearchState;
 
     public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, EDIT_UNDO_ACTION_ID);
-        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, ActionUtils.getMetaMask()));
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
+        setEnabled(false);
+        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.Event.SHIFT_MASK));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (undoRedo instanceof UndoRedoController) {
-            ((UndoRedoController) undoRedo).performUndo();
-        }
+        findSearchState.performFindPrevious();
     }
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(UndoRedoState.class, (instance) -> {
-            undoRedo = instance;
-            boolean canUndo = undoRedo != null && undoRedo.canUndo();
-            setEnabled(canUndo);
+        registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
+            updateByContext(instance);
         });
+        registrar.registerStateChangeListener(ContextSearch.class, (instance, changeType) -> {
+            if (FindSearchState.ChangeType.FIND_AVAILABILITY.equals(changeType)) {
+                updateByContext(instance);
+            }
+        });
+    }
+
+    protected void updateByContext(ContextSearch context) {
+        findSearchState = context instanceof FindSearchState ? (FindSearchState) context : null;
+        setEnabled(findSearchState != null && findSearchState.isFindPreviousAvailable());
     }
 }

@@ -13,25 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.statusbar.api;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.StateChangeType;
 
 /**
- * Listener for action context state change.
+ * Abstract status bar component.
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> instance type
  */
 @ParametersAreNonnullByDefault
-public interface ActionContextStateChangeListener<T> {
+public abstract class AbstractStatusBarComponent implements StatusBarComponent {
 
-    /**
-     * Notifies active state changed.
-     *
-     * @param instance class instance
-     * @param changeType change type
-     */
-    void notifyStateChange(T instance, StateChangeType changeType);
+    protected final Map<String, Object> propertyList = new HashMap<>();
+
+    @Nullable
+    @Override
+    public Object getValue(String key) {
+        return propertyList.get(key);
+    }
+
+    @Override
+    public void putValue(String key, @Nullable Object value) {
+        propertyList.put(key, value);
+    }
 }

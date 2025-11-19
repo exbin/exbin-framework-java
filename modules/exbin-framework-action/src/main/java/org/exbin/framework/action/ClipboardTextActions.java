@@ -32,7 +32,7 @@ import org.exbin.framework.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.framework.utils.ActionUtils;
 
 /**
- * Clipboard operations.
+ * Clipboard text actions.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -91,8 +91,8 @@ public class ClipboardTextActions implements ClipboardActionsApi {
         PassingTextAction cutTextAction = new PassingTextAction(new DefaultEditorKit.CutAction());
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(cutTextAction, resourceBundle, EDIT_CUT_ACTION_ID);
-        cutTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         cutTextAction.setEnabled(false);
+        cutTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, ActionUtils.getMetaMask()));
         actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), cutTextAction);
         return cutTextAction;
     }
@@ -115,8 +115,8 @@ public class ClipboardTextActions implements ClipboardActionsApi {
         PassingTextAction pasteTextAction = new PassingTextAction(new DefaultEditorKit.PasteAction());
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(pasteTextAction, resourceBundle, EDIT_PASTE_ACTION_ID);
-        pasteTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
         pasteTextAction.setEnabled(false);
+        pasteTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, ActionUtils.getMetaMask()));
         actionMap.put(TransferHandler.getPasteAction().getValue(Action.NAME), pasteTextAction);
         return pasteTextAction;
     }
@@ -136,8 +136,8 @@ public class ClipboardTextActions implements ClipboardActionsApi {
         });
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(deleteTextAction, resourceBundle, EDIT_DELETE_ACTION_ID);
-        deleteTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         deleteTextAction.setEnabled(false);
+        deleteTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
         actionMap.put(DELETE_ACTION, deleteTextAction);
         return deleteTextAction;
     }

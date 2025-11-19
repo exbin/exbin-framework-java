@@ -24,13 +24,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeListener;
 import org.exbin.framework.action.api.ActionManagement;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.context.api.ActiveContextChangeListener;
 import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.context.api.StateChangeType;
-import org.exbin.framework.action.api.ActionContextStateChangeListener;
+import org.exbin.framework.context.api.ContextChangeListener;
+import org.exbin.framework.context.api.ContextStateChangeListener;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Default action manager.
@@ -42,8 +42,8 @@ public class ActionManager implements ActionManagement {
 
     protected final ActiveContextManagement contextManager;
     protected final Map<String, ActionRecord> actions = new HashMap<>();
-    protected final Map<Class<?>, List<ActionContextChangeListener<?>>> actionContextChangeListeners = new HashMap<>();
-    protected final Map<Class<?>, List<ActionContextStateChangeListener<?>>> actionContextStateChangeListeners = new HashMap<>();
+    protected final Map<Class<?>, List<ContextChangeListener<?>>> actionContextChangeListeners = new HashMap<>();
+    protected final Map<Class<?>, List<ContextStateChangeListener<?>>> actionContextStateChangeListeners = new HashMap<>();
 
     public ActionManager(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
@@ -82,10 +82,10 @@ public class ActionManager implements ActionManagement {
         String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
         ActionRecord actionRecord = actions.get(actionId);
         actionContextChange.register(new DefaultActionContextChangeRegistrar(actionRecord));
-        for (Map.Entry<Class<?>, ActionContextChangeListener<?>> entry : actionRecord.contextChangeListeners.entrySet()) {
+        for (Map.Entry<Class<?>, ContextChangeListener<?>> entry : actionRecord.contextChangeListeners.entrySet()) {
             Class<?> stateClass = entry.getKey();
             Object activeState = contextManager.getActiveState(stateClass);
-            ActionContextChangeListener listener = entry.getValue();
+            ContextChangeListener listener = entry.getValue();
             listener.stateChanged(activeState);
         }
     }
@@ -93,12 +93,12 @@ public class ActionManager implements ActionManagement {
     @SuppressWarnings("unchecked")
     public <T> void activeStateChanged(Class<T> stateClass, @Nullable T contextInstance) {
         // TODO: Convert to thread
-        List<ActionContextChangeListener<?>> contextListeners = actionContextChangeListeners.get(stateClass);
+        List<ContextChangeListener<?>> contextListeners = actionContextChangeListeners.get(stateClass);
         if (contextListeners == null) {
             return;
         }
 
-        for (ActionContextChangeListener contextListener : contextListeners) {
+        for (ContextChangeListener contextListener : contextListeners) {
             contextListener.stateChanged(contextInstance);
         }
     }
@@ -106,12 +106,12 @@ public class ActionManager implements ActionManagement {
     @SuppressWarnings("unchecked")
     public <T> void notifyStateChange(Class<T> stateClass, @Nullable T contextInstance, StateChangeType changeType) {
         // TODO: Convert to thread
-        List<ActionContextStateChangeListener<?>> contextListeners = actionContextStateChangeListeners.get(stateClass);
+        List<ContextStateChangeListener<?>> contextListeners = actionContextStateChangeListeners.get(stateClass);
         if (contextListeners == null) {
             return;
         }
 
-        for (ActionContextStateChangeListener contextListener : contextListeners) {
+        for (ContextStateChangeListener contextListener : contextListeners) {
             contextListener.notifyStateChange(contextInstance, changeType);
         }
     }
@@ -128,7 +128,7 @@ public class ActionManager implements ActionManagement {
         // TODO Restrict to specific action listeners
         for (Class<?> stateClass : contextManager.getStateClasses()) {
             Object instance = contextManager.getActiveState(stateClass);
-            ActionContextChangeListener listener = actionRecord.contextChangeListeners.get(stateClass);
+            ContextChangeListener listener = actionRecord.contextChangeListeners.get(stateClass);
             if (listener != null) {
                 listener.stateChanged(instance);
             }
@@ -136,7 +136,7 @@ public class ActionManager implements ActionManagement {
     }
 
     @ParametersAreNonnullByDefault
-    private class DefaultActionContextChangeRegistrar implements ActionContextChangeRegistration {
+    private class DefaultActionContextChangeRegistrar implements ContextChangeRegistration {
 
         private final ActionRecord actionRecord;
 
@@ -145,10 +145,10 @@ public class ActionManager implements ActionManagement {
         }
 
         @Override
-        public <T> void registerListener(Class<T> contextClass, ActionContextChangeListener<T> listener) {
+        public <T> void registerListener(Class<T> contextClass, ContextChangeListener<T> listener) {
             actionRecord.contextChangeListeners.put(contextClass, listener);
 
-            List<ActionContextChangeListener<?>> contextChangeListeners = actionContextChangeListeners.get(contextClass);
+            List<ContextChangeListener<?>> contextChangeListeners = actionContextChangeListeners.get(contextClass);
             if (contextChangeListeners == null) {
                 contextChangeListeners = new ArrayList<>();
                 actionContextChangeListeners.put(contextClass, contextChangeListeners);
@@ -158,16 +158,16 @@ public class ActionManager implements ActionManagement {
         }
 
         @Override
-        public <T> void registerUpdateListener(Class<T> contextClass, ActionContextChangeListener<T> listener) {
+        public <T> void registerUpdateListener(Class<T> contextClass, ContextChangeListener<T> listener) {
             // TODO
             registerListener(contextClass, listener);
         }
 
         @Override
-        public <T> void registerStateChangeListener(Class<T> contextClass, ActionContextStateChangeListener<T> listener) {
+        public <T> void registerStateChangeListener(Class<T> contextClass, ContextStateChangeListener<T> listener) {
             actionRecord.contextStateChangeListeners.put(contextClass, listener);
 
-            List<ActionContextStateChangeListener<?>> contextStateChangeListener = actionContextStateChangeListeners.get(contextClass);
+            List<ContextStateChangeListener<?>> contextStateChangeListener = actionContextStateChangeListeners.get(contextClass);
             if (contextStateChangeListener == null) {
                 contextStateChangeListener = new ArrayList<>();
                 actionContextStateChangeListeners.put(contextClass, contextStateChangeListener);
@@ -180,8 +180,8 @@ public class ActionManager implements ActionManagement {
     protected static class ActionRecord {
 
         List<Action> actionInstances = new ArrayList<>();
-        Map<Class<?>, ActionContextChangeListener<?>> contextChangeListeners = new HashMap<>();
-        Map<Class<?>, ActionContextStateChangeListener<?>> contextStateChangeListeners = new HashMap<>();
+        Map<Class<?>, ContextChangeListener<?>> contextChangeListeners = new HashMap<>();
+        Map<Class<?>, ContextStateChangeListener<?>> contextStateChangeListeners = new HashMap<>();
     }
 
     /*
@@ -209,16 +209,16 @@ public class ActionManager implements ActionManagement {
     @Override
     public void requestUpdate(Action action) {
         Object value = action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
-        Map<Class<?>, ActionContextChangeListener<?>> actionListeners = new HashMap<>();
+        Map<Class<?>, ContextChangeListener<?>> actionListeners = new HashMap<>();
         if (value instanceof ActionContextChange) {
-            ((ActionContextChange) value).register(new ActionContextChangeRegistration() {
+            ((ActionContextChange) value).register(new ContextChangeRegistration() {
                 @Override
-                public <T> void registerListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
+                public <T> void registerListener(Class<T> componentClass, ContextChangeListener<T> listener) {
                     actionListeners.put(componentClass, listener);
                 }
 
                 @Override
-                public <T> void registerUpdateListener(Class<T> componentClass, ActionContextChangeListener<T> listener) {
+                public <T> void registerUpdateListener(Class<T> componentClass, ContextChangeListener<T> listener) {
                     registerListener(componentClass, listener);
                 }
             });
@@ -227,7 +227,7 @@ public class ActionManager implements ActionManagement {
         for (Map.Entry<Class<?>, Object> entry : activeComponentState.entrySet()) {
             Class key = entry.getKey();
             Object instance = entry.getValue();
-            ActionContextChangeListener listener = actionListeners.get(key);
+            ContextChangeListener listener = actionListeners.get(key);
             if (listener != null) {
                 listener.notifyStateChange(instance);
             }

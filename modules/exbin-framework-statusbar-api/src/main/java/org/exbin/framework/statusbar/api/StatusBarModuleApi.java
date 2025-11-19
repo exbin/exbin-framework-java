@@ -15,9 +15,14 @@
  */
 package org.exbin.framework.statusbar.api;
 
+import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
+import javax.swing.JToolBar;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
  * Support for status bar.
@@ -28,5 +33,62 @@ import org.exbin.framework.ModuleUtils;
 public interface StatusBarModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(StatusBarModuleApi.class);
+    public static final String MAIN_STATUS_BAR_ID = "mainStatusBar";
 
+    /**
+     * Returns main status bar management interface.
+     *
+     * @param moduleId module id
+     * @return side bar management interface
+     */
+    @Nonnull
+    StatusBarDefinitionManagement getMainStatusBarManager(String moduleId);
+
+    /**
+     * Returns status bar management interface.
+     *
+     * @param statusBarId status bar id
+     * @param moduleId module id
+     * @return status bar management interface
+     */
+    @Nonnull
+    StatusBarDefinitionManagement getStatusBarManager(String statusBarId, String moduleId);
+
+    /**
+     * Registers status bar associating it with given identificator.
+     *
+     * @param statusBarId status bar id
+     * @param moduleId module id
+     */
+    void registerStatusBar(String statusBarId, String moduleId);
+
+    /**
+     * Creates status bar manager.
+     *
+     * @return status bar manager
+     */
+    @Nonnull
+    StatusBarManagement createStatusBarManager();
+
+    /**
+     * Returns status bar using given identificator.
+     *
+     * @param targetStatusBar target status bar
+     * @param statusBarId status bar id
+     * @param actionContextRegistration action context registration
+     */
+    void buildStatusBar(JToolBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration);
+
+    /**
+     * Returns list of action managed by status bar managers.
+     *
+     * @return list of actions
+     */
+    @Nonnull
+    List<Action> getStatusBarManagedActions();
+
+    /**
+     * Returns side bar into main frame.
+     */
+    void registerFrameStatusBar();
 }

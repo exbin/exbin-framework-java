@@ -23,8 +23,8 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.component.api.ContextMoveItem;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Move top action.
@@ -42,7 +42,7 @@ public class MoveTopAction extends AbstractAction {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);
-        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
             registrar.registerUpdateListener(ContextMoveItem.class, (ContextMoveItem instance) -> {
                 actionsHandler = instance;
                 setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());

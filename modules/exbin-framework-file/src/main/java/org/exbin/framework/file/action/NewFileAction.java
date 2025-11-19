@@ -26,7 +26,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * New file action.
@@ -50,7 +50,7 @@ public class NewFileAction extends AbstractAction {
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistration registrar) {
+            public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(FileOperations.class, (instance) -> {
                     fileOperations = instance;
                     setEnabled(instance != null);

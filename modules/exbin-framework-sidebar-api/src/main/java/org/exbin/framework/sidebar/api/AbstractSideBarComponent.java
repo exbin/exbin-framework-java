@@ -13,12 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.search.api;
+package org.exbin.framework.sidebar.api;
+
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for context activable search.
+ * Abstract sidebar component.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ContextSearch {
+@ParametersAreNonnullByDefault
+public abstract class AbstractSideBarComponent implements SideBarComponent {
+
+    protected final Map<String, Object> propertyList = new HashMap<>();
+
+    @Nullable
+    @Override
+    public Object getValue(String key) {
+        return propertyList.get(key);
+    }
+
+    @Override
+    public void putValue(String key, @Nullable Object value) {
+        propertyList.put(key, value);
+    }
 }

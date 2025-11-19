@@ -15,12 +15,15 @@
  */
 package org.exbin.framework.sidebar;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -29,6 +32,8 @@ import org.exbin.framework.sidebar.api.SideBarModuleApi;
 import org.exbin.framework.sidebar.api.SideBarDefinitionManagement;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.action.api.ActionManagement;
+import org.exbin.framework.action.api.ActionModuleApi;
 
 /**
  * Implementation of side bar module.
@@ -111,7 +116,16 @@ public class SideBarModule implements SideBarModuleApi {
 
     @Override
     public void registerFrameSideBar() {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        // TODO frameModule.
+        ActionManagement actionManager = frameModule.getFrameHandler().getActionManager();
+        getSideBarManager();
+        JFrame frame = ((JFrame) frameModule.getFrame());
+        JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
+        sideBarManager.buildSideBar(toolBar, MODULE_ID, actionModule.createActionContextRegistrar(actionManager));
+        toolBar.setFloatable(false);
+        toolBar.add(new JButton("TEST"));
+        toolBar.invalidate();
+        frame.getContentPane().add(toolBar, BorderLayout.WEST);
     }
 }

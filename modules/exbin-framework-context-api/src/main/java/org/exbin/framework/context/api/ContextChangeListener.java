@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.search.api;
+package org.exbin.framework.context.api;
+
+import javax.annotation.Nullable;
 
 /**
- * Interface for context activable search.
+ * Listener for active state changes.
  *
  * @author ExBin Project (https://exbin.org)
+ * @param <T> instance type
  */
-public interface ContextSearch {
+public interface ContextChangeListener<T> {
+
+    /**
+     * Notifies active state instance changed.
+     *
+     * @param instance class instance
+     */
+    void stateChanged(@Nullable T instance);
 }

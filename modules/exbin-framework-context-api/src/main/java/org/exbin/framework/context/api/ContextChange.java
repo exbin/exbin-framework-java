@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.context.api;
 
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Listener for action state changes when menu is activated for component.
+ * Listener for context changes.
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> instance type
  */
-public interface ActionContextChangeListener<T> {
+@ParametersAreNonnullByDefault
+public interface ContextChange {
 
     /**
-     * Notifies active state instance changed.
+     * Registers context change listeners via provided registrar.
      *
-     * @param instance class instance
+     * @param registrar context change registration
      */
-    void stateChanged(@Nullable T instance);
+    void register(ContextChangeRegistration registrar);
 }

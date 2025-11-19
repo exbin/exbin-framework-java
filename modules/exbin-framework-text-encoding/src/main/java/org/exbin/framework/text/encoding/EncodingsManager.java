@@ -34,11 +34,11 @@ import javax.swing.JRadioButtonMenuItem;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.text.encoding.action.ManageEncodingsAction;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Encodings manager.
@@ -92,7 +92,7 @@ public class EncodingsManager {
         };
         toolsEncodingAction.putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistration registrar) {
+            public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
                     listEncodingState = instance instanceof CharsetListEncodingState ? (CharsetListEncodingState) instance : null;
                     encodingState = instance instanceof CharsetEncodingState ? (CharsetEncodingState) instance : null;

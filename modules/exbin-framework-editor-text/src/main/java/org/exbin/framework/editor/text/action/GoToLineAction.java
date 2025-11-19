@@ -32,8 +32,8 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.window.api.gui.DefaultControlPanel;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.controller.DefaultControlController;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Go to line action.
@@ -57,7 +57,7 @@ public class GoToLineAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistration registrar) {
+            public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
                     textPanelComponent = instance instanceof EditorTextPanelComponent ? (EditorTextPanelComponent) instance : null;
                     setEnabled(textPanelComponent != null);

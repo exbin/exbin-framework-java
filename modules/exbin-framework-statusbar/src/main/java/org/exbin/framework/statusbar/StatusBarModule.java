@@ -15,7 +15,13 @@
  */
 package org.exbin.framework.statusbar;
 
+import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
+import javax.swing.JToolBar;
+import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.statusbar.api.StatusBarDefinitionManagement;
+import org.exbin.framework.statusbar.api.StatusBarManagement;
 import org.exbin.framework.statusbar.api.StatusBarModuleApi;
 
 /**
@@ -25,5 +31,40 @@ import org.exbin.framework.statusbar.api.StatusBarModuleApi;
  */
 @ParametersAreNonnullByDefault
 public class StatusBarModule implements StatusBarModuleApi {
+
+    @Override
+    public StatusBarDefinitionManagement getMainStatusBarManager(String moduleId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public StatusBarDefinitionManagement getStatusBarManager(String statusBarId, String moduleId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void registerStatusBar(String statusBarId, String moduleId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public StatusBarManagement createStatusBarManager() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void buildStatusBar(JToolBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Action> getStatusBarManagedActions() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void registerFrameStatusBar() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

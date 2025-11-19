@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.help.api.HelpLink;
 import org.exbin.framework.help.api.HelpModuleApi;
@@ -42,6 +41,7 @@ import org.exbin.framework.window.api.controller.OptionsControlController;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.text.encoding.CharsetListEncodingState;
 import org.exbin.framework.text.encoding.ContextEncoding;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Manage encodings action.
@@ -66,7 +66,7 @@ public class ManageEncodingsAction extends AbstractAction {
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
-            public void register(ActionContextChangeRegistration registrar) {
+            public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
                     charsetEncodingState = instance instanceof CharsetListEncodingState ? (CharsetListEncodingState) instance : null;
                     setEnabled(charsetEncodingState != null);

@@ -13,45 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text;
+package org.exbin.framework.search.api;
 
-import java.awt.Color;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.StateChangeType;
 
 /**
- * Text color panel API.
+ * Interface for find search state.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface TextColorState {
+public interface FindSearchState {
 
     /**
-     * Returns current colors used in application frame.
-     *
-     * @return array of 5 colors
+     * Performs find action.
      */
-    @Nonnull
-    Color[] getCurrentTextColors();
+    void performFind();
 
     /**
-     * Returns default colors used in application frame.
-     *
-     * @return array of 5 colors
+     * Performs find next action.
      */
-    @Nonnull
-    Color[] getDefaultTextColors();
+    void performFindNext();
 
     /**
-     * Sets current colors used in application frame.
-     *
-     * @param colors colors
+     * Performs find previous action.
      */
-    void setCurrentTextColors(Color[] colors);
+    void performFindPrevious();
+
+    /**
+     * Returns if find next is available.
+     *
+     * @return true if available
+     */
+    boolean isFindNextAvailable();
+
+    /**
+     * Returns if find previous is available.
+     *
+     * @return true if available
+     */
+    boolean isFindPreviousAvailable();
 
     public enum ChangeType implements StateChangeType {
-        TEXT_COLOR
+        FIND_AVAILABILITY
     }
 }

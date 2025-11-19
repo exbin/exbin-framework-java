@@ -34,9 +34,9 @@ import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.window.api.controller.OptionsControlController;
 import org.exbin.framework.options.api.OptionsModuleApi;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
 import org.exbin.framework.text.font.ContextFont;
 import org.exbin.framework.text.font.TextFontState;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Text font action.
@@ -60,7 +60,7 @@ public class TextFontAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
             registrar.registerUpdateListener(ContextFont.class, (instance) -> {
                 textFontSupported = instance instanceof TextFontState ? (TextFontState) instance : null;
                 updateByContext();

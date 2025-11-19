@@ -13,45 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.text;
+package org.exbin.framework.context.api;
 
-import java.awt.Color;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.StateChangeType;
 
 /**
- * Text color panel API.
+ * Listener for context state change.
  *
  * @author ExBin Project (https://exbin.org)
+ * @param <T> instance type
  */
 @ParametersAreNonnullByDefault
-public interface TextColorState {
+public interface ContextStateChangeListener<T> {
 
     /**
-     * Returns current colors used in application frame.
+     * Notifies state changed in the active context.
      *
-     * @return array of 5 colors
+     * @param instance class instance
+     * @param changeType change type
      */
-    @Nonnull
-    Color[] getCurrentTextColors();
-
-    /**
-     * Returns default colors used in application frame.
-     *
-     * @return array of 5 colors
-     */
-    @Nonnull
-    Color[] getDefaultTextColors();
-
-    /**
-     * Sets current colors used in application frame.
-     *
-     * @param colors colors
-     */
-    void setCurrentTextColors(Color[] colors);
-
-    public enum ChangeType implements StateChangeType {
-        TEXT_COLOR
-    }
+    void notifyStateChange(T instance, StateChangeType changeType);
 }

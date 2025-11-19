@@ -26,43 +26,48 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class ActionConsts {
 
     /**
+     * Identifier value.
+     * <p>
+     * Value is of type {@link String}.
+     */
+    public static final String ACTION_ID = "actionId";
+    /**
      * Action type like or check, radio.
-     *
-     * Value is {@link ActionType}.
+     * <p>
+     * Value is of type {@link ActionType}.
      */
     public static final String ACTION_TYPE = "type";
     /**
      * Radio group name value.
-     *
-     * Value is {@link String}.
+     * <p>
+     * Value is of type {@link String}.
      */
     public static final String ACTION_RADIO_GROUP = "radioGroup";
     /**
      * Action mode for actions opening dialogs.
-     *
-     * Value is {@link Boolean}.
+     * <p>
+     * Value is of type {@link Boolean}.
      */
     public static final String ACTION_DIALOG_MODE = "dialogMode";
     /**
      * Menu creation handler.
-     *
-     * Value is {@link org.exbin.framework.menu.api.ActionMenuCreation}.
+     * <p>
+     * Value is of type {@link org.exbin.framework.menu.api.ActionMenuCreation}.
      */
     public static final String ACTION_MENU_CREATION = "menuCreation";
     /**
      * Menu activation bus / message registration.
-     *
-     * Value is ActionMenuActivation
+     * <p>
+     * Value is of type ActionMenuActivation
      */
     public static final String ACTION_MENU_ACTIVATION = "menuActivation";
     /**
      * Context change bus / message registration.
-     *
-     * Value is {@link ActionContextChange}.
+     * <p>
+     * Value is of type {@link ActionContextChange}.
      */
     public static final String ACTION_CONTEXT_CHANGE = "actionContextChange";
 
-    public static final String ACTION_ID = "actionId";
     public static final String ACTION_NAME_POSTFIX = ".text";
     public static final String ACTION_SHORT_DESCRIPTION_POSTFIX = ".shortDescription";
     public static final String ACTION_SMALL_ICON_POSTFIX = ".smallIcon";

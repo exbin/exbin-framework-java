@@ -16,9 +16,14 @@
 package org.exbin.framework.search.api;
 
 /**
- * Interface for context activable search.
+ * Interface for replace search state.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ContextSearch {
+public interface ReplaceSearchState {
+    
+    /**
+     * Performs replace action.
+     */
+    void performReplace();
 }

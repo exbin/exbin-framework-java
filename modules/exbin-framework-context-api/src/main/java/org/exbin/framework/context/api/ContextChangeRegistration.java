@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.action.api;
+package org.exbin.framework.context.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for action context change registration.
+ * Interface for context change registration.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionContextChangeRegistration {
+public interface ContextChangeRegistration {
 
     /**
      * Registers listener to call once when menu is created for component or
@@ -33,7 +33,7 @@ public interface ActionContextChangeRegistration {
      * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerListener(Class<T> contextClass, ActionContextChangeListener<T> listener);
+    <T> void registerListener(Class<T> contextClass, ContextChangeListener<T> listener);
 
     /**
      * Registers listener to call each time when component is activated or empty
@@ -43,7 +43,7 @@ public interface ActionContextChangeRegistration {
      * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerUpdateListener(Class<T> contextClass, ActionContextChangeListener<T> listener);
+    <T> void registerUpdateListener(Class<T> contextClass, ContextChangeListener<T> listener);
 
     /**
      * Registers listener to change of the context state.
@@ -52,5 +52,5 @@ public interface ActionContextChangeRegistration {
      * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerStateChangeListener(Class<T> contextClass, ActionContextStateChangeListener<T> listener);
+    <T> void registerStateChangeListener(Class<T> contextClass, ContextStateChangeListener<T> listener);
 }

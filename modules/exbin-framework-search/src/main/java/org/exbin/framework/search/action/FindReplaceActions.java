@@ -15,19 +15,10 @@
  */
 package org.exbin.framework.search.action;
 
-import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.exbin.framework.App;
-import org.exbin.framework.action.api.ActionConsts;
-import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.utils.ActionUtils;
-import org.exbin.framework.action.api.ActionContextChange;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
-import org.exbin.framework.search.api.ContextSearch;
 
 /**
  * Find/replace actions for binary search.
@@ -36,10 +27,6 @@ import org.exbin.framework.search.api.ContextSearch;
  */
 @ParametersAreNonnullByDefault
 public class FindReplaceActions {
-
-    public static final String FIND_ACTION_ID = "searchFindAction";
-    public static final String FIND_AGAIN_ACTION_ID = "searchFindAgainAction";
-    public static final String REPLACE_ACTION_ID = "searchReplaceAction";
 
     private ResourceBundle resourceBundle;
 
@@ -53,87 +40,28 @@ public class FindReplaceActions {
     @Nonnull
     public Action createEditFindAction() {
         EditFindAction editFindAction = new EditFindAction();
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(editFindAction, resourceBundle, FIND_ACTION_ID);
-        editFindAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
-        editFindAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        editFindAction.putValue(ActionConsts.ACTION_CONTEXT_CHANGE, editFindAction);
+        editFindAction.setup(resourceBundle);
         return editFindAction;
     }
 
     @Nonnull
-    public Action createEditFindAgainAction() {
-        EditFindAgainAction editFindAgainAction = new EditFindAgainAction();
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(editFindAgainAction, resourceBundle, FIND_AGAIN_ACTION_ID);
-        editFindAgainAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
-        editFindAgainAction.putValue(ActionConsts.ACTION_CONTEXT_CHANGE, editFindAgainAction);
-        return editFindAgainAction;
+    public Action createEditFindNextAction() {
+        EditFindNextAction editFindNextAction = new EditFindNextAction();
+        editFindNextAction.setup(resourceBundle);
+        return editFindNextAction;
+    }
+
+    @Nonnull
+    public Action createEditFindPreviousAction() {
+        EditFindPreviousAction editFindPreviousAction = new EditFindPreviousAction();
+        editFindPreviousAction.setup(resourceBundle);
+        return editFindPreviousAction;
     }
 
     @Nonnull
     public Action createEditReplaceAction() {
-        EditFindAgainAction editReplaceAction = new EditFindAgainAction();
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(editReplaceAction, resourceBundle, REPLACE_ACTION_ID);
-        editReplaceAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));
-        editReplaceAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        editReplaceAction.putValue(ActionConsts.ACTION_CONTEXT_CHANGE, editReplaceAction);
+        EditReplaceAction editReplaceAction = new EditReplaceAction();
+        editReplaceAction.setup(resourceBundle);
         return editReplaceAction;
-    }
-
-    @ParametersAreNonnullByDefault
-    public class EditFindAction extends AbstractAction implements ActionContextChange {
-
-        private ContextSearch contextSearch;
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void register(ActionContextChangeRegistration registrar) {
-            registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
-                contextSearch = instance;
-                setEnabled(instance != null);
-            });
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    public class EditFindAgainAction extends AbstractAction implements ActionContextChange {
-
-        private ContextSearch contextSearch;
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        }
-
-        @Override
-        public void register(ActionContextChangeRegistration registrar) {
-            registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
-                contextSearch = instance;
-                setEnabled(instance != null);
-            });
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    public class EditReplaceAction extends AbstractAction implements ActionContextChange {
-
-        private ContextSearch contextSearch;
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        }
-
-        @Override
-        public void register(ActionContextChangeRegistration registrar) {
-            registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
-                contextSearch = instance;
-                setEnabled(instance != null);
-            });
-        }
     }
 }

@@ -35,7 +35,7 @@ import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
-import org.exbin.framework.action.api.ActionContextChangeRegistration;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 
 /**
  * Addon manager action.
@@ -59,7 +59,7 @@ public class AddonManagerAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
-        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ActionContextChangeRegistration registrar) -> {
+        putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
             registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                 dialogParentComponent = instance;
                 setEnabled(instance != null);
