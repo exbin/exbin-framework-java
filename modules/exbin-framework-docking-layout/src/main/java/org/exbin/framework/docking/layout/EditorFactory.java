@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.docking;
+package org.exbin.framework.docking.layout;
 
 import bibliothek.gui.dock.common.MultipleCDockableFactory;
 
