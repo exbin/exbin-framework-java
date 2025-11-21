@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.action;
+package org.exbin.framework.docking.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -23,25 +23,26 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.docking.MultiDocking;
+import org.exbin.framework.docking.api.ContextDocking;
+import org.exbin.framework.document.api.ContextDocument;
+import org.exbin.framework.document.api.Document;
 
 /**
- * Save all file action.
+ * Close other files action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SaveAllFileAction extends AbstractAction {
+public class CloseOtherFilesAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileSaveAllAction";
+    public static final String ACTION_ID = "fileCloseOtherAction";
 
-    private EditorProvider editorProvider;
-    private FileHandler fileHandler;
+    private MultiDocking multiDocking;
+    private Document document;
 
-    public SaveAllFileAction() {
+    public CloseOtherFilesAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
@@ -51,22 +52,24 @@ public class SaveAllFileAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(FileHandler.class, (instance) -> {
-                    fileHandler = instance;
-                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
+                    multiDocking = instance instanceof MultiDocking ? (MultiDocking) instance : null;
+                    updateByContext();
                 });
-                registrar.registerUpdateListener(EditorProvider.class, (instance) -> {
-                    editorProvider = instance;
-                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                registrar.registerUpdateListener(ContextDocument.class, (instance) -> {
+                    document = instance instanceof Document ? (Document) instance : null;
+                    updateByContext();
                 });
             }
         });
     }
+    
+    protected void updateByContext() {
+        setEnabled(multiDocking != null && document != null && multiDocking.getDocuments().size() > 1);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (fileHandler != null && (editorProvider instanceof MultiEditorProvider)) {
-            ((MultiEditorProvider) editorProvider).saveAllFiles();
-        }
+        multiDocking.closeOtherDocuments(document);
     }
 }

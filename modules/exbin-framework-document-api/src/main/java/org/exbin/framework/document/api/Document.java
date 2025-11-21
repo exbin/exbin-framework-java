@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.editor.api.EditorProvider;
+package org.exbin.framework.document.api;
 
 /**
- * TODO: Editor manager.
+ * Interface for document.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class EditorManager {
+public interface Document {
 
-    private final List<EditorProvider> editorProviders = new ArrayList<>();
-
-    public void registerEditorProvider(EditorProvider editorProvider) {
-        editorProviders.add(editorProvider);
-    }
 }

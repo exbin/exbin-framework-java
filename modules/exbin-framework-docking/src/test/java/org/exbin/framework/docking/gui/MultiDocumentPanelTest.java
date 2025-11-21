@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.gui;
+package org.exbin.framework.docking.gui;
 
 import org.exbin.framework.utils.TestApplication;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.utils.UtilsModule;
 import org.exbin.framework.utils.WindowUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Test for UnsavedFilesPanel.
+ * Test for MultiDocumentPanel.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class UnsavedFilesPanelTest {
+public class MultiDocumentPanelTest {
 
     @Test
     @Ignore
     public void testPanel() {
-        TestApplication testApplication = UtilsModule.createTestApplication();
-        testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new UnsavedFilesPanel());
-        });
+        TestApplication.run(() -> WindowUtils.invokeWindow(new MultiDocumentPanel()));
 
         UiUtils.waitForUiThread();
     }

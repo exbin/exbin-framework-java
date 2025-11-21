@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.gui;
+package org.exbin.framework.docking.gui;
 
 import java.util.List;
 import java.util.ResourceBundle;
@@ -22,24 +22,23 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.App;
-import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.document.api.Document;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
 /**
- * Unsaved files panel.
+ * Modified documents panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class UnsavedFilesPanel extends javax.swing.JPanel {
+public class ModifiedDocumentsPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(UnsavedFilesPanel.class);
-    private List<FileHandler> fileHandlers;
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ModifiedDocumentsPanel.class);
+    private List<Document> documents;
     private Controller controller;
 
-    public UnsavedFilesPanel() {
+    public ModifiedDocumentsPanel() {
         initComponents();
         init();
     }
@@ -63,11 +62,12 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
         this.controller = controller;
     }
 
-    public void setUnsavedFiles(List<FileHandler> fileHandlers, MultiEditorProvider multiEditorProvider) {
-        this.fileHandlers = fileHandlers;
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
         DefaultListModel<String> listModel = new DefaultListModel<>();
-        for (FileHandler fileHandler : fileHandlers) {
-            listModel.addElement(multiEditorProvider.getName(fileHandler));
+        for (Document document : documents) {
+            // TODO
+            listModel.addElement("Document");
         }
         filesList.setModel(listModel);
         filesList.invalidate();
@@ -172,19 +172,19 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
             int shift = 0;
             for (int i = 0; i < selectedIndices.length; i++) {
                 int selectedIndex = selectedIndices[i];
-                FileHandler fileHandler = fileHandlers.get(selectedIndex - shift);
-                if (controller.saveFile(fileHandler)) {
+                Document document = documents.get(selectedIndex - shift);
+                if (controller.saveFile(document)) {
                     DefaultListModel<String> listModel = (DefaultListModel<String>) filesList.getModel();
                     listModel.remove(selectedIndex - shift);
-                    fileHandlers.remove(selectedIndex - shift);
+                    documents.remove(selectedIndex - shift);
                     shift++;
                 } else {
                     break;
                 }
             }
 
-            if (fileHandlers.isEmpty()) {
-                controller.discardAll(fileHandlers);
+            if (documents.isEmpty()) {
+                controller.discardAll(documents);
             }
         }
     }//GEN-LAST:event_saveButtonActionPerformed
@@ -192,28 +192,28 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     private void saveAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAllButtonActionPerformed
         if (controller != null) {
             int shift = 0;
-            int size = fileHandlers.size();
+            int size = documents.size();
             for (int index = 0; index < size; index++) {
-                FileHandler fileHandler = fileHandlers.get(index - shift);
-                if (controller.saveFile(fileHandler)) {
+                Document document = documents.get(index - shift);
+                if (controller.saveFile(document)) {
                     DefaultListModel<String> listModel = (DefaultListModel<String>) filesList.getModel();
                     listModel.remove(index - shift);
-                    fileHandlers.remove(index - shift);
+                    documents.remove(index - shift);
                     shift++;
                 } else {
                     break;
                 }
             }
 
-            if (fileHandlers.isEmpty()) {
-                controller.discardAll(fileHandlers);
+            if (documents.isEmpty()) {
+                controller.discardAll(documents);
             }
         }
     }//GEN-LAST:event_saveAllButtonActionPerformed
 
     private void discardAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardAllButtonActionPerformed
         if (controller != null) {
-            controller.discardAll(fileHandlers);
+            controller.discardAll(documents);
         }
     }//GEN-LAST:event_discardAllButtonActionPerformed
 
@@ -236,9 +236,9 @@ public class UnsavedFilesPanel extends javax.swing.JPanel {
     @ParametersAreNonnullByDefault
     public interface Controller {
 
-        boolean saveFile(FileHandler fileHandler);
+        boolean saveFile(Document document);
 
-        void discardAll(List<FileHandler> fileHandlers);
+        void discardAll(List<Document> documents);
 
         void cancel();
     }

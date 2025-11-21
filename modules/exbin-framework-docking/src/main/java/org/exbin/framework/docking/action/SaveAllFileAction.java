@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.action;
+package org.exbin.framework.docking.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -23,23 +23,23 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.docking.MultiDocking;
+import org.exbin.framework.docking.api.ContextDocking;
 
 /**
- * Close all files action.
+ * Save all file action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseAllFilesAction extends AbstractAction {
+public class SaveAllFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileCloseAllAction";
+    public static final String ACTION_ID = "fileSaveAllAction";
 
-    private EditorProvider editorProvider;
+    protected MultiDocking multiDocking;
 
-    public CloseAllFilesAction() {
+    public SaveAllFileAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
@@ -49,18 +49,25 @@ public class CloseAllFilesAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(EditorProvider.class, (instance) -> {
-                    editorProvider = instance;
-                    setEnabled(editorProvider instanceof MultiEditorProvider);
+                registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
+                    updateByContext(instance);
+                });
+                registrar.registerStateChangeListener(ContextDocking.class, (instance, changeType) -> {
+                    if (MultiDocking.ChangeType.DOCUMENT_LIST.equals(changeType)) {
+                        updateByContext(instance);
+                    }
                 });
             }
         });
     }
 
+    protected void updateByContext(ContextDocking context) {
+        multiDocking = context instanceof MultiDocking ? (MultiDocking) context : null;
+        setEnabled(multiDocking != null && multiDocking.hasOpenedDocuments());
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (editorProvider instanceof MultiEditorProvider) {
-            ((MultiEditorProvider) editorProvider).closeAllFiles();
-        }
+        multiDocking.saveAllDocuments();
     }
 }

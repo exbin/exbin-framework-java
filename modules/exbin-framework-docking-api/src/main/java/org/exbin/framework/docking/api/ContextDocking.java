@@ -21,4 +21,5 @@ package org.exbin.framework.docking.api;
  * @author ExBin Project (https://exbin.org)
  */
 public interface ContextDocking {
+
 }

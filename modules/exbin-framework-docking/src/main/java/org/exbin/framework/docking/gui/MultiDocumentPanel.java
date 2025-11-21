@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.gui;
+package org.exbin.framework.docking.gui;
 
 import java.awt.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.document.api.UiDocument;
 import org.exbin.framework.utils.UiUtils;
 
 /**
- * Multi editor panel.
+ * Multi document panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MultiEditorPanel extends javax.swing.JPanel {
+public class MultiDocumentPanel extends javax.swing.JPanel {
 
     private Controller controller;
     private int activeIndex = -1;
 
-    public MultiEditorPanel() {
+    public MultiDocumentPanel() {
         initComponents();
         init();
     }
@@ -54,17 +54,17 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         this.controller = controller;
     }
 
-    public void addFileHandler(FileHandler fileHandler, String text) {
-        tabbedPane.addTab(text, fileHandler.getComponent());
+    public void addDocument(UiDocument document, String text) {
+        tabbedPane.addTab(text, document.getComponent());
         tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
     }
 
-    public void insertFileHandler(int position, FileHandler fileHandler, String text) {
-        tabbedPane.insertTab(text, null, fileHandler.getComponent(), null, position);
+    public void insertDocument(int position, UiDocument document, String text) {
+        tabbedPane.insertTab(text, null, document.getComponent(), null, position);
         tabbedPane.setSelectedIndex(position);
     }
 
-    public void removeFileHandlerAt(int index) {
+    public void removeDocumentAtIndex(int index) {
         if (index == activeIndex) {
             changeActiveIndex(-1);
         } else if (index < activeIndex) {
@@ -74,15 +74,15 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         tabbedPane.removeTabAt(index);
     }
 
-    public void removeAllFileHandlers() {
+    public void removeAllDocuments() {
         tabbedPane.removeAll();
         changeActiveIndex(-1);
     }
 
-    public void removeAllFileHandlersExceptFile(int index) {
+    public void removeAllExceptIndex(int index) {
         for (int i = tabbedPane.getTabCount() - 1; i >= 0; i--) {
             if (i != index) {
-                removeFileHandlerAt(i);
+                removeDocumentAtIndex(i);
             }
         }
     }
@@ -100,7 +100,7 @@ public class MultiEditorPanel extends javax.swing.JPanel {
         }
     }
 
-    public void updateFileHandlerAt(int index, String text) {
+    public void setDocumentName(int index, String text) {
         Component component = tabbedPane.getTabComponentAt(index);
         component.setName(text);
     }

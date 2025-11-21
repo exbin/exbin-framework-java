@@ -18,6 +18,7 @@ package org.exbin.framework.docking.api;
 import java.awt.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
@@ -47,10 +48,31 @@ public interface DockingModuleApi extends Module {
     void addDockingView(Component component);
 
     /**
-     * Returns editor view handling.
+     * Registers menu file close actions.
+     */
+    void registerMenuFileCloseActions();
+
+    /**
+     * Creates close file action.
      *
-     * @return editor view handling
+     * @return close file action
      */
     @Nonnull
-    EditorViewHandling getEditorViewHandling();
+    AbstractAction createCloseFileAction();
+
+    /**
+     * Creates close all files action.
+     *
+     * @return close all files action
+     */
+    @Nonnull
+    AbstractAction createCloseAllFilesAction();
+
+    /**
+     * Creates close other files action.
+     *
+     * @return close other files action
+     */
+    @Nonnull
+    AbstractAction createCloseOtherFilesAction();
 }

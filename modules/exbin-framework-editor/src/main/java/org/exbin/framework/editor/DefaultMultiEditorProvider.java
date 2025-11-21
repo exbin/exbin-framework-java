@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.editor;
 
-import java.awt.Component;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,15 +29,9 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
-import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
-import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.editor.api.EditorFileHandler;
-import org.exbin.framework.editor.api.EditorModuleApi;
 import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.editor.gui.MultiEditorPanel;
 import org.exbin.framework.file.api.AllFileTypes;
 import org.exbin.framework.file.api.FileActionsApi;
 import org.exbin.framework.file.api.FileHandler;
@@ -48,11 +41,6 @@ import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileOperations;
-import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.menu.api.MenuDefinitionManagement;
-import org.exbin.framework.action.api.ActionContextRegistration;
-import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
@@ -67,7 +55,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
 
     protected final List<FileHandler> fileHandlers = new ArrayList<>();
     protected FileTypes fileTypes = new AllFileTypes();
-    protected final MultiEditorPanel multiEditorPanel = new MultiEditorPanel();
+//    protected final MultiEditorPanel multiEditorPanel = new MultiEditorPanel();
     protected int lastIndex = 0;
     protected int lastNewFileIndex = 0;
     protected final Map<Integer, Integer> newFilesMap = new HashMap<>();
@@ -82,7 +70,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     }
 
     private void init() {
-        EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
+/*        EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         menuModule.registerMenu(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
         MenuDefinitionManagement mgmt = menuModule.getMenuManager(FILE_CONTEXT_MENU_ID, EditorModule.MODULE_ID);
@@ -114,7 +102,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
                 fileContextPopupMenu.show(component, positionX, positionY);
                 // TODO dispose?
             }
-        });
+        }); */
         
         activeFileChanged();
     }
@@ -142,8 +130,8 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
      * TODO: Temporary method, rework provider later
      */
     public void updateActiveFile() {
-        int activeIndex = multiEditorPanel.getActiveIndex();
-        activeFile = activeIndex >= 0 ? fileHandlers.get(activeIndex) : null;
+//        int activeIndex = multiEditorPanel.getActiveIndex();
+//        activeFile = activeIndex >= 0 ? fileHandlers.get(activeIndex) : null;
     }
 
     @Nonnull
@@ -182,7 +170,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         fileHandlers.add(newFile);
 
         String title = getNewFileTitlePrefix() + " " + newFilesMap.get(newFile.getId());
-        multiEditorPanel.addFileHandler(newFile, title);
+//        multiEditorPanel.addFileHandler(newFile, title);
     }
 
     @Override
@@ -201,7 +189,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         initFileHandler(fileHandler);
         fileHandler.loadFromFile(fileUri, fileType);
         fileHandlers.add(fileHandler);
-        multiEditorPanel.addFileHandler(fileHandler, fileHandler.getTitle());
+//        multiEditorPanel.addFileHandler(fileHandler, fileHandler.getTitle());
     }
 
     public void initFileHandler(FileHandler fileHandler) {
@@ -290,9 +278,9 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
             return;
         }
 
-        EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
-        EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
-        editorActions.showAskForSaveDialog(modifiedFiles);
+//        EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
+//        EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
+//        editorActions.showAskForSaveDialog(modifiedFiles);
     }
 
     @Override
@@ -310,7 +298,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
             int index = fileHandlers.indexOf(fileHandler);
             if (index >= 0) {
                 fileHandlers.remove(index);
-                multiEditorPanel.removeFileHandlerAt(index);
+//                multiEditorPanel.removeFileHandlerAt(index);
                 newFilesMap.remove(fileHandler.getId());
             }
         }
@@ -321,7 +309,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
         if (releaseOtherFiles(exceptHandler)) {
             int exceptIndex = fileHandlers.indexOf(exceptHandler);
             removeAllFileHandlersExceptFile(exceptHandler);
-            multiEditorPanel.removeAllFileHandlersExceptFile(exceptIndex);
+//            multiEditorPanel.removeAllFileHandlersExceptFile(exceptIndex);
             int exceptionFileId = exceptHandler.getId();
             // I miss List.of()
             List<Integer> list = new ArrayList<>();
@@ -334,7 +322,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     public void closeAllFiles() {
         if (releaseAllFiles()) {
             fileHandlers.clear();
-            multiEditorPanel.removeAllFileHandlers();
+//            multiEditorPanel.removeAllFileHandlers();
             newFilesMap.clear();
         }
     }
@@ -350,7 +338,7 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
     @Nonnull
     @Override
     public JComponent getEditorComponent() {
-        return multiEditorPanel;
+        return new javax.swing.JLabel("TODO"); // multiEditorPanel;
     }
 
     @Nonnull
@@ -408,9 +396,10 @@ public abstract class DefaultMultiEditorProvider implements MultiEditorProvider 
             return true;
         }
 
-        EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
-        EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
-        return editorActions.showAskForSaveDialog(modifiedFiles);
+        return false;
+//        EditorModuleApi editorModule = App.getModule(EditorModuleApi.class);
+//        EditorActions editorActions = (EditorActions) editorModule.getEditorActions();
+//        return editorActions.showAskForSaveDialog(modifiedFiles);
     }
 
     @Nonnull

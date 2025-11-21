@@ -36,8 +36,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
 import org.exbin.framework.App;
-import org.exbin.framework.docking.api.EditorViewHandling;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -120,7 +120,7 @@ public class DockingLayoutModule implements DockingModuleApi {
         area.deploy(grid);
     }
 
-    @Nonnull
+/*    @Nonnull
     @Override
     public EditorViewHandling getEditorViewHandling() {
         return new EditorViewHandling() {
@@ -206,7 +206,7 @@ public class DockingLayoutModule implements DockingModuleApi {
                 }
             }
         };
-    }
+    } */
 
 //    @TabDockAction
 //    @EclipseTabDockAction
@@ -226,4 +226,24 @@ public class DockingLayoutModule implements DockingModuleApi {
 //            }
 //        }
 //    }
+
+    @Override
+    public void registerMenuFileCloseActions() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public AbstractAction createCloseFileAction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public AbstractAction createCloseAllFilesAction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public AbstractAction createCloseOtherFilesAction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -13,63 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.action;
+package org.exbin.framework.docking.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.file.api.FileHandler;
-import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.docking.MultiDocking;
+import org.exbin.framework.docking.api.ContextDocking;
 
 /**
- * Close file action.
+ * Close all files action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseFileAction extends AbstractAction {
+public class CloseAllFilesAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileCloseAction";
+    public static final String ACTION_ID = "fileCloseAllAction";
 
-    private EditorProvider editorProvider;
-    private FileHandler fileHandler;
+    protected MultiDocking multiDocking;
 
-    public CloseFileAction() {
+    public CloseAllFilesAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);
-        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(FileHandler.class, (instance) -> {
-                    fileHandler = instance;
-                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
+                    updateByContext(instance);
                 });
-                registrar.registerUpdateListener(EditorProvider.class, (instance) -> {
-                    editorProvider = instance;
-                    setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider));
+                registrar.registerStateChangeListener(ContextDocking.class, (instance, changeType) -> {
+                    if (MultiDocking.ChangeType.DOCUMENT_LIST.equals(changeType)) {
+                        updateByContext(instance);
+                    }
                 });
             }
         });
     }
 
+    protected void updateByContext(ContextDocking context) {
+        multiDocking = context instanceof MultiDocking ? (MultiDocking) context : null;
+        setEnabled(multiDocking != null && multiDocking.hasOpenedDocuments());
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (fileHandler != null && (editorProvider instanceof MultiEditorProvider)) {
-            ((MultiEditorProvider) editorProvider).closeFile(fileHandler);
-        }
+        multiDocking.closeAllDocuments();
     }
 }

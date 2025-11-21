@@ -2,11 +2,12 @@ rootProject.name = 'exbin-framework-docking-layout'
 
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
+    include ':modules:exbin-framework-docking-api'
     include ':modules:exbin-framework-contribution-api'
     include ':modules:exbin-framework-context-api'
     include ':modules:exbin-framework-action-api'
     include ':modules:exbin-framework-menu-popup-api'
-    include ':modules:exbin-framework-docking-api'
+    include ':modules:exbin-framework-document-api'
     include ':modules:exbin-framework-editor-api'
     include ':modules:exbin-framework-ui-api'
     include ':modules:exbin-framework-file-api'

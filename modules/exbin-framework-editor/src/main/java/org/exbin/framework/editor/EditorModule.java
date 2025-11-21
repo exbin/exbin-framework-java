@@ -29,24 +29,14 @@ import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.EditorProviderChangeListener;
 import org.exbin.framework.editor.api.EditorProviderComponentListener;
 import org.exbin.framework.editor.api.EditorModuleApi;
-import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.editor.action.CloseAllFilesAction;
-import org.exbin.framework.editor.action.CloseFileAction;
-import org.exbin.framework.editor.action.CloseOtherFilesAction;
-import org.exbin.framework.editor.action.EditorActions;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
 import org.exbin.framework.action.api.clipboard.TextClipboardController;
-import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
-import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
-import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
-import org.exbin.framework.menu.api.MenuDefinitionManagement;
 
 /**
  * Framework editor module.
@@ -64,8 +54,6 @@ public class EditorModule implements EditorModuleApi {
     private EditorProvider editorProvider = null;
     private ClipboardStateListener clipboardActionsUpdateListener = null;
     private ResourceBundle resourceBundle;
-
-    private EditorActions editorActions;
 
     public EditorModule() {
     }
@@ -247,54 +235,6 @@ public class EditorModule implements EditorModuleApi {
         for (EditorProviderComponentListener listener : componentListeners) {
             listener.componentCreated(component);
         }
-    }
-
-    @Override
-    public void registerMenuFileCloseActions() {
-        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuGroup(FileModuleApi.FILE_MENU_GROUP_ID);
-        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(createCloseFileAction());
-        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FileModuleApi.FILE_MENU_GROUP_ID));
-    }
-
-    @Nonnull
-    @Override
-    public CloseFileAction createCloseFileAction() {
-        CloseFileAction closeFileAction = new CloseFileAction();
-        ensureSetup();
-        closeFileAction.setup(resourceBundle);
-        return closeFileAction;
-    }
-
-    @Nonnull
-    @Override
-    public CloseAllFilesAction createCloseAllFilesAction() {
-        CloseAllFilesAction closeAllFilesAction = new CloseAllFilesAction();
-        ensureSetup();
-        closeAllFilesAction.setup(resourceBundle);
-        return closeAllFilesAction;
-    }
-
-    @Nonnull
-    @Override
-    public CloseOtherFilesAction createCloseOtherFilesAction() {
-        CloseOtherFilesAction closeOtherFilesAction = new CloseOtherFilesAction();
-        ensureSetup();
-        closeOtherFilesAction.setup(resourceBundle);
-        return closeOtherFilesAction;
-    }
-
-    @Nonnull
-    @Override
-    public EditorActions getEditorActions() {
-        if (editorActions == null) {
-            editorActions = new EditorActions();
-            ensureSetup();
-            editorActions.setup(resourceBundle, (MultiEditorProvider) editorProvider);
-        }
-        return editorActions;
     }
 
     @Override

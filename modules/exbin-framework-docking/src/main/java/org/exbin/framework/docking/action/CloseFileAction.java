@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.action;
+package org.exbin.framework.docking.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.api.EditorProvider;
-import org.exbin.framework.editor.api.MultiEditorProvider;
-import org.exbin.framework.file.api.FileHandler;
+import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.docking.MultiDocking;
+import org.exbin.framework.docking.api.ContextDocking;
+import org.exbin.framework.document.api.ContextDocument;
+import org.exbin.framework.document.api.Document;
 
 /**
  * Close file action.
@@ -34,43 +37,42 @@ import org.exbin.framework.context.api.ContextChangeRegistration;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CloseOtherFilesAction extends AbstractAction {
+public class CloseFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileCloseOtherAction";
+    public static final String ACTION_ID = "fileCloseAction";
 
-    private EditorProvider editorProvider;
-    private FileHandler fileHandler;
+    protected MultiDocking multiDocking;
+    protected Document document;
 
-    public CloseOtherFilesAction() {
+    public CloseFileAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);
+        putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(FileHandler.class, (instance) -> {
-                    fileHandler = instance;
-                    update();
+                registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
+                    multiDocking = instance instanceof MultiDocking ? (MultiDocking) instance : null;
+                    updateByContext();
                 });
-                registrar.registerUpdateListener(EditorProvider.class, (instance) -> {
-                    editorProvider = instance;
-                    update();
+                registrar.registerUpdateListener(ContextDocument.class, (instance) -> {
+                    document = instance instanceof Document ? (Document) instance : null;
+                    updateByContext();
                 });
             }
         });
     }
-    
-    private void update() {
-        setEnabled(fileHandler != null && (editorProvider instanceof MultiEditorProvider) && ((MultiEditorProvider) editorProvider).getFileHandlers().size() > 1);
+
+    protected void updateByContext() {
+        setEnabled(multiDocking != null && document != null);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (fileHandler != null && (editorProvider instanceof MultiEditorProvider)) {
-            ((MultiEditorProvider) editorProvider).closeOtherFiles(fileHandler);
-        }
+        multiDocking.closeDocument(document);
     }
 }

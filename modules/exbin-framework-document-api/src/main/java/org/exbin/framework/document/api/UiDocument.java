@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.gui;
+package org.exbin.framework.document.api;
 
-import org.exbin.framework.utils.TestApplication;
-import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.utils.WindowUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import javax.annotation.Nonnull;
+import javax.swing.JComponent;
 
 /**
- * Test for MultiEditorPanel.
+ * Interface for document with single UI component.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class MultiEditorPanelTest {
+public interface UiDocument extends Document {
 
-    @Test
-    @Ignore
-    public void testPanel() {
-        TestApplication.run(() -> WindowUtils.invokeWindow(new MultiEditorPanel()));
-
-        UiUtils.waitForUiThread();
-    }
+    /**
+     * Returns view component.
+     *
+     * @return component
+     */
+    @Nonnull
+    JComponent getComponent();
 }

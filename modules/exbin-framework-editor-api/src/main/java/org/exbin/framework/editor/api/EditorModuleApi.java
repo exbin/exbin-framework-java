@@ -17,7 +17,6 @@ package org.exbin.framework.editor.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
@@ -54,43 +53,6 @@ public interface EditorModuleApi extends Module {
      * @param component editor component
      */
     void notifyEditorComponentCreated(JComponent component);
-
-    /**
-     * Creates close file action.
-     *
-     * @return close file action
-     */
-    @Nonnull
-    AbstractAction createCloseFileAction();
-
-    /**
-     * Creates close all files action.
-     *
-     * @return close all files action
-     */
-    @Nonnull
-    AbstractAction createCloseAllFilesAction();
-
-    /**
-     * Creates close other files action.
-     *
-     * @return close other files action
-     */
-    @Nonnull
-    AbstractAction createCloseOtherFilesAction();
-
-    /**
-     * Returns editor actions.
-     *
-     * @return editor actions
-     */
-    @Nonnull
-    EditorActionsApi getEditorActions();
-
-    /**
-     * Registers menu file close actions.
-     */
-    void registerMenuFileCloseActions();
 
     /**
      * Adds change listener.
