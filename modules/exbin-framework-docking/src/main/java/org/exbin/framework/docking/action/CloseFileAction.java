@@ -26,7 +26,7 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.context.api.ContextChangeRegistration;
-import org.exbin.framework.docking.MultiDocking;
+import org.exbin.framework.docking.DefaultMultiDocking;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
@@ -41,7 +41,7 @@ public class CloseFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileCloseAction";
 
-    protected MultiDocking multiDocking;
+    protected DefaultMultiDocking multiDocking;
     protected Document document;
 
     public CloseFileAction() {
@@ -56,7 +56,7 @@ public class CloseFileAction extends AbstractAction {
             @Override
             public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
-                    multiDocking = instance instanceof MultiDocking ? (MultiDocking) instance : null;
+                    multiDocking = instance instanceof DefaultMultiDocking ? (DefaultMultiDocking) instance : null;
                     updateByContext();
                 });
                 registrar.registerUpdateListener(ContextDocument.class, (instance) -> {

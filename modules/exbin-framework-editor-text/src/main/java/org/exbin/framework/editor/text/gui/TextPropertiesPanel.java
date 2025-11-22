@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.text.Document;
 import org.exbin.framework.App;
-import org.exbin.framework.editor.text.TextFileHandler;
+import org.exbin.framework.editor.text.TextDocument;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
@@ -171,7 +171,7 @@ public class TextPropertiesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField wordsCountTextField;
     // End of variables declaration//GEN-END:variables
 
-    public void setDocument(TextFileHandler fileHandler) {
+    public void setDocument(TextDocument fileHandler) {
         Optional<URI> fileUri = fileHandler.getFileUri();
         fileNameTextField.setText(fileUri.isPresent() ? fileUri.get().toString() : "");
         TextPanel textPanel = (TextPanel) fileHandler.getComponent();

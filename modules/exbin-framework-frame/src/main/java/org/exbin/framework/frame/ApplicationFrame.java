@@ -34,7 +34,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionContextRegistration;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.window.api.gui.WindowHeaderPanel;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
@@ -46,6 +45,7 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.context.api.ContextModuleApi;
 import org.exbin.framework.action.api.ActionManagement;
 import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Basic appplication frame.
@@ -53,7 +53,7 @@ import org.exbin.framework.context.api.ActiveContextManagement;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ApplicationFrame extends javax.swing.JFrame implements ApplicationFrameHandler, WindowHeaderPanel.WindowHeaderDecorationProvider {
+public class ApplicationFrame extends javax.swing.JFrame implements ComponentFrame, WindowHeaderPanel.WindowHeaderDecorationProvider {
 
     private ApplicationExitHandler exitHandler;
     private JPanel currentStatusBarPanel = null;

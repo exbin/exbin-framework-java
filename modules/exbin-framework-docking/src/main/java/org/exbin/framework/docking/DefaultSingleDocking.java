@@ -15,21 +15,46 @@
  */
 package org.exbin.framework.docking;
 
+import java.awt.Component;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.document.api.Document;
 import org.w3c.dom.DocumentType;
 
 /**
- * Interface for editor view handling.
+ * Default implementation of the document docking supporting single document
+ * only.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SingleDocking implements ContextDocking, DocumentDocking {
+public class DefaultSingleDocking implements ContextDocking, DocumentDocking {
+
+    @Nonnull
+    @Override
+    public Component getDockingComponent() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public Component getComponent() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void notifyActivated(ActiveContextManagement contextManager) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void notifyDeactivated(ActiveContextManagement contextManager) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     @Nonnull
     @Override

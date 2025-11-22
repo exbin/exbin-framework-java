@@ -16,20 +16,19 @@
 package org.exbin.framework.document.api;
 
 import javax.annotation.Nonnull;
-import javax.swing.JComponent;
 
 /**
- * Interface for document with single UI component.
+ * Interface for document provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface UiDocument extends Document {
+public interface DocumentProvider {
 
     /**
-     * Returns view component.
+     * Create default new document.
      *
-     * @return component
+     * @return document
      */
     @Nonnull
-    JComponent getComponent();
+    Document createDefaultDocument();
 }

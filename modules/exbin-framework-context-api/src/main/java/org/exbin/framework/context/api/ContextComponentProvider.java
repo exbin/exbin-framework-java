@@ -13,23 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.api;
+package org.exbin.framework.context.api;
 
+import java.awt.Component;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
 
 /**
- * Interface for editor provider component listener.
+ * Interface for content aware component provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface EditorProviderComponentListener {
+public interface ContextComponentProvider {
 
     /**
-     * Notifies that editor provider component was created.
+     * Returns component.
      *
-     * @param component editor provider component
+     * @return component
      */
-    void componentCreated(JComponent component);
+    @Nonnull
+    Component getComponent();
+
+    /**
+     * Notifies activation of the component.
+     *
+     * @param contextManager context manager
+     */
+    void notifyActivated(ActiveContextManagement contextManager);
+
+    /**
+     * Notifies deactivation of the component.
+     *
+     * @param contextManager context manager
+     */
+    void notifyDeactivated(ActiveContextManagement contextManager);
 }

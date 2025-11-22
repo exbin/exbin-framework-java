@@ -24,7 +24,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.context.api.ContextChangeRegistration;
-import org.exbin.framework.docking.MultiDocking;
+import org.exbin.framework.docking.DefaultMultiDocking;
 import org.exbin.framework.docking.api.ContextDocking;
 
 /**
@@ -37,7 +37,7 @@ public class CloseAllFilesAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileCloseAllAction";
 
-    protected MultiDocking multiDocking;
+    protected DefaultMultiDocking multiDocking;
 
     public CloseAllFilesAction() {
     }
@@ -53,7 +53,7 @@ public class CloseAllFilesAction extends AbstractAction {
                     updateByContext(instance);
                 });
                 registrar.registerStateChangeListener(ContextDocking.class, (instance, changeType) -> {
-                    if (MultiDocking.ChangeType.DOCUMENT_LIST.equals(changeType)) {
+                    if (DefaultMultiDocking.ChangeType.DOCUMENT_LIST.equals(changeType)) {
                         updateByContext(instance);
                     }
                 });
@@ -62,7 +62,7 @@ public class CloseAllFilesAction extends AbstractAction {
     }
 
     protected void updateByContext(ContextDocking context) {
-        multiDocking = context instanceof MultiDocking ? (MultiDocking) context : null;
+        multiDocking = context instanceof DefaultMultiDocking ? (DefaultMultiDocking) context : null;
         setEnabled(multiDocking != null && multiDocking.hasOpenedDocuments());
     }
 

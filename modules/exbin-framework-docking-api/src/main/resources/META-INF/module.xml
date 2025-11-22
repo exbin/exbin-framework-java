@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.framework.docking.api.DockingModuleApi</api>
+  <name>Docking Support Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Module to support view docking</description>
+  <dependency>
+    <module id="org.exbin.framework.document.api.DocumentModuleApi" />
+  </dependency>
+</module>

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.frame.api.ApplicationExitListener;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Application exit handler.
@@ -42,7 +42,7 @@ public class ApplicationExitHandler {
         listeners.remove(listener);
     }
 
-    public void executeExit(ApplicationFrameHandler frameHandler) {
+    public void executeExit(ComponentFrame frameHandler) {
         for (ApplicationExitListener listener : listeners) {
             boolean canContinue = listener.processExit(frameHandler);
             if (!canContinue) {
@@ -53,7 +53,7 @@ public class ApplicationExitHandler {
         System.exit(0);
     }
     
-    public boolean canExit(ApplicationFrameHandler frameHandler) {
+    public boolean canExit(ComponentFrame frameHandler) {
         for (ApplicationExitListener listener : listeners) {
             boolean canContinue = listener.processExit(frameHandler);
             if (!canContinue) {

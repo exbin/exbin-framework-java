@@ -24,12 +24,12 @@ import org.exbin.framework.action.api.ActionManagement;
 import org.exbin.framework.context.api.ActiveContextManagement;
 
 /**
- * Interface for application frame.
+ * Interface for component frame.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ApplicationFrameHandler extends ContextFrame {
+public interface ComponentFrame extends ContextFrame {
 
     /**
      * Gets current frame.

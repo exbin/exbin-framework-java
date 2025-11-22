@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.api;
+package org.exbin.framework.document.api;
 
-import java.util.List;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.file.api.FileHandler;
+import javax.annotation.Nonnull;
+import javax.swing.JComponent;
 
 /**
- * Interface for editor handling actions.
+ * Interface for document with single view component.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface EditorActionsApi {
+public interface ComponentDocument extends Document {
 
     /**
-     * Shows dialog for multiple files saving / discarding.
+     * Returns view component.
      *
-     * @param fileHandlers file handlers
-     * @return true if successful
+     * @return component
      */
-    boolean showAskForSaveDialog(List<FileHandler> fileHandlers);
+    @Nonnull
+    JComponent getComponent();
 }

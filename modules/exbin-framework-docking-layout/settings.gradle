@@ -8,7 +8,6 @@ if (rootProject.path == ':') {
     include ':modules:exbin-framework-action-api'
     include ':modules:exbin-framework-menu-popup-api'
     include ':modules:exbin-framework-document-api'
-    include ':modules:exbin-framework-editor-api'
     include ':modules:exbin-framework-ui-api'
     include ':modules:exbin-framework-file-api'
     include ':modules:exbin-framework-language-api'

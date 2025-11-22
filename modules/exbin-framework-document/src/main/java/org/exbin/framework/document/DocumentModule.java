@@ -15,12 +15,16 @@
  */
 package org.exbin.framework.document;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.document.api.DocumentProvider;
 
 /**
  * Implementation of the document module.
@@ -31,6 +35,8 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 public class DocumentModule implements DocumentModuleApi {
 
     private ResourceBundle resourceBundle;
+
+    protected final List<DocumentProvider> documentCreators = new ArrayList<>();
 
     public DocumentModule() {
     }
@@ -51,5 +57,17 @@ public class DocumentModule implements DocumentModuleApi {
         if (resourceBundle == null) {
             getResourceBundle();
         }
+    }
+
+    @Override
+    public void registerDocumentProvider(DocumentProvider documentCreator) {
+        // TODO
+        documentCreators.add(documentCreator);
+    }
+
+    @Nonnull
+    @Override
+    public Document createDefaultDocument() {
+        return documentCreators.get(0).createDefaultDocument();
     }
 }

@@ -15,9 +15,11 @@
  */
 package org.exbin.framework.docking.api;
 
+import java.awt.Component;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.ContextComponentProvider;
 import org.exbin.framework.context.api.StateChangeType;
 import org.exbin.framework.document.api.Document;
 import org.w3c.dom.DocumentType;
@@ -28,7 +30,15 @@ import org.w3c.dom.DocumentType;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentDocking {
+public interface DocumentDocking extends ContextComponentProvider {
+
+    /**
+     * Returns docking component.
+     *
+     * @return docking component
+     */
+    @Nonnull
+    Component getDockingComponent();
 
     /**
      * Returns active document.

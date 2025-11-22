@@ -28,9 +28,9 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.frame.ApplicationFrame;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.ContextFrame;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Basic frame actions.
@@ -75,7 +75,7 @@ public class FrameActions {
 
         public static final String ACTION_ID = "viewToolBarAction";
 
-        protected ApplicationFrameHandler frame;
+        protected ComponentFrame frame;
 
         public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
@@ -104,7 +104,7 @@ public class FrameActions {
         }
 
         public void updateByContext(ContextFrame context) {
-            this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
+            this.frame = context instanceof ComponentFrame ? (ApplicationFrame) context : null;
             setEnabled(frame != null);
             if (frame != null) {
                 putValue(Action.SELECTED_KEY, frame.isToolBarVisible());
@@ -117,7 +117,7 @@ public class FrameActions {
 
         public static final String ACTION_ID = "viewToolBarCaptionsAction";
 
-        protected ApplicationFrameHandler frame;
+        protected ComponentFrame frame;
 
         public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
@@ -146,7 +146,7 @@ public class FrameActions {
         }
 
         public void updateByContext(ContextFrame context) {
-            this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
+            this.frame = context instanceof ComponentFrame ? (ApplicationFrame) context : null;
             setEnabled(frame != null);
             if (frame != null) {
                 putValue(Action.SELECTED_KEY, frame.isToolBarCaptionsVisible());
@@ -159,7 +159,7 @@ public class FrameActions {
 
         public static final String ACTION_ID = "viewStatusBarAction";
 
-        protected ApplicationFrameHandler frame;
+        protected ComponentFrame frame;
 
         public void setup(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
@@ -188,7 +188,7 @@ public class FrameActions {
         }
 
         public void updateByContext(ContextFrame context) {
-            this.frame = context instanceof ApplicationFrameHandler ? (ApplicationFrame) context : null;
+            this.frame = context instanceof ComponentFrame ? (ApplicationFrame) context : null;
             setEnabled(frame != null);
             if (frame != null) {
                 putValue(Action.SELECTED_KEY, frame.isStatusBarVisible());

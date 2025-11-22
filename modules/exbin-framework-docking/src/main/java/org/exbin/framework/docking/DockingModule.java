@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.docking;
 
-import java.awt.Component;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -29,7 +28,10 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.docking.action.CloseAllFilesAction;
 import org.exbin.framework.docking.action.CloseFileAction;
 import org.exbin.framework.docking.action.CloseOtherFilesAction;
+import org.exbin.framework.docking.api.BasicDockingType;
 import org.exbin.framework.docking.api.DockingModuleApi;
+import org.exbin.framework.docking.api.DockingType;
+import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.docking.gui.ModifiedDocumentsPanel;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.file.api.FileModuleApi;
@@ -66,14 +68,16 @@ public class DockingModule implements DockingModuleApi {
         }
     }
 
+    @Nonnull
     @Override
-    public Component getDockingPanel() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void addDockingView(Component component) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public DocumentDocking createDefaultDocking(DockingType dockingType) {
+        if (BasicDockingType.SINGLE.equals(dockingType)) {
+            return new DefaultSingleDocking();
+        } else if (BasicDockingType.MULTI.equals(dockingType)) {
+            return new DefaultMultiDocking();
+        }
+        
+        throw new IllegalStateException("Unsupported docking type " + dockingType.toString());
     }
 
     public boolean showAskForSaveDialog(List<Document> documents, JComponent parentComponent) {

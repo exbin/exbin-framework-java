@@ -16,9 +16,9 @@
 package org.exbin.framework.frame.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Frame appearance settings applier.
@@ -32,9 +32,9 @@ public class FrameAppearanceSettingsApplier implements SettingsApplier {
 
     @Override
     public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
-        if (instance instanceof ApplicationFrameHandler) {
+        if (instance instanceof ComponentFrame) {
             FrameAppearanceOptions options = settingsProvider.getSettingsOptions(FrameAppearanceOptions.class);
-            ApplicationFrameHandler frame = (ApplicationFrameHandler) instance;
+            ComponentFrame frame = (ComponentFrame) instance;
             frame.setToolBarVisible(options.isShowToolBar());
             frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
             frame.setStatusBarVisible(options.isShowStatusBar());

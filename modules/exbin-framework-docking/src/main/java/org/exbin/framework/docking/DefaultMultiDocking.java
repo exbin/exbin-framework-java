@@ -15,35 +15,58 @@
  */
 package org.exbin.framework.docking;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
+import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.docking.api.ContextDocking;
-import org.exbin.framework.docking.api.DocumentDocking;
+import org.exbin.framework.docking.api.MultiDocking;
+import org.exbin.framework.docking.gui.MultiDocumentPanel;
+import org.exbin.framework.document.api.ComponentDocument;
+import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentModuleApi;
 import org.w3c.dom.DocumentType;
 
 /**
- * Interface for editor view handling.
+ * Default implementation of the document docking supporting multiple documents.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class MultiDocking implements ContextDocking, DocumentDocking {
+public class DefaultMultiDocking implements MultiDocking {
 
     protected final List<Document> openDocuments = new ArrayList<>();
+    protected final MultiDocumentPanel docking = new MultiDocumentPanel();
+
+    @Nonnull
+    @Override
+    public Component getDockingComponent() {
+        return docking;
+    }
+
+    @Nonnull
+    @Override
+    public Component getComponent() {
+        return docking;
+    }
 
     @Nonnull
     @Override
     public Optional<Document> getActiveDocument() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Optional.ofNullable(getDocument());
     }
 
     @Override
     public void openNewDocument() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+        Document document = documentModule.createDefaultDocument();
+        docking.addDocument((ComponentDocument) document, "TODO");
     }
 
     @Override
@@ -67,6 +90,7 @@ public class MultiDocking implements ContextDocking, DocumentDocking {
      * @return list of documents
      */
     @Nonnull
+    @Override
     public List<Document> getDocuments() {
         return openDocuments;
     }
@@ -74,6 +98,7 @@ public class MultiDocking implements ContextDocking, DocumentDocking {
     /**
      * Close all documents.
      */
+    @Override
     public void closeAllDocuments() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -83,6 +108,7 @@ public class MultiDocking implements ContextDocking, DocumentDocking {
      *
      * @param document exception document
      */
+    @Override
     public void closeOtherDocuments(Document document) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -90,6 +116,7 @@ public class MultiDocking implements ContextDocking, DocumentDocking {
     /**
      * Save all documents.
      */
+    @Override
     public void saveAllDocuments() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -99,7 +126,31 @@ public class MultiDocking implements ContextDocking, DocumentDocking {
      *
      * @return true if there is at least one opened document
      */
+    @Override
     public boolean hasOpenedDocuments() {
         return !openDocuments.isEmpty();
+    }
+
+    @Override
+    public void notifyActivated(ActiveContextManagement contextManager) {
+        contextManager.changeActiveState(ContextDocking.class, this);
+        Document document = getDocument();
+        contextManager.changeActiveState(ContextDocument.class, (ContextDocument) document);
+    }
+
+    @Override
+    public void notifyDeactivated(ActiveContextManagement contextManager) {
+        contextManager.changeActiveState(ContextDocking.class, null);
+        contextManager.changeActiveState(ContextDocument.class, null);
+    }
+    
+    @Nullable
+    private Document getDocument() {
+        int activeIndex = docking.getActiveIndex();
+        if (activeIndex < 0) {
+            return null;
+        }
+        
+        return openDocuments.get(activeIndex);
     }
 }

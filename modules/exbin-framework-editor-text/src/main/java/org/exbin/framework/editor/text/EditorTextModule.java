@@ -35,7 +35,6 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionContextRegistration;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.gui.TextStatusPanel;
 import org.exbin.framework.editor.text.action.EditSelectionAction;
@@ -95,7 +94,6 @@ public class EditorTextModule implements Module {
 
     public static final String TEXT_STATUS_BAR_ID = "textStatusBar";
 
-    private EditorProvider editorProvider;
     private ResourceBundle resourceBundle;
     private TextStatusPanel textStatusPanel;
 
@@ -109,11 +107,6 @@ public class EditorTextModule implements Module {
         if (resourceBundle == null) {
             getResourceBundle();
         }
-    }
-
-    @Nonnull
-    public void setEditorProvider(EditorProvider editorProvider) {
-        this.editorProvider = editorProvider;
     }
 
     @Nonnull
@@ -135,13 +128,14 @@ public class EditorTextModule implements Module {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         frameModule.registerStatusBar(MODULE_ID, TEXT_STATUS_BAR_ID, textStatusPanel);
         frameModule.switchStatusBar(TEXT_STATUS_BAR_ID);
-        JComponent editorComponent = editorProvider.getEditorComponent();
-        if (editorComponent instanceof TextPanel) {
-            ((TextPanel) editorComponent).registerTextStatus(textStatusPanel);
-        }
-        if (encodingsManager != null) {
-            // TODO encodingsManager.setTextEncodingStatus(textStatusPanel);
-        }
+        // TODO
+//        JComponent editorComponent = editorProvider.getEditorComponent();
+//        if (editorComponent instanceof TextPanel) {
+//            ((TextPanel) editorComponent).registerTextStatus(textStatusPanel);
+//        }
+//        if (encodingsManager != null) {
+//            // TODO encodingsManager.setTextEncodingStatus(textStatusPanel);
+//        }
     }
 
     public void registerOptionsMenuPanels() {
@@ -173,7 +167,8 @@ public class EditorTextModule implements Module {
     }
 
     public void registerUndoHandler() {
-        ((TextEditorProvider) editorProvider).registerUndoHandler();
+        //TODO
+        // ((TextEditorProvider) editorProvider).registerUndoHandler();
     }
 
     public void registerWordWrapping() {

@@ -13,22 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.api;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+package org.exbin.framework.docking.api;
 
 /**
- * Interface for editor provider changes.
+ * Interface for document docking type.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface EditorProviderChangeListener {
-
-    /**
-     * Notifies that editor provider changed.
-     *
-     * @param editorProvider editor provider
-     */
-    void providerChanged(EditorProvider editorProvider);
+public interface DockingType {
 }

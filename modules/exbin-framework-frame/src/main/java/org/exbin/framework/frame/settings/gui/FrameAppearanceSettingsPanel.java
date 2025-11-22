@@ -27,10 +27,10 @@ import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.context.api.ActiveContextProvider;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.ContextFrame;
 import org.exbin.framework.frame.settings.FrameAppearanceSettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsPanelUpdater;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Frame appearance settings panel.
@@ -62,9 +62,9 @@ public class FrameAppearanceSettingsPanel extends javax.swing.JPanel implements 
 
         if (contextProvider != null) {
             ContextFrame contextFrame = contextProvider.getActiveState(ContextFrame.class);
-            if (contextFrame instanceof ApplicationFrameHandler) {
+            if (contextFrame instanceof ComponentFrame) {
                 SettingsPanelUpdater updater = new SettingsPanelUpdater(this::notifyModified);
-                ApplicationFrameHandler frame = (ApplicationFrameHandler) contextFrame;
+                ComponentFrame frame = (ComponentFrame) contextFrame;
                 updater.setCheckBoxSelected(showToolbarCheckBox, frame.isToolBarVisible());
                 updater.setCheckBoxSelected(showCaptionsCheckBox, frame.isToolBarCaptionsVisible());
                 updater.setCheckBoxSelected(showStatusbarCheckBox, frame.isStatusBarVisible());
@@ -81,7 +81,7 @@ public class FrameAppearanceSettingsPanel extends javax.swing.JPanel implements 
 
         if (contextProvider != null) {
             ContextFrame contextFrame = contextProvider.getActiveState(ContextFrame.class);
-            if (contextFrame instanceof ApplicationFrameHandler) {
+            if (contextFrame instanceof ComponentFrame) {
                 FrameAppearanceSettingsApplier applier = new FrameAppearanceSettingsApplier();
                 applier.applySettings(contextFrame, settingsOptionsProvider);
                 contextProvider.notifyStateChange(ContextFrame.class, ContextFrame.ChangeType.BARS_LAYOUT_CHANGE);

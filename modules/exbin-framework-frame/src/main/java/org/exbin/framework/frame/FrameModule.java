@@ -16,6 +16,7 @@
 package org.exbin.framework.frame;
 
 import com.formdev.flatlaf.extras.FlatDesktop;
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -30,12 +31,12 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.App;
 import org.exbin.framework.frame.api.ApplicationExitListener;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
 import org.exbin.framework.utils.WindowUtils;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
@@ -47,6 +48,7 @@ import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.context.api.ContextComponentProvider;
 import org.exbin.framework.frame.settings.FrameAppearanceOptions;
 import org.exbin.framework.frame.settings.FrameAppearanceSettingsApplier;
 import org.exbin.framework.frame.settings.FrameAppearanceSettingsComponent;
@@ -59,6 +61,7 @@ import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 import org.exbin.framework.frame.api.ContextFrame;
 import org.exbin.framework.options.api.PrefixOptionsStorage;
 import org.exbin.framework.window.settings.WindowPositionOptions;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Module frame handling.
@@ -225,7 +228,7 @@ public class FrameModule implements FrameModuleApi {
 
     @Nonnull
     @Override
-    public ApplicationFrameHandler getFrameHandler() {
+    public ComponentFrame getFrameHandler() {
         if (applicationFrame == null) {
             applicationFrame = new ApplicationFrame(undecorated);
             applicationFrame.initApplication();
@@ -238,9 +241,24 @@ public class FrameModule implements FrameModuleApi {
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             ActiveContextManagement contextManager = frameModule.getFrameHandler().getContextManager();
             contextManager.changeActiveState(ContextFrame.class, applicationFrame);
+            contextManager.changeActiveState(DialogParentComponent.class, new DialogParentComponent() {
+                @Nonnull
+                @Override
+                public Component getComponent() {
+                    return applicationFrame;
+                }
+            });
         }
 
         return applicationFrame;
+    }
+    
+    @Override
+    public void attachFrameContentComponent(ContextComponentProvider contextComponentProvider) {
+        ComponentFrame frameHandler = getFrameHandler();
+        frameHandler.setMainPanel(contextComponentProvider.getComponent());
+        ActiveContextManagement contextManager = frameHandler.getContextManager();
+        contextComponentProvider.notifyActivated(contextManager);
     }
 
     @Override

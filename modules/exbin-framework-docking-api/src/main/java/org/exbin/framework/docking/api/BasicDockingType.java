@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.api;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+package org.exbin.framework.docking.api;
 
 /**
- * Editor provider variants enumeration.
+ * Enumeration of basic document docking types.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public enum EditorProviderVariant {
+public enum BasicDockingType implements DockingType {
+
+    /**
+     * Docking supporting simple document only.
+     */
     SINGLE,
-    MULTI
+    MULTI;
 }

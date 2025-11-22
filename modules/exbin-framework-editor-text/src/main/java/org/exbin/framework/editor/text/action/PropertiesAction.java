@@ -25,7 +25,7 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.editor.text.gui.TextPropertiesPanel;
-import org.exbin.framework.editor.text.TextFileHandler;
+import org.exbin.framework.editor.text.TextDocument;
 import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
@@ -56,7 +56,7 @@ public class PropertiesAction extends AbstractAction {
             public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(FileHandler.class, (instance) -> {
                     fileHandler = instance;
-                    setEnabled(fileHandler instanceof TextFileHandler);
+                    setEnabled(fileHandler instanceof TextDocument);
                 });
             }
         });
@@ -64,10 +64,10 @@ public class PropertiesAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (fileHandler instanceof TextFileHandler) {
+        if (fileHandler instanceof TextDocument) {
             WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
             TextPropertiesPanel propertiesPanel = new TextPropertiesPanel();
-            propertiesPanel.setDocument((TextFileHandler) fileHandler);
+            propertiesPanel.setDocument((TextDocument) fileHandler);
             CloseControlPanel controlPanel = new CloseControlPanel();
             final WindowHandler dialog = windowModule.createDialog(propertiesPanel, controlPanel);
             windowModule.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());

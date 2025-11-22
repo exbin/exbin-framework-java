@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.docking.api;
 
-import java.awt.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -33,19 +32,13 @@ public interface DockingModuleApi extends Module {
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DockingModuleApi.class);
 
     /**
-     * Returns docking viewport panel.
+     * Creates default document docking.
      *
-     * @return panel component
+     * @param dockingType docking type
+     * @return document docking
      */
     @Nonnull
-    Component getDockingPanel();
-
-    /**
-     * Adds new view for given component.
-     *
-     * @param component component
-     */
-    void addDockingView(Component component);
+    DocumentDocking createDefaultDocking(DockingType dockingType);
 
     /**
      * Registers menu file close actions.

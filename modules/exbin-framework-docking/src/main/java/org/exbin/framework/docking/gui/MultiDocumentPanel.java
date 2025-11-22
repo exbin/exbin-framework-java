@@ -17,8 +17,8 @@ package org.exbin.framework.docking.gui;
 
 import java.awt.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.document.api.UiDocument;
 import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.document.api.ComponentDocument;
 
 /**
  * Multi document panel.
@@ -54,12 +54,12 @@ public class MultiDocumentPanel extends javax.swing.JPanel {
         this.controller = controller;
     }
 
-    public void addDocument(UiDocument document, String text) {
+    public void addDocument(ComponentDocument document, String text) {
         tabbedPane.addTab(text, document.getComponent());
         tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
     }
 
-    public void insertDocument(int position, UiDocument document, String text) {
+    public void insertDocument(int position, ComponentDocument document, String text) {
         tabbedPane.insertTab(text, null, document.getComponent(), null, position);
         tabbedPane.setSelectedIndex(position);
     }

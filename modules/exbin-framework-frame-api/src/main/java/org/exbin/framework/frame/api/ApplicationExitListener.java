@@ -31,5 +31,5 @@ public interface ApplicationExitListener {
      * @param frameHandler frame handler
      * @return true if exit should proceed
      */
-    boolean processExit(ApplicationFrameHandler frameHandler);
+    boolean processExit(ComponentFrame frameHandler);
 }

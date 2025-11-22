@@ -24,6 +24,7 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.context.api.ContextComponentProvider;
 
 /**
  * Interface for framework frame module.
@@ -49,7 +50,14 @@ public interface FrameModuleApi extends Module {
      * @return frame handler
      */
     @Nonnull
-    ApplicationFrameHandler getFrameHandler();
+    ComponentFrame getFrameHandler();
+
+    /**
+     * Attaches component provider to the component frame.
+     *
+     * @param contextComponentProvider component provider
+     */
+    void attachFrameContentComponent(ContextComponentProvider contextComponentProvider);
 
     /**
      * Creates and initializes main menu and toolbar.

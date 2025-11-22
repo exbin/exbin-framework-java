@@ -13,30 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.editor.api;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ActiveContextManagement;
+package org.exbin.framework.document.api;
 
 /**
- * Interface for file handler for editor.
+ * Interface for editable document.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface EditorFileHandler {
+public interface EditableDocument extends Document {
 
     /**
-     * Notifies file handler activated as editor.
+     * Returns whether document was modified.
      *
-     * @param contextManager context manager
+     * @return true if modified
      */
-    void componentActivated(ActiveContextManagement contextManager);
-
-    /**
-     * Notifies file handler deactivated as editor.
-     *
-     * @param contextManager context manager
-     */
-    void componentDeactivated(ActiveContextManagement contextManager);
+    boolean isModified();
 }

@@ -31,25 +31,27 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.editor.text.gui.TextPanel;
-import org.exbin.framework.file.api.EditableFileHandler;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.editor.text.gui.TextPanelCompoundUndoManager;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.DialogParentComponent;
-import org.exbin.framework.editor.api.EditorFileHandler;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
 import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.document.api.ComponentDocument;
+import org.exbin.framework.document.api.ContextDocument;
+import org.exbin.framework.document.api.EditableDocument;
+import org.exbin.framework.file.api.FileDocument;
 import org.exbin.framework.text.encoding.ContextEncoding;
 import org.exbin.framework.text.font.TextFontState;
 
 /**
- * Text file handler.
+ * Text document.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
+public class TextDocument implements ContextDocument, ComponentDocument, FileDocument, EditableDocument {
 
     protected final TextPanel textPanel = new TextPanel();
 
@@ -60,7 +62,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     protected DialogParentComponent dialogParentComponent;
     protected UndoRedoController undoRedoControl = null;
     protected EditorTextPanelComponent textPanelComponent;
-    public TextFileHandler() {
+    public TextDocument() {
         init();
     }
 
@@ -104,18 +106,12 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         notifyUndoChanged();
     }
 
-    @Override
-    public int getId() {
-        return -1;
-    }
-
     @Nonnull
     @Override
     public TextPanel getComponent() {
         return textPanel;
     }
 
-    @Override
     public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
         File file = new File(fileUri);
         try {
@@ -130,24 +126,21 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
             textPanel.setText(data.toString());
             this.fileUri = fileUri;
         } catch (IOException ex) {
-            Logger.getLogger(TextFileHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TextDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         textPanel.setModified(false);
         notifyUndoChanged();
     }
 
-    @Override
     public boolean canSave() {
         return textPanelComponent.isEditable();
     }
 
-    @Override
     public void saveFile() {
         saveToFile(fileUri, fileType);
     }
 
-    @Override
     public void saveToFile(URI fileUri, FileType fileType) {
         File file = new File(fileUri);
         try {
@@ -165,7 +158,7 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(TextFileHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TextDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         textPanel.setModified(false);
@@ -179,7 +172,6 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     }
 
     @Nonnull
-    @Override
     public String getTitle() {
         if (fileUri != null) {
             String path = fileUri.getPath();
@@ -196,19 +188,16 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
     }
 
     @Nonnull
-    @Override
     public Optional<FileType> getFileType() {
         return Optional.ofNullable(fileType);
     }
 
-    @Override
     public void clearFile() {
         textPanel.setText("");
         textPanel.setModified(false);
         notifyUndoChanged();
     }
 
-    @Override
     public void setFileType(FileType fileType) {
         this.fileType = fileType;
     }
@@ -218,7 +207,6 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         return textPanel.isModified();
     }
 
-    @Override
     public void componentActivated(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
         contextManager.changeActiveState(ContextComponent.class, textPanelComponent);
@@ -228,7 +216,6 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         contextManager.changeActiveState(DialogParentComponent.class, (DialogParentComponent) () -> textPanel);
     }
 
-    @Override
     public void componentDeactivated(ActiveContextManagement contextManager) {
         this.contextManager = null;
         contextManager.changeActiveState(ContextComponent.class, null);
@@ -238,7 +225,6 @@ public class TextFileHandler implements EditableFileHandler, EditorFileHandler {
         contextManager.changeActiveState(DialogParentComponent.class, dialogParentComponent);
     }
 
-    @Override
     public void setDialogParentComponent(DialogParentComponent dialogParentComponent) {
         this.dialogParentComponent = dialogParentComponent;
     }

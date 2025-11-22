@@ -34,7 +34,6 @@ import org.exbin.framework.contribution.api.RelativeSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.file.action.FileActions;
 import org.exbin.framework.file.action.NewFileAction;
 import org.exbin.framework.file.action.OpenFileAction;
@@ -60,6 +59,7 @@ import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.toolbar.api.ToolBarDefinitionManagement;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Framework file module.
@@ -161,7 +161,7 @@ public class FileModule implements FileModuleApi, FileOperationsProvider {
     @Override
     public void registerCloseListener() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.addExitListener((ApplicationFrameHandler frameHandler) -> {
+        frameModule.addExitListener((ComponentFrame frameHandler) -> {
             if (fileOperations != null) {
                 return fileOperations.releaseAllFiles();
             }

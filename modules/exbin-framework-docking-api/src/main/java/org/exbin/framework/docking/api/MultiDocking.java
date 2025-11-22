@@ -13,35 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
+package org.exbin.framework.docking.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.document.api.Document;
 
 /**
- * Interface for document support module.
+ * Interface for editor view handling.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentModuleApi extends Module {
-
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DocumentModuleApi.class);
+public interface MultiDocking extends ContextDocking, DocumentDocking {
 
     /**
-     * Registers document provider.
+     * Returns list of opened documents.
      *
-     * @param documentProvider document provider
-     */
-    void registerDocumentProvider(DocumentProvider documentProvider);
-
-    /**
-     * Creates default document.
-     *
-     * @return document
+     * @return list of documents
      */
     @Nonnull
-    Document createDefaultDocument();
+    List<Document> getDocuments();
+
+    /**
+     * Close all documents.
+     */
+    void closeAllDocuments();
+
+    /**
+     * Close other documents.
+     *
+     * @param document exception document
+     */
+    void closeOtherDocuments(Document document);
+
+    /**
+     * Save all documents.
+     */
+    void saveAllDocuments();
+
+    /**
+     * Returns true if any document is opened.
+     *
+     * @return true if there is at least one opened document
+     */
+    boolean hasOpenedDocuments();
 }

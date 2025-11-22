@@ -36,13 +36,13 @@ import org.exbin.framework.window.api.gui.OptionsControlPanel;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.SettingsPageReceiver;
 import org.exbin.framework.context.api.ActiveContextManagement;
-import org.exbin.framework.frame.api.ApplicationFrameHandler;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.settings.SettingsOptionsStorage;
 import org.exbin.framework.options.settings.SettingsPage;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Options settings action.
@@ -157,7 +157,7 @@ public class SettingsAction extends AbstractAction {
 
         // TODO Run in top context
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationFrameHandler frameHandler = frameModule.getFrameHandler();
+        ComponentFrame frameHandler = frameModule.getFrameHandler();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
         
         for (SettingsPage page : pages) {
@@ -176,7 +176,7 @@ public class SettingsAction extends AbstractAction {
 
         // TODO Run in top context
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationFrameHandler frameHandler = frameModule.getFrameHandler();
+        ComponentFrame frameHandler = frameModule.getFrameHandler();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
         
         for (SettingsPage page : pages) {
@@ -191,7 +191,7 @@ public class SettingsAction extends AbstractAction {
     private void applyOnlyAll(Collection<SettingsPage> pages) {
         // TODO Run in top context
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ApplicationFrameHandler frameHandler = frameModule.getFrameHandler();
+        ComponentFrame frameHandler = frameModule.getFrameHandler();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
         
         SettingsOptionsStorage settingsOptionsStorage = new SettingsOptionsStorage();
