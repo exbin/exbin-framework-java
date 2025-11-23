@@ -57,6 +57,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
 
     private ApplicationExitHandler exitHandler;
     private JPanel currentStatusBarPanel = null;
+    private Component mainComponent;
     private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
     private ActiveContextManagement frameContextManager;
@@ -268,8 +269,15 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
         }
     }
 
+    @Nonnull
+    @Override
+    public Component getMainPanel() {
+        return mainComponent;
+    }
+
     @Override
     public void setMainPanel(Component component) {
+        mainComponent = component;
         getContentPane().add(component, java.awt.BorderLayout.CENTER);
     }
 

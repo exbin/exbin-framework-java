@@ -39,7 +39,7 @@ public interface StatusBarModuleApi extends Module {
      * Returns main status bar management interface.
      *
      * @param moduleId module id
-     * @return side bar management interface
+     * @return status bar management interface
      */
     @Nonnull
     StatusBarDefinitionManagement getMainStatusBarManager(String moduleId);
@@ -88,7 +88,7 @@ public interface StatusBarModuleApi extends Module {
     List<Action> getStatusBarManagedActions();
 
     /**
-     * Returns side bar into main frame.
+     * Returns status bar into main frame.
      */
     void registerFrameStatusBar();
 }

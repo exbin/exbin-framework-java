@@ -15,11 +15,9 @@
  */
 package org.exbin.framework.docking.api;
 
-import java.awt.Component;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ContextComponentProvider;
 import org.exbin.framework.context.api.StateChangeType;
 import org.exbin.framework.document.api.Document;
 import org.w3c.dom.DocumentType;
@@ -30,15 +28,7 @@ import org.w3c.dom.DocumentType;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentDocking extends ContextComponentProvider {
-
-    /**
-     * Returns docking component.
-     *
-     * @return docking component
-     */
-    @Nonnull
-    Component getDockingComponent();
+public interface DocumentDocking extends SidePanelDocking {
 
     /**
      * Returns active document.
@@ -64,15 +54,20 @@ public interface DocumentDocking extends ContextComponentProvider {
 
     /**
      * Opens new document of the default type.
+     *
+     * @return newly opened document
      */
-    void openNewDocument();
+    @Nonnull
+    Document openNewDocument();
 
     /**
      * Opens new document of the given type.
      *
      * @param documentType document type
+     * @return newly opened document
      */
-    void openNewDocument(DocumentType documentType);
+    @Nonnull
+    Document openNewDocument(DocumentType documentType);
 
     public enum ChangeType implements StateChangeType {
         DOCUMENT_LIST

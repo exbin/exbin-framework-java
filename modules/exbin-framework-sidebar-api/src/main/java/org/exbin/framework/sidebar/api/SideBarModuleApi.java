@@ -23,6 +23,7 @@ import javax.swing.JToolBar;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.docking.api.SidePanelDocking;
 
 /**
  * Interface for side bar support module.
@@ -88,7 +89,9 @@ public interface SideBarModuleApi extends Module {
     List<Action> getSideBarManagedActions();
 
     /**
-     * Returns side bar into main frame.
+     * Registers side bar to docking.
+     *
+     * @param docking docking
      */
-    void registerFrameSideBar();
+    void registerDockingSideBar(SidePanelDocking docking);
 }

@@ -13,44 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
+package org.exbin.framework.docking.api;
 
-import java.util.Optional;
-import javax.annotation.Nonnull;
+import java.awt.Component;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.Module;
-import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.context.api.ContextComponentProvider;
 
 /**
- * Interface for document support module.
+ * Interface for side panel docking.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentModuleApi extends Module {
-
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DocumentModuleApi.class);
+public interface SidePanelDocking extends ContextComponentProvider {
 
     /**
-     * Registers document provider.
+     * Sets side tool bar.
      *
-     * @param documentProvider document provider
+     * @param sideToolBar side tool bar
      */
-    void registerDocumentProvider(DocumentProvider documentProvider);
+    void setSideToolBar(@Nullable Component sideToolBar);
 
     /**
-     * Creates default document.
+     * Sets side component.
      *
-     * @return document
+     * @param sideComponent side component
      */
-    @Nonnull
-    Document createDefaultDocument();
+    void setSideComponent(@Nullable Component sideComponent);
 
     /**
-     * Opens default document.
+     * Sets visibility of the side panel.
      *
-     * @return document or empty if failed / cancelled
+     * @param visible true for visible
      */
-    @Nonnull
-    Optional<Document> openDefaultDocument();
+    void setSidePanelVisible(boolean visible);
 }

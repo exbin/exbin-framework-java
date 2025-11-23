@@ -25,7 +25,7 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.action.api.ActionContextRegistration;
 
 /**
- * Interface for side bar management.
+ * Interface for status bar management.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -33,43 +33,43 @@ import org.exbin.framework.action.api.ActionContextRegistration;
 public interface StatusBarManagement {
 
     /**
-     * Builds side bar from given síde bar id.
+     * Builds status bar from given síde bar id.
      *
-     * @param targetSideBar output side bar
-     * @param sideBarId side bar definition id
+     * @param targetStatusBar output status bar
+     * @param statusBarId status bar definition id
      * @param actionContextRegistration action context registration
      */
-    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration);
+    void buildStatusBar(JToolBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration);
 
     /**
-     * Registers side bar.
+     * Registers status bar.
      *
-     * @param sideBarId side bar id
+     * @param statusBarId status bar id
      * @param pluginId plugin id
      */
-    void registerSideBar(String sideBarId, String pluginId);
+    void registerStatusBar(String statusBarId, String pluginId);
 
     /**
-     * Registers side bar item contribution.
+     * Registers status bar item contribution.
      *
-     * @param sideBarId side bar id
+     * @param statusBarId status bar id
      * @param pluginId plugin id
      * @param action item action
      * @return item contribution
      */
     @Nonnull
-    ComponentStatusBarContribution registerSideBarItem(String sideBarId, String pluginId, Action action);
+    ComponentStatusBarContribution registerStatusBarItem(String statusBarId, String pluginId, Action action);
 
     /**
-     * Registers side bar group.
+     * Registers status bar group.
      *
-     * @param sideBarId side bar id
+     * @param statusBarId status bar id
      * @param pluginId plugin id
      * @param groupId group id
      * @return group contribution
      */
     @Nonnull
-    GroupSequenceContribution registerSideBarGroup(String sideBarId, String pluginId, String groupId);
+    GroupSequenceContribution registerStatusBarGroup(String statusBarId, String pluginId, String groupId);
 
     /**
      * Register contribution rule.
@@ -77,5 +77,5 @@ public interface StatusBarManagement {
      * @param contribution contribution
      * @param rule rule
      */
-    void registerSideBarRule(SequenceContribution contribution, SequenceContributionRule rule);
+    void registerStatusBarRule(SequenceContribution contribution, SequenceContributionRule rule);
 }

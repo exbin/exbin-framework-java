@@ -26,6 +26,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.api.MultiDocking;
+import org.exbin.framework.docking.gui.DockingPanel;
 import org.exbin.framework.docking.gui.MultiDocumentPanel;
 import org.exbin.framework.document.api.ComponentDocument;
 import org.exbin.framework.document.api.ContextDocument;
@@ -42,12 +43,13 @@ import org.w3c.dom.DocumentType;
 public class DefaultMultiDocking implements MultiDocking {
 
     protected final List<Document> openDocuments = new ArrayList<>();
-    protected final MultiDocumentPanel docking = new MultiDocumentPanel();
+    protected final DockingPanel docking = new DockingPanel();
+    protected final MultiDocumentPanel documentPanel = new MultiDocumentPanel();
+    protected Document lastActiveDocument = null;
+    protected ActiveContextManagement contextManager = null;
 
-    @Nonnull
-    @Override
-    public Component getDockingComponent() {
-        return docking;
+    public DefaultMultiDocking() {
+        docking.setContentComponent(documentPanel);
     }
 
     @Nonnull
@@ -62,15 +64,18 @@ public class DefaultMultiDocking implements MultiDocking {
         return Optional.ofNullable(getDocument());
     }
 
+    @Nonnull
     @Override
-    public void openNewDocument() {
+    public Document openNewDocument() {
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         Document document = documentModule.createDefaultDocument();
-        docking.addDocument((ComponentDocument) document, "TODO");
+        documentPanel.addDocument((ComponentDocument) document, "TODO");
+        return document;
     }
 
+    @Nonnull
     @Override
-    public void openNewDocument(DocumentType documentType) {
+    public Document openNewDocument(DocumentType documentType) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -84,69 +89,70 @@ public class DefaultMultiDocking implements MultiDocking {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /**
-     * Returns list of opened documents.
-     *
-     * @return list of documents
-     */
     @Nonnull
     @Override
     public List<Document> getDocuments() {
         return openDocuments;
     }
 
-    /**
-     * Close all documents.
-     */
     @Override
     public void closeAllDocuments() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /**
-     * Close other documents.
-     *
-     * @param document exception document
-     */
     @Override
     public void closeOtherDocuments(Document document) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /**
-     * Save all documents.
-     */
     @Override
     public void saveAllDocuments() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /**
-     * Returns true if any document is opened.
-     *
-     * @return true if there is at least one opened document
-     */
     @Override
     public boolean hasOpenedDocuments() {
         return !openDocuments.isEmpty();
     }
 
     @Override
+    public void setSideToolBar(@Nullable Component sideToolBar) {
+        docking.setSideToolBar(sideToolBar);
+    }
+
+    @Override
+    public void setSideComponent(@Nullable Component sideComponent) {
+        docking.setSideComponent(sideComponent);
+    }
+
+    @Override
+    public void setSidePanelVisible(boolean visible) {
+        docking.setSidePanelVisible(visible);
+    }
+
+    @Override
     public void notifyActivated(ActiveContextManagement contextManager) {
+        this.contextManager = contextManager;
         contextManager.changeActiveState(ContextDocking.class, this);
         Document document = getDocument();
         contextManager.changeActiveState(ContextDocument.class, (ContextDocument) document);
+        notifyActiveDocumentChanged();
     }
 
     @Override
     public void notifyDeactivated(ActiveContextManagement contextManager) {
         contextManager.changeActiveState(ContextDocking.class, null);
         contextManager.changeActiveState(ContextDocument.class, null);
+        this.contextManager = null;
+    }
+    
+    public void notifyActiveDocumentChanged() {
+        
     }
     
     @Nullable
     private Document getDocument() {
-        int activeIndex = docking.getActiveIndex();
+        int activeIndex = documentPanel.getActiveIndex();
         if (activeIndex < 0) {
             return null;
         }

@@ -15,7 +15,8 @@
  */
 package org.exbin.framework.sidebar;
 
-import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -23,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -34,6 +35,8 @@ import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.action.api.ActionContextRegistration;
 import org.exbin.framework.action.api.ActionManagement;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.docking.api.SidePanelDocking;
+import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Implementation of side bar module.
@@ -114,18 +117,31 @@ public class SideBarModule implements SideBarModuleApi {
         return new SideBarDefinitionManager(SideBarModule.this.getSideBarManager(), sideBarId, moduleId);
     }
 
+    @Nonnull
     @Override
-    public void registerFrameSideBar() {
+    public void registerDockingSideBar(SidePanelDocking docking) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ActionManagement actionManager = frameModule.getFrameHandler().getActionManager();
+        ComponentFrame frameHandler = frameModule.getFrameHandler();
+        ActionManagement actionManager = frameHandler.getActionManager();
         getSideBarManager();
-        JFrame frame = ((JFrame) frameModule.getFrame());
         JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
-        sideBarManager.buildSideBar(toolBar, MODULE_ID, actionModule.createActionContextRegistrar(actionManager));
         toolBar.setFloatable(false);
-        toolBar.add(new JButton("TEST"));
+        toolBar.setFocusable(false);
+        sideBarManager.buildSideBar(toolBar, MODULE_ID, actionModule.createActionContextRegistrar(actionManager));
+        JButton testButton = new JButton("TEST");
+        testButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean selected = testButton.isSelected();
+                docking.setSidePanelVisible(!selected);
+                testButton.setSelected(!selected);
+            }
+        });
+        testButton.setFocusable(false);
+        toolBar.add(testButton);
         toolBar.invalidate();
-        frame.getContentPane().add(toolBar, BorderLayout.WEST);
+        docking.setSideToolBar(toolBar);
+        docking.setSideComponent(new JLabel("TEST"));
     }
 }

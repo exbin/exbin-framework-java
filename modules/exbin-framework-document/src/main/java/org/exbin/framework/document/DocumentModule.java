@@ -17,6 +17,7 @@ package org.exbin.framework.document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -69,5 +70,11 @@ public class DocumentModule implements DocumentModuleApi {
     @Override
     public Document createDefaultDocument() {
         return documentCreators.get(0).createDefaultDocument();
+    }
+
+    @Nonnull
+    @Override
+    public Optional<Document> openDefaultDocument() {
+        return documentCreators.get(0).openDefaultDocument();
     }
 }

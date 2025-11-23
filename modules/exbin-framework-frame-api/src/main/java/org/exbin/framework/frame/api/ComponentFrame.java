@@ -87,11 +87,19 @@ public interface ComponentFrame extends ContextFrame {
     void initApplication();
 
     /**
+     * Returns content of central area of the frame.
+     *
+     * @return component
+     */
+    @Nonnull
+    Component getMainPanel();
+
+    /**
      * Sets content of central area of the frame.
      *
-     * @param component component to use
+     * @param container component to use
      */
-    void setMainPanel(Component component);
+    void setMainPanel(Component container);
 
     /**
      * Loads main menu for the frame.

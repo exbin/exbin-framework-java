@@ -13,31 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
+package org.exbin.framework.action.api;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /**
- * Interface for document provider.
+ * Provider for action context registration.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface DocumentProvider {
+public interface ActionContextRegistrationProvider {
 
-    /**
-     * Create default new document.
-     *
-     * @return document
-     */
     @Nonnull
-    Document createDefaultDocument();
-
-    /**
-     * Opens document using default method.
-     *
-     * @return document or empty if failed / cancelled
-     */
-    @Nonnull
-    Optional<Document> openDefaultDocument();
+    ActionContextRegistration getRegistration();
 }

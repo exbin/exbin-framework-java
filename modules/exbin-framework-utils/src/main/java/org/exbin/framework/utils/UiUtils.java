@@ -190,13 +190,9 @@ public class UiUtils {
      */
     @Nonnull
     public static JPopupMenu createPopupMenu(MenuShowMethod showMethod) {
-        if (menuBuilder != null) {
-            return menuBuilder.buildPopupMenu();
-        }
-
         return new JPopupMenu() {
             @Override
-            public void show(Component invoker, int x, int y) {
+            public void show(@Nullable Component invoker, int x, int y) {
                 showMethod.show(invoker, x, y);
             }
         };

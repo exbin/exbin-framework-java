@@ -23,7 +23,7 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 
 /**
- * Interface for registered side bars definition management.
+ * Interface for registered status bars definition management.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -31,28 +31,28 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 public interface StatusBarDefinitionManagement {
 
     /**
-     * Registers item as a child item for given side bar.
+     * Registers item as a child item for given status bar.
      *
      * @param action action
-     * @return sidebar contribution
+     * @return status bar contribution
      */
     @Nonnull
-    ComponentStatusBarContribution registerSideBarItem(Action action);
+    ComponentStatusBarContribution registerStatusBarItem(Action action);
 
     /**
-     * Registers group as a child item for given side bar.
+     * Registers group as a child item for given status bar.
      *
      * @param groupId group id
-     * @return sidebar contribution
+     * @return status bar contribution
      */
     @Nonnull
-    GroupSequenceContribution registerSideBarGroup(String groupId);
+    GroupSequenceContribution registerStatusBarGroup(String groupId);
 
     /**
-     * Registers side bar contribution rule.
+     * Registers status bar contribution rule.
      *
-     * @param sideBarContribution side bar contribution
-     * @param rule side bar contribution rule
+     * @param statusBarContribution status bar contribution
+     * @param rule status bar contribution rule
      */
-    void registerSideBarRule(SequenceContribution sideBarContribution, SequenceContributionRule rule);
+    void registerStatusBarRule(SequenceContribution statusBarContribution, SequenceContributionRule rule);
 }

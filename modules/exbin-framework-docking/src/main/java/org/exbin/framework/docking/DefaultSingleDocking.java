@@ -18,11 +18,16 @@ package org.exbin.framework.docking;
 import java.awt.Component;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.api.DocumentDocking;
+import org.exbin.framework.docking.api.SidePanelDocking;
+import org.exbin.framework.docking.gui.DockingPanel;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentModuleApi;
 import org.w3c.dom.DocumentType;
 
 /**
@@ -32,18 +37,29 @@ import org.w3c.dom.DocumentType;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultSingleDocking implements ContextDocking, DocumentDocking {
+public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, DocumentDocking {
 
-    @Nonnull
-    @Override
-    public Component getDockingComponent() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    protected final DockingPanel docking = new DockingPanel();
 
     @Nonnull
     @Override
     public Component getComponent() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return docking;
+    }
+
+    @Override
+    public void setSideToolBar(@Nullable Component sideToolBar) {
+        docking.setSideToolBar(sideToolBar);
+    }
+
+    @Override
+    public void setSideComponent(@Nullable Component sideComponent) {
+        docking.setSideComponent(sideComponent);
+    }
+
+    @Override
+    public void setSidePanelVisible(boolean visible) {
+        docking.setSidePanelVisible(visible);
     }
 
     @Override
@@ -62,13 +78,18 @@ public class DefaultSingleDocking implements ContextDocking, DocumentDocking {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Nonnull
     @Override
-    public void openNewDocument() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Document openNewDocument() {
+        DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+        Document document = documentModule.createDefaultDocument();
+        // TODO docking.addDocument((ComponentDocument) document, "TODO");
+        return document;
     }
 
+    @Nonnull
     @Override
-    public void openNewDocument(DocumentType documentType) {
+    public Document openNewDocument(DocumentType documentType) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

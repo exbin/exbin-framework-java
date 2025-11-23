@@ -13,31 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
+package org.exbin.framework.document;
 
-import java.util.Optional;
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for document provider.
+ * Document manager.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface DocumentProvider {
+@ParametersAreNonnullByDefault
+public class DocumentManager  {
 
-    /**
-     * Create default new document.
-     *
-     * @return document
-     */
-    @Nonnull
-    Document createDefaultDocument();
-
-    /**
-     * Opens document using default method.
-     *
-     * @return document or empty if failed / cancelled
-     */
-    @Nonnull
-    Optional<Document> openDefaultDocument();
 }

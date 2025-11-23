@@ -15,14 +15,19 @@
  */
 package org.exbin.framework.menu.popup;
 
+import java.awt.Component;
 import java.awt.datatransfer.StringSelection;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
+import javax.swing.JViewport;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionContextRegistrationProvider;
 import org.exbin.framework.menu.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.utils.ClipboardUtils;
 import org.exbin.framework.utils.DesktopUtils;
@@ -106,6 +111,31 @@ public class MenuPopupModule implements MenuPopupModuleApi {
             }
         });
         return popupMenu;
+    }
+
+    @Nonnull
+    @Override
+    public JPopupMenu createComponentPopupMenu(String popupMenuId, ActionContextRegistrationProvider actionContextRegistrar) {
+        return new JPopupMenu() {
+            @Override
+            public void show(@Nullable Component invoker, int x, int y) {
+                if (invoker == null) {
+                    return;
+                }
+
+                int clickedX = x;
+                int clickedY = y;
+                if (invoker instanceof JViewport) {
+                    clickedX += invoker.getParent().getX();
+                    clickedY += invoker.getParent().getY();
+                }
+
+                JPopupMenu popupMenu = UiUtils.createPopupMenu();
+                MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+                menuModule.buildMenu(popupMenu, popupMenuId, actionContextRegistrar.getRegistration());
+                popupMenu.show(invoker, clickedX, clickedY);
+            }
+        };
     }
 
     private void ensureSetup() {
