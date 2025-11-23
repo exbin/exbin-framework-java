@@ -15,11 +15,16 @@
  */
 package org.exbin.framework.sidebar;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
@@ -40,8 +45,11 @@ import org.exbin.framework.action.api.ActionContextRegistration;
 public class SideBarManager extends ContributionManager implements SideBarManagement {
 
     protected final ContributionSequenceBuilder builder = new ContributionSequenceBuilder();
+    protected JPanel sideBarPanel;
+    protected JComponent activeComponent = null;
 
     public SideBarManager() {
+        sideBarPanel = new JPanel(new BorderLayout());
     }
 
     @Override
@@ -91,5 +99,31 @@ public class SideBarManager extends ContributionManager implements SideBarManage
             }
         }
         return actions;
+    }
+
+    @Nonnull
+    public JPanel getSideBarPanel() {
+        return sideBarPanel;
+    }
+
+    @Nonnull
+    public Optional<JComponent> getActiveComponent() {
+        return Optional.ofNullable(activeComponent);
+    }
+
+    public void setActiveComponent(@Nullable JComponent component) {
+        if (component == activeComponent) {
+            return;
+        }
+
+        if (activeComponent != null) {
+            sideBarPanel.remove(activeComponent);
+        }
+        if (component != null) {
+            sideBarPanel.add(component, BorderLayout.CENTER);
+        }
+        sideBarPanel.revalidate();
+        sideBarPanel.repaint();
+        activeComponent = component;
     }
 }

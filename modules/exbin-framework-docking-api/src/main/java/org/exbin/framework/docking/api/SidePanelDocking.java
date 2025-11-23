@@ -43,6 +43,13 @@ public interface SidePanelDocking extends ContextComponentProvider {
     void setSideComponent(@Nullable Component sideComponent);
 
     /**
+     * Returns visibility of the side panel.
+     *
+     * @return true if visible
+     */
+    boolean isSidePanelVisible();
+
+    /**
      * Sets visibility of the side panel.
      *
      * @param visible true for visible

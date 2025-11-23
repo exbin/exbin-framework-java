@@ -58,6 +58,11 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
     }
 
     @Override
+    public boolean isSidePanelVisible() {
+        return docking.isSidePanelVisible();
+    }
+
+    @Override
     public void setSidePanelVisible(boolean visible) {
         docking.setSidePanelVisible(visible);
     }

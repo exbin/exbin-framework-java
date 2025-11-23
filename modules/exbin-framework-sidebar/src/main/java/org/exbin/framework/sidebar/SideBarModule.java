@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
 import org.exbin.framework.App;
@@ -120,28 +121,60 @@ public class SideBarModule implements SideBarModuleApi {
     @Nonnull
     @Override
     public void registerDockingSideBar(SidePanelDocking docking) {
+        registerDockingSideBar(getSideBarManager(), docking);
+    }
+
+    @Nonnull
+    public void registerDockingSideBar(SideBarManager sideBarManager, SidePanelDocking docking) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         ComponentFrame frameHandler = frameModule.getFrameHandler();
         ActionManagement actionManager = frameHandler.getActionManager();
-        getSideBarManager();
         JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
         toolBar.setFloatable(false);
         toolBar.setFocusable(false);
         sideBarManager.buildSideBar(toolBar, MODULE_ID, actionModule.createActionContextRegistrar(actionManager));
-        JButton testButton = new JButton("TEST");
-        testButton.addActionListener(new ActionListener() {
+        JButton test1Button = new JButton("TEST1");
+        JLabel label1 = new JLabel("TEST1");
+        test1Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean selected = testButton.isSelected();
-                docking.setSidePanelVisible(!selected);
-                testButton.setSelected(!selected);
+                JComponent currentComponent = sideBarManager.getActiveComponent().orElse(null);
+                if (currentComponent == label1) {
+                    docking.setSidePanelVisible(false);
+                    sideBarManager.setActiveComponent(null);
+                } else {
+                    if (!docking.isSidePanelVisible()) {
+                        docking.setSidePanelVisible(true);
+                    }
+                    sideBarManager.setActiveComponent(label1);
+                }
             }
         });
-        testButton.setFocusable(false);
-        toolBar.add(testButton);
+        test1Button.setFocusable(false);
+        toolBar.add(test1Button);
+        JButton test2Button = new JButton("TEST2");
+        JLabel label2 = new JLabel("TEST2");
+        test2Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComponent currentComponent = sideBarManager.getActiveComponent().orElse(null);
+                if (currentComponent == label2) {
+                    docking.setSidePanelVisible(false);
+                    sideBarManager.setActiveComponent(null);
+                } else {
+                    if (!docking.isSidePanelVisible()) {
+                        docking.setSidePanelVisible(true);
+                    }
+                    sideBarManager.setActiveComponent(label2);
+                }
+            }
+        });
+        test2Button.setFocusable(false);
+        toolBar.add(test2Button);
+
         toolBar.invalidate();
         docking.setSideToolBar(toolBar);
-        docking.setSideComponent(new JLabel("TEST"));
+        docking.setSideComponent(sideBarManager.getSideBarPanel());
     }
 }

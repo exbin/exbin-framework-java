@@ -82,6 +82,10 @@ public class DockingPanel extends javax.swing.JPanel {
         }
     }
 
+    public boolean isSidePanelVisible() {
+        return sidePanelVisible;
+    }
+
     public void setSidePanelVisible(boolean visible) {
         if (sidePanelVisible == visible) {
             return;

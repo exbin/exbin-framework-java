@@ -126,6 +126,11 @@ public class DefaultMultiDocking implements MultiDocking {
     }
 
     @Override
+    public boolean isSidePanelVisible() {
+        return docking.isSidePanelVisible();
+    }
+
+    @Override
     public void setSidePanelVisible(boolean visible) {
         docking.setSidePanelVisible(visible);
     }
