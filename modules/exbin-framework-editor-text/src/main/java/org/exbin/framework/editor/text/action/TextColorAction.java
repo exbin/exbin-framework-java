@@ -28,14 +28,15 @@ import org.exbin.framework.editor.text.gui.TextPanel;
 import org.exbin.framework.editor.text.settings.TextColorOptions;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.gui.OptionsControlPanel;
-import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.action.api.ActionContextChange;
+import org.exbin.framework.action.api.ContextComponent;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.window.api.controller.OptionsControlController;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.editor.text.TextColorState;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.editor.text.EditorTextPanelComponent;
 
 /**
  * Text color action.
@@ -47,7 +48,7 @@ public class TextColorAction extends AbstractAction {
 
     public static final String ACTION_ID = "toolsSetColorAction";
 
-    private FileHandler fileHandler;
+    private EditorTextPanelComponent textComponent;
     private DialogParentComponent dialogParentComponent;
 
     public TextColorAction() {
@@ -60,9 +61,9 @@ public class TextColorAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(FileHandler.class, (instance) -> {
-                    fileHandler = instance;
-                    setEnabled(fileHandler != null && (fileHandler.getComponent() instanceof TextPanel));
+                registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
+                    textComponent = instance instanceof EditorTextPanelComponent ? (EditorTextPanelComponent) instance : null;
+                    setEnabled(textComponent != null);
                 });
                 registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                     dialogParentComponent = instance;
@@ -73,11 +74,11 @@ public class TextColorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!(fileHandler != null && (fileHandler.getComponent() instanceof TextPanel))) {
+        if (!(textComponent != null)) {
             return;
         }
 
-        TextPanel textPanel = (TextPanel) fileHandler.getComponent();
+        TextPanel textPanel = (TextPanel) textComponent.getTextPanel();
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final TextColorState textColorService = new TextColorState() {

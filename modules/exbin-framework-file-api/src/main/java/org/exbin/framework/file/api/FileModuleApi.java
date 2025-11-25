@@ -34,9 +34,6 @@ public interface FileModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(FileModuleApi.class);
 
-    public static final String FILE_MENU_GROUP_ID = MODULE_ID + ".fileMenuGroup";
-    public static final String FILE_TOOL_BAR_GROUP_ID = MODULE_ID + ".fileToolBarGroup";
-
     /**
      * Adds file type.
      *
@@ -51,23 +48,6 @@ public interface FileModuleApi extends Module {
      */
     @Nonnull
     Collection<FileType> getFileTypes();
-
-    /**
-     * Sets file operations handler.
-     *
-     * @param fileOperations file operations handler
-     */
-    void setFileOperations(@Nullable FileOperations fileOperations);
-
-    /**
-     * Registers file handling operations to main frame menu.
-     */
-    void registerMenuFileHandlingActions();
-
-    /**
-     * Registers file handling operations to main frame tool bar.
-     */
-    void registerToolBarFileHandlingActions();
 
     /**
      * Registers close listener.
@@ -87,28 +67,6 @@ public interface FileModuleApi extends Module {
      * @param filename filename
      */
     void loadFromFile(String filename);
-
-    /**
-     * Registers list of last opened files into file menu.
-     */
-    void registerRecenFilesMenuActions();
-
-    @Nonnull
-    AbstractAction createNewFileAction();
-
-    @Nonnull
-    AbstractAction createOpenFileAction();
-
-    @Nonnull
-    AbstractAction createSaveFileAction();
-
-    @Nonnull
-    AbstractAction createSaveAsFileAction();
-
-    @Nonnull
-    FileActionsApi getFileActions();
-
-    void updateRecentFilesList(URI fileUri, @Nullable FileType fileType);
 
     void registerSettings();
 }

@@ -24,16 +24,17 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ContextComponent;
 import org.exbin.framework.editor.text.gui.TextPropertiesPanel;
 import org.exbin.framework.editor.text.TextDocument;
-import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.CloseControlPanel;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.document.api.ContextDocument;
 
 /**
- * Text file properties action.
+ * Text document properties action.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -42,7 +43,7 @@ public class PropertiesAction extends AbstractAction {
 
     public static final String ACTION_ID = "propertiesAction";
 
-    private FileHandler fileHandler;
+    private TextDocument textDocument;
 
     public PropertiesAction() {
     }
@@ -54,9 +55,9 @@ public class PropertiesAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(FileHandler.class, (instance) -> {
-                    fileHandler = instance;
-                    setEnabled(fileHandler instanceof TextDocument);
+                registrar.registerUpdateListener(ContextDocument.class, (instance) -> {
+                    textDocument = instance instanceof TextDocument ? (TextDocument) instance : null;
+                    setEnabled(textDocument != null);
                 });
             }
         });
@@ -64,19 +65,17 @@ public class PropertiesAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (fileHandler instanceof TextDocument) {
-            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-            TextPropertiesPanel propertiesPanel = new TextPropertiesPanel();
-            propertiesPanel.setDocument((TextDocument) fileHandler);
-            CloseControlPanel controlPanel = new CloseControlPanel();
-            final WindowHandler dialog = windowModule.createDialog(propertiesPanel, controlPanel);
-            windowModule.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
-            windowModule.setWindowTitle(dialog, propertiesPanel.getResourceBundle());
-            controlPanel.setController(() -> {
-                dialog.close();
-                dialog.dispose();
-            });
-            dialog.showCentered((Component) e.getSource());
-        }
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        TextPropertiesPanel propertiesPanel = new TextPropertiesPanel();
+        propertiesPanel.setDocument(textDocument);
+        CloseControlPanel controlPanel = new CloseControlPanel();
+        final WindowHandler dialog = windowModule.createDialog(propertiesPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), propertiesPanel.getClass(), propertiesPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, propertiesPanel.getResourceBundle());
+        controlPanel.setController(() -> {
+            dialog.close();
+            dialog.dispose();
+        });
+        dialog.showCentered((Component) e.getSource());
     }
 }

@@ -41,7 +41,6 @@ import org.exbin.framework.App;
 import org.exbin.framework.editor.api.EditorProvider;
 import org.exbin.framework.editor.api.MultiEditorProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.file.api.FileHandler;
 import org.exbin.framework.docking.api.DockingModuleApi;
 
 /**
@@ -62,7 +61,6 @@ public class DockingLayoutModule implements DockingModuleApi {
 
     private EditorFactory factory = null;
     private CLocation editorLocation = null;
-    private MultiEditorProvider multiEditorProvider = null;
     private final Map<EditorProvider, EditorCDockable> editorMap = new HashMap<>();
 
     public DockingLayoutModule() {

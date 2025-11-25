@@ -16,6 +16,8 @@
 package org.exbin.framework.sidebar;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +25,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import org.exbin.framework.App;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
 import org.exbin.framework.contribution.ContributionManager;
@@ -35,6 +40,13 @@ import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.contribution.ContributionSequenceBuilder;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.action.api.ActionManagement;
+import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.docking.api.SidePanelDocking;
+import org.exbin.framework.frame.api.ComponentFrame;
+import org.exbin.framework.frame.api.FrameModuleApi;
+import org.exbin.framework.sidebar.api.SideBarModuleApi;
+import org.exbin.framework.sidebar.api.SideBarPanelProvider;
 
 /**
  * Default sidebar manager.
@@ -42,7 +54,7 @@ import org.exbin.framework.action.api.ActionContextRegistration;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SideBarManager extends ContributionManager implements SideBarManagement {
+public class SideBarManager extends ContributionManager implements SideBarManagement, SideBarPanelProvider {
 
     protected final ContributionSequenceBuilder builder = new ContributionSequenceBuilder();
     protected JPanel sideBarPanel;
@@ -102,6 +114,62 @@ public class SideBarManager extends ContributionManager implements SideBarManage
     }
 
     @Nonnull
+    @Override
+    public JToolBar createSideToolBar(SidePanelDocking docking) {
+        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ComponentFrame frameHandler = frameModule.getFrameHandler();
+        ActionManagement actionManager = frameHandler.getActionManager();
+        JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
+        toolBar.setFloatable(false);
+        toolBar.setFocusable(false);
+        buildSideBar(toolBar, SideBarModuleApi.MODULE_ID, actionModule.createActionContextRegistrar(actionManager));
+
+        JButton test1Button = new JButton("TEST1");
+        JLabel label1 = new JLabel("TEST1");
+        test1Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComponent currentComponent = getActiveComponent().orElse(null);
+                if (currentComponent == label1) {
+                    docking.setSidePanelVisible(false);
+                    setActiveComponent(null);
+                } else {
+                    if (!docking.isSidePanelVisible()) {
+                        docking.setSidePanelVisible(true);
+                    }
+                    setActiveComponent(label1);
+                }
+            }
+        });
+        test1Button.setFocusable(false);
+        toolBar.add(test1Button);
+        JButton test2Button = new JButton("TEST2");
+        JLabel label2 = new JLabel("TEST2");
+        test2Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComponent currentComponent = getActiveComponent().orElse(null);
+                if (currentComponent == label2) {
+                    docking.setSidePanelVisible(false);
+                    setActiveComponent(null);
+                } else {
+                    if (!docking.isSidePanelVisible()) {
+                        docking.setSidePanelVisible(true);
+                    }
+                    setActiveComponent(label2);
+                }
+            }
+        });
+        test2Button.setFocusable(false);
+        toolBar.add(test2Button);
+
+        toolBar.invalidate();
+        return toolBar;
+    }
+
+    @Nonnull
+    @Override
     public JPanel getSideBarPanel() {
         return sideBarPanel;
     }

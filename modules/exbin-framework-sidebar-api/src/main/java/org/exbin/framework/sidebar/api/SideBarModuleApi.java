@@ -94,11 +94,12 @@ public interface SideBarModuleApi extends Module {
      * @param docking docking
      */
     void registerDockingSideBar(SidePanelDocking docking);
-    
+
     /**
      * Registers side bar to docking.
      *
+     * @param sideBarPanelProvider side bar panel provider
      * @param docking docking
      */
-    // void registerDockingSideBar(SideBarManager sideBarManager, SidePanelDocking docking);
+    void registerDockingSideBar(SideBarPanelProvider sideBarPanelProvider, SidePanelDocking docking);
 }

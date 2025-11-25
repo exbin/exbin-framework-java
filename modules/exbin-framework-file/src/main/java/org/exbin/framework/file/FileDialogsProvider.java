@@ -18,8 +18,9 @@ package org.exbin.framework.file;
 import java.io.File;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.exbin.framework.file.api.FileActionsApi;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.file.api.FileTypes;
+import org.exbin.framework.file.api.OpenFileResult;
 import org.exbin.framework.file.api.UsedDirectoryApi;
 
 /**
@@ -27,8 +28,9 @@ import org.exbin.framework.file.api.UsedDirectoryApi;
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface FileDialogsProvider {
-    
+
     @Nonnull
-    FileActionsApi.OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory);
+    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory);
 }

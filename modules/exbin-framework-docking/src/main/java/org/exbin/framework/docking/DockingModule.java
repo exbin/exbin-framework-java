@@ -15,31 +15,26 @@
  */
 package org.exbin.framework.docking;
 
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.docking.action.CloseAllFilesAction;
-import org.exbin.framework.docking.action.CloseFileAction;
-import org.exbin.framework.docking.action.CloseOtherFilesAction;
-import org.exbin.framework.docking.api.BasicDockingType;
+import org.exbin.framework.docking.action.NewFileAction;
+import org.exbin.framework.docking.action.OpenFileAction;
+import org.exbin.framework.docking.action.SaveAsFileAction;
+import org.exbin.framework.docking.action.SaveFileAction;
 import org.exbin.framework.docking.api.DockingModuleApi;
-import org.exbin.framework.docking.api.DockingType;
 import org.exbin.framework.docking.api.DocumentDocking;
-import org.exbin.framework.docking.gui.ModifiedDocumentsPanel;
-import org.exbin.framework.document.api.Document;
-import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.menu.api.MenuModuleApi;
-import org.exbin.framework.window.api.WindowHandler;
-import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.toolbar.api.ToolBarDefinitionManagement;
+import org.exbin.framework.toolbar.api.ToolBarModuleApi;
 
 /**
  * Interface for docking module.
@@ -70,85 +65,73 @@ public class DockingModule implements DockingModuleApi {
 
     @Nonnull
     @Override
-    public DocumentDocking createDefaultDocking(DockingType dockingType) {
-        if (BasicDockingType.SINGLE.equals(dockingType)) {
-            return new DefaultSingleDocking();
-        } else if (BasicDockingType.MULTI.equals(dockingType)) {
-            return new DefaultMultiDocking();
-        }
-        
-        throw new IllegalStateException("Unsupported docking type " + dockingType.toString());
-    }
-
-    public boolean showAskForSaveDialog(List<Document> documents, JComponent parentComponent) {
-        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        ModifiedDocumentsPanel modifiedDocumentsPanel = new ModifiedDocumentsPanel();
-        modifiedDocumentsPanel.setDocuments(documents);
-        final boolean[] result = new boolean[1];
-        final WindowHandler dialog = windowModule.createDialog(modifiedDocumentsPanel);
-        modifiedDocumentsPanel.setController(new ModifiedDocumentsPanel.Controller() {
-            @Override
-            public boolean saveFile(Document document) {
-                // TODO
-//                editorProvider.saveFile(document);
-//                return !((EditableFileHandler) document).isModified();
-                return false;
-            }
-
-            @Override
-            public void discardAll(List<Document> documents) {
-                result[0] = true;
-                dialog.close();
-            }
-
-            @Override
-            public void cancel() {
-                result[0] = false;
-                dialog.close();
-            }
-        });
-
-        windowModule.setWindowTitle(dialog, modifiedDocumentsPanel.getResourceBundle());
-        modifiedDocumentsPanel.assignGlobalKeys();
-        dialog.showCentered(parentComponent);
-
-        return result[0];
-    }
-
-    @Nonnull
-    @Override
-    public CloseFileAction createCloseFileAction() {
-        CloseFileAction closeFileAction = new CloseFileAction();
-        ensureSetup();
-        closeFileAction.setup(resourceBundle);
-        return closeFileAction;
-    }
-
-    @Nonnull
-    @Override
-    public CloseAllFilesAction createCloseAllFilesAction() {
-        CloseAllFilesAction closeAllFilesAction = new CloseAllFilesAction();
-        ensureSetup();
-        closeAllFilesAction.setup(resourceBundle);
-        return closeAllFilesAction;
-    }
-
-    @Nonnull
-    @Override
-    public CloseOtherFilesAction createCloseOtherFilesAction() {
-        CloseOtherFilesAction closeOtherFilesAction = new CloseOtherFilesAction();
-        ensureSetup();
-        closeOtherFilesAction.setup(resourceBundle);
-        return closeOtherFilesAction;
+    public DocumentDocking createDefaultDocking() {
+        return new DefaultSingleDocking();
     }
 
     @Override
-    public void registerMenuFileCloseActions() {
+    public void registerMenuFileHandlingActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuGroup(FileModuleApi.FILE_MENU_GROUP_ID);
+        SequenceContribution contribution = mgmt.registerMenuGroup(DocumentModuleApi.FILE_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(createCloseFileAction());
-        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(FileModuleApi.FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(createNewFileAction());
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(createOpenFileAction());
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(createSaveFileAction());
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(createSaveAsFileAction());
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
+    }
+
+    @Override
+    public void registerToolBarFileHandlingActions() {
+        ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
+        ToolBarDefinitionManagement mgmt = toolBarModule.getMainToolBarManager(MODULE_ID);
+        SequenceContribution contribution = mgmt.registerToolBarGroup(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID);
+        mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
+        contribution = mgmt.registerToolBarItem(createNewFileAction());
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerToolBarItem(createOpenFileAction());
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID));
+        contribution = mgmt.registerToolBarItem(createSaveFileAction());
+        mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID));
+    }
+
+    @Nonnull
+    @Override
+    public NewFileAction createNewFileAction() {
+        ensureSetup();
+        NewFileAction newFileAction = new NewFileAction();
+        newFileAction.init(resourceBundle);
+        return newFileAction;
+    }
+
+    @Nonnull
+    @Override
+    public OpenFileAction createOpenFileAction() {
+        ensureSetup();
+        OpenFileAction openFileAction = new OpenFileAction();
+        openFileAction.init(resourceBundle);
+        return openFileAction;
+    }
+
+    @Nonnull
+    @Override
+    public SaveFileAction createSaveFileAction() {
+        ensureSetup();
+        SaveFileAction saveFileAction = new SaveFileAction();
+        saveFileAction.init(resourceBundle);
+        return saveFileAction;
+    }
+
+    @Nonnull
+    @Override
+    public SaveAsFileAction createSaveAsFileAction() {
+        ensureSetup();
+        SaveAsFileAction saveAsFileAction = new SaveAsFileAction();
+        saveAsFileAction.init(resourceBundle);
+        return saveAsFileAction;
     }
 }

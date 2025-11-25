@@ -25,9 +25,10 @@ import org.exbin.framework.App;
 import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
-import org.exbin.framework.file.api.FileOperations;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.docking.api.ContextDocking;
+import org.exbin.framework.docking.api.DocumentDocking;
 
 /**
  * Save project action.
@@ -39,24 +40,21 @@ public class SaveProjectAction extends AbstractAction {
 
     public static final String ACTION_ID = "saveProjectAction";
 
-    private ResourceBundle resourceBundle;
-    private FileOperations fileOperations;
+    protected DocumentDocking documentDocking;
 
     public SaveProjectAction() {
     }
 
     public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask() | InputEvent.SHIFT_DOWN_MASK));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(FileOperations.class, (instance) -> {
-                    fileOperations = instance;
-                    setEnabled(instance != null && instance.canSave());
+                registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
+                    documentDocking = instance instanceof DocumentDocking ? (DocumentDocking) instance : null;
+                    setEnabled(documentDocking != null);
                 });
             }
         });

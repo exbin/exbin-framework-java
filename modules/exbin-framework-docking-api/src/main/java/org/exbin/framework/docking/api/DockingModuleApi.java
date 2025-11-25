@@ -32,40 +32,52 @@ public interface DockingModuleApi extends Module {
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DockingModuleApi.class);
 
     /**
+     * Registers file handling operations to main frame menu.
+     */
+    void registerMenuFileHandlingActions();
+
+    /**
+     * Registers file handling operations to main frame tool bar.
+     */
+    void registerToolBarFileHandlingActions();
+
+    /**
      * Creates default document docking.
      *
-     * @param dockingType docking type
      * @return document docking
      */
     @Nonnull
-    DocumentDocking createDefaultDocking(DockingType dockingType);
+    DocumentDocking createDefaultDocking();
 
     /**
-     * Registers menu file close actions.
-     */
-    void registerMenuFileCloseActions();
-
-    /**
-     * Creates close file action.
+     * Creates new file action.
      *
-     * @return close file action
+     * @return action
      */
     @Nonnull
-    AbstractAction createCloseFileAction();
+    AbstractAction createNewFileAction();
 
     /**
-     * Creates close all files action.
+     * Creates open file action.
      *
-     * @return close all files action
+     * @return action
      */
     @Nonnull
-    AbstractAction createCloseAllFilesAction();
+    AbstractAction createOpenFileAction();
 
     /**
-     * Creates close other files action.
+     * Creates save file action.
      *
-     * @return close other files action
+     * @return action
      */
     @Nonnull
-    AbstractAction createCloseOtherFilesAction();
+    AbstractAction createSaveFileAction();
+
+    /**
+     * Creates save as file action.
+     *
+     * @return action
+     */
+    @Nonnull
+    AbstractAction createSaveAsFileAction();
 }
