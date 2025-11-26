@@ -77,7 +77,7 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
             JButton button = new JButton();
             String name = (String) sideBarComponent.getValue(SideBarComponent.KEY_NAME);
             if (name != null) {
-                button.setName(name);
+                button.setText(name);
             }
             Icon icon = (Icon) sideBarComponent.getValue(SideBarComponent.KEY_ICON);
             if (icon != null) {

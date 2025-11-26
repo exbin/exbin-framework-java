@@ -22,6 +22,8 @@ import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
+import org.exbin.framework.sidebar.api.ComponentSideBarContribution;
+import org.exbin.framework.sidebar.api.SideBarComponent;
 import org.exbin.framework.sidebar.api.SideBarDefinitionManagement;
 
 /**
@@ -44,8 +46,14 @@ public class SideBarDefinitionManager implements SideBarDefinitionManagement {
 
     @Nonnull
     @Override
-    public ActionSideBarContribution registerSideBarItem(Action action) {
-        return sideBarManager.registerSideBarItem(sideBarId, moduleId, action);
+    public ActionSideBarContribution registerSideBarAction(Action action) {
+        return sideBarManager.registerSideBarAction(sideBarId, moduleId, action);
+    }
+
+    @Nonnull
+    @Override
+    public ComponentSideBarContribution registerSideBarComponent(SideBarComponent sideBarComponent) {
+        return sideBarManager.registerSideBarComponent(sideBarId, moduleId, sideBarComponent);
     }
 
     @Nonnull

@@ -57,7 +57,7 @@ public interface SideBarManagement {
      * @return item contribution
      */
     @Nonnull
-    ActionSideBarContribution registerSideBarItem(String sideBarId, String moduleId, Action action);
+    ActionSideBarContribution registerSideBarAction(String sideBarId, String moduleId, Action action);
 
     /**
      * Registers side bar item contribution.
@@ -68,7 +68,7 @@ public interface SideBarManagement {
      * @return item contribution
      */
     @Nonnull
-    ComponentSideBarContribution registerSideBarItem(String sideBarId, String moduleId, SideBarComponent component);
+    ComponentSideBarContribution registerSideBarComponent(String sideBarId, String moduleId, SideBarComponent component);
 
     /**
      * Registers side bar group.

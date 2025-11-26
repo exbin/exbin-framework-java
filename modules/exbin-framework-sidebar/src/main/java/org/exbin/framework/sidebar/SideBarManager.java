@@ -67,7 +67,7 @@ public class SideBarManager extends ContributionManager implements SideBarManage
 
     @Nonnull
     @Override
-    public ActionSideBarContribution registerSideBarItem(String sideBarId, String moduleId, Action action) {
+    public ActionSideBarContribution registerSideBarAction(String sideBarId, String moduleId, Action action) {
         ContributionDefinition definition = definitions.get(sideBarId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + sideBarId + " doesn't exist");
@@ -80,7 +80,7 @@ public class SideBarManager extends ContributionManager implements SideBarManage
 
     @Nonnull
     @Override
-    public ComponentSideBarContribution registerSideBarItem(String sideBarId, String moduleId, SideBarComponent component) {
+    public ComponentSideBarContribution registerSideBarComponent(String sideBarId, String moduleId, SideBarComponent component) {
         ContributionDefinition definition = definitions.get(sideBarId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + sideBarId + " doesn't exist");

@@ -21,8 +21,6 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.sidebar.api.SideBarModuleApi;
@@ -30,8 +28,6 @@ import org.exbin.framework.sidebar.api.SideBarDefinitionManagement;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.action.api.ActionContextRegistration;
 import org.exbin.framework.docking.api.SidePanelDocking;
-import org.exbin.framework.sidebar.api.AbstractSideBarComponent;
-import org.exbin.framework.sidebar.api.SideBarComponent;
 import org.exbin.framework.sidebar.api.SideBar;
 
 /**
@@ -70,16 +66,17 @@ public class SideBarModule implements SideBarModuleApi {
     @Override
     public List<Action> getSideBarManagedActions() {
         List<Action> actions = new ArrayList<>();
-        SideBarModule.this.getSideBarManager();
+        SideBarModule.this.getMainSideBarManager();
         actions.addAll(sideBarManager.getAllManagedActions());
 
         return actions;
     }
 
     @Nonnull
-    private SideBarManager getSideBarManager() {
+    private SideBarManager getMainSideBarManager() {
         if (sideBarManager == null) {
             sideBarManager = new SideBarManager();
+            sideBarManager.registerSideBar(MAIN_SIDE_BAR_ID, MODULE_ID);
         }
 
         return sideBarManager;
@@ -93,12 +90,12 @@ public class SideBarModule implements SideBarModuleApi {
 
     @Override
     public void buildSideBar(SideBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration) {
-        SideBarModule.this.getSideBarManager().buildSideBar(targetSideBar, sideBarId, actionContextRegistration);
+        SideBarModule.this.getMainSideBarManager().buildSideBar(targetSideBar, sideBarId, actionContextRegistration);
     }
 
     @Override
     public void registerSideBar(String sideBarId, String moduleId) {
-        SideBarModule.this.getSideBarManager().registerSideBar(sideBarId, moduleId);
+        SideBarModule.this.getMainSideBarManager().registerSideBar(sideBarId, moduleId);
     }
 
     @Nonnull
@@ -110,13 +107,13 @@ public class SideBarModule implements SideBarModuleApi {
     @Nonnull
     @Override
     public SideBarDefinitionManagement getSideBarManager(String sideBarId, String moduleId) {
-        return new SideBarDefinitionManager(SideBarModule.this.getSideBarManager(), sideBarId, moduleId);
+        return new SideBarDefinitionManager(SideBarModule.this.getMainSideBarManager(), sideBarId, moduleId);
     }
 
     @Nonnull
     @Override
     public void registerDockingSideBar(SidePanelDocking docking) {
-        registerDockingSideBar(getSideBarManager().createSideToolBar(docking), docking);
+        registerDockingSideBar(getMainSideBarManager().createSideToolBar(docking), docking);
     }
 
     @Nonnull

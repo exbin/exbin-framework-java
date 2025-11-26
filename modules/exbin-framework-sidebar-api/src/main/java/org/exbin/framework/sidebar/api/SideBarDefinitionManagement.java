@@ -37,7 +37,16 @@ public interface SideBarDefinitionManagement {
      * @return sidebar contribution
      */
     @Nonnull
-    ActionSideBarContribution registerSideBarItem(Action action);
+    ActionSideBarContribution registerSideBarAction(Action action);
+
+    /**
+     * Registers item as a child item for given side bar.
+     *
+     * @param sideBarComponent side bar component
+     * @return sidebar contribution
+     */
+    @Nonnull
+    ComponentSideBarContribution registerSideBarComponent(SideBarComponent sideBarComponent);
 
     /**
      * Registers group as a child item for given side bar.
