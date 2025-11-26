@@ -15,21 +15,40 @@
  */
 package org.exbin.framework.sidebar.api;
 
+import java.awt.Component;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import org.exbin.framework.docking.api.SidePanelDocking;
 
 /**
- * Interface for sidebar panel provider.
+ * Interface for sidebar.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface SideBarPanelProvider {
+@ParametersAreNonnullByDefault
+public interface SideBar {
 
+    /**
+     * Returns side bar tool bar.
+     *
+     * @return tool bar
+     */
     @Nonnull
-    JToolBar createSideToolBar(SidePanelDocking docking);
+    JToolBar getToolBar();
 
+    /**
+     * Returns side bar panel.
+     *
+     * @return side bar panel
+     */
     @Nonnull
-    public JPanel getSideBarPanel();
+    JPanel getSideBarPanel();
+
+    /**
+     * Switch to specific component.
+     *
+     * @param component component
+     */
+    void switchComponent(SideBarComponent component);
 }

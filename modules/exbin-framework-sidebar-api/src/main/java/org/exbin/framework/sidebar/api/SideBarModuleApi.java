@@ -19,7 +19,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JToolBar;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionContextRegistration;
@@ -78,7 +77,7 @@ public interface SideBarModuleApi extends Module {
      * @param sideBarId sidebar id
      * @param actionContextRegistration action context registration
      */
-    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration);
+    void buildSideBar(SideBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Returns list of action managed by sidebar managers.
@@ -101,5 +100,5 @@ public interface SideBarModuleApi extends Module {
      * @param sideBarPanelProvider side bar panel provider
      * @param docking docking
      */
-    void registerDockingSideBar(SideBarPanelProvider sideBarPanelProvider, SidePanelDocking docking);
+    void registerDockingSideBar(SideBar sideBarPanelProvider, SidePanelDocking docking);
 }

@@ -35,6 +35,18 @@ public interface SideBarComponent {
      */
     public static final String KEY_ID = "ID";
     /**
+     * Name value.
+     * <p>
+     * Value is of type {@link String}.
+     */
+    public static final String KEY_NAME = "Name";
+    /**
+     * Icon value.
+     * <p>
+     * Value is of type {@link Icon}.
+     */
+    public static final String KEY_ICON = "Icon";
+    /**
      * Tool tip value.
      * <p>
      * Value is of type {@link String}.

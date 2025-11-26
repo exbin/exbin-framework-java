@@ -46,8 +46,8 @@ public class ToolBarSequenceOutput implements ContributionSequenceOutput {
     protected final JToolBar toolBar;
     protected final ActionContextRegistration actionContextRegistration;
 
-    public ToolBarSequenceOutput(JToolBar menuBar, ActionContextRegistration actionContextRegistration) {
-        this.toolBar = menuBar;
+    public ToolBarSequenceOutput(JToolBar toolBar, ActionContextRegistration actionContextRegistration) {
+        this.toolBar = toolBar;
         this.actionContextRegistration = actionContextRegistration;
     }
 

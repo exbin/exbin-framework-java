@@ -15,9 +15,12 @@
  */
 package org.exbin.framework.sidebar;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -31,6 +34,9 @@ import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.sidebar.api.ComponentSideBarContribution;
+import org.exbin.framework.sidebar.api.SideBar;
+import org.exbin.framework.sidebar.api.SideBarComponent;
 
 /**
  * Sidebar toolbar sequence output.
@@ -40,35 +46,63 @@ import org.exbin.framework.action.api.ActionContextRegistration;
 @ParametersAreNonnullByDefault
 public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
 
-    protected final JToolBar toolBar;
+    protected final SideBar sideBar;
     protected final ActionContextRegistration actionContextRegistration;
 
-    public SideToolBarSequenceOutput(JToolBar menuBar, ActionContextRegistration actionContextRegistration) {
-        this.toolBar = menuBar;
+    public SideToolBarSequenceOutput(SideBar sideBar, ActionContextRegistration actionContextRegistration) {
+        this.sideBar = sideBar;
         this.actionContextRegistration = actionContextRegistration;
     }
 
     @Override
     public boolean initItem(ItemSequenceContribution itemContribution) {
-        Action action = ((ActionSideBarContribution) itemContribution).getAction();
-        ((ActionSideBarContribution) itemContribution).setComponent(SideToolBarSequenceOutput.createSideBarComponent(action));
-        return true;
+        if (itemContribution instanceof ActionSideBarContribution) {
+            Action action = ((ActionSideBarContribution) itemContribution).getAction();
+            ((ActionSideBarContribution) itemContribution).setComponent(SideToolBarSequenceOutput.createSideBarComponent(action));
+            return true;
+        } else if (itemContribution instanceof ComponentSideBarContribution) {
+            return true;
+        }
+        
+        throw new IllegalStateException("Unsupported contribution type");
     }
 
     @Override
     public void add(ItemSequenceContribution itemContribution) {
-        toolBar.add(((ActionSideBarContribution) itemContribution).getComponent());
-        SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextRegistration);
+        if (itemContribution instanceof ActionSideBarContribution) {
+            sideBar.getToolBar().add(((ActionSideBarContribution) itemContribution).getComponent());
+            SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextRegistration);
+        } else if (itemContribution instanceof ComponentSideBarContribution) {
+            SideBarComponent sideBarComponent = ((ComponentSideBarContribution) itemContribution).getComponent();
+            JButton button = new JButton();
+            String name = (String) sideBarComponent.getValue(SideBarComponent.KEY_NAME);
+            if (name != null) {
+                button.setName(name);
+            }
+            Icon icon = (Icon) sideBarComponent.getValue(SideBarComponent.KEY_ICON);
+            if (icon != null) {
+                button.setIcon(icon);
+            }
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    sideBar.switchComponent(sideBarComponent);
+                }
+            });
+            button.setFocusable(false);
+            sideBar.getToolBar().add(button);
+            // TODO SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextRegistration);
+        }
     }
 
     @Override
     public void addSeparator() {
-        toolBar.addSeparator();
+        sideBar.getToolBar().addSeparator();
     }
 
     @Override
     public boolean isEmpty() {
-        return toolBar.getComponentCount() == 0;
+        return sideBar.getToolBar().getComponentCount() == 0;
     }
 
     @Nonnull

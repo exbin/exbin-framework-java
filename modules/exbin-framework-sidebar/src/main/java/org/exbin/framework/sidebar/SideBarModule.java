@@ -21,7 +21,8 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JToolBar;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.sidebar.api.SideBarModuleApi;
@@ -29,7 +30,9 @@ import org.exbin.framework.sidebar.api.SideBarDefinitionManagement;
 import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.action.api.ActionContextRegistration;
 import org.exbin.framework.docking.api.SidePanelDocking;
-import org.exbin.framework.sidebar.api.SideBarPanelProvider;
+import org.exbin.framework.sidebar.api.AbstractSideBarComponent;
+import org.exbin.framework.sidebar.api.SideBarComponent;
+import org.exbin.framework.sidebar.api.SideBar;
 
 /**
  * Implementation of side bar module.
@@ -89,7 +92,7 @@ public class SideBarModule implements SideBarModuleApi {
     }
 
     @Override
-    public void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration) {
+    public void buildSideBar(SideBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration) {
         SideBarModule.this.getSideBarManager().buildSideBar(targetSideBar, sideBarId, actionContextRegistration);
     }
 
@@ -113,13 +116,13 @@ public class SideBarModule implements SideBarModuleApi {
     @Nonnull
     @Override
     public void registerDockingSideBar(SidePanelDocking docking) {
-        registerDockingSideBar(getSideBarManager(), docking);
+        registerDockingSideBar(getSideBarManager().createSideToolBar(docking), docking);
     }
 
     @Nonnull
     @Override
-    public void registerDockingSideBar(SideBarPanelProvider sideBarPanelProvider, SidePanelDocking docking) {
-        docking.setSideToolBar(sideBarPanelProvider.createSideToolBar(docking));
-        docking.setSideComponent(sideBarPanelProvider.getSideBarPanel());
+    public void registerDockingSideBar(SideBar sideBar, SidePanelDocking docking) {
+        docking.setSideToolBar(sideBar.getToolBar());
+        docking.setSideComponent(sideBar.getSideBarPanel());
     }
 }

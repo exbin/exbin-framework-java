@@ -63,23 +63,23 @@ public interface ToolBarManagement {
      * Registers tool bar item contribution.
      *
      * @param toolBarId tool bar id
-     * @param pluginId plugin id
+     * @param moduleId module id
      * @param action item action
      * @return item contribution
      */
     @Nonnull
-    ActionToolBarContribution registerToolBarItem(String toolBarId, String pluginId, Action action);
+    ActionToolBarContribution registerToolBarItem(String toolBarId, String moduleId, Action action);
 
     /**
      * Registers tool bar group.
      *
      * @param toolBarId tool bar id
-     * @param pluginId plugin id
+     * @param moduleId module id
      * @param groupId group id
      * @return group contribution
      */
     @Nonnull
-    GroupSequenceContribution registerToolBarGroup(String toolBarId, String pluginId, String groupId);
+    GroupSequenceContribution registerToolBarGroup(String toolBarId, String moduleId, String groupId);
 
     /**
      * Register tool bar contribution rule.

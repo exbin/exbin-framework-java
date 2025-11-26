@@ -18,7 +18,6 @@ package org.exbin.framework.sidebar.api;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JToolBar;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
@@ -39,7 +38,7 @@ public interface SideBarManagement {
      * @param sideBarId side bar definition id
      * @param actionContextRegistration action context registration
      */
-    void buildSideBar(JToolBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration);
+    void buildSideBar(SideBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Registers side bar.
@@ -53,23 +52,34 @@ public interface SideBarManagement {
      * Registers side bar item contribution.
      *
      * @param sideBarId side bar id
-     * @param pluginId plugin id
+     * @param moduleId module id
      * @param action item action
      * @return item contribution
      */
     @Nonnull
-    ActionSideBarContribution registerSideBarItem(String sideBarId, String pluginId, Action action);
+    ActionSideBarContribution registerSideBarItem(String sideBarId, String moduleId, Action action);
+
+    /**
+     * Registers side bar item contribution.
+     *
+     * @param sideBarId side bar id
+     * @param moduleId module id
+     * @param component side bar component
+     * @return item contribution
+     */
+    @Nonnull
+    ComponentSideBarContribution registerSideBarItem(String sideBarId, String moduleId, SideBarComponent component);
 
     /**
      * Registers side bar group.
      *
      * @param sideBarId side bar id
-     * @param pluginId plugin id
+     * @param moduleId module id
      * @param groupId group id
      * @return group contribution
      */
     @Nonnull
-    GroupSequenceContribution registerSideBarGroup(String sideBarId, String pluginId, String groupId);
+    GroupSequenceContribution registerSideBarGroup(String sideBarId, String moduleId, String groupId);
 
     /**
      * Register contribution rule.
