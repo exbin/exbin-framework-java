@@ -19,8 +19,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.file.api.FileDialogsProvider;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.FileType;
 
@@ -56,5 +56,32 @@ public class TestFileModule implements FileModuleApi {
 
     @Override
     public void registerSettings() {
+    }
+
+    @Override
+    public void registerFileDialogsProvider(String providerId, FileDialogsProvider provider) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public String getFileDialogProviderId() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setFileDialogProviderId(String fileDialogProviderId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Nonnull
+    @Override
+    public FileDialogsProvider getFileDialogsProvider() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void registerFileProviders() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

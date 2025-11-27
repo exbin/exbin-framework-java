@@ -15,15 +15,25 @@
  */
 package org.exbin.framework.file;
 
+import org.exbin.framework.file.api.FileDialogsProvider;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentManagement;
+import org.exbin.framework.document.api.DocumentModuleApi;
+import org.exbin.framework.file.api.FileDocumentSource;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.settings.FileOptions;
@@ -51,6 +61,8 @@ public class FileModule implements FileModuleApi {
     private java.util.ResourceBundle resourceBundle = null;
 
     private final List<FileType> registeredFileTypes = new ArrayList<>();
+    private final Map<String, FileDialogsProvider> fileDialogsProviders = new HashMap<>();
+    private String fileDialogProviderId = "";
 
     public FileModule() {
     }
@@ -81,16 +93,6 @@ public class FileModule implements FileModuleApi {
         return Collections.unmodifiableCollection(registeredFileTypes);
     }
 
-    boolean useAwtDialogs = false;
-
-    public boolean isUseAwtDialogs() {
-        return useAwtDialogs;
-    }
-
-    public void setUseAwtDialogs(boolean useAwtDialogs) {
-        this.useAwtDialogs = useAwtDialogs;
-    }
-
     @Override
     public void registerCloseListener() {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
@@ -104,38 +106,64 @@ public class FileModule implements FileModuleApi {
         });
     }
 
-    /* @Nonnull
     @Override
-    public FileActions getFileActions() {
-        if (fileActions == null) {
-            ensureSetup();
-            fileActions = new FileActions();
-            fileActions.init(resourceBundle);
-        }
+    public void registerFileDialogsProvider(String providerId, FileDialogsProvider provider) {
+        fileDialogsProviders.put(providerId, provider);
+    }
 
-        return fileActions;
-    } */
+    @Nonnull
+    @Override
+    public String getFileDialogProviderId() {
+        return fileDialogProviderId;
+    }
+
+    @Override
+    public void setFileDialogProviderId(String fileDialogProviderId) {
+        this.fileDialogProviderId = fileDialogProviderId;
+    }
+    
+    @Nonnull
+    @Override
+    public FileDialogsProvider getFileDialogsProvider() {
+        FileDialogsProvider fileDialogsProvider = fileDialogsProviders.get(fileDialogProviderId);
+        if (fileDialogsProvider == null) {
+            throw new IllegalStateException();
+        }
+        return fileDialogsProvider;
+    }
 
     @Override
     public void loadFromFile(String filename) {
-        throw new IllegalStateException();
-        /*if (fileOperations == null) {
-            return;
-        }
+        FileDocumentSource documentSource;
         try {
-            fileOperations.loadFromFile(filename);
+            documentSource = new FileDocumentSource(new URI(filename));
+            DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+            DocumentManagement documentManager = documentModule.getMainDocumentManager();
+            Document document = documentManager.openDocument(documentSource);
+            // TODO
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileModule.class.getName()).log(Level.SEVERE, null, ex);
-        } */
+        }
     }
 
     @Override
     public void loadFromFile(URI fileUri) {
-        throw new IllegalStateException();
-        /* if (fileOperations == null) {
-            return;
-        }
-        fileOperations.loadFromFile(fileUri, null); */
+        FileDocumentSource documentSource = new FileDocumentSource(fileUri);
+        DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+        DocumentManagement documentManager = documentModule.getMainDocumentManager();
+        Document document = documentManager.openDocument(documentSource);
+        // TODO
+    }
+
+    @Override
+    public void registerFileProviders() {
+        ensureSetup();
+        registerFileDialogsProvider(FileDialogsType.SWING.name(), new SwingFileDialogsProvider(resourceBundle));
+        setFileDialogProviderId(FileDialogsType.SWING.name());
+        
+        DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+        DocumentManagement documentManager = documentModule.getMainDocumentManager();
+        documentManager.registerDocumentProvider(new FileDocumentProvider());
     }
 
     @Override

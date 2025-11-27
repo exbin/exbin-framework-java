@@ -18,9 +18,7 @@ package org.exbin.framework.file.api;
 import java.net.URI;
 import java.util.Collection;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.AbstractAction;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 
@@ -49,6 +47,16 @@ public interface FileModuleApi extends Module {
     @Nonnull
     Collection<FileType> getFileTypes();
 
+    void registerFileDialogsProvider(String providerId, FileDialogsProvider provider);
+
+    @Nonnull
+    String getFileDialogProviderId();
+
+    void setFileDialogProviderId(String fileDialogProviderId);
+
+    @Nonnull
+    FileDialogsProvider getFileDialogsProvider();
+
     /**
      * Registers close listener.
      */
@@ -68,5 +76,13 @@ public interface FileModuleApi extends Module {
      */
     void loadFromFile(String filename);
 
+    /**
+     * Registers file providers.
+     */
+    void registerFileProviders();
+
+    /**
+     * Registers settings.
+     */
     void registerSettings();
 }

@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.document.api.DocumentProvider;
@@ -37,7 +38,7 @@ public class DocumentModule implements DocumentModuleApi {
 
     private ResourceBundle resourceBundle;
 
-    protected final List<DocumentProvider> documentCreators = new ArrayList<>();
+    private DocumentManager mainDocumentManager;
 
     public DocumentModule() {
     }
@@ -60,21 +61,13 @@ public class DocumentModule implements DocumentModuleApi {
         }
     }
 
-    @Override
-    public void registerDocumentProvider(DocumentProvider documentCreator) {
-        // TODO
-        documentCreators.add(documentCreator);
-    }
-
     @Nonnull
     @Override
-    public Document createDefaultDocument() {
-        return documentCreators.get(0).createDefaultDocument();
-    }
+    public DocumentManagement getMainDocumentManager() {
+        if (mainDocumentManager == null) {
+            mainDocumentManager = new DocumentManager();
+        }
 
-    @Nonnull
-    @Override
-    public Optional<Document> openDefaultDocument() {
-        return documentCreators.get(0).openDefaultDocument();
+        return mainDocumentManager;
     }
 }

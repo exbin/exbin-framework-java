@@ -15,13 +15,16 @@
  */
 package org.exbin.framework.document.api;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for document types.
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface DocumentType {
 
     /**
@@ -31,4 +34,10 @@ public interface DocumentType {
      */
     @Nonnull
     String getTypeId();
+
+    @Nonnull
+    Document createDefaultDocument();
+
+    @Nonnull
+    Optional<Document> openDocument(DocumentData documentData);
 }

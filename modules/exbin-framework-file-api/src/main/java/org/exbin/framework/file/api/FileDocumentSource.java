@@ -13,32 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
+package org.exbin.framework.file.api;
 
-import java.util.Optional;
+import java.net.URI;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+import org.exbin.framework.document.api.DocumentSource;
 
 /**
- * Interface for document provider.
+ * File document source.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface DocumentProvider {
+@ParametersAreNonnullByDefault
+@Immutable
+public class FileDocumentSource implements DocumentSource {
 
-    /**
-     * Opens document using default method.
-     *
-     * @return document or empty if failed / cancelled
-     */
-    @Nonnull
-    Optional<DocumentData> openDefaultDocument();
+    protected final URI fileUri;
 
-    /**
-     * Opens document from given source.
-     *
-     * @param source document source
-     * @return document or empty if failed / cancelled
-     */
+    public FileDocumentSource(URI fileUri) {
+        this.fileUri = fileUri;
+    }
+
     @Nonnull
-    Optional<DocumentData> openDocument(DocumentSource source);
+    public URI getFileUri() {
+        return fileUri;
+    }
 }

@@ -16,6 +16,7 @@
 package org.exbin.framework.docking.action;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -29,6 +30,8 @@ import org.exbin.framework.context.api.ContextChangeRegistration;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentManagement;
+import org.exbin.framework.document.api.DocumentModuleApi;
 
 /**
  * Open file action.
@@ -64,8 +67,11 @@ public class OpenFileAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO
-        Document document = null;
-        documentDocking.openDocument(document);
+        DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+        DocumentManagement documentManager = documentModule.getMainDocumentManager();
+        Optional<Document> document = documentManager.openDefaultDocument();
+        if (document.isPresent()) {
+            documentDocking.openDocument(document.get());
+        }
     }
 }

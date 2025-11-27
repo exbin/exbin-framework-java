@@ -31,6 +31,7 @@ import org.exbin.framework.docking.multi.gui.MultiDocumentPanel;
 import org.exbin.framework.document.api.ComponentDocument;
 import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.w3c.dom.DocumentType;
 
@@ -68,7 +69,8 @@ public class DefaultMultiDocking implements MultiDocking {
     @Override
     public Document openNewDocument() {
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
-        Document document = documentModule.createDefaultDocument();
+        DocumentManagement documentManager = documentModule.getMainDocumentManager();
+        Document document = documentManager.createDefaultDocument();
         documentPanel.addDocument((ComponentDocument) document, "TODO");
         return document;
     }
@@ -81,7 +83,7 @@ public class DefaultMultiDocking implements MultiDocking {
 
     @Override
     public void openDocument(Document document) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        documentPanel.addDocument((ComponentDocument) document, "OPEN");
     }
 
     @Override

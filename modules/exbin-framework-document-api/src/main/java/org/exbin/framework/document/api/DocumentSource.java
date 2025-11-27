@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.file;
-
-import java.io.File;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.file.api.FileTypes;
-import org.exbin.framework.file.api.OpenFileResult;
-import org.exbin.framework.file.api.UsedDirectoryApi;
+package org.exbin.framework.document.api;
 
 /**
- * File dialogs provider.
+ * Interface for document source.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface FileDialogsProvider {
+public interface DocumentSource {
 
-    @Nonnull
-    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory);
 }

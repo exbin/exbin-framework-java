@@ -27,6 +27,7 @@ import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.docking.api.SidePanelDocking;
 import org.exbin.framework.docking.gui.DockingPanel;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.w3c.dom.DocumentType;
 
@@ -40,6 +41,7 @@ import org.w3c.dom.DocumentType;
 public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, DocumentDocking {
 
     protected final DockingPanel docking = new DockingPanel();
+    protected Document currentDocument = null;
 
     @Nonnull
     @Override
@@ -87,9 +89,8 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
     @Override
     public Document openNewDocument() {
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
-        Document document = documentModule.createDefaultDocument();
-        // TODO docking.addDocument((ComponentDocument) document, "TODO");
-        return document;
+        DocumentManagement documentManager = documentModule.getMainDocumentManager();
+        return documentManager.createDefaultDocument();
     }
 
     @Nonnull

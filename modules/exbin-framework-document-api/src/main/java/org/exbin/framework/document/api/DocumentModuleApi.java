@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.document.api;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
@@ -34,25 +33,10 @@ public interface DocumentModuleApi extends Module {
     public static final String FILE_TOOL_BAR_GROUP_ID = MODULE_ID + ".fileToolBarGroup";
 
     /**
-     * Registers document provider.
+     * Returns main document manager.
      *
-     * @param documentProvider document provider
-     */
-    void registerDocumentProvider(DocumentProvider documentProvider);
-
-    /**
-     * Creates default document.
-     *
-     * @return document
+     * @return document manager
      */
     @Nonnull
-    Document createDefaultDocument();
-
-    /**
-     * Opens default document.
-     *
-     * @return document or empty if failed / cancelled
-     */
-    @Nonnull
-    Optional<Document> openDefaultDocument();
+    DocumentManagement getMainDocumentManager();
 }

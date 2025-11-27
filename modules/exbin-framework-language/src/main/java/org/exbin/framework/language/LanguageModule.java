@@ -68,7 +68,7 @@ public class LanguageModule implements LanguageModuleApi {
     @Override
     public ResourceBundle getBundle(Class<?> targetClass) {
         if (languageClassLoader == null && iconSetProvider == null) {
-            return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass), getLanguageBundleLocale());
+            return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass), getLanguageBundleLocale(), targetClass.getClassLoader());
         } else {
             String bundleName = getResourceBaseNameBundleByClass(targetClass);
             LanguageResourceBundle bundle = new LanguageResourceBundle(bundleName, getResourceBundleForLanguage(bundleName));

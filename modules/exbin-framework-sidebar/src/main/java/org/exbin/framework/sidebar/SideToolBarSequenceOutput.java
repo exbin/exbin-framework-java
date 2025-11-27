@@ -79,6 +79,10 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
             if (name != null) {
                 button.setText(name);
             }
+            String toolTip = (String) sideBarComponent.getValue(SideBarComponent.KEY_TOOLTIP);
+            if (toolTip != null) {
+                button.setToolTipText(toolTip);
+            }
             Icon icon = (Icon) sideBarComponent.getValue(SideBarComponent.KEY_ICON);
             if (icon != null) {
                 button.setIcon(icon);

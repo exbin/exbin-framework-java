@@ -19,26 +19,48 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /**
- * Interface for document provider.
+ * Interface for document management.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface DocumentProvider {
+public interface DocumentManagement {
 
     /**
-     * Opens document using default method.
+     * Registers document provider.
+     *
+     * @param documentProvider document provider
+     */
+    void registerDocumentProvider(DocumentProvider documentProvider);
+
+    /**
+     * Registers document type.
+     *
+     * @param documentType document type
+     */
+    void registerDocumentType(DocumentType documentType);
+
+    /**
+     * Creates default document.
+     *
+     * @return document
+     */
+    @Nonnull
+    Document createDefaultDocument();
+
+    /**
+     * Opens default document.
      *
      * @return document or empty if failed / cancelled
      */
     @Nonnull
-    Optional<DocumentData> openDefaultDocument();
+    Optional<Document> openDefaultDocument();
 
     /**
      * Opens document from given source.
      *
      * @param source document source
-     * @return document or empty if failed / cancelled
+     * @return document
      */
     @Nonnull
-    Optional<DocumentData> openDocument(DocumentSource source);
+    Document openDocument(DocumentSource source);
 }

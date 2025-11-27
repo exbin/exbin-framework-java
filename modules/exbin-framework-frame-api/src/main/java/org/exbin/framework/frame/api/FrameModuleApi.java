@@ -161,7 +161,7 @@ public interface FrameModuleApi extends Module {
     Optional<Image> getApplicationIcon();
 
     /**
-     * Registers options panels.
+     * Registers settings options and panels.
      */
     void registerSettings();
 }
