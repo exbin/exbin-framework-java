@@ -1,4 +1,4 @@
-rootProject.name = 'exbin-framework-text-font'
+rootProject.name = 'exbin-framework-document-syntax'
 
 if (rootProject.path == ':') {
     include ':core:exbin-framework'

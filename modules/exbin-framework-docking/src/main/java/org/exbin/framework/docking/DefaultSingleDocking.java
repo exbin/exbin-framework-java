@@ -26,6 +26,8 @@ import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.docking.api.SidePanelDocking;
 import org.exbin.framework.docking.gui.DockingPanel;
+import org.exbin.framework.document.api.ComponentDocument;
+import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
@@ -42,6 +44,7 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
 
     protected final DockingPanel docking = new DockingPanel();
     protected Document currentDocument = null;
+    protected ActiveContextManagement contextManager = null;
 
     @Nonnull
     @Override
@@ -71,18 +74,27 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
 
     @Override
     public void notifyActivated(ActiveContextManagement contextManager) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.contextManager = contextManager;
+        contextManager.changeActiveState(ContextDocking.class, this);
+        contextManager.changeActiveState(ContextDocument.class, (ContextDocument) currentDocument);
+        notifyActiveDocumentChanged();
     }
 
     @Override
     public void notifyDeactivated(ActiveContextManagement contextManager) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        contextManager.changeActiveState(ContextDocking.class, null);
+        contextManager.changeActiveState(ContextDocument.class, null);
+        this.contextManager = null;
+    }
+
+    public void notifyActiveDocumentChanged() {
+
     }
 
     @Nonnull
     @Override
     public Optional<Document> getActiveDocument() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Optional.ofNullable(currentDocument);
     }
 
     @Nonnull
@@ -101,7 +113,11 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
 
     @Override
     public void openDocument(Document document) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (currentDocument != null) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        currentDocument = document;
+        docking.setContentComponent(((ComponentDocument) document).getComponent());
     }
 
     @Override
