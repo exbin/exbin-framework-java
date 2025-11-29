@@ -15,30 +15,20 @@
  */
 package org.exbin.framework.document.api;
 
-import java.util.Optional;
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for document provider.
+ * Interface for loadable document.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface DocumentProvider {
+@ParametersAreNonnullByDefault
+public interface LoadableDocument extends Document {
 
     /**
-     * Opens document using default method.
+     * Performs loading from the document source.
      *
-     * @return document or empty if failed / cancelled
+     * @param documentSource document source
      */
-    @Nonnull
-    Optional<DocumentSource> openDefaultDocument();
-
-    /**
-     * Opens document from given source.
-     *
-     * @param source document source
-     * @return document or empty if failed / cancelled
-     */
-    @Nonnull
-    Optional<DocumentSource> openDocument(SourceIdentifier source);
+    void loadFrom(DocumentSource documentSource);
 }

@@ -21,11 +21,11 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.document.api.Document;
-import org.exbin.framework.document.api.DocumentData;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentProvider;
-import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.document.api.DocumentType;
+import org.exbin.framework.document.api.SourceIdentifier;
+import org.exbin.framework.document.api.DocumentSource;
 
 /**
  * Document manager.
@@ -58,16 +58,16 @@ public class DocumentManager implements DocumentManagement {
     @Nonnull
     @Override
     public Optional<Document> openDefaultDocument() {
-        Optional<DocumentData> documentData = documentProviders.get(0).openDefaultDocument();
+        Optional<DocumentSource> documentData = documentProviders.get(0).openDefaultDocument();
         Optional<Document> document = documentTypes.get(0).openDocument(documentData.get());
         return document;
     }
 
     @Nonnull
     @Override
-    public Document openDocument(DocumentSource source) {
+    public Document openDocument(SourceIdentifier source) {
         for (DocumentProvider documentProvider : documentProviders) {
-            Optional<DocumentData> documentData = documentProvider.openDocument(source);
+            Optional<DocumentSource> documentData = documentProvider.openDocument(source);
             if (documentData.isPresent()) {
                 Optional<Document> document = documentTypes.get(0).openDocument(documentData.get());
                 if (document.isPresent()) {

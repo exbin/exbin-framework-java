@@ -39,5 +39,5 @@ public interface DocumentType {
     Document createDefaultDocument();
 
     @Nonnull
-    Optional<Document> openDocument(DocumentData documentData);
+    Optional<Document> openDocument(DocumentSource documentSource);
 }

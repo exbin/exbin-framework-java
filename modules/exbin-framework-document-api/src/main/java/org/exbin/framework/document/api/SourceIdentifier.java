@@ -13,31 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.file.api;
-
-import java.io.File;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.concurrent.Immutable;
-import org.exbin.framework.document.api.DocumentData;
+package org.exbin.framework.document.api;
 
 /**
- * File document data.
+ * Interface for source identifier.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-@Immutable
-public class FileDocumentData implements DocumentData {
+public interface SourceIdentifier {
 
-    protected final File file;
-
-    public FileDocumentData(File file) {
-        this.file = file;
-    }
-
-    @Nonnull
-    public File getFile() {
-        return file;
-    }
 }

@@ -62,5 +62,5 @@ public interface DocumentManagement {
      * @return document
      */
     @Nonnull
-    Document openDocument(DocumentSource source);
+    Document openDocument(SourceIdentifier source);
 }

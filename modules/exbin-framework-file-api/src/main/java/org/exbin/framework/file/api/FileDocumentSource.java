@@ -15,8 +15,10 @@
  */
 package org.exbin.framework.file.api;
 
-import java.net.URI;
+import java.io.File;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 import org.exbin.framework.document.api.DocumentSource;
@@ -30,14 +32,26 @@ import org.exbin.framework.document.api.DocumentSource;
 @Immutable
 public class FileDocumentSource implements DocumentSource {
 
-    protected final URI fileUri;
+    protected final File file;
+    protected final FileType fileType;
 
-    public FileDocumentSource(URI fileUri) {
-        this.fileUri = fileUri;
+    public FileDocumentSource(File file) {
+        this.file = file;
+        this.fileType = null;
+    }
+
+    public FileDocumentSource(File file, @Nullable FileType fileType) {
+        this.file = file;
+        this.fileType = fileType;
     }
 
     @Nonnull
-    public URI getFileUri() {
-        return fileUri;
+    public File getFile() {
+        return file;
+    }
+
+    @Nonnull
+    public Optional<FileType> getFileType() {
+        return Optional.ofNullable(fileType);
     }
 }

@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.context.api.ContextComponentProvider;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.gui.DockingPanel;
 import org.exbin.framework.docking.multi.api.MultiDocking;
@@ -71,7 +72,9 @@ public class DefaultMultiDocking implements MultiDocking {
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         DocumentManagement documentManager = documentModule.getMainDocumentManager();
         Document document = documentManager.createDefaultDocument();
+        openDocuments.add(document);
         documentPanel.addDocument((ComponentDocument) document, "TODO");
+        notifyActivated(contextManager);
         return document;
     }
 
@@ -83,7 +86,9 @@ public class DefaultMultiDocking implements MultiDocking {
 
     @Override
     public void openDocument(Document document) {
+        openDocuments.add(document);
         documentPanel.addDocument((ComponentDocument) document, "OPEN");
+        notifyActivated(contextManager);
     }
 
     @Override
@@ -143,18 +148,27 @@ public class DefaultMultiDocking implements MultiDocking {
         contextManager.changeActiveState(ContextDocking.class, this);
         Document document = getDocument();
         contextManager.changeActiveState(ContextDocument.class, (ContextDocument) document);
-        notifyActiveDocumentChanged();
+        Optional<Document> optActiveDocument = getActiveDocument();
+        if (optActiveDocument.isPresent()) {
+            Document activeDocument = optActiveDocument.get();
+            if (activeDocument instanceof ContextComponentProvider) {
+                ((ContextComponentProvider) activeDocument).notifyActivated(contextManager);
+            }
+        }
     }
 
     @Override
     public void notifyDeactivated(ActiveContextManagement contextManager) {
         contextManager.changeActiveState(ContextDocking.class, null);
         contextManager.changeActiveState(ContextDocument.class, null);
+        Optional<Document> optActiveDocument = getActiveDocument();
+        if (optActiveDocument.isPresent()) {
+            Document activeDocument = optActiveDocument.get();
+            if (activeDocument instanceof ContextComponentProvider) {
+                ((ContextComponentProvider) activeDocument).notifyDeactivated(contextManager);
+            }
+        }
         this.contextManager = null;
-    }
-
-    public void notifyActiveDocumentChanged() {
-
     }
 
     @Nullable

@@ -15,12 +15,15 @@
  */
 package org.exbin.framework.document.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for editable document.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface EditableDocument extends Document {
+@ParametersAreNonnullByDefault
+public interface EditableDocument extends LoadableDocument {
 
     /**
      * Returns whether document was modified.
@@ -28,4 +31,23 @@ public interface EditableDocument extends Document {
      * @return true if modified
      */
     boolean isModified();
+
+    /**
+     * Clears content of the file.
+     */
+    void clearFile();
+
+    /**
+     * Returns true if save operation is possible.
+     *
+     * @return id
+     */
+    boolean canSave();
+
+    /**
+     * Performs saving of the document source.
+     *
+     * @param documentSource document source
+     */
+    void saveTo(DocumentSource documentSource);
 }

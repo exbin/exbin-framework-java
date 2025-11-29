@@ -33,7 +33,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
-import org.exbin.framework.file.api.FileDocumentSource;
+import org.exbin.framework.file.api.FileSourceIdentifier;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.settings.FileOptions;
@@ -134,9 +134,9 @@ public class FileModule implements FileModuleApi {
 
     @Override
     public void loadFromFile(String filename) {
-        FileDocumentSource documentSource;
+        FileSourceIdentifier documentSource;
         try {
-            documentSource = new FileDocumentSource(new URI(filename));
+            documentSource = new FileSourceIdentifier(new URI(filename));
             DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
             DocumentManagement documentManager = documentModule.getMainDocumentManager();
             Document document = documentManager.openDocument(documentSource);
@@ -148,7 +148,7 @@ public class FileModule implements FileModuleApi {
 
     @Override
     public void loadFromFile(URI fileUri) {
-        FileDocumentSource documentSource = new FileDocumentSource(fileUri);
+        FileSourceIdentifier documentSource = new FileSourceIdentifier(fileUri);
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         DocumentManagement documentManager = documentModule.getMainDocumentManager();
         Document document = documentManager.openDocument(documentSource);

@@ -21,15 +21,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
 import org.exbin.framework.App;
-import org.exbin.framework.document.api.DocumentData;
 import org.exbin.framework.document.api.DocumentProvider;
-import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.file.api.DefaultFileTypes;
 import org.exbin.framework.file.api.FileDialogsProvider;
-import org.exbin.framework.file.api.FileDocumentData;
 import org.exbin.framework.file.api.FileDocumentSource;
+import org.exbin.framework.file.api.FileSourceIdentifier;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.OpenFileResult;
+import org.exbin.framework.document.api.SourceIdentifier;
+import org.exbin.framework.document.api.DocumentSource;
 
 /**
  * File document provider.
@@ -41,12 +41,12 @@ public class FileDocumentProvider implements DocumentProvider {
 
     @Nonnull
     @Override
-    public Optional<DocumentData> openDefaultDocument() {
+    public Optional<DocumentSource> openDefaultDocument() {
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         FileDialogsProvider fileDialogsProvider = fileModule.getFileDialogsProvider();
         OpenFileResult openFileResult = fileDialogsProvider.showOpenFileDialog(new DefaultFileTypes(fileModule.getFileTypes()), null, null);
         if (openFileResult.getDialogResult() == JFileChooser.APPROVE_OPTION) {
-            return Optional.of(new FileDocumentData(openFileResult.getSelectedFile().get()));
+            return Optional.of(new FileDocumentSource(openFileResult.getSelectedFile().get()));
         }
 
         return Optional.empty();
@@ -54,9 +54,9 @@ public class FileDocumentProvider implements DocumentProvider {
 
     @Nonnull
     @Override
-    public Optional<DocumentData> openDocument(DocumentSource source) {
-        if (source instanceof FileDocumentSource) {
-            return Optional.of(new FileDocumentData(new File(((FileDocumentSource) source).getFileUri())));
+    public Optional<DocumentSource> openDocument(SourceIdentifier source) {
+        if (source instanceof FileSourceIdentifier) {
+            return Optional.of(new FileDocumentSource(new File(((FileSourceIdentifier) source).getFileUri())));
         }
 
         return Optional.empty();

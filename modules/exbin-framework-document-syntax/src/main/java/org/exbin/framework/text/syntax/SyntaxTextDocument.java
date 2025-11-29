@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.text;
+package org.exbin.framework.text.syntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -30,8 +30,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.document.text.gui.TextPanel;
-import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.operation.undo.api.UndoRedoController;
@@ -45,6 +43,10 @@ import org.exbin.framework.file.api.FileDocument;
 import org.exbin.framework.file.api.FileDocumentSource;
 import org.exbin.framework.text.encoding.ContextEncoding;
 import org.exbin.framework.text.font.TextFontState;
+import org.exbin.framework.text.syntax.gui.SyntaxTextPanel;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  * Text document.
@@ -52,22 +54,27 @@ import org.exbin.framework.text.font.TextFontState;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextDocument implements ContextDocument, ComponentDocument, FileDocument, EditableDocument {
+public class SyntaxTextDocument implements ContextDocument, ComponentDocument, FileDocument, EditableDocument {
 
-    protected final TextPanel textPanel = new TextPanel();
+    protected final SyntaxTextPanel textPanel = new SyntaxTextPanel();
 
-    protected DocumentSource documentSource = null;
     protected String title;
+    protected DocumentSource documentSource = null;
     protected ActiveContextManagement contextManager;
     protected DialogParentComponent dialogParentComponent;
     protected UndoRedoController undoRedoControl = null;
-    protected EditorTextPanelComponent textPanelComponent;
-    public TextDocument() {
+    protected SyntaxTextPanelComponent textPanelComponent;
+    public SyntaxTextDocument() {
         init();
     }
 
     private void init() {
-        textPanelComponent = new EditorTextPanelComponent(textPanel);
+        RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        textArea.setCodeFoldingEnabled(true);
+        RTextScrollPane sp = new RTextScrollPane(textArea);        
+
+        textPanelComponent = new SyntaxTextPanelComponent(textPanel);
         textPanel.setUpdateListener(() -> {
             if (contextManager != null) {
                 contextManager.changeActiveState(ContextComponent.class, textPanelComponent);
@@ -108,7 +115,7 @@ public class TextDocument implements ContextDocument, ComponentDocument, FileDoc
 
     @Nonnull
     @Override
-    public TextPanel getComponent() {
+    public SyntaxTextPanel getComponent() {
         return textPanel;
     }
 
@@ -131,7 +138,7 @@ public class TextDocument implements ContextDocument, ComponentDocument, FileDoc
             textPanel.setText(data.toString());
             this.documentSource = documentSource;
         } catch (IOException ex) {
-            Logger.getLogger(TextDocument.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SyntaxTextDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         textPanel.setModified(false);
@@ -165,7 +172,7 @@ public class TextDocument implements ContextDocument, ComponentDocument, FileDoc
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(TextDocument.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SyntaxTextDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         textPanel.setModified(false);

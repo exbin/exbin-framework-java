@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.text;
+package org.exbin.framework.text.syntax;
 
 import java.util.ArrayList;
 import javax.annotation.ParametersAreNonnullByDefault;

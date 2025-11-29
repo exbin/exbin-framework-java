@@ -58,11 +58,4 @@ public class DocumentSyntaxModule implements Module {
 
     public void registerSettings() {
     }
-    
-    public void test() {
-        RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
-        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-        textArea.setCodeFoldingEnabled(true);
-        RTextScrollPane sp = new RTextScrollPane(textArea);        
-    }
 }
