@@ -48,7 +48,6 @@ import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.context.api.ActiveContextManagement;
-import org.exbin.framework.context.api.ContextComponentProvider;
 import org.exbin.framework.frame.settings.FrameAppearanceOptions;
 import org.exbin.framework.frame.settings.FrameAppearanceSettingsApplier;
 import org.exbin.framework.frame.settings.FrameAppearanceSettingsComponent;
@@ -62,6 +61,8 @@ import org.exbin.framework.frame.api.ContextFrame;
 import org.exbin.framework.options.api.PrefixOptionsStorage;
 import org.exbin.framework.window.settings.WindowPositionOptions;
 import org.exbin.framework.frame.api.ComponentFrame;
+import org.exbin.framework.context.api.ContextActivable;
+import org.exbin.framework.utils.ComponentProvider;
 
 /**
  * Module frame handling.
@@ -254,11 +255,13 @@ public class FrameModule implements FrameModuleApi {
     }
     
     @Override
-    public void attachFrameContentComponent(ContextComponentProvider contextComponentProvider) {
+    public void attachFrameContentComponent(ComponentProvider componentProvider) {
         ComponentFrame frameHandler = getFrameHandler();
-        frameHandler.setMainPanel(contextComponentProvider.getComponent());
-        ActiveContextManagement contextManager = frameHandler.getContextManager();
-        contextComponentProvider.notifyActivated(contextManager);
+        frameHandler.setMainPanel(componentProvider.getComponent());
+        if (componentProvider instanceof ContextActivable) {
+            ActiveContextManagement contextManager = frameHandler.getContextManager();
+            ((ContextActivable) componentProvider).notifyActivated(contextManager);
+        }
     }
 
     @Override

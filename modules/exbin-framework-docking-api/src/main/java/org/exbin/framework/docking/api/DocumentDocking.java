@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.StateChangeType;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.utils.ComponentProvider;
 import org.w3c.dom.DocumentType;
 
 /**
@@ -28,7 +29,7 @@ import org.w3c.dom.DocumentType;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentDocking extends SidePanelDocking {
+public interface DocumentDocking extends SidePanelDocking, ComponentProvider {
 
     /**
      * Returns active document.

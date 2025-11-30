@@ -15,25 +15,15 @@
  */
 package org.exbin.framework.context.api;
 
-import java.awt.Component;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for content aware component provider.
+ * Interface for content activable.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ContextComponentProvider {
-
-    /**
-     * Returns component.
-     *
-     * @return component
-     */
-    @Nonnull
-    Component getComponent();
+public interface ContextActivable {
 
     /**
      * Notifies activation of the component.

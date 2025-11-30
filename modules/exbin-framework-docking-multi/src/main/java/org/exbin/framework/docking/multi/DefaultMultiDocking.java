@@ -24,7 +24,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.context.api.ActiveContextManagement;
-import org.exbin.framework.context.api.ContextComponentProvider;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.gui.DockingPanel;
 import org.exbin.framework.docking.multi.api.MultiDocking;
@@ -35,6 +34,7 @@ import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.w3c.dom.DocumentType;
+import org.exbin.framework.context.api.ContextActivable;
 
 /**
  * Default implementation of the document docking supporting multiple documents.
@@ -151,8 +151,8 @@ public class DefaultMultiDocking implements MultiDocking {
         Optional<Document> optActiveDocument = getActiveDocument();
         if (optActiveDocument.isPresent()) {
             Document activeDocument = optActiveDocument.get();
-            if (activeDocument instanceof ContextComponentProvider) {
-                ((ContextComponentProvider) activeDocument).notifyActivated(contextManager);
+            if (activeDocument instanceof ContextActivable) {
+                ((ContextActivable) activeDocument).notifyActivated(contextManager);
             }
         }
     }
@@ -164,8 +164,8 @@ public class DefaultMultiDocking implements MultiDocking {
         Optional<Document> optActiveDocument = getActiveDocument();
         if (optActiveDocument.isPresent()) {
             Document activeDocument = optActiveDocument.get();
-            if (activeDocument instanceof ContextComponentProvider) {
-                ((ContextComponentProvider) activeDocument).notifyDeactivated(contextManager);
+            if (activeDocument instanceof ContextActivable) {
+                ((ContextActivable) activeDocument).notifyDeactivated(contextManager);
             }
         }
         this.contextManager = null;

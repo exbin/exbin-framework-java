@@ -13,14 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
+package org.exbin.framework.utils;
 
-import org.exbin.framework.utils.ComponentProvider;
+import java.awt.Component;
+import javax.annotation.Nonnull;
 
 /**
- * Interface for document with single view component.
+ * Interface for component provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ComponentDocument extends Document, ComponentProvider {
+public interface ComponentProvider {
+
+    /**
+     * Returns component.
+     *
+     * @return component
+     */
+    @Nonnull
+    Component getComponent();
 }

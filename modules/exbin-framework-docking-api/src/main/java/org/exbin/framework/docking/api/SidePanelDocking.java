@@ -18,7 +18,7 @@ package org.exbin.framework.docking.api;
 import java.awt.Component;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ContextComponentProvider;
+import org.exbin.framework.context.api.ContextActivable;
 
 /**
  * Interface for side panel docking.
@@ -26,7 +26,7 @@ import org.exbin.framework.context.api.ContextComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface SidePanelDocking extends ContextComponentProvider {
+public interface SidePanelDocking extends ContextActivable {
 
     /**
      * Sets side tool bar.
