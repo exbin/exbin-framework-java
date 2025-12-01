@@ -50,6 +50,7 @@ public class UndoAction extends AbstractAction implements ActionContextChange {
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, EDIT_UNDO_ACTION_ID);
+        setEnabled(false);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }

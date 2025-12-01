@@ -13,24 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.context.api;
+package org.exbin.framework.document;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.document.api.MemoryDocumentSource;
 
 /**
- * Listener for context state change.
+ * Default memory document source.
  *
  * @author ExBin Project (https://exbin.org)
- * @param <T> instance type
  */
 @ParametersAreNonnullByDefault
-public interface ContextStateChangeListener<T> {
+public class DefaultMemoryDocumentSource implements MemoryDocumentSource {
 
-    /**
-     * Notifies state changed in the active context.
-     *
-     * @param instance class instance
-     * @param changeType change type
-     */
-    void notifyStateChange(T instance, StateChangeType changeType);
+    protected String documentTitle = "";
+
+    @Nonnull
+    @Override
+    public String getDocumentTitle() {
+        return documentTitle;
+    }
+
+    public void setDocumentTitle(String documentTitle) {
+        this.documentTitle = documentTitle;
+    }
 }

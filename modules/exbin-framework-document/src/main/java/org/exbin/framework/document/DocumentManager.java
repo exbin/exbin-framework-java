@@ -58,18 +58,18 @@ public class DocumentManager implements DocumentManagement {
     @Nonnull
     @Override
     public Optional<Document> openDefaultDocument() {
-        Optional<DocumentSource> documentData = documentProviders.get(0).openDefaultDocument();
-        Optional<Document> document = documentTypes.get(0).openDocument(documentData.get());
+        Optional<DocumentSource> documentData = documentProviders.get(0).performOpenDefaultDocument();
+        Optional<Document> document = documentTypes.get(0).createDocument(documentData.get());
         return document;
     }
 
     @Nonnull
     @Override
-    public Document openDocument(SourceIdentifier source) {
+    public Document openDocument(SourceIdentifier sourceIdentifier) {
         for (DocumentProvider documentProvider : documentProviders) {
-            Optional<DocumentSource> documentData = documentProvider.openDocument(source);
+            Optional<DocumentSource> documentData = documentProvider.createDocumentSource(sourceIdentifier);
             if (documentData.isPresent()) {
-                Optional<Document> document = documentTypes.get(0).openDocument(documentData.get());
+                Optional<Document> document = documentTypes.get(0).createDocument(documentData.get());
                 if (document.isPresent()) {
                     return document.get();
                 }

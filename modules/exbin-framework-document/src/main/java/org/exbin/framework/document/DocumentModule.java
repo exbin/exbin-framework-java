@@ -27,6 +27,7 @@ import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.document.api.DocumentProvider;
+import org.exbin.framework.document.api.MemoryDocumentSource;
 
 /**
  * Implementation of the document module.
@@ -69,5 +70,11 @@ public class DocumentModule implements DocumentModuleApi {
         }
 
         return mainDocumentManager;
+    }
+    
+    @Nonnull
+    @Override
+    public MemoryDocumentSource createMemoryDocumentSource() {
+        return new DefaultMemoryDocumentSource();
     }
 }

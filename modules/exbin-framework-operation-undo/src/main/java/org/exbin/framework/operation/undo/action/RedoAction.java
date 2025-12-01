@@ -50,6 +50,7 @@ public class RedoAction extends AbstractAction implements ActionContextChange {
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, EDIT_REDO_ACTION_ID);
+        setEnabled(false);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_DOWN_MASK | ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);
     }

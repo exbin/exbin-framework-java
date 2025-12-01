@@ -47,11 +47,11 @@ public class TestFileModule implements FileModuleApi {
     }
 
     @Override
-    public void loadFromFile(URI fileUri) {
+    public void openFile(URI fileUri) {
     }
 
     @Override
-    public void loadFromFile(String filename) {
+    public void openFile(String filename) {
     }
 
     @Override

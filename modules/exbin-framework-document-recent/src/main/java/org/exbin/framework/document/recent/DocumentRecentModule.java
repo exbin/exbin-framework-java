@@ -16,6 +16,7 @@
 package org.exbin.framework.document.recent;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -30,6 +31,7 @@ import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.document.recent.action.RecentFilesActions;
 import org.exbin.framework.document.recent.settings.RecentFilesOptions;
+import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
@@ -88,15 +90,18 @@ public class DocumentRecentModule implements Module {
             recentFilesActions = new RecentFilesActions();
             recentFilesActions.init(resourceBundle, new RecentFilesActions.FilesController() {
                 @Override
-                public void loadFromFile(URI fileUri, @Nullable FileType fileType) {
-                    // TODO fileOperations.loadFromFile(fileUri, fileType);
+                public void openRecentFile(URI fileUri, @Nullable FileType fileType) {
+                    FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+                    fileModule.openFile(fileUri);
                 }
 
                 @Nonnull
                 @Override
                 public List<FileType> getRegisteredFileTypes() {
-                    throw new IllegalStateException();
-                    // TODO return registeredFileTypes;
+                    FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+                    List<FileType> fileTypes = new ArrayList<>();
+                    fileTypes.addAll(fileModule.getFileTypes());
+                    return fileTypes;
                 }
             });
             OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);

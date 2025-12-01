@@ -156,7 +156,7 @@ public class RecentFilesActions {
                             URI fileUri;
                             try {
                                 fileUri = new URI(recentItem.getFileName());
-                                filesController.loadFromFile(fileUri, fileType);
+                                filesController.openRecentFile(fileUri, fileType);
 
                                 if (itemIndex > 0) {
                                     // Move recent item on top
@@ -251,7 +251,7 @@ public class RecentFilesActions {
     @ParametersAreNonnullByDefault
     public interface FilesController {
 
-        void loadFromFile(URI fileUri, @Nullable FileType fileType);
+        void openRecentFile(URI fileUri, @Nullable FileType fileType);
 
         @Nonnull
         List<FileType> getRegisteredFileTypes();

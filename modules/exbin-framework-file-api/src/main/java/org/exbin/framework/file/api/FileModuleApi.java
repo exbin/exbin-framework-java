@@ -63,18 +63,18 @@ public interface FileModuleApi extends Module {
     void registerCloseListener();
 
     /**
-     * Attempts to load given filename to active panel.
+     * Attempts to open given file URI to active panel.
      *
      * @param fileUri file URI
      */
-    void loadFromFile(URI fileUri);
+    void openFile(URI fileUri);
 
     /**
-     * Attempts to load given filename to active panel.
+     * Attempts to open given filename to active panel.
      *
      * @param filename filename
      */
-    void loadFromFile(String filename);
+    void openFile(String filename);
 
     /**
      * Registers file providers.

@@ -133,7 +133,7 @@ public class FileModule implements FileModuleApi {
     }
 
     @Override
-    public void loadFromFile(String filename) {
+    public void openFile(String filename) {
         FileSourceIdentifier documentSource;
         try {
             documentSource = new FileSourceIdentifier(new URI(filename));
@@ -147,7 +147,7 @@ public class FileModule implements FileModuleApi {
     }
 
     @Override
-    public void loadFromFile(URI fileUri) {
+    public void openFile(URI fileUri) {
         FileSourceIdentifier documentSource = new FileSourceIdentifier(fileUri);
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         DocumentManagement documentManager = documentModule.getMainDocumentManager();

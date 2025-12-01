@@ -35,9 +35,20 @@ public interface DocumentType {
     @Nonnull
     String getTypeId();
 
+    /**
+     * Creates document using default method.
+     *
+     * @return new document
+     */
     @Nonnull
     Document createDefaultDocument();
 
+    /**
+     * Creates document from given source.
+     *
+     * @param documentSource document source
+     * @return document
+     */
     @Nonnull
-    Optional<Document> openDocument(DocumentSource documentSource);
+    Optional<Document> createDocument(DocumentSource documentSource);
 }

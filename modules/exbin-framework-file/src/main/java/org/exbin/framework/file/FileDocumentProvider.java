@@ -41,7 +41,7 @@ public class FileDocumentProvider implements DocumentProvider {
 
     @Nonnull
     @Override
-    public Optional<DocumentSource> openDefaultDocument() {
+    public Optional<DocumentSource> performOpenDefaultDocument() {
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         FileDialogsProvider fileDialogsProvider = fileModule.getFileDialogsProvider();
         OpenFileResult openFileResult = fileDialogsProvider.showOpenFileDialog(new DefaultFileTypes(fileModule.getFileTypes()), null, null);
@@ -54,7 +54,7 @@ public class FileDocumentProvider implements DocumentProvider {
 
     @Nonnull
     @Override
-    public Optional<DocumentSource> openDocument(SourceIdentifier source) {
+    public Optional<DocumentSource> createDocumentSource(SourceIdentifier source) {
         if (source instanceof FileSourceIdentifier) {
             return Optional.of(new FileDocumentSource(new File(((FileSourceIdentifier) source).getFileUri())));
         }

@@ -17,12 +17,14 @@ package org.exbin.framework.document.api;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for document provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface DocumentProvider {
 
     /**
@@ -31,7 +33,7 @@ public interface DocumentProvider {
      * @return document or empty if failed / cancelled
      */
     @Nonnull
-    Optional<DocumentSource> openDefaultDocument();
+    Optional<DocumentSource> performOpenDefaultDocument();
 
     /**
      * Opens document from given source.
@@ -40,5 +42,5 @@ public interface DocumentProvider {
      * @return document or empty if failed / cancelled
      */
     @Nonnull
-    Optional<DocumentSource> openDocument(SourceIdentifier source);
+    Optional<DocumentSource> createDocumentSource(SourceIdentifier source);
 }

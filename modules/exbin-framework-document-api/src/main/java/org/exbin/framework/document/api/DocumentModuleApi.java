@@ -39,4 +39,12 @@ public interface DocumentModuleApi extends Module {
      */
     @Nonnull
     DocumentManagement getMainDocumentManager();
+
+    /**
+     * Creates instance of memory document source.
+     *
+     * @return memory document source
+     */
+    @Nonnull
+    MemoryDocumentSource createMemoryDocumentSource();
 }
