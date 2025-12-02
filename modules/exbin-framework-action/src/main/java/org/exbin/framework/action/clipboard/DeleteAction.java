@@ -61,18 +61,22 @@ public class DeleteAction extends AbstractAction implements ActionContextChange 
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextComponent.class, component -> {
-            deletionSupport = component instanceof DeletionController ? (DeletionController) component : null;
-            update();
+        registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
+            updateByContext(instance);
+        });
+        registrar.registerStateChangeListener(ContextComponent.class, (instance, changeType) -> {
+            if (DeletionController.ChangeType.CONTENT_STATE.equals(changeType)) {
+                updateByContext(instance);
+            }
         });
     }
 
     public void setClipboardSupport(@Nullable DeletionController deletionSupport) {
-        this.deletionSupport = deletionSupport;
-        update();
+        updateByContext(deletionSupport);
     }
 
-    public void update() {
+    public void updateByContext(Object context) {
+        deletionSupport = context instanceof DeletionController ? (DeletionController) context : null;
         setEnabled(deletionSupport != null && deletionSupport.canDelete());
     }
 }

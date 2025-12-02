@@ -16,6 +16,7 @@
 package org.exbin.framework.docking.multi;
 
 import java.awt.Component;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,10 @@ import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.w3c.dom.DocumentType;
 import org.exbin.framework.context.api.ContextActivable;
+import org.exbin.framework.document.api.DocumentSource;
+import org.exbin.framework.document.api.LoadableDocument;
+import org.exbin.framework.document.api.MemoryDocumentSource;
+import org.exbin.framework.file.api.FileDocument;
 
 /**
  * Default implementation of the document docking supporting multiple documents.
@@ -52,6 +57,17 @@ public class DefaultMultiDocking implements MultiDocking {
 
     public DefaultMultiDocking() {
         docking.setContentComponent(documentPanel);
+        documentPanel.setController(new MultiDocumentPanel.Controller() {
+            @Override
+            public void activeIndexChanged(int index) {
+                notifyActivated(contextManager);
+            }
+
+            @Override
+            public void showPopupMenu(int index, Component component, int positionX, int positionY) {
+                // TODO
+            }
+        });
     }
 
     @Nonnull
@@ -73,7 +89,7 @@ public class DefaultMultiDocking implements MultiDocking {
         DocumentManagement documentManager = documentModule.getMainDocumentManager();
         Document document = documentManager.createDefaultDocument();
         openDocuments.add(document);
-        documentPanel.addDocument((ComponentDocument) document, "TODO");
+        documentPanel.addDocument((ComponentDocument) document, getDocumentTitle(document));
         notifyActivated(contextManager);
         return document;
     }
@@ -87,7 +103,7 @@ public class DefaultMultiDocking implements MultiDocking {
     @Override
     public void openDocument(Document document) {
         openDocuments.add(document);
-        documentPanel.addDocument((ComponentDocument) document, "OPEN");
+        documentPanel.addDocument((ComponentDocument) document, getDocumentTitle(document));
         notifyActivated(contextManager);
     }
 
@@ -179,5 +195,29 @@ public class DefaultMultiDocking implements MultiDocking {
         }
 
         return openDocuments.get(activeIndex);
+    }
+
+    @Nonnull
+    private String getDocumentTitle(Document document) {
+        if (!(document instanceof FileDocument)) {
+            return "";
+        }
+        FileDocument fileDocument = (FileDocument) document;
+        URI fileUri = fileDocument.getFileUri().orElse(null);
+        if (fileUri == null) {
+            LoadableDocument loadableDocument = (LoadableDocument) document;
+            Optional<DocumentSource> optDocumentSource = loadableDocument.getDocumentSource();
+            if (optDocumentSource.isPresent()) {
+                DocumentSource documentSource = optDocumentSource.get();
+                if (documentSource instanceof MemoryDocumentSource) {
+                    return ((MemoryDocumentSource) documentSource).getDocumentTitle();
+                }
+            }
+            return "";
+        }
+        String path = fileUri.getPath();
+        int lastSegment = path.lastIndexOf("/");
+        String fileName = lastSegment < 0 ? path : path.substring(lastSegment + 1);
+        return fileName == null ? "" : fileName;
     }
 }

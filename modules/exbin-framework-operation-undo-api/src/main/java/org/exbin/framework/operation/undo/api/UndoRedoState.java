@@ -15,12 +15,14 @@
  */
 package org.exbin.framework.operation.undo.api;
 
+import org.exbin.framework.context.api.StateChangeType;
+
 /**
  * Interface for undo state.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface UndoRedoState {
+public interface UndoRedoState extends ContextUndoRedo {
 
     /**
      * Returns whether undo operation is available.
@@ -35,4 +37,8 @@ public interface UndoRedoState {
      * @return true if redo possible
      */
     boolean canRedo();
+
+    public enum ChangeType implements StateChangeType {
+        UNDO_REDO_STATE
+    }
 }

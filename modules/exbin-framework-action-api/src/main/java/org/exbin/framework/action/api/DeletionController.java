@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.action.api;
 
+import org.exbin.framework.context.api.StateChangeType;
+
 /**
  * Interface for active document deletion controller.
  *
@@ -33,4 +35,8 @@ public interface DeletionController {
      * @return true, if delete operation is allowed.
      */
     boolean canDelete();
+
+    public enum ChangeType implements StateChangeType {
+        CONTENT_STATE
+    }
 }

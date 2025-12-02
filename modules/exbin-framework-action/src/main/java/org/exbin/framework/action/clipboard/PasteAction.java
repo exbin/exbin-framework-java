@@ -62,21 +62,25 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextComponent.class, component -> {
-            clipboardSupport = component instanceof ClipboardController ? (ClipboardController) component : null;
-            update();
+        registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
+            updateByContext(instance);
         });
         registrar.registerUpdateListener(ClipboardFlavorState.class, instance -> {
-            update();
+            updateByContext(instance);
+        });
+        registrar.registerStateChangeListener(ContextComponent.class, (instance, changeType) -> {
+            if (ClipboardController.ChangeType.CONTENT_STATE.equals(changeType)) {
+                updateByContext(instance);
+            }
         });
     }
 
     public void setClipboardActionsHandler(@Nullable ClipboardController clipboardSupport) {
-        this.clipboardSupport = clipboardSupport;
-        update();
+        updateByContext(clipboardSupport);
     }
 
-    public void update() {
+    public void updateByContext(Object context) {
+        clipboardSupport = context instanceof ClipboardController ? (ClipboardController) context : null;
         setEnabled(clipboardSupport != null && clipboardSupport.canPaste());
     }
 }

@@ -28,8 +28,8 @@ import org.exbin.framework.document.api.ComponentDocument;
 @ParametersAreNonnullByDefault
 public class MultiDocumentPanel extends javax.swing.JPanel {
 
-    private Controller controller;
-    private int activeIndex = -1;
+    protected Controller controller;
+    protected int activeIndex = -1;
 
     public MultiDocumentPanel() {
         initComponents();

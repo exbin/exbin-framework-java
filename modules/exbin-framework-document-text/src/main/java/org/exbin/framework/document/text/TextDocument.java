@@ -112,6 +112,12 @@ public class TextDocument implements ContextDocument, ComponentDocument, FileDoc
         return textPanel;
     }
 
+    @Nonnull
+    @Override
+    public Optional<DocumentSource> getDocumentSource() {
+        return Optional.ofNullable(documentSource);
+    }
+
     @Override
     public void loadFrom(DocumentSource documentSource) {
         if (!(documentSource instanceof FileDocumentSource)) {

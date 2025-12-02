@@ -75,6 +75,14 @@ public class DocumentModule implements DocumentModuleApi {
     @Nonnull
     @Override
     public MemoryDocumentSource createMemoryDocumentSource() {
-        return new DefaultMemoryDocumentSource();
+        String title = getNewFileTitlePrefix() + " " + 1;
+        DefaultMemoryDocumentSource memoryDocumentSource = new DefaultMemoryDocumentSource();
+        memoryDocumentSource.setDocumentTitle(title);
+        return memoryDocumentSource;
+    }
+
+    @Nonnull
+    public String getNewFileTitlePrefix() {
+        return getResourceBundle().getString("newFileTitlePrefix");
     }
 }

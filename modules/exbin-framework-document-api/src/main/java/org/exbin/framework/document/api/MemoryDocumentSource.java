@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface MemoryDocumentSource {
+public interface MemoryDocumentSource extends DocumentSource {
 
     /**
      * Returns document title.

@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.action.api;
 
+import org.exbin.framework.context.api.StateChangeType;
+
 /**
  * Interface for active document selection controller.
  *
@@ -40,4 +42,8 @@ public interface SelectionController {
      * @return true if can perform select all
      */
     boolean canSelectAll();
+
+    public enum ChangeType implements StateChangeType {
+        CONTENT_STATE
+    }
 }

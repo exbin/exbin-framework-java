@@ -13,32 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
-
-import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+package org.exbin.framework.operation.undo.api;
 
 /**
- * Interface for loadable document.
+ * Context undo redo.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface LoadableDocument extends Document {
+public interface ContextUndoRedo {
 
-    /**
-     * Returns document source.
-     *
-     * @return document source
-     */
-    @Nonnull
-    Optional<DocumentSource> getDocumentSource();
-
-    /**
-     * Performs loading from the document source.
-     *
-     * @param documentSource document source
-     */
-    void loadFrom(DocumentSource documentSource);
 }

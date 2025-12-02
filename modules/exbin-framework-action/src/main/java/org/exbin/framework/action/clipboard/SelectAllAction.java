@@ -61,18 +61,22 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextComponent.class, component -> {
-            selectionSupport = component instanceof SelectionController ? (SelectionController) component : null;
-            update();
+        registrar.registerUpdateListener(ContextComponent.class, instance -> {
+            updateByContext(instance);
+        });
+        registrar.registerStateChangeListener(ContextComponent.class, (instance, changeType) -> {
+            if (SelectionController.ChangeType.CONTENT_STATE.equals(changeType)) {
+                updateByContext(instance);
+            }
         });
     }
 
     public void setClipboardActionsHandler(@Nullable SelectionController selectionSupport) {
-        this.selectionSupport = selectionSupport;
-        update();
+        updateByContext(selectionSupport);
     }
 
-    public void update() {
+    public void updateByContext(Object context) {
+        selectionSupport = context instanceof SelectionController ? (SelectionController) context : null;
         setEnabled(selectionSupport != null && selectionSupport.canSelectAll());
     }
 }

@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.action.api.clipboard;
 
+import org.exbin.framework.context.api.StateChangeType;
+
 /**
  * Interface for document clipboard actions controller.
  *
@@ -52,4 +54,8 @@ public interface ClipboardController {
      * @return true if can perform paste
      */
     boolean canPaste();
+
+    public enum ChangeType implements StateChangeType {
+        CONTENT_STATE
+    }
 }
