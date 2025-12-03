@@ -30,7 +30,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import org.exbin.framework.App;
-import org.exbin.framework.frame.api.ApplicationExitListener;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowPosition;
@@ -63,6 +62,7 @@ import org.exbin.framework.window.settings.WindowPositionOptions;
 import org.exbin.framework.frame.api.ComponentFrame;
 import org.exbin.framework.context.api.ContextActivable;
 import org.exbin.framework.utils.ComponentProvider;
+import org.exbin.framework.utils.WindowClosingListener;
 
 /**
  * Module frame handling.
@@ -80,7 +80,7 @@ public class FrameModule implements FrameModuleApi {
     private ResourceBundle resourceBundle;
     private ApplicationFrame applicationFrame;
     private boolean undecorated = false;
-    private ApplicationExitHandler exitHandler = null;
+    private FrameClosingHandler exitHandler = null;
     private StatusBarHandler statusBarHandler = null;
     private FrameActions frameActions;
     private Image appIcon = null;
@@ -262,22 +262,25 @@ public class FrameModule implements FrameModuleApi {
             ActiveContextManagement contextManager = frameHandler.getContextManager();
             ((ContextActivable) componentProvider).notifyActivated(contextManager);
         }
+        if (componentProvider instanceof WindowClosingListener) {
+            addClosingListener((WindowClosingListener) componentProvider);
+        }
     }
 
     @Override
-    public void addExitListener(ApplicationExitListener listener) {
-        getExitHandler().addListener(listener);
+    public void addClosingListener(WindowClosingListener listener) {
+        getExitHandler().addClosingListener(listener);
     }
 
     @Override
-    public void removeExitListener(ApplicationExitListener listener) {
-        getExitHandler().removeListener(listener);
+    public void removeClosingListener(WindowClosingListener listener) {
+        getExitHandler().removeClosingListener(listener);
     }
 
     @Nonnull
-    private ApplicationExitHandler getExitHandler() {
+    private FrameClosingHandler getExitHandler() {
         if (exitHandler == null) {
-            exitHandler = new ApplicationExitHandler();
+            exitHandler = new FrameClosingHandler();
             if (applicationFrame != null) {
                 applicationFrame.setApplicationExitHandler(exitHandler);
             }

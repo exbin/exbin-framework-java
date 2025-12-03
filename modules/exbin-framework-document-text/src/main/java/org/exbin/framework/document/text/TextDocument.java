@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.document.text.gui.TextPanel;
-import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.operation.undo.api.UndoRedoState;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.operation.undo.api.UndoRedoController;

@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
 import org.exbin.framework.App;
+import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentProvider;
 import org.exbin.framework.file.api.DefaultFileTypes;
 import org.exbin.framework.file.api.FileDialogsProvider;
@@ -30,6 +31,8 @@ import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.OpenFileResult;
 import org.exbin.framework.document.api.SourceIdentifier;
 import org.exbin.framework.document.api.DocumentSource;
+import org.exbin.framework.document.api.LoadableDocument;
+import org.exbin.framework.document.api.MemoryDocumentSource;
 
 /**
  * File document provider.
@@ -41,10 +44,20 @@ public class FileDocumentProvider implements DocumentProvider {
 
     @Nonnull
     @Override
+    public Optional<DocumentSource> createDocumentSource(SourceIdentifier source) {
+        if (source instanceof FileSourceIdentifier) {
+            return Optional.of(new FileDocumentSource(new File(((FileSourceIdentifier) source).getFileUri())));
+        }
+
+        return Optional.empty();
+    }
+
+    @Nonnull
+    @Override
     public Optional<DocumentSource> performOpenDefaultDocument() {
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         FileDialogsProvider fileDialogsProvider = fileModule.getFileDialogsProvider();
-        OpenFileResult openFileResult = fileDialogsProvider.showOpenFileDialog(new DefaultFileTypes(fileModule.getFileTypes()), null, null);
+        OpenFileResult openFileResult = fileDialogsProvider.showOpenFileDialog(new DefaultFileTypes(fileModule.getFileTypes()), null, null, null);
         if (openFileResult.getDialogResult() == JFileChooser.APPROVE_OPTION) {
             return Optional.of(new FileDocumentSource(openFileResult.getSelectedFile().get()));
         }
@@ -54,9 +67,22 @@ public class FileDocumentProvider implements DocumentProvider {
 
     @Nonnull
     @Override
-    public Optional<DocumentSource> createDocumentSource(SourceIdentifier source) {
-        if (source instanceof FileSourceIdentifier) {
-            return Optional.of(new FileDocumentSource(new File(((FileSourceIdentifier) source).getFileUri())));
+    public Optional<DocumentSource> performSaveAsDefaultDocument(Document document) {
+        File suggestedFile = null;
+        if (document instanceof LoadableDocument) {
+            Optional<DocumentSource> optDocumentSource = ((LoadableDocument) document).getDocumentSource();
+            if (optDocumentSource.isPresent()) {
+                DocumentSource documentSource = optDocumentSource.get();
+                if (documentSource instanceof MemoryDocumentSource) {
+                    suggestedFile = new File(((MemoryDocumentSource) documentSource).getDocumentTitle());
+                }
+            }
+        }
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        FileDialogsProvider fileDialogsProvider = fileModule.getFileDialogsProvider();
+        OpenFileResult openFileResult = fileDialogsProvider.showSaveFileDialog(new DefaultFileTypes(fileModule.getFileTypes()), suggestedFile, null, null);
+        if (openFileResult.getDialogResult() == JFileChooser.APPROVE_OPTION) {
+            return Optional.of(new FileDocumentSource(openFileResult.getSelectedFile().get()));
         }
 
         return Optional.empty();

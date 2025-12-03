@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.utils.ComponentProvider;
+import org.exbin.framework.utils.WindowClosingListener;
 
 /**
  * Interface for framework frame module.
@@ -88,18 +89,18 @@ public interface FrameModuleApi extends Module {
     void registerExitAction();
 
     /**
-     * Adds exit listener.
+     * Adds closing listener.
      *
      * @param listener listener
      */
-    void addExitListener(ApplicationExitListener listener);
+    void addClosingListener(WindowClosingListener listener);
 
     /**
-     * Removes exit listener.
+     * Removes closing listener.
      *
      * @param listener listener
      */
-    void removeExitListener(ApplicationExitListener listener);
+    void removeClosingListener(WindowClosingListener listener);
 
     /**
      * Registers visibility actions for both status bar and tool bar.

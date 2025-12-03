@@ -57,14 +57,6 @@ public class DocumentManager implements DocumentManagement {
 
     @Nonnull
     @Override
-    public Optional<Document> openDefaultDocument() {
-        Optional<DocumentSource> documentData = documentProviders.get(0).performOpenDefaultDocument();
-        Optional<Document> document = documentTypes.get(0).createDocument(documentData.get());
-        return document;
-    }
-
-    @Nonnull
-    @Override
     public Document openDocument(SourceIdentifier sourceIdentifier) {
         for (DocumentProvider documentProvider : documentProviders) {
             Optional<DocumentSource> documentData = documentProvider.createDocumentSource(sourceIdentifier);
@@ -77,5 +69,18 @@ public class DocumentManager implements DocumentManagement {
         }
 
         throw new IllegalStateException("Unsupported document source");
+    }
+
+    @Nonnull
+    @Override
+    public Optional<Document> openDefaultDocument() {
+        Optional<DocumentSource> documentSource = documentProviders.get(0).performOpenDefaultDocument();
+        Optional<Document> document = documentTypes.get(0).createDocument(documentSource.get());
+        return document;
+    }
+
+    @Override
+    public Optional<DocumentSource> saveDocumentAs(Document document) {
+        return documentProviders.get(0).performSaveAsDefaultDocument(document);
     }
 }

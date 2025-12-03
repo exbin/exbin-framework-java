@@ -38,7 +38,6 @@ import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.utils.UiUtils;
-import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Recent files actions.
@@ -62,7 +61,7 @@ public class RecentFilesActions {
         this.resourceBundle = resourceBundle;
 
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.addExitListener((ComponentFrame frameHandler) -> {
+        frameModule.addClosingListener(() -> {
             saveState();
             return true;
         });

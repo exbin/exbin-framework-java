@@ -23,7 +23,11 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.action.api.ActionManagement;
+import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.gui.DockingPanel;
@@ -34,12 +38,17 @@ import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
-import org.w3c.dom.DocumentType;
 import org.exbin.framework.context.api.ContextActivable;
+import org.exbin.framework.docking.multi.api.DockingMultiModuleApi;
 import org.exbin.framework.document.api.DocumentSource;
+import org.exbin.framework.document.api.DocumentType;
+import org.exbin.framework.document.api.EditableDocument;
 import org.exbin.framework.document.api.LoadableDocument;
 import org.exbin.framework.document.api.MemoryDocumentSource;
 import org.exbin.framework.file.api.FileDocument;
+import org.exbin.framework.menu.api.MenuModuleApi;
+import org.exbin.framework.utils.UiUtils;
+import org.exbin.framework.utils.WindowClosingListener;
 
 /**
  * Default implementation of the document docking supporting multiple documents.
@@ -47,7 +56,7 @@ import org.exbin.framework.file.api.FileDocument;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultMultiDocking implements MultiDocking {
+public class DefaultMultiDocking implements MultiDocking, WindowClosingListener {
 
     protected final List<Document> openDocuments = new ArrayList<>();
     protected final DockingPanel docking = new DockingPanel();
@@ -65,7 +74,19 @@ public class DefaultMultiDocking implements MultiDocking {
 
             @Override
             public void showPopupMenu(int index, Component component, int positionX, int positionY) {
-                // TODO
+                if (index < 0) {
+                    return;
+                }
+
+//                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+                JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
+                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+                ActionManagement actionManager = actionModule.createActionManager(contextManager);
+                ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(actionManager);
+                menuModule.buildMenu(fileContextPopupMenu, DockingMultiModule.FILE_CONTEXT_MENU_ID, actionContextRegistrar);
+                fileContextPopupMenu.show(component, positionX, positionY);
+                // TODO dispose?
             }
         });
     }
@@ -109,7 +130,13 @@ public class DefaultMultiDocking implements MultiDocking {
 
     @Override
     public void closeDocument(Document document) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (releaseDocument(document)) {
+            int index = openDocuments.indexOf(document);
+            if (index >= 0) {
+                openDocuments.remove(index);
+                documentPanel.removeDocumentAtIndex(index);
+            }
+        }
     }
 
     @Nonnull
@@ -120,12 +147,23 @@ public class DefaultMultiDocking implements MultiDocking {
 
     @Override
     public void closeAllDocuments() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (releaseAllDocuments()) {
+            for (Document document : openDocuments) {
+                closeDocument(document);
+            }
+        }
     }
 
     @Override
-    public void closeOtherDocuments(Document document) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void closeOtherDocuments(Document exceptionDocument) {
+        if (releaseOtherDocuments(exceptionDocument)) {
+            for (int i = openDocuments.size() - 1; i >= 0; i--) {
+                if (openDocuments.get(i) != exceptionDocument) {
+                    openDocuments.remove(i);
+                    documentPanel.removeDocumentAtIndex(i);
+                }
+            }
+        }
     }
 
     @Override
@@ -136,6 +174,48 @@ public class DefaultMultiDocking implements MultiDocking {
     @Override
     public boolean hasOpenedDocuments() {
         return !openDocuments.isEmpty();
+    }
+
+    public boolean releaseDocument(Document document) {
+        if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
+            DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+            Optional<DocumentSource> documentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
+            if (documentSource.isPresent()) {
+                ((EditableDocument) document).saveTo(documentSource.get());
+                return true;
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean releaseAllDocuments() {
+        return releaseOtherDocuments(null);
+    }
+
+    private boolean releaseOtherDocuments(@Nullable Document exceptionDocument) {
+        if (openDocuments.isEmpty()) {
+            return true;
+        }
+
+        if (openDocuments.size() == 1) {
+            return (openDocuments.get(0) == exceptionDocument) || releaseDocument(openDocuments.get(0));
+        }
+
+        List<Document> modifiedDocuments = new ArrayList<>();
+        for (Document document : openDocuments) {
+            if (document instanceof EditableDocument && ((EditableDocument) document).isModified() && document != exceptionDocument) {
+                modifiedDocuments.add(document);
+            }
+        }
+
+        if (modifiedDocuments.isEmpty()) {
+            return true;
+        }
+
+        DockingMultiModule dockingMultiModule = (DockingMultiModule) App.getModule(DockingMultiModuleApi.class);
+        return dockingMultiModule.showAskForSaveDialog(modifiedDocuments, documentPanel);
     }
 
     @Override
@@ -219,5 +299,10 @@ public class DefaultMultiDocking implements MultiDocking {
         int lastSegment = path.lastIndexOf("/");
         String fileName = lastSegment < 0 ? path : path.substring(lastSegment + 1);
         return fileName == null ? "" : fileName;
+    }
+
+    @Override
+    public boolean windowClosing() {
+        return true;
     }
 }

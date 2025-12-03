@@ -31,7 +31,7 @@ import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
-import org.w3c.dom.DocumentType;
+import org.exbin.framework.document.api.DocumentType;
 
 /**
  * Default implementation of the document docking supporting single document

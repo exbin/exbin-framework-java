@@ -47,7 +47,7 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
 
     @Nonnull
     @Override
-    public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
+    public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         JFileChooser openFileChooser = new JFileChooser();
         setupFileFilters(openFileChooser, fileTypes);
@@ -56,6 +56,9 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
         }
         if (selectedFile != null) {
             openFileChooser.setSelectedFile(selectedFile);
+        }
+        if (dialogName != null) {
+            openFileChooser.setDialogTitle(dialogName);
         }
         int dialogResult = openFileChooser.showOpenDialog(frameModule.getFrame());
         FileFilter fileFilter = openFileChooser.getFileFilter();

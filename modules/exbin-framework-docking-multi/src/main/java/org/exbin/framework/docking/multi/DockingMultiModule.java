@@ -17,6 +17,7 @@ package org.exbin.framework.docking.multi;
 
 import org.exbin.framework.docking.multi.gui.ModifiedDocumentsPanel;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -33,7 +34,8 @@ import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.docking.multi.api.DockingMultiModuleApi;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentModuleApi;
-import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.document.api.DocumentSource;
+import org.exbin.framework.document.api.EditableDocument;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.menu.api.MenuModuleApi;
@@ -49,6 +51,7 @@ import org.exbin.framework.window.api.WindowModuleApi;
 public class DockingMultiModule implements DockingMultiModuleApi {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DockingMultiModule.class);
+    public static final String FILE_CONTEXT_MENU_ID = "fileContextMenu";
 
     private ResourceBundle resourceBundle;
 
@@ -82,9 +85,19 @@ public class DockingMultiModule implements DockingMultiModuleApi {
         modifiedDocumentsPanel.setController(new ModifiedDocumentsPanel.Controller() {
             @Override
             public boolean saveFile(Document document) {
-                // TODO
-//                editorProvider.saveFile(document);
-//                return !((EditableFileHandler) document).isModified();
+                EditableDocument editableDocument = (EditableDocument) document;
+                Optional<DocumentSource> optDocumentSource = editableDocument.getDocumentSource();
+                if (optDocumentSource.isPresent()) {
+                    editableDocument.saveTo(optDocumentSource.get());
+                    return true;
+                } else {
+                    DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+                    Optional<DocumentSource> documentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
+                    if (documentSource.isPresent()) {
+                        editableDocument.saveTo(documentSource.get());
+                        return true;
+                    }
+                }
                 return false;
             }
 
@@ -138,10 +151,21 @@ public class DockingMultiModule implements DockingMultiModuleApi {
     @Override
     public void registerMenuFileCloseActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuGroup(DocumentModuleApi.FILE_MENU_GROUP_ID);
+        {
+            MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
+            SequenceContribution contribution = mgmt.registerMenuGroup(DocumentModuleApi.FILE_MENU_GROUP_ID);
+            mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
+            contribution = mgmt.registerMenuItem(createCloseFileAction());
+            mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
+        }
+
+        menuModule.registerMenu(FILE_CONTEXT_MENU_ID, MODULE_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMenuManager(FILE_CONTEXT_MENU_ID, MODULE_ID);
+        SequenceContribution contribution = mgmt.registerMenuItem(createCloseFileAction());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(createCloseFileAction());
-        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(createCloseAllFilesAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
+        contribution = mgmt.registerMenuItem(createCloseOtherFilesAction());
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
     }
 }

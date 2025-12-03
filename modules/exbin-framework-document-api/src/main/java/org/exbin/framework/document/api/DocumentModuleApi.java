@@ -29,6 +29,7 @@ import org.exbin.framework.ModuleUtils;
 public interface DocumentModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DocumentModuleApi.class);
+    public static final String SETTINGS_PAGE_ID = "document";
     public static final String FILE_MENU_GROUP_ID = MODULE_ID + ".fileMenuGroup";
     public static final String FILE_TOOL_BAR_GROUP_ID = MODULE_ID + ".fileToolBarGroup";
 
@@ -47,4 +48,9 @@ public interface DocumentModuleApi extends Module {
      */
     @Nonnull
     MemoryDocumentSource createMemoryDocumentSource();
+
+    /**
+     * Registers settings options and panels.
+     */
+    void registerSettings();
 }

@@ -17,12 +17,14 @@ package org.exbin.framework.document.api;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for document management.
  *
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface DocumentManagement {
 
     /**
@@ -48,14 +50,6 @@ public interface DocumentManagement {
     Document createDefaultDocument();
 
     /**
-     * Opens default document.
-     *
-     * @return document or empty if failed / cancelled
-     */
-    @Nonnull
-    Optional<Document> openDefaultDocument();
-
-    /**
      * Opens document from given source.
      *
      * @param source document source
@@ -63,4 +57,22 @@ public interface DocumentManagement {
      */
     @Nonnull
     Document openDocument(SourceIdentifier source);
+
+    /**
+     * Invokes opening of document using default method - typically opens file
+     * chooser dialog.
+     *
+     * @return document or empty if failed / cancelled
+     */
+    @Nonnull
+    Optional<Document> openDefaultDocument();
+
+    /**
+     * Invokes save document as - typically opens file chooser dialog.
+     *
+     * @param document document to save
+     * @return document source if selected
+     */
+    @Nonnull
+    Optional<DocumentSource> saveDocumentAs(Document document);
 }

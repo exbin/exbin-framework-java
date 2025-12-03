@@ -55,7 +55,7 @@ import org.exbin.framework.frame.api.ComponentFrame;
 @ParametersAreNonnullByDefault
 public class ApplicationFrame extends javax.swing.JFrame implements ComponentFrame, WindowHeaderPanel.WindowHeaderDecorationProvider {
 
-    private ApplicationExitHandler exitHandler;
+    private FrameClosingHandler exitHandler;
     private JPanel currentStatusBarPanel = null;
     private Component mainComponent;
     private boolean captionsVisible = true;
@@ -331,7 +331,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
         setLocationRelativeTo(null);
     }
 
-    public void setApplicationExitHandler(ApplicationExitHandler exitHandler) {
+    public void setApplicationExitHandler(FrameClosingHandler exitHandler) {
         this.exitHandler = exitHandler;
     }
 

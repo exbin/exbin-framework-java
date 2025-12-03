@@ -20,8 +20,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.StateChangeType;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentType;
 import org.exbin.framework.utils.ComponentProvider;
-import org.w3c.dom.DocumentType;
 
 /**
  * Interface for document docking.

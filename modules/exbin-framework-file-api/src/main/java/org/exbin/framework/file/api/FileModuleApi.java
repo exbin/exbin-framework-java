@@ -58,11 +58,6 @@ public interface FileModuleApi extends Module {
     FileDialogsProvider getFileDialogsProvider();
 
     /**
-     * Registers close listener.
-     */
-    void registerCloseListener();
-
-    /**
      * Attempts to open given file URI to active panel.
      *
      * @param fileUri file URI

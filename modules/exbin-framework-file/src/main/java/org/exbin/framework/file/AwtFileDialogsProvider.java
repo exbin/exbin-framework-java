@@ -40,7 +40,7 @@ public class AwtFileDialogsProvider implements FileDialogsProvider {
 
     @Nonnull
     @Override
-    public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory) {
+    public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         FileDialog fileDialog = new FileDialog(frameModule.getFrame());
         fileDialog.setMode(FileDialog.LOAD);

@@ -18,33 +18,33 @@ package org.exbin.framework.frame;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.frame.api.ApplicationExitListener;
 import org.exbin.framework.frame.api.ComponentFrame;
+import org.exbin.framework.utils.WindowClosingListener;
 
 /**
- * Application exit handler.
+ * Frame exit handler.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ApplicationExitHandler {
+public class FrameClosingHandler {
 
-    private final List<ApplicationExitListener> listeners = new ArrayList<>();
+    private final List<WindowClosingListener> closingListeners = new ArrayList<>();
 
-    public ApplicationExitHandler() {
+    public FrameClosingHandler() {
     }
 
-    public void addListener(ApplicationExitListener listener) {
-        listeners.add(listener);
+    public void addClosingListener(WindowClosingListener closingListener) {
+        closingListeners.add(closingListener);
     }
 
-    public void removeListener(ApplicationExitListener listener) {
-        listeners.remove(listener);
+    public void removeClosingListener(WindowClosingListener closingListener) {
+        closingListeners.remove(closingListener);
     }
 
     public void executeExit(ComponentFrame frameHandler) {
-        for (ApplicationExitListener listener : listeners) {
-            boolean canContinue = listener.processExit(frameHandler);
+        for (WindowClosingListener listener : closingListeners) {
+            boolean canContinue = listener.windowClosing();
             if (!canContinue) {
                 return;
             }
@@ -52,10 +52,10 @@ public class ApplicationExitHandler {
 
         System.exit(0);
     }
-    
+
     public boolean canExit(ComponentFrame frameHandler) {
-        for (ApplicationExitListener listener : listeners) {
-            boolean canContinue = listener.processExit(frameHandler);
+        for (WindowClosingListener listener : closingListeners) {
+            boolean canContinue = listener.windowClosing();
             if (!canContinue) {
                 return false;
             }

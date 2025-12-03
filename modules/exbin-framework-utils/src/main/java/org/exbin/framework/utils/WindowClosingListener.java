@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.frame.api;
+package org.exbin.framework.utils;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for application frame exit action.
+ * Listener for window closing.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ApplicationExitListener {
+public interface WindowClosingListener {
 
     /**
-     * Handles application exit.
+     * Attempts to close window.
      *
-     * @param frameHandler frame handler
-     * @return true if exit should proceed
+     * @return true if closing should proceed.
      */
-    boolean processExit(ComponentFrame frameHandler);
+    boolean windowClosing();
 }

@@ -39,7 +39,6 @@ import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.settings.FileOptions;
 import org.exbin.framework.file.settings.FileSettingsApplier;
 import org.exbin.framework.file.settings.FileSettingsComponent;
-import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
@@ -47,7 +46,6 @@ import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
 import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
-import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Framework file module.
@@ -91,19 +89,6 @@ public class FileModule implements FileModuleApi {
     @Override
     public Collection<FileType> getFileTypes() {
         return Collections.unmodifiableCollection(registeredFileTypes);
-    }
-
-    @Override
-    public void registerCloseListener() {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        frameModule.addExitListener((ComponentFrame frameHandler) -> {
-            // TODO
-//            if (fileOperations != null) {
-//                return fileOperations.releaseAllFiles();
-//            }
-
-            return true;
-        });
     }
 
     @Override
@@ -168,6 +153,7 @@ public class FileModule implements FileModuleApi {
 
     @Override
     public void registerSettings() {
+        getResourceBundle();
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 

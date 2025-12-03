@@ -43,10 +43,6 @@ public class TestFileModule implements FileModuleApi {
     }
 
     @Override
-    public void registerCloseListener() {
-    }
-
-    @Override
     public void openFile(URI fileUri) {
     }
 

@@ -34,10 +34,11 @@ public interface FileDialogsProvider {
      * @param fileTypes file types
      * @param selectedFile selected file
      * @param usedDirectory used directory
+     * @param dialogName dialog name
      * @return open file result
      */
     @Nonnull
-    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory);
+    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName);
 
     /**
      * Shows save file dialog.
@@ -45,7 +46,7 @@ public interface FileDialogsProvider {
      * @param fileTypes file types
      * @param selectedFile selected file
      * @param usedDirectory used directory
-     * @param dialogName
+     * @param dialogName dialog name
      * @return open file result
      */
     @Nonnull

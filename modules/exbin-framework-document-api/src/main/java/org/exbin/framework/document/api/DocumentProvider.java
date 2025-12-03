@@ -28,14 +28,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface DocumentProvider {
 
     /**
-     * Opens document using default method.
-     *
-     * @return document or empty if failed / cancelled
-     */
-    @Nonnull
-    Optional<DocumentSource> performOpenDefaultDocument();
-
-    /**
      * Opens document from given source.
      *
      * @param source document source
@@ -43,4 +35,21 @@ public interface DocumentProvider {
      */
     @Nonnull
     Optional<DocumentSource> createDocumentSource(SourceIdentifier source);
+
+    /**
+     * Opens document using default method.
+     *
+     * @return document source or empty if failed / cancelled
+     */
+    @Nonnull
+    Optional<DocumentSource> performOpenDefaultDocument();
+
+    /**
+     * Performs save as action using default method for given document.
+     *
+     * @param document refered document
+     * @return document source or empty if failed / cancelled
+     */
+    @Nonnull
+    Optional<DocumentSource> performSaveAsDefaultDocument(Document document);
 }

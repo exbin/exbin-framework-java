@@ -30,7 +30,10 @@ import org.exbin.framework.context.api.ContextChangeRegistration;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.DocumentModuleApi;
+import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.document.api.EditableDocument;
+import org.exbin.framework.document.api.MemoryDocumentSource;
 
 /**
  * Save file action.
@@ -67,9 +70,22 @@ public class SaveFileAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Optional<Document> activeDocument = documentDocking.getActiveDocument();
         if (activeDocument.isPresent()) {
+            DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
             Document document = activeDocument.get();
             if (document instanceof EditableDocument) {
-                // TODO documentDocking.saveFile();
+                Optional<DocumentSource> optDocumentSource = ((EditableDocument) document).getDocumentSource();
+                if (optDocumentSource.isPresent()) {
+                    DocumentSource documentSource = optDocumentSource.get();
+                    if (!(documentSource instanceof MemoryDocumentSource)) {
+                        ((EditableDocument) document).saveTo(optDocumentSource.get());
+                        return;
+                    }
+                }
+                
+                optDocumentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
+                if (optDocumentSource.isPresent()) {
+                    ((EditableDocument) document).saveTo(optDocumentSource.get());
+                }
             }
         }
     }

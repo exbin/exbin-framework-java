@@ -43,6 +43,13 @@ public class OpenFileResult {
         this.fileType = fileType;
     }
 
+    /**
+     * Returns dialog regult.
+     * <p>
+     * Typically JFileChooser.APPROVE_OPTION or JFileChooser.CANCEL_OPTION
+     *
+     * @return dialog result
+     */
     public int getDialogResult() {
         return dialogResult;
     }
