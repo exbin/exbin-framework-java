@@ -13,41 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.document.api;
+package org.exbin.framework.document.settings;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.document.settings.gui.StartupSettingsPanel;
+import org.exbin.framework.options.settings.api.SettingsComponent;
+import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 
 /**
- * Interface for editable document.
- *
- * @author ExBin Project (https://exbin.org)
+ * Document startup behavior settings component.
  */
 @ParametersAreNonnullByDefault
-public interface EditableDocument extends LoadableDocument {
+public class StartupSettingsComponent implements SettingsComponentProvider {
 
-    /**
-     * Returns whether document was modified.
-     *
-     * @return true if modified
-     */
-    boolean isModified();
+    public static final String COMPONENT_ID = "startup";
 
-    /**
-     * Clears content of the file.
-     */
-    void clearFile();
-
-    /**
-     * Returns true if save operation is possible.
-     *
-     * @return true if save possible
-     */
-    boolean canSave();
-
-    /**
-     * Performs saving of the document source.
-     *
-     * @param documentSource document source
-     */
-    void saveTo(DocumentSource documentSource);
+    @Nonnull
+    @Override
+    public SettingsComponent createComponent() {
+        return new StartupSettingsPanel();
+    }
 }

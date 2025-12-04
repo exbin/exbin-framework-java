@@ -15,19 +15,16 @@
  */
 package org.exbin.framework.document;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.document.api.DocumentProvider;
 import org.exbin.framework.document.api.MemoryDocumentSource;
+import org.exbin.framework.document.settings.StartupOptions;
+import org.exbin.framework.document.settings.StartupSettingsComponent;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsPageContribution;
@@ -93,9 +90,13 @@ public class DocumentModule implements DocumentModuleApi {
     public void registerSettings() {
         getResourceBundle();
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
-        OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
+        OptionsSettingsManagement settingsManager = settingsModule.getMainSettingsManager();
+
+        settingsManager.registerOptionsSettings(StartupOptions.class, (optionsStorage) -> new StartupOptions(optionsStorage));
+        settingsManager.registerComponent(StartupSettingsComponent.COMPONENT_ID, new StartupSettingsComponent());
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
-        settingsManagement.registerPage(pageContribution);
+        settingsManager.registerPage(pageContribution);
     }
+
 }
