@@ -75,6 +75,10 @@ public class DocumentManager implements DocumentManagement {
     @Override
     public Optional<Document> openDefaultDocument() {
         Optional<DocumentSource> documentSource = documentProviders.get(0).performOpenDefaultDocument();
+        if (!documentSource.isPresent()) {
+            return Optional.empty();
+        }
+
         Optional<Document> document = documentTypes.get(0).createDocument(documentSource.get());
         return document;
     }

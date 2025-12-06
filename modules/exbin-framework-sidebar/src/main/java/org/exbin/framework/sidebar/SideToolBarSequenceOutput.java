@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -29,11 +30,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import org.exbin.framework.action.api.ActionConsts;
+import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.sidebar.api.ActionSideBarContribution;
 import org.exbin.framework.contribution.api.ContributionSequenceOutput;
 import org.exbin.framework.contribution.api.ItemSequenceContribution;
 import org.exbin.framework.action.api.ActionType;
 import org.exbin.framework.action.api.ActionContextRegistration;
+import org.exbin.framework.context.api.ContextChange;
+import org.exbin.framework.context.api.ContextChangeRegistration;
 import org.exbin.framework.sidebar.api.ComponentSideBarContribution;
 import org.exbin.framework.sidebar.api.SideBar;
 import org.exbin.framework.sidebar.api.SideBarComponent;
@@ -74,7 +78,13 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
             SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextRegistration);
         } else if (itemContribution instanceof ComponentSideBarContribution) {
             SideBarComponent sideBarComponent = ((ComponentSideBarContribution) itemContribution).getComponent();
-            JButton button = new JButton();
+            Action buttonAction = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    sideBar.switchComponent(sideBarComponent);
+                }
+            };
+            JButton button = new JButton(buttonAction);
             String name = (String) sideBarComponent.getValue(SideBarComponent.KEY_NAME);
             if (name != null) {
                 button.setText(name);
@@ -87,15 +97,13 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
             if (icon != null) {
                 button.setIcon(icon);
             }
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    sideBar.switchComponent(sideBarComponent);
-                }
-            });
+            ContextChange contextChange = (ContextChange) sideBarComponent.getValue(SideBarComponent.KEY_CONTEXT_CHANGE);
+            if (contextChange != null) {
+                buttonAction.putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) contextChange::register);
+            }
             button.setFocusable(false);
             sideBar.getToolBar().add(button);
-            // TODO SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextRegistration);
+            SideToolBarSequenceOutput.finishSideBarAction(buttonAction, actionContextRegistration);
         }
     }
 
