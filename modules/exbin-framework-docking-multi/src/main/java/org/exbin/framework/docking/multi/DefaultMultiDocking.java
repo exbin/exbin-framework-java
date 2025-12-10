@@ -39,6 +39,7 @@ import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.context.api.ContextActivable;
+import org.exbin.framework.context.api.ContextModuleApi;
 import org.exbin.framework.docking.multi.api.DockingMultiModuleApi;
 import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.document.api.DocumentType;
@@ -77,12 +78,17 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
                 if (index < 0) {
                     return;
                 }
+                
+                ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
+                ActiveContextManagement popupContextManager = contextModule.createChildContextManager(contextManager);
+                Document refDocument = openDocuments.get(index);
+                popupContextManager.changeActiveState(ContextDocument.class, (ContextDocument) refDocument);
 
 //                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
                 JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
                 ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                ActionManagement actionManager = actionModule.createActionManager(contextManager);
+                ActionManagement actionManager = actionModule.createActionManager(popupContextManager);
                 ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(actionManager);
                 menuModule.buildMenu(fileContextPopupMenu, DockingMultiModule.FILE_CONTEXT_MENU_ID, actionContextRegistrar);
                 fileContextPopupMenu.show(component, positionX, positionY);

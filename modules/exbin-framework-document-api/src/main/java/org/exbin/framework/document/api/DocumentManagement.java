@@ -56,7 +56,15 @@ public interface DocumentManagement {
      * @return document
      */
     @Nonnull
-    Document openDocument(SourceIdentifier source);
+    Document createDocumentForSource(SourceIdentifier source);
+
+    /**
+     * Creates document source for document represented in memory.
+     *
+     * @return memory document source
+     */
+    @Nonnull
+    MemoryDocumentSource createMemoryDocumentSource();
 
     /**
      * Invokes opening of document using default method - typically opens file
@@ -75,4 +83,18 @@ public interface DocumentManagement {
      */
     @Nonnull
     Optional<DocumentSource> saveDocumentAs(Document document);
+
+    /**
+     * Adds document receiver.
+     *
+     * @param documentReceiver document receiver
+     */
+    void addDocumentReceiver(DocumentReceiver documentReceiver);
+
+    /**
+     * Receives document for further processing.
+     *
+     * @param document document
+     */
+    void receiveDocument(Document document);
 }

@@ -124,8 +124,8 @@ public class FileModule implements FileModuleApi {
             documentSource = new FileSourceIdentifier(new URI(filename));
             DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
             DocumentManagement documentManager = documentModule.getMainDocumentManager();
-            Document document = documentManager.openDocument(documentSource);
-            // TODO
+            Document document = documentManager.createDocumentForSource(documentSource);
+            documentManager.receiveDocument(document);
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileModule.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -136,8 +136,8 @@ public class FileModule implements FileModuleApi {
         FileSourceIdentifier documentSource = new FileSourceIdentifier(fileUri);
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         DocumentManagement documentManager = documentModule.getMainDocumentManager();
-        Document document = documentManager.openDocument(documentSource);
-        // TODO
+        Document document = documentManager.createDocumentForSource(documentSource);
+        documentManager.receiveDocument(document);
     }
 
     @Override

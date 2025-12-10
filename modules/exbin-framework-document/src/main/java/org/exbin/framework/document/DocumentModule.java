@@ -38,7 +38,6 @@ import org.exbin.framework.options.settings.api.SettingsPageContribution;
 public class DocumentModule implements DocumentModuleApi {
 
     private ResourceBundle resourceBundle;
-
     private DocumentManager mainDocumentManager;
 
     public DocumentModule() {
@@ -75,14 +74,12 @@ public class DocumentModule implements DocumentModuleApi {
     @Nonnull
     @Override
     public MemoryDocumentSource createMemoryDocumentSource() {
-        String title = getNewFileTitlePrefix() + " " + 1;
-        DefaultMemoryDocumentSource memoryDocumentSource = new DefaultMemoryDocumentSource();
-        memoryDocumentSource.setDocumentTitle(title);
-        return memoryDocumentSource;
+        return getMainDocumentManager().createMemoryDocumentSource();
     }
 
     @Nonnull
-    public String getNewFileTitlePrefix() {
+    @Override
+    public String getNewDocumentNamePrefix() {
         return getResourceBundle().getString("newFileTitlePrefix");
     }
 

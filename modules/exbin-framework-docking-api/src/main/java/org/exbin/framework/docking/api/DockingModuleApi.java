@@ -42,6 +42,13 @@ public interface DockingModuleApi extends Module {
     void registerToolBarFileHandlingActions();
 
     /**
+     * Registers document docking as document receiver.
+     *
+     * @param documentDocking document docking
+     */
+    void registerDocumentReceiver(DocumentDocking documentDocking);
+
+    /**
      * Creates default document docking.
      *
      * @return document docking

@@ -43,8 +43,8 @@ public class MultiDocumentPanel extends javax.swing.JPanel {
         });
 
         tabbedPane.setComponentPopupMenu(UiUtils.createPopupMenu((invoker, x, y) -> {
-            int index = tabbedPane.indexAtLocation(x, y);
             if (controller != null) {
+                int index = tabbedPane.indexAtLocation(x, y);
                 controller.showPopupMenu(index, invoker, x, y);
             }
         }));
@@ -65,13 +65,13 @@ public class MultiDocumentPanel extends javax.swing.JPanel {
     }
 
     public void removeDocumentAtIndex(int index) {
-        if (index == activeIndex) {
-            changeActiveIndex(-1);
-        } else if (index < activeIndex) {
-            changeActiveIndex(activeIndex--);
+        int indexAfter = -1;
+        if (index < activeIndex) {
+            indexAfter = activeIndex - 1;
         }
-
+        changeActiveIndex(-1);
         tabbedPane.removeTabAt(index);
+        changeActiveIndex(indexAfter);
     }
 
     public void removeAllDocuments() {

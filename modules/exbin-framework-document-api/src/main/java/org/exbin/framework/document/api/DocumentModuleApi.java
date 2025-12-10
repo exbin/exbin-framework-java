@@ -50,6 +50,13 @@ public interface DocumentModuleApi extends Module {
     MemoryDocumentSource createMemoryDocumentSource();
 
     /**
+     * Returns new document name prefix.
+     * @return name prefix
+     */
+    @Nonnull
+    String getNewDocumentNamePrefix();
+    
+    /**
      * Registers settings options and panels.
      */
     void registerSettings();

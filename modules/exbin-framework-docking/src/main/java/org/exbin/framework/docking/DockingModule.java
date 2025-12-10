@@ -29,7 +29,10 @@ import org.exbin.framework.docking.action.SaveAsFileAction;
 import org.exbin.framework.docking.action.SaveFileAction;
 import org.exbin.framework.docking.api.DockingModuleApi;
 import org.exbin.framework.docking.api.DocumentDocking;
+import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentModuleApi;
+import org.exbin.framework.document.api.DocumentReceiver;
+import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.menu.api.MenuModuleApi;
@@ -97,6 +100,12 @@ public class DockingModule implements DockingModuleApi {
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID));
         contribution = mgmt.registerToolBarItem(createSaveFileAction());
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID));
+    }
+    
+    @Override
+    public void registerDocumentReceiver(DocumentDocking documentDocking) {
+        DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+        documentModule.getMainDocumentManager().addDocumentReceiver(documentDocking::openDocument);
     }
 
     @Nonnull
