@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.sidebar.api;
 
-import java.awt.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPanel;

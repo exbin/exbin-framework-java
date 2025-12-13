@@ -88,6 +88,13 @@ public interface SideBarModuleApi extends Module {
     List<Action> getSideBarManagedActions();
 
     /**
+     * Sets automatic showing.
+     *
+     * @param autoShow automatic showing
+     */
+    void setAutoShow(boolean autoShow);
+
+    /**
      * Registers side bar to docking.
      *
      * @param docking docking

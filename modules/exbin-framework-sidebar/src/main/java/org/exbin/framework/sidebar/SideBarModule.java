@@ -15,12 +15,15 @@
  */
 package org.exbin.framework.sidebar;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.sidebar.api.SideBarModuleApi;
@@ -29,6 +32,7 @@ import org.exbin.framework.sidebar.api.SideBarManagement;
 import org.exbin.framework.action.api.ActionContextRegistration;
 import org.exbin.framework.docking.api.SidePanelDocking;
 import org.exbin.framework.sidebar.api.SideBar;
+import org.exbin.framework.utils.UiUtils;
 
 /**
  * Implementation of side bar module.
@@ -38,7 +42,8 @@ import org.exbin.framework.sidebar.api.SideBar;
 @ParametersAreNonnullByDefault
 public class SideBarModule implements SideBarModuleApi {
 
-    private SideBarManager sideBarManager = null;
+    private SideBarManager mainSideBarManager = null;
+    private boolean autoShow = false;
     private ResourceBundle resourceBundle;
 
     public SideBarModule() {
@@ -67,19 +72,23 @@ public class SideBarModule implements SideBarModuleApi {
     public List<Action> getSideBarManagedActions() {
         List<Action> actions = new ArrayList<>();
         SideBarModule.this.getMainSideBarManager();
-        actions.addAll(sideBarManager.getAllManagedActions());
+        actions.addAll(mainSideBarManager.getAllManagedActions());
 
         return actions;
     }
 
     @Nonnull
     private SideBarManager getMainSideBarManager() {
-        if (sideBarManager == null) {
-            sideBarManager = new SideBarManager();
-            sideBarManager.registerSideBar(MAIN_SIDE_BAR_ID, MODULE_ID);
+        if (mainSideBarManager == null) {
+            mainSideBarManager = new SideBarManager();
+            mainSideBarManager.registerSideBar(MAIN_SIDE_BAR_ID, MODULE_ID);
         }
+        return mainSideBarManager;
+    }
 
-        return sideBarManager;
+    @Override
+    public void setAutoShow(boolean autoShow) {
+        this.autoShow = autoShow;
     }
 
     @Nonnull
@@ -119,7 +128,12 @@ public class SideBarModule implements SideBarModuleApi {
     @Nonnull
     @Override
     public void registerDockingSideBar(SideBar sideBar, SidePanelDocking docking) {
-        docking.setSideToolBar(sideBar.getToolBar());
+        JToolBar toolBar = sideBar.getToolBar();
+        docking.setSideToolBar(toolBar);
         docking.setSideComponent(sideBar.getSideBarPanel());
+        if (autoShow) {
+            JButton component = (JButton) toolBar.getComponentAtIndex(0);
+            UiUtils.doButtonClick(component);
+        }
     }
 }
