@@ -33,7 +33,7 @@ public class FilePreferencesFactory implements PreferencesFactory {
     public static String preferenceFilename = "prefs.xml";
     public static String preferencesPath = null;
     private static final String PREFERENCES_FACTORY_PROPERTY = "java.util.prefs.PreferencesFactory";
-    private static final String PREFERENCES_FACTORY_CLASS = "org.exbin.framework.preferences.FilePreferencesFactory";
+    private static final String PREFERENCES_FACTORY_CLASS = FilePreferencesFactory.class.getName();
     private Preferences userPreferences;
     private Preferences systemPreferences;
 

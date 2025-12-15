@@ -187,21 +187,13 @@ public class BasicApplication {
         // Load addons
         try {
             URL addonsPath = addonsDirectory.toURI().toURL();
-            addModulesFrom(addonsPath, ModuleFileLocation.ADDON);
+            BasicApplication.this.addModulesFromPath(addonsPath, ModuleFileLocation.ADDON);
         } catch (MalformedURLException ex) {
             Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void addModulesFrom(URI moduleClassUri, ModuleFileLocation fileLocation) {
-        moduleProvider.addModulesFrom(moduleClassUri, fileLocation);
-    }
-
-    public void addModulesFrom(URL moduleClassUrl, ModuleFileLocation fileLocation) {
-        moduleProvider.addModulesFrom(moduleClassUrl, fileLocation);
-    }
-
-    public void loadModulesFromPath(URI pathUri, ModuleFileLocation fileLocation) {
+    public void addModulesFromPath(URI pathUri, ModuleFileLocation fileLocation) {
         moduleProvider.addModulesFromPath(pathUri, fileLocation);
     }
 
@@ -219,6 +211,10 @@ public class BasicApplication {
 
     public void addModulesFromManifest() {
         moduleProvider.addModulesFromManifest();
+    }
+
+    public void addPreloadedLibrary(String libraryFileName) {
+        moduleProvider.addPreloadedLibrary(libraryFileName);
     }
 
     public void initModules() {

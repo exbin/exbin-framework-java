@@ -117,24 +117,6 @@ public class BasicModuleProvider implements ModuleProvider {
         return manifestClass;
     }
 
-    public void addModulesFrom(URI pathUri, ModuleFileLocation fileLocation) {
-        File directory = new File(pathUri);
-        if (directory.exists() && directory.isDirectory()) {
-            File[] jarFiles = directory.listFiles((File pathname) -> pathname.isFile() && pathname.getName().endsWith(".jar"));
-            for (File jarFile : jarFiles) {
-                addModulePlugin(jarFile.toURI(), fileLocation, false);
-            }
-        }
-    }
-
-    public void addModulesFrom(URL moduleClassUrl, ModuleFileLocation fileLocation) {
-        try {
-            addModulesFrom(moduleClassUrl.toURI(), fileLocation);
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(BasicModuleProvider.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     public void addModulesFromPath(URI pathUri, ModuleFileLocation fileLocation) {
         File directory = new File(pathUri);
         if (directory.exists() && directory.isDirectory()) {
@@ -550,6 +532,12 @@ public class BasicModuleProvider implements ModuleProvider {
 
     public boolean hasLibrary(String libraryFileName) {
         return libraries.containsKey(libraryFileName);
+    }
+    
+    public void addPreloadedLibrary(String libraryFileName) {
+        LibraryRecord libraryRecord = new LibraryRecord();
+        libraryRecord.loaded = true;
+        libraries.put(libraryFileName, libraryRecord);
     }
 
     @Nonnull
