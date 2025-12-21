@@ -15,15 +15,18 @@
  */
 package org.exbin.framework.options;
 
+import java.io.File;
 import org.exbin.framework.options.preferences.FilePreferencesFactory;
 import org.exbin.framework.options.preferences.PreferencesWrapper;
 import org.exbin.framework.options.preferences.StreamPreferences;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.api.OptionsModuleApi;
+import org.exbin.framework.options.preferences.FilePreferences;
 
 /**
  * Implementation of options module.
@@ -55,6 +58,24 @@ public class OptionsModule implements OptionsModuleApi {
         appOptions = new PreferencesWrapper(preferences);
     }
 
+    @Override
+    public void setupAppOptions(@Nullable String organization, String product, @Nullable String version) {
+        String path = product;
+        if (organization != null) {
+            path = organization + File.pathSeparator + product;
+        }
+        if (version != null) {
+            path += File.pathSeparator + version;
+        }
+        File preferencesFile = new File(App.getConfigDirectory(), path);
+        appOptions = new PreferencesWrapper(new FilePreferences(null, product, preferencesFile));
+    }
+
+    @Override
+    public void setupAppOptions(String product, @Nullable String version) {
+        setupAppOptions(null, product, version);
+    }
+
     @Nonnull
     @Override
     public OptionsStorage getAppOptions() {
@@ -70,7 +91,7 @@ public class OptionsModule implements OptionsModuleApi {
         java.util.prefs.Preferences filePreferences = new StreamPreferences(inputStream);
         return new PreferencesWrapper(filePreferences);
     }
-    
+
     @Nonnull
     @Override
     public OptionsStorage createMemoryStorage() {
