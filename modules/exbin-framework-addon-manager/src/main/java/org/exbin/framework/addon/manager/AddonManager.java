@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleProvider;
+import org.exbin.framework.addon.AddonModuleFileLocation;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.framework.addon.manager.model.AddonRecord;
@@ -50,7 +51,6 @@ import org.exbin.framework.addon.manager.service.AddonCatalogService;
 import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.basic.BasicModuleProvider;
-import org.exbin.framework.basic.ModuleFileLocation;
 import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.window.api.gui.MultiStepControlPanel;
@@ -87,7 +87,7 @@ public class AddonManager {
             for (ModuleRecord moduleRecord : basicModulesList) {
                 AddonRecord itemRecord = new AddonRecord(moduleRecord.getModuleId(), moduleRecord.getName());
                 itemRecord.setInstalled(true);
-                itemRecord.setAddon(moduleRecord.getFileLocation() == ModuleFileLocation.ADDON);
+                itemRecord.setAddon(moduleRecord.getFileLocation() == AddonModuleFileLocation.ADDON);
                 itemRecord.setVersion(moduleRecord.getVersion());
                 itemRecord.setProvider(moduleRecord.getProvider().orElse(null));
                 itemRecord.setHomepage(moduleRecord.getHomepage().orElse(null));

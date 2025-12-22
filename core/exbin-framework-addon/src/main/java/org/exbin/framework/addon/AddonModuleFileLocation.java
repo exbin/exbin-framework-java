@@ -13,12 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.basic;
+package org.exbin.framework.addon;
+
+import org.exbin.framework.basic.ModuleFileLocation;
 
 /**
- * Module file location interface.
+ * Module file location.
  *
  * @author ExBin Project (http://exbin.org)
  */
-public interface ModuleFileLocation {
+public enum AddonModuleFileLocation implements ModuleFileLocation {
+
+    /**
+     * Addon file location,
+     */
+    ADDON
 }

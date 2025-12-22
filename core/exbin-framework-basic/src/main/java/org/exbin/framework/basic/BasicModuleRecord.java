@@ -35,7 +35,7 @@ public class BasicModuleRecord implements ModuleRecord {
 
     private String moduleId = "";
     private ModuleType type = ModuleType.MODULE;
-    private ModuleFileLocation fileLocation = ModuleFileLocation.LIBRARY;
+    private ModuleFileLocation fileLocation = BasicModuleFileLocation.LIBRARY;
     private String name;
     private ClassLoader classLoader;
     private String version = "";

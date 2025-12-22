@@ -16,9 +16,26 @@
 package org.exbin.framework.basic;
 
 /**
- * Module file location interface.
+ * Module file location.
  *
  * @author ExBin Project (http://exbin.org)
  */
-public interface ModuleFileLocation {
+public enum BasicModuleFileLocation implements ModuleFileLocation {
+
+    /**
+     * Library file location.
+     */
+    LIBRARY,
+    /**
+     * Classpath file location.
+     */
+    CLASSPATH,
+    /**
+     * Manifest file location.
+     */
+    MANIFEST,
+    /**
+     * Plugin file location,
+     */
+    PLUGIN
 }

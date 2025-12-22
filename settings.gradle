@@ -4,6 +4,7 @@ include ":deps"
 
 include ":core:exbin-framework"
 include ":core:exbin-framework-basic"
+include ":core:exbin-framework-addon"
 include ":modules:exbin-framework-context"
 include ":modules:exbin-framework-context-api"
 include ":modules:exbin-framework-contribution"

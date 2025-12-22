@@ -3,6 +3,7 @@ rootProject.name = 'exbin-framework-addon-manager'
 if (rootProject.path == ':') {
     include ':core:exbin-framework'
     include ':core:exbin-framework-basic'
+    include ':core:exbin-framework-addon'
     include ':modules:exbin-framework-context-api'
     include ':modules:exbin-framework-action-api'
     include ':modules:exbin-framework-help-api'

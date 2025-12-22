@@ -45,6 +45,14 @@ public interface ModuleRecord {
     ModuleType getType();
 
     /**
+     * Returns instance of the module.
+     *
+     * @return module instance
+     */
+    @Nonnull
+    Module getModule();
+
+    /**
      * Returns location of the module file.
      *
      * @return file location
@@ -123,12 +131,4 @@ public interface ModuleRecord {
      */
     @Nonnull
     List<String> getOptionalModuleIds();
-
-    /**
-     * Returns instance of the module.
-     *
-     * @return module instance
-     */
-    @Nonnull
-    Module getModule();
 }

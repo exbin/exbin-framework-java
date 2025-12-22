@@ -39,6 +39,14 @@ public class TestOptionsModule implements OptionsModuleApi {
     public void setupAppOptions(java.util.prefs.Preferences preferences) {
     }
 
+    @Override
+    public void setupAppOptions(String organization, String product, String version) {
+    }
+
+    @Override
+    public void setupAppOptions(String product, String version) {
+    }
+
     @Nonnull
     @Override
     public OptionsStorage getAppOptions() {

@@ -1,0 +1,8 @@
+rootProject.name = 'exbin-framework-addon'
+
+if (rootProject.path == ':') {
+    include ':core:exbin-framework'
+    include ':core:exbin-framework-basic'
+}
+
+apply from: '../exbin-framework-java-core-settings.gradle'

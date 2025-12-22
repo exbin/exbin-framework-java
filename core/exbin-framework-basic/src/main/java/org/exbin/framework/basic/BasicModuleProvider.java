@@ -139,7 +139,7 @@ public class BasicModuleProvider implements ModuleProvider {
         String classpath = System.getProperty("java.class.path");
         String[] classpathEntries = classpath.split(File.pathSeparator);
         for (String classpathEntry : classpathEntries) {
-            addModulePlugin(new File(classpathEntry).toURI(), ModuleFileLocation.CLASSPATH, true);
+            addModulePlugin(new File(classpathEntry).toURI(), BasicModuleFileLocation.CLASSPATH, true);
         }
     }
 
@@ -154,7 +154,7 @@ public class BasicModuleProvider implements ModuleProvider {
             String rootDirectory = new File(moduleClassLocation.toURI()).getParentFile().toURI().toString();
             for (String path : paths) {
                 try {
-                    addModulePlugin(new URI(rootDirectory + path), ModuleFileLocation.MANIFEST, true);
+                    addModulePlugin(new URI(rootDirectory + path), BasicModuleFileLocation.MANIFEST, true);
                 } catch (URISyntaxException ex) {
                     // Ignore
                 }
