@@ -52,7 +52,7 @@ import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
 import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleRecord;
-import org.exbin.framework.language.api.ApplicationInfoKeys;
+import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.window.api.gui.MultiStepControlPanel;
 import org.exbin.framework.window.api.controller.MultiStepControlController;
 
@@ -137,7 +137,7 @@ public class AddonManager {
             try {
                 LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
                 ResourceBundle appBundle = languageModule.getAppBundle();
-                String releaseString = appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE);
+                String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
                 serviceStatus = addonCatalogService.checkStatus(releaseString);
             } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);

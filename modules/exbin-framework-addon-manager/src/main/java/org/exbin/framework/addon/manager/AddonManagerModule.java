@@ -26,7 +26,7 @@ import org.exbin.framework.addon.manager.settings.AddonManagerOptions;
 import org.exbin.framework.addon.manager.settings.AddonManagerSettingsComponent;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.language.api.ApplicationInfoKeys;
+import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
@@ -82,7 +82,7 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     public String getManualLegacyUrl() {
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         ResourceBundle appBundle = languageModule.getAppBundle();
-        return manualLegacyGitHubUrl + appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE);
+        return manualLegacyGitHubUrl + appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
     }
 
     @Nonnull

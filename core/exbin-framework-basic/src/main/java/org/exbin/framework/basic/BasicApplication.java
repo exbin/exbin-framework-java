@@ -22,12 +22,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.ApplicationBundleKeys;
 
 /**
  * Basic framework application.
@@ -39,28 +44,39 @@ public class BasicApplication {
 
     public static final String PLUGINS_DIRECTORY = "plugins";
 
+    protected ResourceBundle appBundle;
     protected Preferences appPreferences;
     protected BasicModuleProvider moduleProvider;
 //    private final List<URI> plugins = new ArrayList<>();
 //    private String targetLaf = null;
-    protected File appDirectory = new File("");
+    protected File appDirectory;
     protected File configDirectory;
 
     public BasicApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass) {
+        this(dynamicClassLoader, manifestClass, null);
+    }
+
+    public BasicApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass, @Nullable ResourceBundle appBundle) {
+        this.appBundle = appBundle;
         moduleProvider = new BasicModuleProvider(dynamicClassLoader, manifestClass);
+        File appsConfigDirectory;
         String osName = System.getProperty("os.name").toLowerCase();
         try {
             if (osName.startsWith("win")) {
                 String appData = System.getenv("APPDATA");
                 if (appData != null) {
-                    configDirectory = Paths.get(appData).toFile();
+                    appsConfigDirectory = Paths.get(appData).toFile();
                 } else {
-                    configDirectory = Paths.get(System.getProperty("user.home"), "AppData", "Local").toFile();
+                    appsConfigDirectory = Paths.get(System.getProperty("user.home"), "AppData", "Local").toFile();
                 }
             } else {
-                configDirectory = new File(System.getProperty("user.home"), ".config");
+                appsConfigDirectory = new File(System.getProperty("user.home"), ".config");
             }
-            configDirectory = new File(configDirectory, manifestClass.getName());
+            if (appBundle == null) {
+                configDirectory = new File(appsConfigDirectory, manifestClass.getName());
+            } else {
+                configDirectory = new File(appsConfigDirectory, appBundle.getString(ApplicationBundleKeys.APPLICATION_VENDOR_ID) + File.separator + appBundle.getString(ApplicationBundleKeys.APPLICATION_ID) + File.separator + appBundle.getString(ApplicationBundleKeys.APPLICATION_VERSION));
+            }
         } catch (Throwable tw) {
             Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Unable to locate configuration directory", tw);
             configDirectory = new File("");
@@ -79,6 +95,18 @@ public class BasicApplication {
         }
     }
 
+    @Nonnull
+    public static BasicApplication createApplication(Class manifestClass, ResourceBundle appBundle) {
+        try {
+            DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(manifestClass);
+            Class<?> applicationClass = dynamicClassLoader.loadClass(BasicApplication.class.getCanonicalName());
+            Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class, ResourceBundle.class);
+            return (BasicApplication) constructor.newInstance(dynamicClassLoader, manifestClass, appBundle);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException("Unable to create application instance", ex);
+        }
+    }
+
     public void init() {
         App.setModuleProvider(moduleProvider);
         App.setConfigDirectory(configDirectory);
@@ -86,6 +114,9 @@ public class BasicApplication {
 
     @Nonnull
     public File getAppDirectory() {
+        if (appDirectory == null) {
+            appDirectory = new File("");
+        }
         return appDirectory;
     }
 
@@ -100,6 +131,30 @@ public class BasicApplication {
 
     public void setConfigDirectory(File configDirectory) {
         this.configDirectory = configDirectory;
+    }
+
+    @Nonnull
+    public ResourceBundle getAppBundle() {
+        if (appBundle == null) {
+            appBundle = new ResourceBundle() {
+                @Nullable
+                @Override
+                protected Object handleGetObject(String key) {
+                    return null;
+                }
+
+                @Nonnull
+                @Override
+                public Enumeration<String> getKeys() {
+                    return Collections.emptyEnumeration();
+                }
+            };
+        }
+        return appBundle;
+    }
+
+    public void setAppBundle(ResourceBundle appBundle) {
+        this.appBundle = appBundle;
     }
 
     @Nonnull

@@ -33,7 +33,7 @@ import org.exbin.framework.addon.update.settings.CheckForUpdateOptions;
 import org.exbin.framework.addon.update.settings.CheckForUpdateSettingsComponent;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.language.api.ApplicationInfoKeys;
+import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
@@ -101,7 +101,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     public VersionNumbers getCurrentVersion() {
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         ResourceBundle appBundle = languageModule.getAppBundle();
-        String releaseString = appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE);
+        String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
         VersionNumbers versionNumbers = new VersionNumbers();
         versionNumbers.versionFromString(releaseString);
         return versionNumbers;

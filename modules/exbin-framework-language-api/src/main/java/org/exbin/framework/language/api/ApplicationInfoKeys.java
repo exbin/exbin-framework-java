@@ -15,30 +15,26 @@
  */
 package org.exbin.framework.language.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Application information language keys.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public class ApplicationInfoKeys {
 
-    public static final String APPLICATION_NAME = "Application.name";
-    public static final String APPLICATION_DESCRIPTION = "Application.description";
-    public static final String APPLICATION_TITLE = "Application.title";
-    public static final String APPLICATION_VENDOR = "Application.vendor";
-    public static final String APPLICATION_AUTHORS = "Application.authors";
-    public static final String APPLICATION_RELEASE = "Application.release";
-    public static final String APPLICATION_VERSION = "Application.version";
-    public static final String APPLICATION_LICENSE = "Application.license";
-    public static final String APPLICATION_LICENSE_FILE = "Application.licenseFile";
-
-    public static final String APPLICATION_ICON = "Application.icon";
-    public static final String APPLICATION_ABOUT_IMAGE = "Application.aboutImage";
-    public static final String APPLICATION_HOMEPAGE = "Application.homepage";
-    public static final String APPLICATION_LANGUAGE_MODIFIER = "Application.languageModifier";
+    public static final String APPLICATION_PREFIX = "Application.";
+    public static final String APPLICATION_NAME = APPLICATION_PREFIX + "name";
+    public static final String APPLICATION_TITLE = APPLICATION_PREFIX + "title";
+    public static final String APPLICATION_PRODUCT = APPLICATION_PREFIX + "product";
+    public static final String APPLICATION_DESCRIPTION = APPLICATION_PREFIX + "description";
+    public static final String APPLICATION_VENDOR = APPLICATION_PREFIX + "vendor";
+    public static final String APPLICATION_AUTHORS = APPLICATION_PREFIX + "authors";
+    public static final String APPLICATION_LICENSE = APPLICATION_PREFIX + "license";
+    public static final String APPLICATION_LICENSE_FILE = APPLICATION_PREFIX + "licenseFile";
+    public static final String APPLICATION_ICON = APPLICATION_PREFIX + "icon";
+    public static final String APPLICATION_ABOUT_IMAGE = APPLICATION_PREFIX + "aboutImage";
+    public static final String APPLICATION_HOMEPAGE = APPLICATION_PREFIX + "homepage";
+    public static final String APPLICATION_LANGUAGE_MODIFIER = APPLICATION_PREFIX + "languageModifier";
 
     private ApplicationInfoKeys() {
     }

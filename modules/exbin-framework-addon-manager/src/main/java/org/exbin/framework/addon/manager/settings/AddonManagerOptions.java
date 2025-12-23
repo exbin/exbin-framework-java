@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.language.api.ApplicationInfoKeys;
+import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsStorage;
 import org.exbin.framework.options.settings.api.SettingsOptions;
@@ -44,7 +44,7 @@ public class AddonManagerOptions implements SettingsOptions {
     public String getActivatedVersion() {
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         ResourceBundle appBundle = languageModule.getAppBundle();
-        String defaultVersion = appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE) + "-SNAPSHOT";
+        String defaultVersion = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE) + "-SNAPSHOT";
         return storage.get(KEY_ACTIVATED_VERSION, defaultVersion);
     }
 

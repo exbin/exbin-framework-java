@@ -24,9 +24,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.basic.BasicApplication;
@@ -48,6 +50,10 @@ public class AddonApplication extends BasicApplication {
         super(dynamicClassLoader, manifestClass);
     }
 
+    public AddonApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass, @Nullable ResourceBundle appBundle) {
+        super(dynamicClassLoader, manifestClass, appBundle);
+    }
+
     @Nonnull
     public static AddonApplication createApplication(Class manifestClass) {
         try {
@@ -55,6 +61,18 @@ public class AddonApplication extends BasicApplication {
             Class<?> applicationClass = dynamicClassLoader.loadClass(AddonApplication.class.getCanonicalName());
             Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class);
             return (AddonApplication) constructor.newInstance(dynamicClassLoader, manifestClass);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException("Unable to create application instance", ex);
+        }
+    }
+
+    @Nonnull
+    public static AddonApplication createApplication(Class manifestClass, ResourceBundle appBundle) {
+        try {
+            DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(manifestClass);
+            Class<?> applicationClass = dynamicClassLoader.loadClass(AddonApplication.class.getCanonicalName());
+            Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class, ResourceBundle.class);
+            return (AddonApplication) constructor.newInstance(dynamicClassLoader, manifestClass, appBundle);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException("Unable to create application instance", ex);
         }

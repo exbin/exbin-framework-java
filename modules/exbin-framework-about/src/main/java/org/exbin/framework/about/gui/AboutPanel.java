@@ -31,6 +31,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.DefaultTableModel;
 import org.exbin.framework.App;
+import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.language.api.ApplicationInfoKeys;
 import org.exbin.framework.utils.DesktopUtils;
@@ -377,7 +378,7 @@ public class AboutPanel extends javax.swing.JPanel {
         }
 
         nameTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_NAME));
-        versionTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_VERSION));
+        versionTextField.setText(appBundle.getString(ApplicationBundleKeys.APPLICATION_VERSION));
         vendorTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_VENDOR));
         licenseTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_LICENSE));
         appHomepageLink = appBundle.getString(ApplicationInfoKeys.APPLICATION_HOMEPAGE);

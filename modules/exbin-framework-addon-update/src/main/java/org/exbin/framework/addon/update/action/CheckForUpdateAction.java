@@ -33,7 +33,7 @@ import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.update.gui.CheckForUpdatePanel;
 import org.exbin.framework.addon.update.settings.CheckForUpdateOptions;
 import org.exbin.framework.addon.update.service.CheckForUpdateService;
-import org.exbin.framework.language.api.ApplicationInfoKeys;
+import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.window.api.gui.CloseControlPanel;
@@ -95,7 +95,7 @@ public class CheckForUpdateAction extends AbstractAction {
     public VersionNumbers getCurrentVersion() {
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
         ResourceBundle appBundle = languageModule.getAppBundle();
-        String releaseString = appBundle.getString(ApplicationInfoKeys.APPLICATION_RELEASE);
+        String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
         VersionNumbers versionNumbers = new VersionNumbers();
         versionNumbers.versionFromString(releaseString);
         return versionNumbers;
