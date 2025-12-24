@@ -17,7 +17,6 @@ package org.exbin.framework.options.api;
 
 import java.io.InputStream;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
@@ -31,6 +30,7 @@ import org.exbin.framework.ModuleUtils;
 public interface OptionsModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(OptionsModuleApi.class);
+    public static String PREFERENCE_FILE = "preferences.xml";
 
     /**
      * Setups application options using class instance as base.
@@ -47,22 +47,10 @@ public interface OptionsModuleApi extends Module {
     void setupAppOptions(java.util.prefs.Preferences preferences);
 
     /**
-     * Setups application options using organization / product / version
-     * combination.
-     *
-     * @param organization organization
-     * @param product product
-     * @param version version
+     * Setups options using configuration file in the application configuration
+     * directory.
      */
-    void setupAppOptions(@Nullable String organization, String product, @Nullable String version);
-
-    /**
-     * Setups application options using product / version combination.
-     *
-     * @param product product
-     * @param version version
-     */
-    void setupAppOptions(String product, @Nullable String version);
+    void setupAppOptions();
 
     /**
      * Returns application options.

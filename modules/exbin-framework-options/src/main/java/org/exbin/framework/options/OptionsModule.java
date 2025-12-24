@@ -59,21 +59,9 @@ public class OptionsModule implements OptionsModuleApi {
     }
 
     @Override
-    public void setupAppOptions(@Nullable String organization, String product, @Nullable String version) {
-        String path = product;
-        if (organization != null) {
-            path = organization + File.pathSeparator + product;
-        }
-        if (version != null) {
-            path += File.pathSeparator + version;
-        }
-        File preferencesFile = new File(App.getConfigDirectory(), path);
-        appOptions = new PreferencesWrapper(new FilePreferences(null, product, preferencesFile));
-    }
-
-    @Override
-    public void setupAppOptions(String product, @Nullable String version) {
-        setupAppOptions(null, product, version);
+    public void setupAppOptions() {
+        File preferencesFile = new File(App.getConfigDirectory(), OptionsModuleApi.PREFERENCE_FILE);
+        appOptions = new PreferencesWrapper(new FilePreferences(null, "", preferencesFile));
     }
 
     @Nonnull

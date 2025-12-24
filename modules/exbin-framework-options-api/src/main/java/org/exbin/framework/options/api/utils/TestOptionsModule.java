@@ -40,11 +40,7 @@ public class TestOptionsModule implements OptionsModuleApi {
     }
 
     @Override
-    public void setupAppOptions(String organization, String product, String version) {
-    }
-
-    @Override
-    public void setupAppOptions(String product, String version) {
+    public void setupAppOptions() {
     }
 
     @Nonnull
