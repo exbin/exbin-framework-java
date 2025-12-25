@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
 import org.exbin.framework.basic.BasicApplication;
 import org.exbin.framework.basic.DynamicClassLoader;
 
@@ -45,6 +44,8 @@ public class AddonApplication extends BasicApplication {
     public static final String ADDONS_DIRECTORY = "addons";
     public static final String ADDONS_UPDATE_DIRECTORY = "addons_update";
     public static final String ADDONS_CONFIG_FILE = "changes.cfg";
+    public static final String ADDONS_UPDATE_FILE = "UPDATE_FILE";
+    public static final String ADDONS_REMOVE_FILE = "REMOVE_FILE";
 
     public AddonApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass) {
         super(dynamicClassLoader, manifestClass);
@@ -79,7 +80,6 @@ public class AddonApplication extends BasicApplication {
     }
 
     public void setupAddons() {
-        File configDirectory = App.getConfigDirectory();
         String configDirectoryPath = configDirectory.getAbsolutePath();
         File addonsDirectory = new File(configDirectoryPath, ADDONS_DIRECTORY);
         File updateDirectory = new File(configDirectoryPath, ADDONS_UPDATE_DIRECTORY);
@@ -98,7 +98,7 @@ public class AddonApplication extends BasicApplication {
                     do {
                         line = reader.readLine();
                         if (line != null) {
-                            if (line.startsWith("UPDATE_FILE")) {
+                            if (line.startsWith(ADDONS_UPDATE_FILE)) {
                                 String fileName = line.substring(12);
                                 File replacedFile = new File(addonsDirectory, fileName);
                                 File sourceFile = new File(updateDirectory, fileName);
@@ -108,7 +108,7 @@ public class AddonApplication extends BasicApplication {
                                     }
                                 }
                                 sourceFile.renameTo(replacedFile);
-                            } else if (line.startsWith("REMOVE_FILE")) {
+                            } else if (line.startsWith(ADDONS_REMOVE_FILE)) {
                                 String fileName = line.substring(12);
                                 File removedFile = new File(addonsDirectory, fileName);
                                 if (removedFile.exists()) {
