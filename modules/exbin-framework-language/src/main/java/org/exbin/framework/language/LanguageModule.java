@@ -71,7 +71,7 @@ public class LanguageModule implements LanguageModuleApi {
             return ResourceBundle.getBundle(getResourceBaseNameBundleByClass(targetClass), getLanguageBundleLocale(), targetClass.getClassLoader());
         } else {
             String bundleName = getResourceBaseNameBundleByClass(targetClass);
-            LanguageResourceBundle bundle = new LanguageResourceBundle(bundleName, getResourceBundleForLanguage(bundleName));
+            LanguageResourceBundle bundle = new LanguageResourceBundle(bundleName, getResourceBundleForLanguage(bundleName), targetClass.getClassLoader());
             if (iconSetProvider != null) {
                 bundle.setIconSet(iconSetProvider);
             }
@@ -85,7 +85,7 @@ public class LanguageModule implements LanguageModuleApi {
         if (languageClassLoader == null) {
             return ResourceBundle.getBundle(bundleName, getLanguageBundleLocale());
         } else {
-            return new LanguageResourceBundle(bundleName, getResourceBundleForLanguage(bundleName));
+            return new LanguageResourceBundle(bundleName, getResourceBundleForLanguage(bundleName), languageClassLoader);
         }
     }
 

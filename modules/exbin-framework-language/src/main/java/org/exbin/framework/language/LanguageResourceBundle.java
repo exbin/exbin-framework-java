@@ -39,13 +39,15 @@ public class LanguageResourceBundle extends ResourceBundle {
 
     protected final ResourceBundle mainResourceBundle;
     protected final ResourceBundle languageResourceBundle;
+    protected final ClassLoader classLoader;
     protected IconSetProvider iconSetProvider = null;
     protected final String prefix;
 
-    public LanguageResourceBundle(String baseName, ResourceBundle languageResourceBundle) {
+    public LanguageResourceBundle(String baseName, ResourceBundle languageResourceBundle, ClassLoader classLoader) {
         this.prefix = baseName.replace("/", ".") + ".";
-        mainResourceBundle = ResourceBundle.getBundle(baseName, Locale.ROOT);
+        mainResourceBundle = ResourceBundle.getBundle(baseName, Locale.ROOT, classLoader);
         this.languageResourceBundle = languageResourceBundle;
+        this.classLoader = classLoader;
     }
 
     public void setIconSet(@Nullable IconSetProvider iconSetProvider) {
