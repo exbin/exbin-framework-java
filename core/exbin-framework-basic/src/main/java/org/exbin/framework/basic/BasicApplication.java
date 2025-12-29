@@ -58,6 +58,7 @@ public class BasicApplication {
 
     public BasicApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass, @Nullable ResourceBundle appBundle) {
         this.appBundle = appBundle;
+        BasicApplication.this.setAppDirectory(manifestClass);
         moduleProvider = new BasicModuleProvider(dynamicClassLoader, manifestClass);
         File appsConfigDirectory;
         String osName = System.getProperty("os.name").toLowerCase();
