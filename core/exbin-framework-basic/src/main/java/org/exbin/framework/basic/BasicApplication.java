@@ -86,21 +86,19 @@ public class BasicApplication {
 
     @Nonnull
     public static BasicApplication createApplication(Class manifestClass) {
-        try {
-            DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(manifestClass);
-            Class<?> applicationClass = dynamicClassLoader.loadClass(BasicApplication.class.getCanonicalName());
-            Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class);
-            return (BasicApplication) constructor.newInstance(dynamicClassLoader, manifestClass);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException("Unable to create application instance", ex);
-        }
+        return BasicApplication.createApplication(manifestClass, null);
     }
 
     @Nonnull
-    public static BasicApplication createApplication(Class manifestClass, ResourceBundle appBundle) {
+    public static BasicApplication createApplication(Class manifestClass, @Nullable ResourceBundle appBundle) {
         try {
             DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(manifestClass);
             Class<?> applicationClass = dynamicClassLoader.loadClass(BasicApplication.class.getCanonicalName());
+            if (appBundle == null) {
+                Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class);
+                return (BasicApplication) constructor.newInstance(dynamicClassLoader, manifestClass);
+            }
+
             Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class, ResourceBundle.class);
             return (BasicApplication) constructor.newInstance(dynamicClassLoader, manifestClass, appBundle);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {

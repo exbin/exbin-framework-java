@@ -57,21 +57,19 @@ public class AddonApplication extends BasicApplication {
 
     @Nonnull
     public static AddonApplication createApplication(Class manifestClass) {
-        try {
-            DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(manifestClass);
-            Class<?> applicationClass = dynamicClassLoader.loadClass(AddonApplication.class.getCanonicalName());
-            Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class);
-            return (AddonApplication) constructor.newInstance(dynamicClassLoader, manifestClass);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException("Unable to create application instance", ex);
-        }
+        return AddonApplication.createApplication(manifestClass, null);
     }
 
     @Nonnull
-    public static AddonApplication createApplication(Class manifestClass, ResourceBundle appBundle) {
+    public static AddonApplication createApplication(Class manifestClass, @Nullable ResourceBundle appBundle) {
         try {
             DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(manifestClass);
             Class<?> applicationClass = dynamicClassLoader.loadClass(AddonApplication.class.getCanonicalName());
+            if (appBundle == null) {
+                Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class);
+                return (AddonApplication) constructor.newInstance(dynamicClassLoader, manifestClass);
+            }
+
             Constructor<?> constructor = applicationClass.getConstructor(DynamicClassLoader.class, Class.class, ResourceBundle.class);
             return (AddonApplication) constructor.newInstance(dynamicClassLoader, manifestClass, appBundle);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
