@@ -17,6 +17,7 @@ package org.exbin.framework;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -29,6 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public final class App {
 
     private static ModuleProvider moduleProvider = null;
+    private static ResourceBundle appBundle = null;
     private static File configDirectory = null;
 
     private App() {
@@ -60,6 +62,21 @@ public final class App {
         throw createNotInitializedException();
     }
 
+    @Nonnull
+    public static ModuleProvider getModuleProvider() {
+        return Objects.requireNonNull(moduleProvider);
+    }
+
+    @Nonnull
+    public static File getConfigDirectory() {
+        return Objects.requireNonNull(configDirectory);
+    }
+
+    @Nonnull
+    public static ResourceBundle getAppBundle() {
+        return Objects.requireNonNull(appBundle);
+    }
+
     public static void setModuleProvider(ModuleProvider moduleProvider) {
         if (App.moduleProvider != null) {
             throw createAlreadyInitializedException();
@@ -76,14 +93,12 @@ public final class App {
         App.configDirectory = configDirectory;
     }
 
-    @Nonnull
-    public static ModuleProvider getModuleProvider() {
-        return Objects.requireNonNull(moduleProvider);
-    }
+    public static void setAppBundle(ResourceBundle appBundle) {
+        if (App.appBundle != null) {
+            throw createAlreadyInitializedException();
+        }
 
-    @Nonnull
-    public static File getConfigDirectory() {
-        return Objects.requireNonNull(configDirectory);
+        App.appBundle = appBundle;
     }
 
     private static IllegalStateException createNotInitializedException() {
@@ -91,6 +106,6 @@ public final class App {
     }
 
     private static IllegalStateException createAlreadyInitializedException() {
-        return new IllegalStateException("Config directory already initialized");
+        return new IllegalStateException("Value was already initialized");
     }
 }

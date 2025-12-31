@@ -27,7 +27,6 @@ import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -44,22 +43,19 @@ public class BasicApplication {
 
     public static final String PLUGINS_DIRECTORY = "plugins";
 
-    protected ResourceBundle appBundle;
-    protected Preferences appPreferences;
-    protected BasicModuleProvider moduleProvider;
 //    private final List<URI> plugins = new ArrayList<>();
 //    private String targetLaf = null;
+    protected BasicModuleProvider moduleProvider;
     protected File appDirectory;
-    protected File configDirectory;
 
     public BasicApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass) {
         this(dynamicClassLoader, manifestClass, null);
     }
 
     public BasicApplication(DynamicClassLoader dynamicClassLoader, Class manifestClass, @Nullable ResourceBundle appBundle) {
-        this.appBundle = appBundle;
+        App.setAppBundle(appBundle);
         BasicApplication.this.setAppDirectory(manifestClass);
-        moduleProvider = new BasicModuleProvider(dynamicClassLoader, manifestClass);
+        File configDirectory;
         File appsConfigDirectory;
         String osName = System.getProperty("os.name").toLowerCase();
         try {
@@ -82,6 +78,9 @@ public class BasicApplication {
             Logger.getLogger(BasicApplication.class.getName()).log(Level.SEVERE, "Unable to locate configuration directory", tw);
             configDirectory = new File("");
         }
+        App.setConfigDirectory(configDirectory);
+        moduleProvider = new BasicModuleProvider(dynamicClassLoader, manifestClass);
+        App.setModuleProvider(moduleProvider);
     }
 
     @Nonnull
@@ -106,11 +105,6 @@ public class BasicApplication {
         }
     }
 
-    public void init() {
-        App.setModuleProvider(moduleProvider);
-        App.setConfigDirectory(configDirectory);
-    }
-
     @Nonnull
     public File getAppDirectory() {
         if (appDirectory == null) {
@@ -121,48 +115,6 @@ public class BasicApplication {
 
     public void setAppDirectory(File appDirectory) {
         this.appDirectory = appDirectory;
-    }
-
-    @Nonnull
-    public File getConfigDirectory() {
-        return configDirectory;
-    }
-
-    public void setConfigDirectory(File configDirectory) {
-        this.configDirectory = configDirectory;
-    }
-
-    @Nonnull
-    public ResourceBundle getAppBundle() {
-        if (appBundle == null) {
-            appBundle = new ResourceBundle() {
-                @Nullable
-                @Override
-                protected Object handleGetObject(String key) {
-                    return null;
-                }
-
-                @Nonnull
-                @Override
-                public Enumeration<String> getKeys() {
-                    return Collections.emptyEnumeration();
-                }
-            };
-        }
-        return appBundle;
-    }
-
-    public void setAppBundle(ResourceBundle appBundle) {
-        this.appBundle = appBundle;
-    }
-
-    @Nonnull
-    public Preferences getAppPreferences() {
-        return appPreferences;
-    }
-
-    public void setAppPreferences(Preferences appPreferences) {
-        this.appPreferences = appPreferences;
     }
 
     public void setAppDirectory(Class classInstance) {

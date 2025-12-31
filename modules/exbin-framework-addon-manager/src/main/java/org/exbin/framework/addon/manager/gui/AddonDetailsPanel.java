@@ -79,7 +79,9 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 if (evt.getButton() == MouseEvent.BUTTON1 && !evt.isPopupTrigger()) {
-                    DesktopUtils.openDesktopURL(providerLink);
+                    if (providerLink != null) {
+                        DesktopUtils.openDesktopURL(providerLink);
+                    }
                 }
             }
         };
@@ -110,9 +112,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         String provider = itemRecord.getProvider().orElse("");
         String providerHomepage = itemRecord.getHomepage().orElse(null);
 
-        if (providerLinkListener != null) {
-            providerLabel.removeMouseListener(providerLinkListener);
-        }
         if (providerHomepage != null) {
             provider = "<html><body><a href=\"" + providerHomepage + "\">" + (provider.isEmpty() ? resourceBundle.getString("record.provider") : provider) + "</a></body></html>";
             providerLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

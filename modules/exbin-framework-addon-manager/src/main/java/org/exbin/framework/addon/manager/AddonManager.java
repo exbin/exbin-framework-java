@@ -67,6 +67,7 @@ public class AddonManager {
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManager.class);
 
     private AddonCatalogService addonCatalogService;
+    private CatalogOperation catalogOperation = CatalogOperation.IDLE;
     private ApplicationModulesUsage applicationModulesUsage;
     private AvailableModuleUpdates availableModuleUpdates = new AvailableModuleUpdates();
     private AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
@@ -135,8 +136,7 @@ public class AddonManager {
 
         Thread thread = new Thread(() -> {
             try {
-                LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-                ResourceBundle appBundle = languageModule.getAppBundle();
+                ResourceBundle appBundle = App.getAppBundle();
                 String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
                 serviceStatus = addonCatalogService.checkStatus(releaseString);
             } catch (AddonCatalogServiceException ex) {
@@ -416,5 +416,38 @@ public class AddonManager {
         controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.FINISH, false);
         dialog.showCentered(parentComponent);
         dialog.dispose();
+    }
+
+    private void invokeCatalogOperation(CatalogOperation operation) {
+
+    }
+
+    private class CatalogThread extends Thread {
+
+        public CatalogThread() {
+            super("AddonCatalogThread");
+        }
+
+        @Override
+        public void run() {
+            switch (catalogOperation) {
+                case CHECK:
+                    try {
+                        ResourceBundle appBundle = App.getAppBundle();
+                        String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
+                        addonCatalogService.checkStatus(releaseString);
+                    } catch (AddonCatalogServiceException ex) {
+                        Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);
+                    }
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }
+    }
+
+    private enum CatalogOperation {
+        IDLE,
+        CHECK
     }
 }

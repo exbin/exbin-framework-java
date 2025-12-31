@@ -357,15 +357,16 @@ public class AboutPanel extends javax.swing.JPanel {
 
     public void loadFromApplication() {
         LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-        ResourceBundle appBundle = languageModule.getAppBundle();
+        ResourceBundle appBundle = App.getAppBundle();
+        ResourceBundle langBundle = languageModule.getAppBundle();
 
 //        aboutModulesPanel.setApplication(application);
-        aboutAuthorsPanel.loadFromResources(appBundle);
+        aboutAuthorsPanel.loadFromResources(langBundle);
 
         // Load license
         try {
-            if (appBundle.containsKey(ApplicationInfoKeys.APPLICATION_LICENSE_FILE)) {
-                String licenseFilePath = appBundle.getString(ApplicationInfoKeys.APPLICATION_LICENSE_FILE);
+            if (langBundle.containsKey(ApplicationInfoKeys.APPLICATION_LICENSE_FILE)) {
+                String licenseFilePath = langBundle.getString(ApplicationInfoKeys.APPLICATION_LICENSE_FILE);
                 licenseEditorPane.setPage(getClass().getResource(licenseFilePath));
             }
             licenseEditorPane.addHyperlinkListener((HyperlinkEvent event) -> {
@@ -377,19 +378,19 @@ public class AboutPanel extends javax.swing.JPanel {
             Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        nameTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_NAME));
         versionTextField.setText(appBundle.getString(ApplicationBundleKeys.APPLICATION_VERSION));
-        vendorTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_VENDOR));
-        licenseTextField.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_LICENSE));
-        appHomepageLink = appBundle.getString(ApplicationInfoKeys.APPLICATION_HOMEPAGE);
+        nameTextField.setText(langBundle.getString(ApplicationInfoKeys.APPLICATION_NAME));
+        vendorTextField.setText(langBundle.getString(ApplicationInfoKeys.APPLICATION_VENDOR));
+        licenseTextField.setText(langBundle.getString(ApplicationInfoKeys.APPLICATION_LICENSE));
+        appHomepageLink = langBundle.getString(ApplicationInfoKeys.APPLICATION_HOMEPAGE);
         appHomepageLabel.setText("<html><a href=\"\">" + appHomepageLink + "</a></html>");
-        if (appBundle.containsKey(ApplicationInfoKeys.APPLICATION_ABOUT_IMAGE)) {
-            String aboutImagePath = appBundle.getString(ApplicationInfoKeys.APPLICATION_ABOUT_IMAGE);
+        if (langBundle.containsKey(ApplicationInfoKeys.APPLICATION_ABOUT_IMAGE)) {
+            String aboutImagePath = langBundle.getString(ApplicationInfoKeys.APPLICATION_ABOUT_IMAGE);
             imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(aboutImagePath)));
             aboutHeaderPanel.add(aboutHeaderImagePanel, BorderLayout.WEST);
         }
-        appTitleLabel.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_TITLE));
-        appDescLabel.setText(appBundle.getString(ApplicationInfoKeys.APPLICATION_DESCRIPTION));
+        appTitleLabel.setText(langBundle.getString(ApplicationInfoKeys.APPLICATION_TITLE));
+        appDescLabel.setText(langBundle.getString(ApplicationInfoKeys.APPLICATION_DESCRIPTION));
 
         appHomepageLabel.setComponentPopupMenu(new JPopupMenu() {
 

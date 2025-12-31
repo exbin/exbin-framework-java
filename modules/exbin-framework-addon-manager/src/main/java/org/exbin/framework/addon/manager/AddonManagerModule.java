@@ -80,8 +80,7 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     @Nonnull
     @Override
     public String getManualLegacyUrl() {
-        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-        ResourceBundle appBundle = languageModule.getAppBundle();
+        ResourceBundle appBundle = App.getAppBundle();
         return manualLegacyGitHubUrl + appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
     }
 

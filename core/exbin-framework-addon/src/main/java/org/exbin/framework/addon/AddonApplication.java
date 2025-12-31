@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.App;
 import org.exbin.framework.basic.BasicApplication;
 import org.exbin.framework.basic.DynamicClassLoader;
 
@@ -78,7 +79,7 @@ public class AddonApplication extends BasicApplication {
     }
 
     public void setupAddons() {
-        String configDirectoryPath = configDirectory.getAbsolutePath();
+        String configDirectoryPath = App.getConfigDirectory().getAbsolutePath();
         File addonsDirectory = new File(configDirectoryPath, ADDONS_DIRECTORY);
         File updateDirectory = new File(configDirectoryPath, ADDONS_UPDATE_DIRECTORY);
         if (updateDirectory.exists()) {
