@@ -198,8 +198,10 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
     }
 
     private static void finishMenu(JMenu menu, ActionContextRegistration actionContextRegistration) {
-        for (int i = 0; i < menu.getItemCount(); i++) {
+        int i = 0;
+        while (i < menu.getItemCount()) {
             JMenuItem menuItem = menu.getItem(i);
+            i++;
             if (menuItem == null) {
                 continue;
             }

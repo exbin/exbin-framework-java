@@ -99,8 +99,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
 
     @Nonnull
     public VersionNumbers getCurrentVersion() {
-        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-        ResourceBundle appBundle = languageModule.getAppBundle();
+        ResourceBundle appBundle = App.getAppBundle();
         String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
         VersionNumbers versionNumbers = new VersionNumbers();
         versionNumbers.versionFromString(releaseString);
