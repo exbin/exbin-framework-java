@@ -36,6 +36,7 @@ import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.context.api.ContextChangeRegistration;
+import org.exbin.framework.help.api.HelpLink;
 
 /**
  * Addon manager action.
@@ -46,6 +47,7 @@ import org.exbin.framework.context.api.ContextChangeRegistration;
 public class AddonManagerAction extends AbstractAction {
 
     public static final String ACTION_ID = "addonManagerAction";
+    public static final String HELP_ID = "addon-manager";
 
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerAction.class);
     private DialogParentComponent dialogParentComponent;
@@ -71,6 +73,7 @@ public class AddonManagerAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         // TODO: Extract to separate class to not share fields
         AddonsControlPanel controlPanel = new AddonsControlPanel();
+        controlPanel.addHelpButton(new HelpLink(HELP_ID));
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();

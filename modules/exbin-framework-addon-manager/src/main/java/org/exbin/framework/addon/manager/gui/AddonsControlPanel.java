@@ -18,6 +18,7 @@ package org.exbin.framework.addon.manager.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -27,6 +28,8 @@ import javax.swing.JPopupMenu;
 import org.exbin.framework.App;
 import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
+import org.exbin.framework.help.api.HelpLink;
+import org.exbin.framework.help.api.HelpModuleApi;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.utils.UiUtils;
@@ -52,6 +55,43 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     public AddonsControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+    }
+    
+    public void addHelpButton(HelpLink helpLink) {
+        HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
+        JButton helpButton = helpModule.createHelpButton();
+        helpButton.addActionListener((ActionEvent e) -> {
+            if (helpLink != null) {
+                helpModule.openHelp(helpLink);
+            }
+        });
+        buttonsPanel.add(helpButton);
+        javax.swing.GroupLayout buttonsPanelLayout = new javax.swing.GroupLayout(buttonsPanel);
+        buttonsPanel.setLayout(buttonsPanelLayout);
+        buttonsPanelLayout.setHorizontalGroup(
+            buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(buttonsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(helpButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(operationButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(closeButton)
+                .addContainerGap())
+        );
+        buttonsPanelLayout.setVerticalGroup(
+            buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonsPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(helpButton)
+                    .addComponent(closeButton)
+                    .addComponent(operationButton)
+                    .addComponent(operationLabel))
+                .addContainerGap())
+        );
     }
 
     public void showLegacyWarning() {
