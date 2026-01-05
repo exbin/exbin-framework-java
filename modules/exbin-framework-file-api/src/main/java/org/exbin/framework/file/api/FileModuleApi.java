@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.file.api;
 
+import java.awt.Component;
 import java.net.URI;
 import java.util.Collection;
 import javax.annotation.Nonnull;
@@ -47,13 +48,34 @@ public interface FileModuleApi extends Module {
     @Nonnull
     Collection<FileType> getFileTypes();
 
+    /**
+     * Registers file dialogs provider.
+     *
+     * @param providerId final provider ID
+     * @param provider file dialog provider
+     */
     void registerFileDialogsProvider(String providerId, FileDialogsProvider provider);
 
+    /**
+     * Retuns preferred file dialog provider id.
+     *
+     * @return file dialog provider id
+     */
     @Nonnull
     String getFileDialogProviderId();
 
+    /**
+     * Sets preferred file dialog provider.
+     *
+     * @param fileDialogProviderId file dialog provider id
+     */
     void setFileDialogProviderId(String fileDialogProviderId);
 
+    /**
+     * Retuns preferred file dialog provider.
+     *
+     * @return file dialog provider
+     */
     @Nonnull
     FileDialogsProvider getFileDialogsProvider();
 
@@ -80,4 +102,29 @@ public interface FileModuleApi extends Module {
      * Registers settings.
      */
     void registerSettings();
+
+    /**
+     * Asks whether modified file should be saved.
+     *
+     * @param parentComponent
+     * @return
+     */
+    boolean showSaveModified(Component parentComponent);
+
+    /**
+     * Asks whether it's allowed to overwrite file.
+     *
+     * @param parentComponent parent component
+     * @return true if allowed
+     */
+    boolean showAskToOverwrite(Component parentComponent);
+
+    /**
+     * Shows unable to save message.
+     *
+     * @param parentComponent parent component
+     * @param ex exception
+     */
+    void showUnableToSave(Component parentComponent, Exception ex);
+
 }

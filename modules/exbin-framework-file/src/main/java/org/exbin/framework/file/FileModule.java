@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.file;
 
+import java.awt.Component;
 import org.exbin.framework.file.api.FileDialogsProvider;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JOptionPane;
 import org.exbin.framework.App;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
@@ -106,7 +108,7 @@ public class FileModule implements FileModuleApi {
     public void setFileDialogProviderId(String fileDialogProviderId) {
         this.fileDialogProviderId = fileDialogProviderId;
     }
-    
+
     @Nonnull
     @Override
     public FileDialogsProvider getFileDialogsProvider() {
@@ -145,7 +147,7 @@ public class FileModule implements FileModuleApi {
         ensureSetup();
         registerFileDialogsProvider(FileDialogsType.SWING.name(), new SwingFileDialogsProvider(resourceBundle));
         setFileDialogProviderId(FileDialogsType.SWING.name());
-        
+
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         DocumentManagement documentManager = documentModule.getMainDocumentManager();
         documentManager.registerDocumentProvider(new FileDocumentProvider());
@@ -165,5 +167,57 @@ public class FileModule implements FileModuleApi {
         settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(FileSettingsComponent.COMPONENT_ID, new FileSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
+    }
+
+    @Override
+    public boolean showSaveModified(Component parentComponent) {
+        Object[] options = {
+            resourceBundle.getString("Question.modified_save"),
+            resourceBundle.getString("Question.modified_discard"),
+            resourceBundle.getString("Question.modified_cancel")
+        };
+        int result = JOptionPane.showOptionDialog(
+                parentComponent,
+                resourceBundle.getString("Question.modified"),
+                resourceBundle.getString("Question.modified_title"),
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null, options, options[0]);
+
+        return result == JOptionPane.NO_OPTION;
+    }
+
+    @Override
+    public boolean showAskToOverwrite(Component parentComponent) {
+        Object[] options = {
+            resourceBundle.getString("Question.overwrite_save"),
+            resourceBundle.getString("Question.modified_cancel")
+        };
+
+        int result = JOptionPane.showOptionDialog(
+                parentComponent,
+                resourceBundle.getString("Question.overwrite"),
+                resourceBundle.getString("Question.overwrite_title"),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null, options, options[0]);
+        if (result == JOptionPane.YES_OPTION) {
+            return true;
+        }
+        if (result == JOptionPane.NO_OPTION || result == JOptionPane.CLOSED_OPTION) {
+            return false;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void showUnableToSave(Component parentComponent, Exception ex) {
+        String errorMessage = ex.getLocalizedMessage();
+        JOptionPane.showMessageDialog(
+                parentComponent,
+                resourceBundle.getString("Question.unable_to_save") + ": " + ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage),
+                resourceBundle.getString("Question.unable_to_save"), JOptionPane.ERROR_MESSAGE
+        );
     }
 }

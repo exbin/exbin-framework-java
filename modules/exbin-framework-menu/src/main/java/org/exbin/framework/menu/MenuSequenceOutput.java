@@ -142,7 +142,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
             MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
             return;
         }
-        
+
         throw new IllegalStateException();
     }
 
@@ -201,8 +201,8 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
         int i = 0;
         while (i < menu.getItemCount()) {
             JMenuItem menuItem = menu.getItem(i);
-            i++;
             if (menuItem == null) {
+                i++;
                 continue;
             }
             Action action = menuItem.getAction();
@@ -211,6 +211,10 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
             }
             if (menuItem instanceof JMenu) {
                 finishMenu((JMenu) menuItem, actionContextRegistration);
+            }
+            if (i < menu.getItemCount() && menu.getItem(i) == menuItem) {
+                // menuItem can be removed when finishing
+                i++;
             }
         }
     }
