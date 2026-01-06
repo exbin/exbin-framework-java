@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.file.api.utils;
+package org.exbin.framework.file.api;
 
+import java.awt.Component;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.file.api.FileDialogsProvider;
-import org.exbin.framework.file.api.FileModuleApi;
-import org.exbin.framework.file.api.FileType;
 
 /**
  * Test implementation of file module.
@@ -78,6 +76,21 @@ public class TestFileModule implements FileModuleApi {
 
     @Override
     public void registerFileProviders() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean showSaveModified(Component parentComponent) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean showAskToOverwrite(Component parentComponent) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void showUnableToSave(Component parentComponent, Exception ex) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
