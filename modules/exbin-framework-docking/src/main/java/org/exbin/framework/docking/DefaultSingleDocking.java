@@ -31,7 +31,8 @@ import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
-import org.exbin.framework.document.api.DocumentType;
+import org.exbin.framework.document.api.DocumentSource;
+import org.exbin.framework.document.api.EditableDocument;
 
 /**
  * Default implementation of the document docking supporting single document
@@ -77,7 +78,6 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         this.contextManager = contextManager;
         contextManager.changeActiveState(ContextDocking.class, this);
         contextManager.changeActiveState(ContextDocument.class, (ContextDocument) currentDocument);
-        notifyActiveDocumentChanged();
     }
 
     @Override
@@ -85,10 +85,6 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         contextManager.changeActiveState(ContextDocking.class, null);
         contextManager.changeActiveState(ContextDocument.class, null);
         this.contextManager = null;
-    }
-
-    public void notifyActiveDocumentChanged() {
-
     }
 
     @Nonnull
@@ -105,23 +101,36 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         return documentManager.createDefaultDocument();
     }
 
-    @Nonnull
-    @Override
-    public Document openNewDocument(DocumentType documentType) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     @Override
     public void openDocument(Document document) {
         if (currentDocument != null) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if (!releaseDocument(document)) {
+                return;
+            }
         }
+
         currentDocument = document;
         docking.setContentComponent(((ComponentDocument) document).getComponent());
     }
 
     @Override
     public void closeDocument(Document document) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (releaseDocument(document)) {
+            currentDocument = null;
+        }
+    }
+
+    public boolean releaseDocument(Document document) {
+        if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
+            DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+            Optional<DocumentSource> documentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
+            if (documentSource.isPresent()) {
+                ((EditableDocument) document).saveTo(documentSource.get());
+                return true;
+            }
+            return false;
+        }
+
+        return true;
     }
 }

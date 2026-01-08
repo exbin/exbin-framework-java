@@ -16,10 +16,19 @@
 package org.exbin.framework.docking.multi;
 
 import java.awt.Component;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -42,11 +51,11 @@ import org.exbin.framework.context.api.ContextActivable;
 import org.exbin.framework.context.api.ContextModuleApi;
 import org.exbin.framework.docking.multi.api.DockingMultiModuleApi;
 import org.exbin.framework.document.api.DocumentSource;
-import org.exbin.framework.document.api.DocumentType;
 import org.exbin.framework.document.api.EditableDocument;
 import org.exbin.framework.document.api.LoadableDocument;
 import org.exbin.framework.document.api.MemoryDocumentSource;
 import org.exbin.framework.file.api.FileDocument;
+import org.exbin.framework.file.api.FileSourceIdentifier;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.utils.WindowClosingListener;
@@ -78,7 +87,7 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
                 if (index < 0) {
                     return;
                 }
-                
+
                 ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
                 ActiveContextManagement popupContextManager = contextModule.createChildContextManager(contextManager);
                 Document refDocument = openDocuments.get(index);
@@ -93,6 +102,25 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
                 menuModule.buildMenu(fileContextPopupMenu, DockingMultiModule.FILE_CONTEXT_MENU_ID, actionContextRegistrar);
                 fileContextPopupMenu.show(component, positionX, positionY);
                 // TODO dispose?
+            }
+        });
+        documentPanel.setDropTarget(new DropTarget() {
+            @Override
+            public synchronized void drop(DropTargetDropEvent event) {
+                try {
+                    event.acceptDrop(DnDConstants.ACTION_COPY);
+                    Object transferData = event.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                    List<?> droppedFiles = (List) transferData;
+                    DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+                    DocumentManagement documentManager = documentModule.getMainDocumentManager();
+                    for (Object droppedFile : droppedFiles) {
+                        File file = (File) droppedFile;
+                        Document document = documentManager.createDocumentForSource(new FileSourceIdentifier(file.toURI()));
+                        openDocument(document);
+                    }
+                } catch (UnsupportedFlavorException | IOException ex) {
+                    Logger.getLogger(DefaultMultiDocking.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -119,12 +147,6 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
         documentPanel.addDocument((ComponentDocument) document, getDocumentTitle(document));
         notifyActivated(contextManager);
         return document;
-    }
-
-    @Nonnull
-    @Override
-    public Document openNewDocument(DocumentType documentType) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -174,7 +196,20 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
 
     @Override
     public void saveAllDocuments() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (openDocuments.isEmpty()) {
+            return;
+        }
+
+        for (Document document : openDocuments) {
+            if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
+                Optional<DocumentSource> documentSource = ((EditableDocument) document).getDocumentSource();
+                if (documentSource.isPresent()) {
+                    ((EditableDocument) document).saveTo(documentSource.get());
+                }
+            }
+        }
+
+        releaseAllDocuments();
     }
 
     @Override

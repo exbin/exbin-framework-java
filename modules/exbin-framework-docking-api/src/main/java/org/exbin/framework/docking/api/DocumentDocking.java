@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.StateChangeType;
 import org.exbin.framework.document.api.Document;
-import org.exbin.framework.document.api.DocumentType;
 import org.exbin.framework.utils.ComponentProvider;
 
 /**
@@ -60,15 +59,6 @@ public interface DocumentDocking extends SidePanelDocking, ComponentProvider {
      */
     @Nonnull
     Document openNewDocument();
-
-    /**
-     * Opens new document of the given type.
-     *
-     * @param documentType document type
-     * @return newly opened document
-     */
-    @Nonnull
-    Document openNewDocument(DocumentType documentType);
 
     public enum ChangeType implements StateChangeType {
         DOCUMENT_LIST

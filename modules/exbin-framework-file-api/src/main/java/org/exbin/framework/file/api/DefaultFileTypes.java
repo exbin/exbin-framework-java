@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.file.api;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -29,6 +30,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class DefaultFileTypes implements FileTypes {
 
     private final Collection<FileType> fileTypes;
+
+    public DefaultFileTypes(FileType fileType) {
+        this.fileTypes = new ArrayList<>();
+        this.fileTypes.add(fileType);
+    }
 
     public DefaultFileTypes(Collection<FileType> fileTypes) {
         this.fileTypes = fileTypes;
