@@ -199,7 +199,8 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
 
     private static void finishMenu(JMenu menu, ActionContextRegistration actionContextRegistration) {
         int i = 0;
-        while (i < menu.getItemCount()) {
+        int itemCount = menu.getItemCount();
+        while (i < itemCount) {
             JMenuItem menuItem = menu.getItem(i);
             if (menuItem == null) {
                 i++;
@@ -212,7 +213,8 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
             if (menuItem instanceof JMenu) {
                 finishMenu((JMenu) menuItem, actionContextRegistration);
             }
-            if (i < menu.getItemCount() && menu.getItem(i) == menuItem) {
+            itemCount = menu.getItemCount();
+            if (i < itemCount && menu.getItem(i) == menuItem) {
                 // menuItem can be removed when finishing
                 i++;
             }
