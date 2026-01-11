@@ -244,15 +244,15 @@ public class WindowModule implements WindowModuleApi {
         if (applicationIcon.isPresent()) {
             ((JDialog) dialog.getWindow()).setIconImage(applicationIcon.get());
         }
-        if (controlPanel instanceof OkCancelControlComponent) {
-            Optional<JButton> defaultButton = ((OkCancelControlComponent) controlPanel).getDefaultButton();
-            if (defaultButton.isPresent()) {
-                JRootPane rootPane = SwingUtilities.getRootPane(dialog.getWindow());
-                if (rootPane != null) {
-                    rootPane.setDefaultButton(defaultButton.get());
-                }
+
+        Optional<JButton> defaultButton = ((OkCancelControlComponent) controlPanel).getDefaultButton();
+        if (defaultButton.isPresent()) {
+            JRootPane rootPane = SwingUtilities.getRootPane(dialog.getWindow());
+            if (rootPane != null) {
+                rootPane.setDefaultButton(defaultButton.get());
             }
         }
+
         return dialog;
     }
 
