@@ -54,43 +54,43 @@ public class TestFileModule implements FileModuleApi {
 
     @Override
     public void registerFileDialogsProvider(String providerId, FileDialogsProvider provider) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Nonnull
     @Override
     public String getFileDialogProviderId() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setFileDialogProviderId(String fileDialogProviderId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Nonnull
     @Override
     public FileDialogsProvider getFileDialogsProvider() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void registerFileProviders() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean showSaveModified(Component parentComponent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean showAskToOverwrite(Component parentComponent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void showUnableToSave(Component parentComponent, Exception ex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 }

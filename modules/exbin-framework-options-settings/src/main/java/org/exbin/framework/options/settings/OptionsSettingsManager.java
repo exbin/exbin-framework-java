@@ -16,14 +16,12 @@
 package org.exbin.framework.options.settings;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.context.api.ActiveContextManagement;
 import org.exbin.framework.contribution.ContributionDefinition;
 import org.exbin.framework.contribution.TreeContributionSequenceBuilder;
 import org.exbin.framework.contribution.api.GroupSequenceContribution;
@@ -90,7 +88,16 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
 
     @Override
     public boolean groupExists(String groupId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<SequenceContribution> contributions = definition.getContributions();
+        for (SequenceContribution contribution : contributions) {
+            if (contribution instanceof GroupSequenceContribution) {
+                if (((GroupSequenceContribution) contribution).getGroupId().equals(groupId)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -148,7 +155,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
         }
     }
 
-/*    @Override
+    /*    @Override
     public void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider provider) {
         Collection<Class<?>> stateClasses = contextManager.getStateClasses();
         for (Map.Entry<Class<?>, List<ApplySettingsContribution>> entry : applySettingsContributions.entrySet()) {
