@@ -81,13 +81,39 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cartPanel = new javax.swing.JPanel();
+        cartButton = new javax.swing.JButton();
         tabbedPane = new javax.swing.JTabbedPane();
 
         setLayout(new java.awt.BorderLayout());
+
+        cartButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/basket-free-material-svgrepo-com-32x32.png"))); // NOI18N
+        cartButton.setText(" 0");
+
+        javax.swing.GroupLayout cartPanelLayout = new javax.swing.GroupLayout(cartPanel);
+        cartPanel.setLayout(cartPanelLayout);
+        cartPanelLayout.setHorizontalGroup(
+            cartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cartPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cartButton)
+                .addContainerGap())
+        );
+        cartPanelLayout.setVerticalGroup(
+            cartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cartPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cartButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        add(cartPanel, java.awt.BorderLayout.PAGE_START);
         add(tabbedPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cartButton;
+    private javax.swing.JPanel cartPanel;
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
