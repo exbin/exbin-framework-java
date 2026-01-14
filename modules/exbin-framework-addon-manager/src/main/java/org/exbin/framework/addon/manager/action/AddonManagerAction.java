@@ -82,9 +82,9 @@ public class AddonManagerAction extends AbstractAction {
             @Override
             public void tabSwitched(AddonManagerTab managerTab) {
                 if (managerTab instanceof AddonsManagerTab) {
-                    controlPanel.setOperationState(AddonsControlPanel.OperationVariant.INSTALL, ((AddonsManagerTab) managerTab).getToInstallCount());
+                    controlPanel.setOperationCount(((AddonsManagerTab) managerTab).getToInstallCount());
                 } else if (managerTab instanceof InstalledManagerTab) {
-                    controlPanel.setOperationState(AddonsControlPanel.OperationVariant.UPDATE, ((InstalledManagerTab) managerTab).getToUpdateCount());
+                    controlPanel.setOperationCount(((InstalledManagerTab) managerTab).getToUpdateCount());
                 } else {
                     throw new IllegalStateException();
                 }

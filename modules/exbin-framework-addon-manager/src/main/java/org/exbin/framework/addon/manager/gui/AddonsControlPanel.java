@@ -45,8 +45,6 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
     private final java.util.ResourceBundle resourceBundle;
     private Controller controller;
-    private int availableUpdates = 0;
-    private int selectedForOperation = 0;
 
     public AddonsControlPanel() {
         this(App.getModule(LanguageModuleApi.class).getBundle(AddonsControlPanel.class));
@@ -56,7 +54,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         this.resourceBundle = resourceBundle;
         initComponents();
     }
-    
+
     public void addHelpButton(HelpLink helpLink) {
         HelpModuleApi helpModule = App.getModule(HelpModuleApi.class);
         JButton helpButton = helpModule.createHelpButton();
@@ -69,28 +67,28 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         javax.swing.GroupLayout buttonsPanelLayout = new javax.swing.GroupLayout(buttonsPanel);
         buttonsPanel.setLayout(buttonsPanelLayout);
         buttonsPanelLayout.setHorizontalGroup(
-            buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(helpButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(operationButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(closeButton)
-                .addContainerGap())
+                buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(buttonsPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(helpButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(operationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(closeButton)
+                                .addContainerGap())
         );
         buttonsPanelLayout.setVerticalGroup(
-            buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonsPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(helpButton)
-                    .addComponent(closeButton)
-                    .addComponent(operationButton)
-                    .addComponent(operationLabel))
-                .addContainerGap())
+                buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonsPanelLayout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(helpButton)
+                                        .addComponent(closeButton)
+                                        .addComponent(operationButton)
+                                        .addComponent(operationLabel))
+                                .addContainerGap())
         );
     }
 
@@ -122,50 +120,9 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         add(manualOnlyModePanel, BorderLayout.CENTER);
     }
 
-    public void setOperationState(OperationVariant variant, int selected) {
-        this.selectedForOperation = selected;
-        switch (variant) {
-            case INSTALL:
-                operationButton.setText(resourceBundle.getString("installButton.text"));
-                if (selected > 0) {
-                    operationLabel.setText(String.format(resourceBundle.getString("installLabel.text"), selected));
-                    operationButton.setEnabled(true);
-                } else {
-                    updateAllState();
-                }
-                break;
-            case UPDATE:
-                operationButton.setText(resourceBundle.getString("updateButton.text"));
-                if (selected > 0) {
-                    operationLabel.setText(String.format(resourceBundle.getString("updateLabel.text"), selected));
-                    operationButton.setEnabled(true);
-                } else {
-                    updateAllState();
-                }
-                break;
-            case REMOVE:
-                throw new UnsupportedOperationException("Not supported yet.");
-            default:
-                throw new AssertionError();
-        }
-    }
-
-    public void setAvailableUpdates(int availableUpdates) {
-        this.availableUpdates = availableUpdates;
-        updateAllState();
-    }
-
-    public void updateAllState() {
-        if (selectedForOperation == 0) {
-            operationButton.setText(resourceBundle.getString("updateAllButton.text"));
-            if (availableUpdates > 0) {
-                operationButton.setEnabled(availableUpdates > 0);
-                operationLabel.setText(String.format(resourceBundle.getString("updateAllLabel.text"), availableUpdates));
-            } else {
-                operationButton.setEnabled(false);
-                operationLabel.setText(null);
-            }
-        }
+    public void setOperationCount(int count) {
+        operationButton.setText(String.valueOf(count));
+        operationButton.setEnabled(count > 0);
     }
 
     public void setController(Controller controller) {
@@ -186,8 +143,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         manualOnlyModePanel = new javax.swing.JPanel();
         manualOnlyModeLabel = new javax.swing.JLabel();
         buttonsPanel = new javax.swing.JPanel();
-        operationButton = new javax.swing.JButton();
         operationLabel = new javax.swing.JLabel();
+        operationButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
 
         legacyModePanel.setBackground(new java.awt.Color(255, 153, 0));
@@ -238,7 +195,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
         setLayout(new java.awt.BorderLayout());
 
-        operationButton.setText(resourceBundle.getString("operationButton.text")); // NOI18N
+        operationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/basket-free-material-svgrepo-com-16x16.png")));
+        operationButton.setText("0");
         operationButton.setEnabled(false);
         operationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -259,21 +217,26 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
             buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(buttonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(operationButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(operationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(closeButton)
                 .addContainerGap())
         );
         buttonsPanelLayout.setVerticalGroup(
             buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonsPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(closeButton)
-                    .addComponent(operationButton)
-                    .addComponent(operationLabel))
+                .addContainerGap()
+                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(buttonsPanelLayout.createSequentialGroup()
+                        .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(23, 23, 23))
+                    .addGroup(buttonsPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(closeButton)
+                            .addComponent(operationButton))))
                 .addContainerGap())
         );
 
@@ -311,7 +274,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     @Nonnull
     @Override
     public Optional<JButton> getDefaultButton() {
-        return Optional.of(closeButton);
+        return Optional.of(operationButton);
     }
 
     @Override
@@ -332,11 +295,5 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     public interface Controller extends CloseControlController {
 
         void performOperation();
-    }
-
-    public enum OperationVariant {
-        INSTALL,
-        UPDATE,
-        REMOVE
     }
 }
