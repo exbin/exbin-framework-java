@@ -74,7 +74,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(operationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(closeButton)
                                 .addContainerGap())
@@ -86,7 +86,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                                 .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(helpButton)
                                         .addComponent(closeButton)
-                                        .addComponent(operationButton)
+                                        .addComponent(cartButton)
                                         .addComponent(operationLabel))
                                 .addContainerGap())
         );
@@ -121,8 +121,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     }
 
     public void setOperationCount(int count) {
-        operationButton.setText(String.valueOf(count));
-        operationButton.setEnabled(count > 0);
+        cartButton.setText(String.format(resourceBundle.getString("cartButton.text"), String.valueOf(count)));
+        cartButton.setEnabled(count > 0);
     }
 
     public void setController(Controller controller) {
@@ -144,7 +144,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         manualOnlyModeLabel = new javax.swing.JLabel();
         buttonsPanel = new javax.swing.JPanel();
         operationLabel = new javax.swing.JLabel();
-        operationButton = new javax.swing.JButton();
+        cartButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
 
         legacyModePanel.setBackground(new java.awt.Color(255, 153, 0));
@@ -195,12 +195,12 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
         setLayout(new java.awt.BorderLayout());
 
-        operationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/basket-free-material-svgrepo-com-16x16.png")));
-        operationButton.setText("0");
-        operationButton.setEnabled(false);
-        operationButton.addActionListener(new java.awt.event.ActionListener() {
+        cartButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/basket-free-material-svgrepo-com-16x16.png")));
+        cartButton.setText(resourceBundle.getString("cartButton.text")); // NOI18N
+        cartButton.setEnabled(false);
+        cartButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                operationButtonActionPerformed(evt);
+                cartButtonActionPerformed(evt);
             }
         });
 
@@ -219,7 +219,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                 .addContainerGap()
                 .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(operationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(closeButton)
                 .addContainerGap())
@@ -236,7 +236,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(closeButton)
-                            .addComponent(operationButton))))
+                            .addComponent(cartButton))))
                 .addContainerGap())
         );
 
@@ -249,20 +249,20 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         }
     }//GEN-LAST:event_closeButtonActionPerformed
 
-    private void operationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operationButtonActionPerformed
+    private void cartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cartButtonActionPerformed
         if (controller != null) {
             controller.performOperation();
         }
-    }//GEN-LAST:event_operationButtonActionPerformed
+    }//GEN-LAST:event_cartButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonsPanel;
+    private javax.swing.JButton cartButton;
     private javax.swing.JButton closeButton;
     private javax.swing.JLabel legacyModeLabel;
     private javax.swing.JPanel legacyModePanel;
     private javax.swing.JLabel manualOnlyModeLabel;
     private javax.swing.JPanel manualOnlyModePanel;
-    private javax.swing.JButton operationButton;
     private javax.swing.JLabel operationLabel;
     // End of variables declaration//GEN-END:variables
 
@@ -274,7 +274,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     @Nonnull
     @Override
     public Optional<JButton> getDefaultButton() {
-        return Optional.of(operationButton);
+        return Optional.of(cartButton);
     }
 
     @Override
