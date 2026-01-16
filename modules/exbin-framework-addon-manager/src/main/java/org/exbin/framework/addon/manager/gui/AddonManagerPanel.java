@@ -39,6 +39,10 @@ public class AddonManagerPanel extends javax.swing.JPanel {
 
     public AddonManagerPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
         tabbedPane.addChangeListener((ChangeEvent e) -> {
             if (controller == null) {
                 return;
