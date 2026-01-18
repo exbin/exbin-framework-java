@@ -16,6 +16,7 @@
 package org.exbin.framework.text.encoding.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,6 +72,7 @@ public class EncodingsListModel extends AbstractListModel<String> {
             return;
         }
 
+        Arrays.sort(indices);
         for (int i = indices.length - 1; i >= 0; i--) {
             charsets.remove(indices[i]);
             fireIntervalRemoved(this, indices[i], indices[i]);

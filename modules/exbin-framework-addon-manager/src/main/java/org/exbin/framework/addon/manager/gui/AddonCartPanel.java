@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -51,7 +52,9 @@ public class AddonCartPanel extends javax.swing.JPanel {
 
         scrollPane = new javax.swing.JScrollPane();
         itemsList = new javax.swing.JList<>();
-        performButton = new javax.swing.JButton();
+        controlPanel = new javax.swing.JPanel();
+        selectAllButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
 
         itemsList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -60,35 +63,91 @@ public class AddonCartPanel extends javax.swing.JPanel {
         });
         scrollPane.setViewportView(itemsList);
 
-        performButton.setText("jButton1");
+        selectAllButton.setText(resourceBundle.getString("selectAllButton.text")); // NOI18N
+        selectAllButton.setEnabled(false);
+        selectAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectAllButtonActionPerformed(evt);
+            }
+        });
+
+        removeButton.setText(resourceBundle.getString("removeButton.text")); // NOI18N
+        removeButton.setEnabled(false);
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
+        controlPanel.setLayout(controlPanelLayout);
+        controlPanelLayout.setHorizontalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(selectAllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        controlPanelLayout.setVerticalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(selectAllButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(removeButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(performButton))
-                    .addComponent(scrollPane))
-                .addContainerGap())
+                .addComponent(scrollPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(scrollPane)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(performButton)
                 .addContainerGap())
+            .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void selectAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllButtonActionPerformed
+        if (itemsList.getSelectedIndices().length < itemsList.getModel().getSize()) {
+            itemsList.setSelectionInterval(0, itemsList.getModel().getSize() - 1);
+        } else {
+            itemsList.clearSelection();
+        }
+    }//GEN-LAST:event_selectAllButtonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        removeIndices(itemsList.getSelectedIndices());
+        itemsList.clearSelection();
+    }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void removeIndices(int[] indices) {
+        if (indices.length == 0) {
+            return;
+        }
+
+        Arrays.sort(indices);
+        for (int i = indices.length - 1; i >= 0; i--) {
+            itemsList.remove(indices[i]);
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel controlPanel;
     private javax.swing.JList<String> itemsList;
-    private javax.swing.JButton performButton;
+    private javax.swing.JButton removeButton;
     private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JButton selectAllButton;
     // End of variables declaration//GEN-END:variables
 
 }
