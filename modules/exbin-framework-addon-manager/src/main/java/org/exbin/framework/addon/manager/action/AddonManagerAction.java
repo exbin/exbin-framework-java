@@ -105,7 +105,7 @@ public class AddonManagerAction extends AbstractAction {
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         controlPanel.setController(new AddonsControlPanel.Controller() {
             @Override
-            public void performOperation() {
+            public void performOpenCart() {
                 AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
                 if (managerTab instanceof AddonsManagerTab) {
                     ((AddonsManagerTab) managerTab).installAddons();

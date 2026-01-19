@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.addon.manager.gui;
+package org.exbin.framework.addon.manager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.addon.manager.model.ItemRecord;
 
 /**
  * Cart operation record.
@@ -27,13 +28,20 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class CartOperation {
 
     protected final CartOperationVariant variant;
+    protected final ItemRecord item;
 
-    public CartOperation(CartOperationVariant variant) {
+    public CartOperation(CartOperationVariant variant, ItemRecord item) {
         this.variant = variant;
+        this.item = item;
     }
 
     @Nonnull
     public CartOperationVariant getVariant() {
         return variant;
+    }
+
+    @Nonnull
+    public ItemRecord getItem() {
+        return item;
     }
 }

@@ -122,7 +122,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
     public void setOperationCount(int count) {
         cartButton.setText(String.format(resourceBundle.getString("cartButton.text"), String.valueOf(count)));
-        cartButton.setEnabled(count > 0);
+        // cartButton.setEnabled(count > 0);
+        cartButton.setEnabled(true);
     }
 
     public void setController(Controller controller) {
@@ -244,15 +245,11 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        if (controller != null) {
-            controller.controlActionPerformed();
-        }
+        controller.controlActionPerformed();
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void cartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cartButtonActionPerformed
-        if (controller != null) {
-            controller.performOperation();
-        }
+        controller.performOpenCart();
     }//GEN-LAST:event_cartButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -294,6 +291,6 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
     public interface Controller extends CloseControlController {
 
-        void performOperation();
+        void performOpenCart();
     }
 }

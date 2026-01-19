@@ -15,15 +15,19 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultListModel;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.CartOperation;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
- * Panel for list operation.
+ * Panel for addons cart operations panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -34,11 +38,35 @@ public class AddonCartPanel extends javax.swing.JPanel {
 
     public AddonCartPanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        itemsList.setModel(new DefaultListModel<>());
+        itemsList.setCellRenderer(new CartOperationRenderer());
     }
 
     @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void setCartItems(List<CartOperation> cartOperations) {
+        DefaultListModel<CartOperation> model = (DefaultListModel<CartOperation>) itemsList.getModel();
+        model.removeAllElements();
+        for (CartOperation cartOperation : cartOperations) {
+            model.addElement(cartOperation);
+        }
+    }
+
+    @Nonnull
+    public List<CartOperation> getCartItems() {
+        List<CartOperation> items = new ArrayList<>();
+        DefaultListModel<CartOperation> model = (DefaultListModel<CartOperation>) itemsList.getModel();
+        for (int i = 0; i < model.getSize(); i++) {
+            items.add(model.getElementAt(i));
+        }
+        return items;
     }
 
     /**
@@ -56,11 +84,6 @@ public class AddonCartPanel extends javax.swing.JPanel {
         selectAllButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
 
-        itemsList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         scrollPane.setViewportView(itemsList);
 
         selectAllButton.setText(resourceBundle.getString("selectAllButton.text")); // NOI18N
@@ -144,7 +167,7 @@ public class AddonCartPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel controlPanel;
-    private javax.swing.JList<String> itemsList;
+    private javax.swing.JList<CartOperation> itemsList;
     private javax.swing.JButton removeButton;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JButton selectAllButton;
