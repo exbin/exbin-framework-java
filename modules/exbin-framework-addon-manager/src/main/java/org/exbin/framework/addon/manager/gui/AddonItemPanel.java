@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**

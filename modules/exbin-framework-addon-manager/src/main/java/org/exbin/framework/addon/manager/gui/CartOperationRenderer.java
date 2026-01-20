@@ -17,7 +17,6 @@ package org.exbin.framework.addon.manager.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import org.exbin.framework.addon.manager.*;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -25,6 +24,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import org.exbin.framework.addon.manager.CartOperation;
 import sun.swing.DefaultLookup;
 
 /**

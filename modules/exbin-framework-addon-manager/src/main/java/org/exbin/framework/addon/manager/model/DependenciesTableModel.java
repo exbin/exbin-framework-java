@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager.model;
 
+import org.exbin.framework.addon.manager.api.DependencyRecord;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nullable;

@@ -22,9 +22,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.addon.manager.model.UpdateRecord;
-import org.exbin.framework.addon.manager.service.AddonCatalogService;
-import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
+import org.exbin.framework.addon.manager.api.UpdateRecord;
+import org.exbin.framework.addon.manager.api.AddonCatalogService;
+import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.operation.api.CancellableOperation;
 
 /**

@@ -39,22 +39,6 @@ public interface AddonManagerModuleApi extends Module {
     @Nonnull
     Action createAddonManagerAction();
 
-    @Nonnull
-    String getAddonServiceUrl();
-
-    @Nonnull
-    String getManualLegacyUrl();
-
-    @Nonnull
-    String getAddonServiceCoreUrl();
-
-    void setAddonServiceCoreUrl(String addonServiceCoreUrl);
-
-    @Nonnull
-    String getManualLegacyGitHubUrl();
-
-    void setManualLegacyGitHubUrl(String manualLegacyGitHubUrl);
-
     /**
      * Registers addon manager menu item.
      */

@@ -28,10 +28,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
 import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.addon.manager.gui.AddonsPanel;
-import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
-import org.exbin.framework.addon.manager.model.ItemRecord;
-import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
+import org.exbin.framework.addon.manager.api.ItemRecord;
+import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 
 /**
  * Addons manager tab.

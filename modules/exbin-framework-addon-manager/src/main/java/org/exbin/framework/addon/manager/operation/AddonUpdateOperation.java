@@ -35,16 +35,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
-import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
-import org.exbin.framework.addon.manager.model.DependencyRecord;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.api.DependencyRecord;
+import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.addon.manager.settings.AddonManagerOptions;
-import org.exbin.framework.addon.manager.service.AddonCatalogService;
-import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
+import org.exbin.framework.addon.manager.api.AddonCatalogService;
+import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
@@ -57,17 +56,18 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonUpdateOperation {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonUpdateOperation.class);
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonUpdateOperation.class);
 
-    private static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
-    private final AddonCatalogService addonCatalogService;
-    private final AddonUpdateChanges addonUpdateChanges;
-    private final ApplicationModulesUsage applicationModulesUsage;
-    private final List<LicenseItemRecord> licenseRecords = new ArrayList<>();
-    private final Set<String> licenseCodes = new HashSet<>();
-    private final Set<String> availableUpdates = new HashSet<>();
+    protected static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
+    protected final String primaryLicense = "Apache-2.0";
+    protected final AddonCatalogService addonCatalogService;
+    protected final AddonUpdateChanges addonUpdateChanges;
+    protected final ApplicationModulesUsage applicationModulesUsage;
+    protected final List<LicenseItemRecord> licenseRecords = new ArrayList<>();
+    protected final Set<String> licenseCodes = new HashSet<>();
+    protected final Set<String> availableUpdates = new HashSet<>();
 
-    private final UpdateOperations updateOperations = new UpdateOperations();
+    protected final UpdateOperations updateOperations = new UpdateOperations();
 
     public AddonUpdateOperation(AddonCatalogService addonCatalogService, ApplicationModulesUsage applicationModulesUsage, AddonUpdateChanges addonUpdateChanges) {
         this.addonCatalogService = addonCatalogService;
@@ -112,12 +112,10 @@ public class AddonUpdateOperation {
 
     @Nonnull
     public List<LicenseItemRecord> getLicenseRecords() {
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String licenseDownloadPrefix = addonManagerModule.getAddonServiceUrl() + "license/";
         for (LicenseItemRecord record : licenseRecords) {
             try {
-                record.setUrl(new URI(licenseDownloadPrefix + record.getRemoteFile()).toURL());
-            } catch (MalformedURLException | URISyntaxException ex) {
+                record.setUrl(addonCatalogService.getLicenseDownloadUrl(record.getRemoteFile()));
+            } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -127,16 +125,14 @@ public class AddonUpdateOperation {
 
     @Nonnull
     public List<DownloadItemRecord> getDownloadRecords() {
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String libraryDownloadPrefix = addonManagerModule.getAddonServiceUrl() + "download/?f=";
         List<DownloadItemRecord> downloadRecords = new ArrayList<>();
         String downloadItemDescription = resourceBundle.getString("downloadItemDescription.module");
         for (String moduleFile : updateOperations.downloadModule) {
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, moduleFile), moduleFile);
             try {
-                record.setUrl(new URI(libraryDownloadPrefix + moduleFile).toURL());
+                record.setUrl(addonCatalogService.getFileDownloadUrl(moduleFile));
                 downloadRecords.add(record);
-            } catch (MalformedURLException | URISyntaxException ex) {
+            } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -144,9 +140,9 @@ public class AddonUpdateOperation {
         for (String library : updateOperations.downloadLibraries) {
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), library);
             try {
-                record.setUrl(new URI(libraryDownloadPrefix + library).toURL());
+                record.setUrl(addonCatalogService.getFileDownloadUrl(library));
                 downloadRecords.add(record);
-            } catch (MalformedURLException | URISyntaxException ex) {
+            } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -333,7 +329,7 @@ public class AddonUpdateOperation {
 
     public void processAddonLicense(AddonRecord addonRecord) {
         String remoteFile = addonRecord.getLicenseRemoteFile();
-        if ("Apache-2.0".equals(addonRecord.getLicenseSpdx().orElse(null)) || remoteFile.isEmpty()) {
+        if (primaryLicense.equals(addonRecord.getLicenseSpdx().orElse(null)) || remoteFile.isEmpty()) {
             return;
         }
         if (!licenseCodes.contains(remoteFile)) {

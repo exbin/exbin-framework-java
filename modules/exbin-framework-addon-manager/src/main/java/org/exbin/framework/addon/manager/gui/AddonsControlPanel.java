@@ -98,7 +98,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
     public void showManualOnlyWarning() {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String link = addonManagerModule.getManualLegacyUrl();
+        String link = ""; // TODO addonManagerModule.getManualLegacyUrl();
         manualOnlyModeLabel.setText(String.format(resourceBundle.getString("manualOnlyModeLabel.text"), link));
         manualOnlyModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

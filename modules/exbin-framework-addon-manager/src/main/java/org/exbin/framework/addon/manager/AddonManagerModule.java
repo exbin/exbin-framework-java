@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.addon.manager;
 
-import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -26,8 +25,6 @@ import org.exbin.framework.addon.manager.settings.AddonManagerOptions;
 import org.exbin.framework.addon.manager.settings.AddonManagerSettingsComponent;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
-import org.exbin.framework.ApplicationBundleKeys;
-import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
@@ -47,8 +44,6 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     public static final String SETTINGS_PAGE_ID = "addonManager";
 
     private static boolean devMode = false;
-    private String addonServiceCoreUrl = "https://www.exbin.org/";
-    private String manualLegacyGitHubUrl = "https://github.com/exbin/bined/releases/tag/";
     private AddonManager addonManager = null;
 
     public AddonManagerModule() {
@@ -58,41 +53,6 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     @Override
     public Action createAddonManagerAction() {
         return new AddonManagerAction();
-    }
-
-    @Nonnull
-    @Override
-    public String getAddonServiceUrl() {
-        return addonServiceCoreUrl + (devMode ? "addon-dev/" : "addon/");
-    }
-
-    @Nonnull
-    @Override
-    public String getAddonServiceCoreUrl() {
-        return addonServiceCoreUrl;
-    }
-
-    @Override
-    public void setAddonServiceCoreUrl(String addonServiceCoreUrl) {
-        this.addonServiceCoreUrl = addonServiceCoreUrl;
-    }
-
-    @Nonnull
-    @Override
-    public String getManualLegacyUrl() {
-        ResourceBundle appBundle = App.getAppBundle();
-        return manualLegacyGitHubUrl + appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-    }
-
-    @Nonnull
-    @Override
-    public String getManualLegacyGitHubUrl() {
-        return manualLegacyGitHubUrl;
-    }
-
-    @Override
-    public void setManualLegacyGitHubUrl(String manualLegacyGitHubUrl) {
-        this.manualLegacyGitHubUrl = manualLegacyGitHubUrl;
     }
 
     @Override

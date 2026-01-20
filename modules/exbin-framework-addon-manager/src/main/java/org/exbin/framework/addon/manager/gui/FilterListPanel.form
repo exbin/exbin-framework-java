@@ -67,7 +67,7 @@
             <Property name="selectionMode" type="int" value="0"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;org.exbin.framework.addon.manager.model.ItemRecord&gt;"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;org.exbin.framework.addon.manager.api.ItemRecord&gt;"/>
           </AuxValues>
         </Component>
       </SubComponents>

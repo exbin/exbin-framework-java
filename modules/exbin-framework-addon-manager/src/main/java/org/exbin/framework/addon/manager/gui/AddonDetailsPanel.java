@@ -30,11 +30,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.html.HTMLDocument;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.AddonManagerModule;
 import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
-import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependenciesTableModel;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.DesktopUtils;
 
@@ -67,8 +68,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             }
         });
         try {
-            AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-            String addonServiceUrl = addonManagerModule.getAddonServiceUrl();
+            AddonManagerModule addonManagerModule = (AddonManagerModule) App.getModule(AddonManagerModuleApi.class);
+            String addonServiceUrl = ""; // TODO addonManagerModule.getAddonServiceUrl();
             HTMLDocument htmlDocument = new HTMLDocument();
             htmlDocument.setBase(new URI(addonServiceUrl).toURL());
             overviewTextPane.setDocument(htmlDocument);

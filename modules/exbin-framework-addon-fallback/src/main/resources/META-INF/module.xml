@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<module>
+  <id>org.exbin.framework.addon.fallback.AddonFallbackModule</id>
+  <name>Addon fallback service</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Fallback service support to provide addons</description>
+  <dependency>
+    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+    <module id="org.exbin.framework.window.api.WindowModuleApi" />
+    <module id="org.exbin.framework.options.api.OptionsModuleApi" />
+    <module id="org.exbin.framework.options.settings.api.OptionsSettingsModuleApi" />
+    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+    <module id="org.exbin.framework.utils.UtilsModule" />
+  </dependency>
+</module>

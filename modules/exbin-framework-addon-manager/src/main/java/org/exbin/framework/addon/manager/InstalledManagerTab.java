@@ -25,7 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.addon.manager.gui.AddonsPanel;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.api.ItemRecord;
 
 /**
  * Installed manager tab.

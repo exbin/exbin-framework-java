@@ -27,7 +27,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.FilterListModel;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
@@ -173,7 +173,7 @@ public class FilterListPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
     private javax.swing.JTextField filterTextField;
-    private javax.swing.JList<org.exbin.framework.addon.manager.model.ItemRecord> itemsList;
+    private javax.swing.JList<org.exbin.framework.addon.manager.api.ItemRecord> itemsList;
     private javax.swing.JScrollPane itemsListScrollPane;
     // End of variables declaration//GEN-END:variables
 

@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager.model;
 
+import org.exbin.framework.addon.manager.api.ItemRecord;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractListModel;

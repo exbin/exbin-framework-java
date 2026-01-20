@@ -17,7 +17,7 @@ package org.exbin.framework.addon.manager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.api.ItemRecord;
 
 /**
  * Cart operation record.

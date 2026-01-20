@@ -31,10 +31,10 @@ import org.exbin.framework.ModuleProvider;
 import org.exbin.framework.addon.AddonModuleFileLocation;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
-import org.exbin.framework.addon.manager.model.AddonRecord;
+import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
-import org.exbin.framework.addon.manager.model.DependencyRecord;
-import org.exbin.framework.addon.manager.model.ItemRecord;
+import org.exbin.framework.addon.manager.api.DependencyRecord;
+import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.addon.manager.operation.AddonUpdateOperation;
 import org.exbin.framework.addon.manager.operation.ApplicationModulesUsage;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
@@ -47,9 +47,8 @@ import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
-import org.exbin.framework.addon.manager.service.AddonCatalogService;
-import org.exbin.framework.addon.manager.service.AddonCatalogServiceException;
-import org.exbin.framework.addon.manager.service.impl.AddonCatalogServiceImpl;
+import org.exbin.framework.addon.manager.api.AddonCatalogService;
+import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.ApplicationBundleKeys;
@@ -75,7 +74,6 @@ public class AddonManager {
     private int serviceStatus = -1;
 
     public AddonManager() {
-        addonCatalogService = new AddonCatalogServiceImpl();
     }
 
     public void init() {
@@ -162,6 +160,10 @@ public class AddonManager {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
+        this.addonCatalogService = addonCatalogService;
     }
 
     public boolean isAlreadyInstalled(String moduleId) {
@@ -390,7 +392,7 @@ public class AddonManager {
                 operationPanel.goToStep(step);
                 AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent().get();
                 panel.setDownloadedItemRecords(downloadRecords);
-                downloadOperation = addonCatalogService.createDownloadsOperation(downloadRecords);
+                downloadOperation = new DownloadOperation(downloadRecords);
                 downloadOperation.setItemChangeListener(new DownloadOperation.ItemChangeListener() {
                     @Override
                     public void itemChanged(int itemIndex) {

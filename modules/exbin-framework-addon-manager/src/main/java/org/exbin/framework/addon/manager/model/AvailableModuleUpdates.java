@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager.model;
 
+import org.exbin.framework.addon.manager.api.ItemRecord;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
