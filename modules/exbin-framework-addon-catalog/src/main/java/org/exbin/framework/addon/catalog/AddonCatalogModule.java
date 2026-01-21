@@ -19,8 +19,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.Module;
+import org.exbin.framework.ModuleUtils;
+import org.exbin.framework.addon.catalog.service.impl.AddonCatalogServiceImpl;
 import org.exbin.framework.addon.catalog.settings.AddonCatalogOptions;
 import org.exbin.framework.addon.catalog.settings.AddonCatalogSettingsComponent;
+import org.exbin.framework.addon.manager.api.AddonCatalogService;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
@@ -35,26 +38,27 @@ import org.exbin.framework.options.settings.api.SettingsPageContributionRule;
 @ParametersAreNonnullByDefault
 public class AddonCatalogModule implements Module {
 
+    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(AddonCatalogModule.class);
     public static final String SETTINGS_PAGE_ID = "addonCatalog";
 
     private static boolean devMode = false;
-    private String addonServiceCoreUrl = "https://www.exbin.org/";
+    private String catalogPageUrl = "https://www.exbin.org/";
 
     public AddonCatalogModule() {
     }
 
     @Nonnull
     public String getAddonServiceUrl() {
-        return addonServiceCoreUrl + (devMode ? "addon-dev/" : "addon/");
+        return catalogPageUrl + (devMode ? "addon-dev/" : "addon/");
     }
 
     @Nonnull
-    public String getAddonServiceCoreUrl() {
-        return addonServiceCoreUrl;
+    public String getCatalogPageUrl() {
+        return catalogPageUrl;
     }
 
-    public void setAddonServiceCoreUrl(String addonServiceCoreUrl) {
-        this.addonServiceCoreUrl = addonServiceCoreUrl;
+    public void setCatalogPageUrl(String catalogPageUrl) {
+        this.catalogPageUrl = catalogPageUrl;
     }
 
     public boolean isDevMode() {
@@ -63,6 +67,11 @@ public class AddonCatalogModule implements Module {
 
     public void setDevMode(boolean devMode) {
         AddonCatalogModule.devMode = devMode;
+    }
+    
+    @Nonnull
+    public AddonCatalogService createCatalogService() {
+        return new AddonCatalogServiceImpl();
     }
 
     public void registerSettings() {

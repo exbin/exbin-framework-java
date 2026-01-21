@@ -56,12 +56,14 @@ import org.xml.sax.SAXException;
 public class AddonCatalogServiceImpl implements AddonCatalogService {
 
     private String addonServiceUrl;
+    private String catalogPageUrl = "";
     private final Map<AddonRecord, String> iconPaths = new HashMap<>();
     private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
     public AddonCatalogServiceImpl() {
         AddonCatalogModule addonCatalogModule = App.getModule(AddonCatalogModule.class);
         this.addonServiceUrl = addonCatalogModule.getAddonServiceUrl();
+        this.catalogPageUrl = addonCatalogModule.getCatalogPageUrl();
     }
 
     public AddonCatalogServiceImpl(String addonServiceUrl) {
@@ -319,6 +321,12 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
         } catch (MalformedURLException | URISyntaxException ex) {
             throw new AddonCatalogServiceException("Invalid response for download license URL request: " + remoteFilePath, ex);
         }
+    }
+
+    @Nonnull
+    @Override
+    public String getCatalogPageUrl() {
+        return catalogPageUrl;
     }
 
     public void addIconChangeListener(IconChangeListener listener) {

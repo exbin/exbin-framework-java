@@ -108,6 +108,13 @@ public interface AddonCatalogService {
     @Nonnull
     URL getLicenseDownloadUrl(String remoteFilePath) throws AddonCatalogServiceException;
 
+    /**
+     * Returns link to catalog main page URL.
+     *
+     * @return link URL
+     */
+    String getCatalogPageUrl();
+
 //    @Nonnull
 //    CancellableOperation createIconsDownloadOperation(List<AddonRecord> records);
 }

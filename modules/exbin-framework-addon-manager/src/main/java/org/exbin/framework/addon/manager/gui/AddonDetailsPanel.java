@@ -30,6 +30,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.html.HTMLDocument;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.AddonManagerModule;
 import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
@@ -69,7 +70,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         });
         try {
             AddonManagerModule addonManagerModule = (AddonManagerModule) App.getModule(AddonManagerModuleApi.class);
-            String addonServiceUrl = ""; // TODO addonManagerModule.getAddonServiceUrl();
+            AddonManager addonManager = addonManagerModule.getAddonManager();
+            String addonServiceUrl = addonManager.getServiceUrl();
             HTMLDocument htmlDocument = new HTMLDocument();
             htmlDocument.setBase(new URI(addonServiceUrl).toURL());
             overviewTextPane.setDocument(htmlDocument);

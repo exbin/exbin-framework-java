@@ -424,6 +424,11 @@ public class AddonManager {
 
     }
 
+    @Nonnull
+    public String getServiceUrl() {
+        return addonCatalogService.getCatalogPageUrl();
+    }
+
     private class CatalogThread extends Thread {
 
         public CatalogThread() {
