@@ -176,6 +176,11 @@ public class InstalledManagerTab implements AddonManagerTab {
         return installedPanel;
     }
 
+    @Override
+    public void notifyChanged() {
+        notifyItemsChanged();
+    }
+
     private void notifyItemsChanged() {
         for (ItemChangedListener itemChangedListener : itemChangedListeners) {
             itemChangedListener.itemChanged();

@@ -35,6 +35,7 @@ public class AddonOperationPanel extends javax.swing.JPanel {
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationPanel.class);
     private Controller controller;
 
+    private final AddonOperationCartPanel cartPanel = new AddonOperationCartPanel();
     private final AddonOperationOverviewPanel overviewPanel = new AddonOperationOverviewPanel();
     private final AddonOperationLicensePanel licensePanel = new AddonOperationLicensePanel();
     private final AddonOperationDownloadPanel downloadPanel = new AddonOperationDownloadPanel();
@@ -48,7 +49,7 @@ public class AddonOperationPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        goToStep(Step.OVERVIEW);
+        goToStep(Step.CART);
     }
 
     @Nonnull
@@ -66,6 +67,9 @@ public class AddonOperationPanel extends javax.swing.JPanel {
         }
         
         switch (step) {
+            case CART:
+                activePanel = cartPanel;
+                break;
             case OVERVIEW:
                 activePanel = overviewPanel;
                 break;
@@ -111,6 +115,7 @@ public class AddonOperationPanel extends javax.swing.JPanel {
     }
     
     public enum Step {
+        CART,
         OVERVIEW,
         LICENSE,
         DOWNLOAD,

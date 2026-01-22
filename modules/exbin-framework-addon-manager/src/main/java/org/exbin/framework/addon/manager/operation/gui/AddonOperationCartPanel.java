@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.addon.manager.gui;
+package org.exbin.framework.addon.manager.operation.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.CartOperation;
+import org.exbin.framework.addon.manager.gui.CartOperationRenderer;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
@@ -32,11 +33,11 @@ import org.exbin.framework.language.api.LanguageModuleApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonCartPanel extends javax.swing.JPanel {
+public class AddonOperationCartPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonCartPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationCartPanel.class);
 
-    public AddonCartPanel() {
+    public AddonOperationCartPanel() {
         initComponents();
         init();
     }

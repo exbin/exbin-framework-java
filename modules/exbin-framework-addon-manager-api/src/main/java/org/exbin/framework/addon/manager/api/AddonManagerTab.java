@@ -40,4 +40,9 @@ public interface AddonManagerTab {
      */
     @Nonnull
     Component getComponent();
+
+    /**
+     * Notifies content changed.
+     */
+    void notifyChanged();
 }

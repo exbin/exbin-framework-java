@@ -22,10 +22,10 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import org.exbin.framework.addon.manager.CartOperation;
-import sun.swing.DefaultLookup;
 
 /**
  * Cart operation list cell renderer.
@@ -49,8 +49,8 @@ public class CartOperationRenderer extends JLabel implements ListCellRenderer<Ca
                 && !dropLocation.isInsert()
                 && dropLocation.getIndex() == index) {
 
-            bg = DefaultLookup.getColor(this, ui, "List.dropCellBackground");
-            fg = DefaultLookup.getColor(this, ui, "List.dropCellForeground");
+            bg = UIManager.getColor("List.dropCellBackground");
+            fg = UIManager.getColor("List.dropCellForeground");
 
             isSelected = true;
         }
@@ -77,10 +77,10 @@ public class CartOperationRenderer extends JLabel implements ListCellRenderer<Ca
         Border border = null;
         if (cellHasFocus) {
             if (isSelected) {
-                border = DefaultLookup.getBorder(this, ui, "List.focusSelectedCellHighlightBorder");
+                border = UIManager.getBorder("List.focusSelectedCellHighlightBorder");
             }
             if (border == null) {
-                border = DefaultLookup.getBorder(this, ui, "List.focusCellHighlightBorder");
+                border = UIManager.getBorder("List.focusCellHighlightBorder");
             }
         } else {
             border = getNoFocusBorder();
@@ -91,7 +91,7 @@ public class CartOperationRenderer extends JLabel implements ListCellRenderer<Ca
     }
 
     private Border getNoFocusBorder() {
-        Border border = DefaultLookup.getBorder(this, ui, "List.cellNoFocusBorder");
+        Border border = UIManager.getBorder("List.cellNoFocusBorder");
         if (System.getSecurityManager() != null) {
             if (border != null) {
                 return border;

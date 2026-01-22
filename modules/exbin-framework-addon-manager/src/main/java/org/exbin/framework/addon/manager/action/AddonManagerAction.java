@@ -30,7 +30,6 @@ import org.exbin.framework.addon.manager.AddonsManagerTab;
 import org.exbin.framework.addon.manager.InstalledManagerTab;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerTab;
-import org.exbin.framework.addon.manager.gui.AddonCartPanel;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
@@ -38,9 +37,6 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.context.api.ContextChangeRegistration;
 import org.exbin.framework.help.api.HelpLink;
-import org.exbin.framework.utils.OkCancelControlComponent;
-import org.exbin.framework.window.api.controller.DefaultControlController;
-import org.exbin.framework.window.api.gui.DefaultControlPanel;
 
 /**
  * Addon manager action.
@@ -110,27 +106,18 @@ public class AddonManagerAction extends AbstractAction {
         controlPanel.setController(new AddonsControlPanel.Controller() {
             @Override
             public void performOpenCart() {
-                final AddonCartPanel cartPanel = new AddonCartPanel();
-                DefaultControlPanel cartControlPanel = new DefaultControlPanel();
-                final WindowHandler cartDialog = windowModule.createDialog(cartPanel, cartControlPanel);
-                cartControlPanel.setController(new DefaultControlController() {
-                    @Override
-                    public void controlActionPerformed(DefaultControlController.ControlActionType actionType) {
-                        cartDialog.close();
-                    }
-                });
-                windowModule.addHeaderPanel(cartDialog.getWindow(), cartPanel.getClass(), cartPanel.getResourceBundle());
-                cartDialog.showCentered(dialogParentComponent.getComponent());
-                cartDialog.dispose();
+                addonManager.performAddonsOperation(addonManagerPanel);
 
                 AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
-                if (managerTab instanceof AddonsManagerTab) {
-                    ((AddonsManagerTab) managerTab).installAddons();
-                } else if (managerTab instanceof InstalledManagerTab) {
-                    ((InstalledManagerTab) managerTab).updateAddons();
-                } else {
-                    throw new IllegalStateException();
-                }
+                managerTab.notifyChanged();
+
+//                if (managerTab instanceof AddonsManagerTab) {
+//                    ((AddonsManagerTab) managerTab).installAddons();
+//                } else if (managerTab instanceof InstalledManagerTab) {
+//                    ((InstalledManagerTab) managerTab).updateAddons();
+//                } else {
+//                    throw new IllegalStateException();
+//                }
             }
 
             @Override

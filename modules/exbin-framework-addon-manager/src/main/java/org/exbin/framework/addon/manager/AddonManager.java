@@ -42,7 +42,6 @@ import org.exbin.framework.addon.manager.operation.DownloadOperation;
 import org.exbin.framework.addon.manager.operation.UpdateAvailabilityOperation;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationDownloadPanel;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePanel;
-import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
 import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -255,7 +254,7 @@ public class AddonManager {
         }
         performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
     }
-
+    
     @Nonnull
     public List<ItemRecord> getInstalledAddons() {
         return installedAddons;
@@ -299,15 +298,20 @@ public class AddonManager {
         return searchResult;
     }
 
+    public void performAddonsOperation(Component parentComponent) {
+        AddonUpdateOperation operation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
+        performAddonsOperation(operation, parentComponent, null);
+    }
+
     public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, Component parentComponent, @Nullable Runnable finishListener) {
         MultiStepControlPanel controlPanel = new MultiStepControlPanel();
         AddonOperationPanel operationPanel = new AddonOperationPanel();
         operationPanel.setPreferredSize(new Dimension(600, 300));
-        operationPanel.goToStep(AddonOperationPanel.Step.OVERVIEW);
-        AddonOperationOverviewPanel panel = (AddonOperationOverviewPanel) operationPanel.getActiveComponent().get();
+        // TODO
+/*        AddonOperationOverviewPanel panel = (AddonOperationOverviewPanel) operationPanel.getActiveComponent().get();
         for (String operation : addonUpdateOperation.getOperations()) {
             panel.addOperation(operation);
-        }
+        } */
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         final WindowHandler dialog = windowModule.createDialog(operationPanel, controlPanel);
@@ -329,6 +333,8 @@ public class AddonManager {
                         break;
                     case NEXT:
                         switch (step) {
+                            case CART:
+                                break;
                             case OVERVIEW:
                                 List<LicenseItemRecord> licenseRecords = addonUpdateOperation.getLicenseRecords();
                                 if (!licenseRecords.isEmpty()) {
