@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleProvider;
@@ -173,13 +172,13 @@ public class AddonManager {
         return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
     }
 
-    public void installItem(ItemRecord item, Component parentComponent, @Nullable Runnable finishListener) {
+    public void installItem(ItemRecord item, Component parentComponent) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         addonUpdateOperation.installItem(item);
-        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
+        performAddonsOperation(addonUpdateOperation, parentComponent);
     }
 
-    public void updateItem(ItemRecord item, Component parentComponent, @Nullable Runnable finishListener) {
+    public void updateItem(ItemRecord item, Component parentComponent) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         AddonRecord addonRecord;
         try {
@@ -188,16 +187,16 @@ public class AddonManager {
         } catch (AddonCatalogServiceException ex) {
             Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
+        performAddonsOperation(addonUpdateOperation, parentComponent);
     }
 
-    public void removeItem(ItemRecord item, Component parentComponent, @Nullable Runnable finishListener) {
+    public void removeItem(ItemRecord item, Component parentComponent) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         addonUpdateOperation.removeItem(item);
-        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
+        performAddonsOperation(addonUpdateOperation, parentComponent);
     }
 
-    public void installAddons(Set<String> toInstall, Component parentComponent, @Nullable Runnable finishListener) {
+    public void installAddons(Set<String> toInstall, Component parentComponent) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         if (toInstall.isEmpty()) {
             for (ItemRecord addon : installedAddons) {
@@ -222,10 +221,10 @@ public class AddonManager {
                 }
             }
         }
-        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
+        performAddonsOperation(addonUpdateOperation, parentComponent);
     }
 
-    public void updateAddons(Set<String> toUpdate, Component parentComponent, @Nullable Runnable finishListener) {
+    public void updateAddons(Set<String> toUpdate, Component parentComponent) {
         AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
         if (toUpdate.isEmpty()) {
             for (ItemRecord addon : installedAddons) {
@@ -252,7 +251,7 @@ public class AddonManager {
                 }
             }
         }
-        performAddonsOperation(addonUpdateOperation, parentComponent, finishListener);
+        performAddonsOperation(addonUpdateOperation, parentComponent);
     }
     
     @Nonnull
@@ -300,10 +299,10 @@ public class AddonManager {
 
     public void performAddonsOperation(Component parentComponent) {
         AddonUpdateOperation operation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
-        performAddonsOperation(operation, parentComponent, null);
+        performAddonsOperation(operation, parentComponent);
     }
 
-    public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, Component parentComponent, @Nullable Runnable finishListener) {
+    public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, Component parentComponent) {
         MultiStepControlPanel controlPanel = new MultiStepControlPanel();
         AddonOperationPanel operationPanel = new AddonOperationPanel();
         operationPanel.setPreferredSize(new Dimension(600, 300));
@@ -383,9 +382,9 @@ public class AddonManager {
                         break;
                     case FINISH:
                         addonUpdateOperation.finished();
-                        if (finishListener != null) {
-                            finishListener.run();
-                        }
+//                        if (finishListener != null) {
+//                            finishListener.run();
+//                        }
                         dialog.close();
                         break;
                     default:

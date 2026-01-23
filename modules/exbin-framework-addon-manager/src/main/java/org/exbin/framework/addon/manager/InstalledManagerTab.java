@@ -96,16 +96,14 @@ public class InstalledManagerTab implements AddonManagerTab {
 
             @Override
             public void update(ItemRecord item) {
-                addonManager.updateItem(item, installedPanel, () -> {
-                    notifyItemsChanged();
-                });
+                addonManager.updateItem(item, installedPanel);
+                notifyItemsChanged();
             }
 
             @Override
             public void remove(ItemRecord item) {
-                addonManager.removeItem(item, installedPanel, () -> {
-                    notifyItemsChanged();
-                });
+                addonManager.removeItem(item, installedPanel);
+                notifyItemsChanged();
             }
 
             @Override
@@ -189,9 +187,8 @@ public class InstalledManagerTab implements AddonManagerTab {
     }
 
     public void updateAddons() {
-        addonManager.updateAddons(toUpdate, installedPanel, () -> {
-            notifyItemsChanged();
-        });
+        addonManager.updateAddons(toUpdate, installedPanel);
+        notifyItemsChanged();
     }
 
     @Nonnull
