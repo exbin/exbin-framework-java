@@ -33,6 +33,7 @@ import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationCartPanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.context.api.ContextChangeRegistration;
@@ -77,7 +78,9 @@ public class AddonManagerAction extends AbstractAction {
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
+        AddonOperationCartPanel cartPanel = new AddonOperationCartPanel();
         addonManagerPanel.setPreferredSize(new Dimension(800, 500));
+        addonManagerPanel.setCartComponent(cartPanel);
         addonManagerPanel.setController(new AddonManagerPanel.Controller() {
             @Override
             public void tabSwitched(AddonManagerTab managerTab) {
@@ -88,6 +91,16 @@ public class AddonManagerAction extends AbstractAction {
                 } else {
                     throw new IllegalStateException();
                 }
+            }
+
+            @Override
+            public void openCatalog() {
+
+            }
+
+            @Override
+            public void openCart() {
+
             }
         });
 

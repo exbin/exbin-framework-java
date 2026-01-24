@@ -15,6 +15,8 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -33,9 +35,10 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonManagerPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerPanel.class);
-    private Controller controller;
-    private final List<AddonManagerTab> managerTabs = new ArrayList<>();
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerPanel.class);
+    protected final List<AddonManagerTab> managerTabs = new ArrayList<>();
+    protected Controller controller;
+    protected Component cartComponent;
 
     public AddonManagerPanel() {
         initComponents();
@@ -63,6 +66,14 @@ public class AddonManagerPanel extends javax.swing.JPanel {
         this.controller = controller;
     }
 
+    public void setCartComponent(Component cartComponent) {
+        this.cartComponent = cartComponent;
+    }
+
+    public void setCartItemsCount(int itemsCount) {
+        cartButton.setText("(" + itemsCount + ")");
+    }
+
     public void addManagerTab(AddonManagerTab managerTab) {
         managerTabs.add(managerTab);
         tabbedPane.add(managerTab.getTitle(), managerTab.getComponent());
@@ -86,17 +97,89 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         tabbedPane = new javax.swing.JTabbedPane();
+        headerPanel = new javax.swing.JPanel();
+        cartButton = new javax.swing.JToggleButton();
+        filterLabel = new javax.swing.JLabel();
+        searchLabel = new javax.swing.JLabel();
+        searchTextField = new javax.swing.JTextField();
 
         setLayout(new java.awt.BorderLayout());
         add(tabbedPane, java.awt.BorderLayout.CENTER);
+
+        cartButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("cartButton.icon"))));
+        cartButton.setText("(0)");
+        cartButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cartButtonActionPerformed(evt);
+            }
+        });
+
+        filterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("filterLabel.icon"))));
+
+        searchLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("searchLabel.icon"))));
+
+        javax.swing.GroupLayout headerPanelLayout = new javax.swing.GroupLayout(headerPanel);
+        headerPanel.setLayout(headerPanelLayout);
+        headerPanelLayout.setHorizontalGroup(
+            headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(filterLabel)
+                    .addGroup(headerPanelLayout.createSequentialGroup()
+                        .addComponent(searchLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchTextField)))
+                .addGap(18, 18, 18)
+                .addComponent(cartButton)
+                .addContainerGap())
+        );
+        headerPanelLayout.setVerticalGroup(
+            headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(headerPanelLayout.createSequentialGroup()
+                        .addComponent(filterLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(searchLabel)
+                            .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cartButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        add(headerPanel, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cartButtonActionPerformed
+        if (cartButton.isSelected()) {
+            remove(tabbedPane);
+            add(cartComponent, BorderLayout.CENTER);
+        } else {
+            remove(cartComponent);
+            add(tabbedPane, BorderLayout.CENTER);
+        }
+        revalidate();
+        repaint();
+    }//GEN-LAST:event_cartButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton cartButton;
+    private javax.swing.JLabel filterLabel;
+    private javax.swing.JPanel headerPanel;
+    private javax.swing.JLabel searchLabel;
+    private javax.swing.JTextField searchTextField;
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
     @ParametersAreNonnullByDefault
     public interface Controller {
+
+        void openCatalog();
+
+        void openCart();
 
         void tabSwitched(AddonManagerTab managerTab);
     }

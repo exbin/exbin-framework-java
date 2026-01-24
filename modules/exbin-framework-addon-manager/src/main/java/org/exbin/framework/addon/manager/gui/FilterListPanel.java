@@ -138,7 +138,7 @@ public class FilterListPanel extends javax.swing.JPanel {
         itemsListScrollPane = new javax.swing.JScrollPane();
         itemsList = new javax.swing.JList<>();
 
-        filterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/view-filter.png"))); // NOI18N
+        filterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/22x22/view-filter.png"))); // NOI18N
 
         itemsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         itemsListScrollPane.setViewportView(itemsList);
