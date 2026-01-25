@@ -33,11 +33,11 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonsPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsPanel.class);
-    private FilterListPanel filterListPanel = new FilterListPanel();
-    private ItemRecord activeRecord;
-    private AddonDetailsPanel addonDetailsPanel = new AddonDetailsPanel();
-    private Controller controller;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsPanel.class);
+    protected FilterListPanel filterListPanel = new FilterListPanel();
+    protected ItemRecord activeRecord;
+    protected AddonDetailsPanel addonDetailsPanel = new AddonDetailsPanel();
+    protected Controller controller;
 
     public AddonsPanel() {
         initComponents();

@@ -31,9 +31,9 @@ import org.exbin.framework.addon.manager.InstalledManagerTab;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.addon.manager.gui.AddonManagerPanel;
+import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
-import org.exbin.framework.addon.manager.operation.gui.AddonOperationCartPanel;
+import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.context.api.ContextChangeRegistration;
@@ -77,17 +77,17 @@ public class AddonManagerAction extends AbstractAction {
         controlPanel.addHelpButton(new HelpLink(HELP_ID));
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        AddonManagerPanel addonManagerPanel = new AddonManagerPanel();
-        AddonOperationCartPanel cartPanel = new AddonOperationCartPanel();
+        AddonsManagerPanel addonManagerPanel = new AddonsManagerPanel();
+        AddonsCartPanel cartPanel = new AddonsCartPanel();
         addonManagerPanel.setPreferredSize(new Dimension(800, 500));
         addonManagerPanel.setCartComponent(cartPanel);
-        addonManagerPanel.setController(new AddonManagerPanel.Controller() {
+        addonManagerPanel.setController(new AddonsManagerPanel.Controller() {
             @Override
             public void tabSwitched(AddonManagerTab managerTab) {
                 if (managerTab instanceof AddonsManagerTab) {
-                    controlPanel.setOperationCount(((AddonsManagerTab) managerTab).getToInstallCount());
+                    // controlPanel.setOperationCount(((AddonsManagerTab) managerTab).getToInstallCount());
                 } else if (managerTab instanceof InstalledManagerTab) {
-                    controlPanel.setOperationCount(((InstalledManagerTab) managerTab).getToUpdateCount());
+                    // controlPanel.setOperationCount(((InstalledManagerTab) managerTab).getToUpdateCount());
                 } else {
                     throw new IllegalStateException();
                 }
@@ -95,30 +95,20 @@ public class AddonManagerAction extends AbstractAction {
 
             @Override
             public void openCatalog() {
-
+                
             }
 
             @Override
             public void openCart() {
-
+                // TODO cartPanel.setCartItems(cartOperations);
             }
         });
-
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
 
-        AddonsManagerTab addonsManagerTab = new AddonsManagerTab();
-        addonsManagerTab.setAddonManager(addonManager);
-        addonManagerPanel.addManagerTab(addonsManagerTab);
-
-        InstalledManagerTab installedManagerTab = new InstalledManagerTab();
-        installedManagerTab.setAddonManager(addonManager);
-        addonManagerPanel.addManagerTab(installedManagerTab);
-
-        final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
-        controlPanel.setController(new AddonsControlPanel.Controller() {
+        cartPanel.setController(new AddonsCartPanel.Controller() {
             @Override
-            public void performOpenCart() {
+            public void runOperations() {
                 addonManager.performAddonsOperation(addonManagerPanel);
 
                 AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
@@ -131,6 +121,21 @@ public class AddonManagerAction extends AbstractAction {
 //                } else {
 //                    throw new IllegalStateException();
 //                }
+            }
+        });
+
+        AddonsManagerTab addonsManagerTab = new AddonsManagerTab();
+        addonsManagerTab.setAddonManager(addonManager);
+        addonManagerPanel.addManagerTab(addonsManagerTab);
+
+        InstalledManagerTab installedManagerTab = new InstalledManagerTab();
+        installedManagerTab.setAddonManager(addonManager);
+        addonManagerPanel.addManagerTab(installedManagerTab);
+
+        final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
+        controlPanel.setController(new AddonsControlPanel.Controller() {
+            @Override
+            public void performRefresh() {
             }
 
             @Override

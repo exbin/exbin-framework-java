@@ -23,7 +23,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Test for AddonManagerPanel.
+ * Test for AddonsManagerPanel.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -35,7 +35,7 @@ public class AddonManagerPanelTest {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
             testApplication.addModule(org.exbin.framework.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.framework.language.api.utils.TestLanguageModule());
-            WindowUtils.invokeWindow(new AddonManagerPanel());
+            WindowUtils.invokeWindow(new AddonsManagerPanel());
         });
 
         UiUtils.waitForUiThread();

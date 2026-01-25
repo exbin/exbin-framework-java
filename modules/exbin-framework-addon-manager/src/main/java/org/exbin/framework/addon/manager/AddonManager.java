@@ -332,8 +332,6 @@ public class AddonManager {
                         break;
                     case NEXT:
                         switch (step) {
-                            case CART:
-                                break;
                             case OVERVIEW:
                                 List<LicenseItemRecord> licenseRecords = addonUpdateOperation.getLicenseRecords();
                                 if (!licenseRecords.isEmpty()) {

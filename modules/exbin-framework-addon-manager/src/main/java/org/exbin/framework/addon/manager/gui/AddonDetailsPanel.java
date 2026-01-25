@@ -48,12 +48,12 @@ import org.exbin.framework.utils.DesktopUtils;
 @ParametersAreNonnullByDefault
 public class AddonDetailsPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonDetailsPanel.class);
-    private Controller controller;
-    private MouseListener providerLinkListener;
-    private final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
-    private boolean recordChangeInProgress = false;
-    private String providerLink = null;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonDetailsPanel.class);
+    protected Controller controller;
+    protected MouseListener providerLinkListener;
+    protected final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
+    protected boolean recordChangeInProgress = false;
+    protected String providerLink = null;
     // TODO private final Thread detailsThread
 
     public AddonDetailsPanel() {

@@ -50,7 +50,7 @@ public class FilterListPanel extends javax.swing.JPanel {
     private void init() {
         itemsList.setCellRenderer(new DefaultListCellRenderer() {
 
-            private final AddonItemPanel addonItemPanel = new AddonItemPanel();
+            private final AddonItemComponent addonItemPanel = new AddonItemComponent();
 
             @Nonnull
             @Override

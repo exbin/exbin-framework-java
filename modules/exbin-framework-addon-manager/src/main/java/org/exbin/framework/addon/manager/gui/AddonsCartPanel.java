@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.addon.manager.operation.gui;
+package org.exbin.framework.addon.manager.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListModel;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.CartOperation;
-import org.exbin.framework.addon.manager.gui.CartOperationRenderer;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
@@ -33,11 +32,12 @@ import org.exbin.framework.language.api.LanguageModuleApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonOperationCartPanel extends javax.swing.JPanel {
+public class AddonsCartPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationCartPanel.class);
+    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsCartPanel.class);
+    protected Controller controller;
 
-    public AddonOperationCartPanel() {
+    public AddonsCartPanel() {
         initComponents();
         init();
     }
@@ -50,6 +50,10 @@ public class AddonOperationCartPanel extends javax.swing.JPanel {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public void setCartItems(List<CartOperation> cartOperations) {
@@ -84,6 +88,7 @@ public class AddonOperationCartPanel extends javax.swing.JPanel {
         controlPanel = new javax.swing.JPanel();
         selectAllButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        runButton = new javax.swing.JButton();
 
         scrollPane.setViewportView(itemsList);
 
@@ -103,6 +108,14 @@ public class AddonOperationCartPanel extends javax.swing.JPanel {
             }
         });
 
+        runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("runButton.icon"))));
+        runButton.setText(resourceBundle.getString("runButton.text")); // NOI18N
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
         controlPanel.setLayout(controlPanelLayout);
         controlPanelLayout.setHorizontalGroup(
@@ -111,7 +124,8 @@ public class AddonOperationCartPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(selectAllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(selectAllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(runButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         controlPanelLayout.setVerticalGroup(
@@ -121,7 +135,9 @@ public class AddonOperationCartPanel extends javax.swing.JPanel {
                 .addComponent(selectAllButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(removeButton)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(runButton)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -130,16 +146,16 @@ public class AddonOperationCartPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+                .addComponent(scrollPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(scrollPane)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -157,6 +173,10 @@ public class AddonOperationCartPanel extends javax.swing.JPanel {
         itemsList.clearSelection();
     }//GEN-LAST:event_removeButtonActionPerformed
 
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        controller.runOperations();
+    }//GEN-LAST:event_runButtonActionPerformed
+
     private void removeIndices(int[] indices) {
         if (indices.length == 0) {
             return;
@@ -172,8 +192,13 @@ public class AddonOperationCartPanel extends javax.swing.JPanel {
     private javax.swing.JPanel controlPanel;
     private javax.swing.JList<CartOperation> itemsList;
     private javax.swing.JButton removeButton;
+    private javax.swing.JButton runButton;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JButton selectAllButton;
     // End of variables declaration//GEN-END:variables
 
+    public interface Controller {
+
+        void runOperations();
+    }
 }

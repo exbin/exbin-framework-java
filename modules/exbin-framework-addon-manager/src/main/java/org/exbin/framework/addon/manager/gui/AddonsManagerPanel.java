@@ -33,14 +33,14 @@ import org.exbin.framework.language.api.LanguageModuleApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonManagerPanel extends javax.swing.JPanel {
+public class AddonsManagerPanel extends javax.swing.JPanel {
 
-    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerPanel.class);
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsManagerPanel.class);
     protected final List<AddonManagerTab> managerTabs = new ArrayList<>();
     protected Controller controller;
     protected Component cartComponent;
 
-    public AddonManagerPanel() {
+    public AddonsManagerPanel() {
         initComponents();
         init();
     }
@@ -100,6 +100,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
         headerPanel = new javax.swing.JPanel();
         cartButton = new javax.swing.JToggleButton();
         filterLabel = new javax.swing.JLabel();
+        filterTextField = new javax.swing.JTextField();
         searchLabel = new javax.swing.JLabel();
         searchTextField = new javax.swing.JTextField();
 
@@ -115,8 +116,12 @@ public class AddonManagerPanel extends javax.swing.JPanel {
         });
 
         filterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("filterLabel.icon"))));
+        filterLabel.setToolTipText(resourceBundle.getString("filterLabel.toolTipText")); // NOI18N
+
+        filterTextField.setEditable(false);
 
         searchLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("searchLabel.icon"))));
+        searchLabel.setToolTipText(resourceBundle.getString("searchLabel.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout headerPanelLayout = new javax.swing.GroupLayout(headerPanel);
         headerPanel.setLayout(headerPanelLayout);
@@ -125,11 +130,14 @@ public class AddonManagerPanel extends javax.swing.JPanel {
             .addGroup(headerPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(filterLabel)
                     .addGroup(headerPanelLayout.createSequentialGroup()
                         .addComponent(searchLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchTextField)))
+                        .addComponent(searchTextField))
+                    .addGroup(headerPanelLayout.createSequentialGroup()
+                        .addComponent(filterLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filterTextField)))
                 .addGap(18, 18, 18)
                 .addComponent(cartButton)
                 .addContainerGap())
@@ -140,7 +148,9 @@ public class AddonManagerPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(headerPanelLayout.createSequentialGroup()
-                        .addComponent(filterLabel)
+                        .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(filterLabel)
+                            .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(searchLabel)
@@ -168,6 +178,7 @@ public class AddonManagerPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton cartButton;
     private javax.swing.JLabel filterLabel;
+    private javax.swing.JTextField filterTextField;
     private javax.swing.JPanel headerPanel;
     private javax.swing.JLabel searchLabel;
     private javax.swing.JTextField searchTextField;
