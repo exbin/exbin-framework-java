@@ -76,6 +76,9 @@ public class AddonManagerAction extends AbstractAction {
         AddonsControlPanel controlPanel = new AddonsControlPanel();
         controlPanel.addHelpButton(new HelpLink(HELP_ID));
 
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
+
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AddonsManagerPanel addonManagerPanel = new AddonsManagerPanel();
         AddonsCartPanel cartPanel = new AddonsCartPanel();
@@ -100,11 +103,9 @@ public class AddonManagerAction extends AbstractAction {
 
             @Override
             public void openCart() {
-                // TODO cartPanel.setCartItems(cartOperations);
+                cartPanel.setCartItems(addonManager.getCartOperations());
             }
         });
-        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
 
         cartPanel.setController(new AddonsCartPanel.Controller() {
             @Override

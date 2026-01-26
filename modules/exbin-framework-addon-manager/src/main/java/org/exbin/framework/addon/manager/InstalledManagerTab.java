@@ -107,6 +107,11 @@ public class InstalledManagerTab implements AddonManagerTab {
             }
 
             @Override
+            public void changeEnablement(ItemRecord item) {
+                // TODO
+            }
+
+            @Override
             public void changeSelection(ItemRecord item) {
                 String moduleId = item.getId();
                 if (toUpdate.contains(moduleId)) {
@@ -201,6 +206,7 @@ public class InstalledManagerTab implements AddonManagerTab {
     }
 
     public interface ItemChangedListener {
+
         void itemChanged();
     }
 }

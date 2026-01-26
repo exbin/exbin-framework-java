@@ -15,13 +15,18 @@
  */
 package org.exbin.framework.addon.manager.gui;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.CartOperation;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -44,7 +49,24 @@ public class AddonsCartPanel extends javax.swing.JPanel {
 
     private void init() {
         itemsList.setModel(new DefaultListModel<>());
-        itemsList.setCellRenderer(new CartOperationRenderer());
+        itemsList.setCellRenderer(new DefaultListCellRenderer() {
+
+            private final AddonCartComponent component = new AddonCartComponent();
+
+            @Nonnull
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                CartOperation record = (CartOperation) value;
+                component.setCartRecord(list, record, isSelected, cellHasFocus);
+                return component;
+            }
+        });
+        itemsList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                updateState();
+            }
+        });
     }
 
     @Nonnull
@@ -62,6 +84,7 @@ public class AddonsCartPanel extends javax.swing.JPanel {
         for (CartOperation cartOperation : cartOperations) {
             model.addElement(cartOperation);
         }
+        updateState();
     }
 
     @Nonnull
@@ -72,6 +95,12 @@ public class AddonsCartPanel extends javax.swing.JPanel {
             items.add(model.getElementAt(i));
         }
         return items;
+    }
+
+    private void updateState() {
+        boolean hasItems = itemsList.getModel().getSize() > 0;
+        selectAllButton.setEnabled(hasItems);
+        removeButton.setEnabled(itemsList.getSelectedIndex() >= 0);
     }
 
     /**

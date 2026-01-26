@@ -253,7 +253,7 @@ public class AddonManager {
         }
         performAddonsOperation(addonUpdateOperation, parentComponent);
     }
-    
+
     @Nonnull
     public List<ItemRecord> getInstalledAddons() {
         return installedAddons;
@@ -430,6 +430,14 @@ public class AddonManager {
     @Nonnull
     public String getServiceUrl() {
         return addonCatalogService.getCatalogPageUrl();
+    }
+
+    @Nonnull
+    public List<CartOperation> getCartOperations() {
+        List<CartOperation> cartOperations = new ArrayList<>();
+        CartOperation operation = new CartOperation(CartOperationVariant.INSTALL, installedAddons.get(0));
+        cartOperations.add(operation);
+        return cartOperations;
     }
 
     private class CatalogThread extends Thread {

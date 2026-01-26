@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.CartOperation;
 import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
@@ -35,17 +36,20 @@ public class AddonCartComponent extends javax.swing.JPanel {
 
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonCartComponent.class);
     protected final ImageIcon defaultItemIcon;
-    protected final ImageIcon disabledStateIcon;
-    protected final ImageIcon updateAvailableStateIcon;
+    protected final ImageIcon installVariantIcon;
+    protected final ImageIcon updateVariantIcon;
+    protected final ImageIcon removeVariantIcon;
 
     public AddonCartComponent() {
         defaultItemIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("defaultItem.icon")));
-        disabledStateIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("disabledState.icon")));
-        updateAvailableStateIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("updateAvailableState.icon")));
+        installVariantIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("installVariant.icon")));
+        updateVariantIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("updateVariant.icon")));
+        removeVariantIcon = new ImageIcon(getClass().getResource(resourceBundle.getString("removeVariant.icon")));
         initComponents();
     }
 
-    public void setItemRecord(JList<?> list, ItemRecord itemRecord, boolean isSelected, boolean cellHasFocus) {
+    public void setCartRecord(JList<?> list, CartOperation cartOperation, boolean isSelected, boolean cellHasFocus) {
+        ItemRecord itemRecord = cartOperation.getItem();
         nameLabel.setText(itemRecord.getName());
         iconLabel.setIcon(itemRecord.getIcon().orElse(defaultItemIcon));
         providerLabel.setText(itemRecord.getProvider().orElse(""));
@@ -57,12 +61,21 @@ public class AddonCartComponent extends javax.swing.JPanel {
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-        if (!itemRecord.isEnabled()) {
-            setToolTipText(resourceBundle.getString("disabledState.toolTip"));
-        } else if (itemRecord.isUpdateAvailable()) {
-            setToolTipText(resourceBundle.getString("updateAvailableState.toolTip"));
-        } else {
-            setToolTipText(null);
+        switch (cartOperation.getVariant()) {
+            case INSTALL:
+                variantLabel.setIcon(installVariantIcon);
+                variantLabel.setToolTipText(resourceBundle.getString("installVariant.toolTip"));
+                break;
+            case UPDATE:
+                variantLabel.setIcon(updateVariantIcon);
+                variantLabel.setToolTipText(resourceBundle.getString("updateVariant.toolTip"));
+                break;
+            case REMOVE:
+                variantLabel.setIcon(removeVariantIcon);
+                variantLabel.setToolTipText(resourceBundle.getString("removeVariant.toolTip"));
+                break;
+            default:
+                throw new AssertionError();
         }
     }
 
@@ -80,16 +93,15 @@ public class AddonCartComponent extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        operationLabel = new javax.swing.JLabel();
+        variantLabel = new javax.swing.JLabel();
         iconLabel = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
         providerLabel = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-        operationLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        operationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/basket-free-material-svgrepo-com-16x16.png"))); // NOI18N
-        operationLabel.setToolTipText("");
+        variantLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        variantLabel.setToolTipText("");
 
         iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/puzzle-svgrepo-com-48x48.png"))); // NOI18N
 
@@ -104,7 +116,7 @@ public class AddonCartComponent extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(operationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(variantLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(iconLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -115,23 +127,20 @@ public class AddonCartComponent extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(iconLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(iconLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(providerLabel))
-                    .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(providerLabel))
+            .addComponent(variantLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel iconLabel;
     private javax.swing.JLabel nameLabel;
-    private javax.swing.JLabel operationLabel;
     private javax.swing.JLabel providerLabel;
+    private javax.swing.JLabel variantLabel;
     // End of variables declaration//GEN-END:variables
 
 }

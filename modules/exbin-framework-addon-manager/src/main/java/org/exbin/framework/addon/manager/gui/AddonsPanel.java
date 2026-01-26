@@ -93,7 +93,7 @@ public class AddonsPanel extends javax.swing.JPanel {
         addonDetailsPanel.setController(new AddonDetailsPanel.Controller() {
             @Override
             public void changeEnablement() {
-                // TODO
+                controller.changeEnablement(activeRecord);
             }
 
             @Override
@@ -200,7 +200,9 @@ public class AddonsPanel extends javax.swing.JPanel {
         void remove(ItemRecord item);
 
         void changeSelection(ItemRecord item);
-
+        
+        void changeEnablement(ItemRecord item);
+        
         boolean isItemSelectedForOperation(ItemRecord item);
 
         @Nonnull

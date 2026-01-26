@@ -167,9 +167,11 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
         if (cartButton.isSelected()) {
             remove(tabbedPane);
             add(cartComponent, BorderLayout.CENTER);
+            controller.openCart();
         } else {
             remove(cartComponent);
             add(tabbedPane, BorderLayout.CENTER);
+            controller.openCatalog();
         }
         revalidate();
         repaint();
