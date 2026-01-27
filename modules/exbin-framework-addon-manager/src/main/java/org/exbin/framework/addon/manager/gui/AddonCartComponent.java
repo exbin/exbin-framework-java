@@ -64,15 +64,15 @@ public class AddonCartComponent extends javax.swing.JPanel {
         switch (cartOperation.getVariant()) {
             case INSTALL:
                 variantLabel.setIcon(installVariantIcon);
-                variantLabel.setToolTipText(resourceBundle.getString("installVariant.toolTip"));
+                setToolTipText(resourceBundle.getString("installVariant.toolTip"));
                 break;
             case UPDATE:
                 variantLabel.setIcon(updateVariantIcon);
-                variantLabel.setToolTipText(resourceBundle.getString("updateVariant.toolTip"));
+                setToolTipText(resourceBundle.getString("updateVariant.toolTip"));
                 break;
             case REMOVE:
                 variantLabel.setIcon(removeVariantIcon);
-                variantLabel.setToolTipText(resourceBundle.getString("removeVariant.toolTip"));
+                setToolTipText(resourceBundle.getString("removeVariant.toolTip"));
                 break;
             default:
                 throw new AssertionError();

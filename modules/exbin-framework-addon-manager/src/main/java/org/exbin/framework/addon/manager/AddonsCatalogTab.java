@@ -39,7 +39,7 @@ import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonsManagerTab implements AddonManagerTab {
+public class AddonsCatalogTab implements AddonManagerTab {
 
     private AddonsPanel addonsPanel = new AddonsPanel();
     private Set<String> toInstall = new HashSet<>();
@@ -48,7 +48,7 @@ public class AddonsManagerTab implements AddonManagerTab {
     private AddonManager addonManager;
     private List<AddonRecord> searchResult;
 
-    public AddonsManagerTab() {
+    public AddonsCatalogTab() {
         init();
     }
 
@@ -63,13 +63,13 @@ public class AddonsManagerTab implements AddonManagerTab {
 
             @Override
             public int getItemsCount() {
-                return AddonsManagerTab.this.getItemsCount();
+                return AddonsCatalogTab.this.getItemsCount();
             }
 
             @Nonnull
             @Override
             public ItemRecord getItem(int index) {
-                return AddonsManagerTab.this.getItem(index);
+                return AddonsCatalogTab.this.getItem(index);
             }
 
             @Override
@@ -147,7 +147,7 @@ public class AddonsManagerTab implements AddonManagerTab {
             try {
                 searchResult = addonManager.searchForAddons();
             } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonsManagerTab.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddonsCatalogTab.class.getName()).log(Level.SEVERE, null, ex);
                 ResourceBundle resourceBundle = addonManager.getResourceBundle();
                 JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
                 return 0;

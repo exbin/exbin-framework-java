@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager.api;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -32,15 +33,15 @@ public class AddonCatalogServiceException extends Exception {
         super(string);
     }
 
-    public AddonCatalogServiceException(String string, Throwable thrwbl) {
+    public AddonCatalogServiceException(String string, @Nullable Throwable thrwbl) {
         super(string, thrwbl);
     }
 
-    public AddonCatalogServiceException(Throwable thrwbl) {
+    public AddonCatalogServiceException(@Nullable Throwable thrwbl) {
         super(thrwbl);
     }
 
-    public AddonCatalogServiceException(String string, Throwable thrwbl, boolean enableSuppression, boolean writableStackTrace) {
+    public AddonCatalogServiceException(String string, @Nullable Throwable thrwbl, boolean enableSuppression, boolean writableStackTrace) {
         super(string, thrwbl, enableSuppression, writableStackTrace);
     }
 }

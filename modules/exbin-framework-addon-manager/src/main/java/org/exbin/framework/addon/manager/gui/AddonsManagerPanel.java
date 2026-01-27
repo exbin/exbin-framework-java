@@ -50,10 +50,7 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
             if (controller == null) {
                 return;
             }
-
-            int selectedIndex = tabbedPane.getSelectedIndex();
-            AddonManagerTab managerTab = managerTabs.get(selectedIndex);
-            controller.tabSwitched(managerTab);
+            controller.tabSwitched();
         });
     }
 
@@ -187,13 +184,12 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
-    @ParametersAreNonnullByDefault
     public interface Controller {
 
         void openCatalog();
 
         void openCart();
 
-        void tabSwitched(AddonManagerTab managerTab);
+        void tabSwitched();
     }
 }

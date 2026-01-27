@@ -26,7 +26,7 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.AddonManagerModule;
-import org.exbin.framework.addon.manager.AddonsManagerTab;
+import org.exbin.framework.addon.manager.AddonsCatalogTab;
 import org.exbin.framework.addon.manager.InstalledManagerTab;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerTab;
@@ -86,9 +86,10 @@ public class AddonManagerAction extends AbstractAction {
         addonManagerPanel.setCartComponent(cartPanel);
         addonManagerPanel.setController(new AddonsManagerPanel.Controller() {
             @Override
-            public void tabSwitched(AddonManagerTab managerTab) {
-                if (managerTab instanceof AddonsManagerTab) {
-                    // controlPanel.setOperationCount(((AddonsManagerTab) managerTab).getToInstallCount());
+            public void tabSwitched() {
+                AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
+                if (managerTab instanceof AddonsCatalogTab) {
+                    // controlPanel.setOperationCount(((AddonsCatalogTab) managerTab).getToInstallCount());
                 } else if (managerTab instanceof InstalledManagerTab) {
                     // controlPanel.setOperationCount(((InstalledManagerTab) managerTab).getToUpdateCount());
                 } else {
@@ -98,7 +99,7 @@ public class AddonManagerAction extends AbstractAction {
 
             @Override
             public void openCatalog() {
-                
+                AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
             }
 
             @Override
@@ -115,8 +116,8 @@ public class AddonManagerAction extends AbstractAction {
                 AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
                 managerTab.notifyChanged();
 
-//                if (managerTab instanceof AddonsManagerTab) {
-//                    ((AddonsManagerTab) managerTab).installAddons();
+//                if (managerTab instanceof AddonsCatalogTab) {
+//                    ((AddonsCatalogTab) managerTab).installAddons();
 //                } else if (managerTab instanceof InstalledManagerTab) {
 //                    ((InstalledManagerTab) managerTab).updateAddons();
 //                } else {
@@ -125,7 +126,7 @@ public class AddonManagerAction extends AbstractAction {
             }
         });
 
-        AddonsManagerTab addonsManagerTab = new AddonsManagerTab();
+        AddonsCatalogTab addonsManagerTab = new AddonsCatalogTab();
         addonsManagerTab.setAddonManager(addonManager);
         addonManagerPanel.addManagerTab(addonsManagerTab);
 
