@@ -23,6 +23,9 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -51,6 +54,39 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
                 return;
             }
             controller.tabSwitched();
+        });
+        Document document = filterTextField.getDocument();
+        document.addDocumentListener(new DocumentListener() {
+
+            private final Runnable filterFinished = () -> {
+                // TODO filterListModel.notifyItemsChanged();
+            };
+            private String lastFilter = "";
+
+            @Override
+            public void insertUpdate(DocumentEvent de) {
+                filterValueChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent de) {
+                filterValueChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+                filterValueChanged();
+            }
+
+            public void filterValueChanged() {
+                if (controller != null) {
+                    String newFilter = filterTextField.getText();
+                    if (!lastFilter.equals(newFilter)) {
+                        lastFilter = newFilter;
+                        controller.setFilter(newFilter, filterFinished);
+                    }
+                }
+            }
         });
     }
 
@@ -191,5 +227,9 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
         void openCart();
 
         void tabSwitched();
+
+        void setFilter(String filter, Runnable finished);
+
+        void setSearch(String search, Runnable finished);
     }
 }

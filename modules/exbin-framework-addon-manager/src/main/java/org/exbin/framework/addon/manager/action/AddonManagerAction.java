@@ -106,6 +106,16 @@ public class AddonManagerAction extends AbstractAction {
             public void openCart() {
                 cartPanel.setCartItems(addonManager.getCartOperations());
             }
+
+            @Override
+            public void setFilter(String filter, Runnable finished) {
+                // TODO
+            }
+
+            @Override
+            public void setSearch(String search, Runnable finished) {
+                // TODO
+            }
         });
 
         cartPanel.setController(new AddonsCartPanel.Controller() {

@@ -21,12 +21,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractListModel;
 
 /**
- * Filter list model.
+ * Addons list model.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FilterListModel extends AbstractListModel<ItemRecord> {
+public class AddonsListModel extends AbstractListModel<ItemRecord> {
 
     private RecordsProvider provider;
     private int size = 0;

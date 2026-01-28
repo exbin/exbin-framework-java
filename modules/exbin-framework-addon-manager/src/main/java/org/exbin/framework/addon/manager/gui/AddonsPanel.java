@@ -16,12 +16,14 @@
 package org.exbin.framework.addon.manager.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.model.FilterListModel;
+import org.exbin.framework.addon.manager.model.AddonsListModel;
 import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
@@ -34,14 +36,32 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 public class AddonsPanel extends javax.swing.JPanel {
 
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsPanel.class);
-    protected FilterListPanel filterListPanel = new FilterListPanel();
+    protected final AddonsListModel addonsListModel = new AddonsListModel();
     protected ItemRecord activeRecord;
     protected AddonDetailsPanel addonDetailsPanel = new AddonDetailsPanel();
     protected Controller controller;
 
     public AddonsPanel() {
         initComponents();
-        splitPane.setLeftComponent(filterListPanel);
+        init();
+    }
+
+    private void init() {
+        itemsList.setCellRenderer(new DefaultListCellRenderer() {
+
+            private final AddonItemComponent addonItemPanel = new AddonItemComponent();
+
+            @Nonnull
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                ItemRecord record = (ItemRecord) value;
+                addonItemPanel.setItemRecord(list, record, isSelected, cellHasFocus);
+                return addonItemPanel;
+            }
+        });
+        itemsList.addListSelectionListener((event) -> {
+            notifyItemSelected();
+        });
     }
 
     @Nonnull
@@ -51,34 +71,7 @@ public class AddonsPanel extends javax.swing.JPanel {
 
     public void setController(Controller controller) {
         this.controller = controller;
-        filterListPanel.setController(new FilterListPanel.Controller() {
-            @Override
-            public void setFilter(String filter, Runnable finished) {
-                controller.setFilter(filter, finished);
-            }
-
-            @Override
-            public void notifyItemSelected(@Nullable ItemRecord itemRecord) {
-                if (activeRecord != itemRecord) {
-                    if (activeRecord == null) {
-                        infoPanel.remove(noItemSelectedLabel);
-                        addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
-                        infoPanel.add(addonDetailsPanel, BorderLayout.CENTER);
-                        infoPanel.revalidate();
-                        infoPanel.repaint();
-                    } else if (itemRecord == null) {
-                        infoPanel.remove(addonDetailsPanel);
-                        infoPanel.add(noItemSelectedLabel, BorderLayout.CENTER);
-                        infoPanel.revalidate();
-                        infoPanel.repaint();
-                    } else {
-                        addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
-                    }
-                    activeRecord = itemRecord;
-                }
-            }
-        });
-        filterListPanel.setRecordProvider(new FilterListModel.RecordsProvider() {
+        addonsListModel.setProvider(new AddonsListModel.RecordsProvider() {
             @Override
             public int getItemsCount() {
                 return controller.getItemsCount();
@@ -90,6 +83,7 @@ public class AddonsPanel extends javax.swing.JPanel {
                 return controller.getItem(index);
             }
         });
+        itemsList.setModel(addonsListModel);
         addonDetailsPanel.setController(new AddonDetailsPanel.Controller() {
             @Override
             public void changeEnablement() {
@@ -133,6 +127,29 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
         });
     }
+    
+    private void notifyItemSelected() {
+        int index = itemsList.getSelectedIndex();
+        ItemRecord itemRecord = index >= 0 ? itemsList.getModel().getElementAt(index) : null;
+
+        if (activeRecord != itemRecord) {
+            if (activeRecord == null) {
+                infoPanel.remove(noItemSelectedLabel);
+                addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
+                infoPanel.add(addonDetailsPanel, BorderLayout.CENTER);
+                infoPanel.revalidate();
+                infoPanel.repaint();
+            } else if (itemRecord == null) {
+                infoPanel.remove(addonDetailsPanel);
+                infoPanel.add(noItemSelectedLabel, BorderLayout.CENTER);
+                infoPanel.revalidate();
+                infoPanel.repaint();
+            } else {
+                addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
+            }
+            activeRecord = itemRecord;
+        }
+    }
 
     public void notifyItemChanged() {
         if (activeRecord != null) {
@@ -141,7 +158,7 @@ public class AddonsPanel extends javax.swing.JPanel {
     }
 
     public void notifyItemsChanged() {
-        filterListPanel.notifyItemsChanged();
+        // TODO filterListPanel.notifyItemsChanged();
     }
 
     /**
@@ -156,6 +173,8 @@ public class AddonsPanel extends javax.swing.JPanel {
         splitPane = new javax.swing.JSplitPane();
         infoPanel = new javax.swing.JPanel();
         noItemSelectedLabel = new javax.swing.JLabel();
+        itemsListScrollPane = new javax.swing.JScrollPane();
+        itemsList = new javax.swing.JList<>();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -170,11 +189,18 @@ public class AddonsPanel extends javax.swing.JPanel {
 
         splitPane.setRightComponent(infoPanel);
 
+        itemsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        itemsListScrollPane.setViewportView(itemsList);
+
+        splitPane.setLeftComponent(itemsListScrollPane);
+
         add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel infoPanel;
+    private javax.swing.JList<org.exbin.framework.addon.manager.api.ItemRecord> itemsList;
+    private javax.swing.JScrollPane itemsListScrollPane;
     private javax.swing.JLabel noItemSelectedLabel;
     private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables
@@ -200,9 +226,9 @@ public class AddonsPanel extends javax.swing.JPanel {
         void remove(ItemRecord item);
 
         void changeSelection(ItemRecord item);
-        
+
         void changeEnablement(ItemRecord item);
-        
+
         boolean isItemSelectedForOperation(ItemRecord item);
 
         @Nonnull
