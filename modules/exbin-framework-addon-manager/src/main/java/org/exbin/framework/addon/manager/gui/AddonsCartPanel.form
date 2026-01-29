@@ -46,7 +46,7 @@
       <SubComponents>
         <Component class="javax.swing.JList" name="itemsList">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;CartOperation&gt;"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;AddonOperation&gt;"/>
           </AuxValues>
         </Component>
       </SubComponents>

@@ -96,13 +96,13 @@ public class InstalledManagerTab implements AddonManagerTab {
 
             @Override
             public void update(ItemRecord item) {
-                addonManager.updateItem(item, installedPanel);
+                addonManager.addCartOperation(new AddonOperation(AddonOperationVariant.INSTALL, item));
                 notifyItemsChanged();
             }
 
             @Override
             public void remove(ItemRecord item) {
-                addonManager.removeItem(item, installedPanel);
+                addonManager.addCartOperation(new AddonOperation(AddonOperationVariant.REMOVE, item));
                 notifyItemsChanged();
             }
 
@@ -137,6 +137,10 @@ public class InstalledManagerTab implements AddonManagerTab {
     }
 
     private int getItemsCount() {
+        if (addonManager == null) {
+            return 0;
+        }
+
         List<ItemRecord> installedAddons = addonManager.getInstalledAddons();
         if (filterItems != null) {
             return filterItems.size();
@@ -192,7 +196,7 @@ public class InstalledManagerTab implements AddonManagerTab {
     }
 
     public void updateAddons() {
-        addonManager.updateAddons(toUpdate, installedPanel);
+        // TODO addonManager.updateAddons(toUpdate, installedPanel);
         notifyItemsChanged();
     }
 

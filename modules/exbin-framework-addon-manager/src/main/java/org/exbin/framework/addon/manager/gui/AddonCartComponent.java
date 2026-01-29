@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.CartOperation;
+import org.exbin.framework.addon.manager.AddonOperation;
 import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
@@ -48,8 +48,8 @@ public class AddonCartComponent extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void setCartRecord(JList<?> list, CartOperation cartOperation, boolean isSelected, boolean cellHasFocus) {
-        ItemRecord itemRecord = cartOperation.getItem();
+    public void setCartRecord(JList<?> list, AddonOperation addonOperation, boolean isSelected, boolean cellHasFocus) {
+        ItemRecord itemRecord = addonOperation.getItem();
         nameLabel.setText(itemRecord.getName());
         iconLabel.setIcon(itemRecord.getIcon().orElse(defaultItemIcon));
         providerLabel.setText(itemRecord.getProvider().orElse(""));
@@ -61,7 +61,7 @@ public class AddonCartComponent extends javax.swing.JPanel {
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-        switch (cartOperation.getVariant()) {
+        switch (addonOperation.getVariant()) {
             case INSTALL:
                 variantLabel.setIcon(installVariantIcon);
                 setToolTipText(resourceBundle.getString("installVariant.toolTip"));

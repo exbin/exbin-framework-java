@@ -88,6 +88,39 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
                 }
             }
         });
+        document = searchTextField.getDocument();
+        document.addDocumentListener(new DocumentListener() {
+
+            private final Runnable searchFinished = () -> {
+                // TODO searchListModel.notifyItemsChanged();
+            };
+            private String lastSearch = "";
+
+            @Override
+            public void insertUpdate(DocumentEvent de) {
+                searchValueChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent de) {
+                searchValueChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+                searchValueChanged();
+            }
+
+            public void searchValueChanged() {
+                if (controller != null) {
+                    String newSearch = searchTextField.getText();
+                    if (!lastSearch.equals(newSearch)) {
+                        lastSearch = newSearch;
+                        controller.setSearch(newSearch, searchFinished);
+                    }
+                }
+            }
+        });
     }
 
     @Nonnull

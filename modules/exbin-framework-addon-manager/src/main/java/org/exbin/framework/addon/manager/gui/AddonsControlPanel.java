@@ -43,8 +43,8 @@ import org.exbin.framework.window.api.controller.CloseControlController;
 @ParametersAreNonnullByDefault
 public class AddonsControlPanel extends javax.swing.JPanel implements CloseControlController.CloseControlComponent {
 
-    private final java.util.ResourceBundle resourceBundle;
-    private Controller controller;
+    protected final java.util.ResourceBundle resourceBundle;
+    protected Controller controller;
 
     public AddonsControlPanel() {
         this(App.getModule(LanguageModuleApi.class).getBundle(AddonsControlPanel.class));

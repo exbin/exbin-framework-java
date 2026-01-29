@@ -15,12 +15,9 @@
  */
 package org.exbin.framework.addon.manager;
 
-import java.awt.Component;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -28,30 +25,19 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleProvider;
 import org.exbin.framework.addon.AddonModuleFileLocation;
-import org.exbin.framework.window.api.WindowModuleApi;
-import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.api.DependencyRecord;
 import org.exbin.framework.addon.manager.api.ItemRecord;
-import org.exbin.framework.addon.manager.operation.AddonUpdateOperation;
 import org.exbin.framework.addon.manager.operation.ApplicationModulesUsage;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
-import org.exbin.framework.addon.manager.operation.DownloadOperation;
 import org.exbin.framework.addon.manager.operation.UpdateAvailabilityOperation;
-import org.exbin.framework.addon.manager.operation.gui.AddonOperationDownloadPanel;
-import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePanel;
-import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
-import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
-import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
 import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.ApplicationBundleKeys;
-import org.exbin.framework.window.api.gui.MultiStepControlPanel;
-import org.exbin.framework.window.api.controller.MultiStepControlController;
 
 /**
  * Addon manager.
@@ -70,6 +56,7 @@ public class AddonManager {
     private AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
     private List<ItemRecord> installedAddons = new ArrayList<>();
     private int serviceStatus = -1;
+    private List<AddonOperation> cartOperations = new ArrayList<>();
 
     public AddonManager() {
     }
@@ -171,87 +158,9 @@ public class AddonManager {
     public boolean isAlreadyRemoved(String moduleId) {
         return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
     }
-
-    public void installItem(ItemRecord item, Component parentComponent) {
-        AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
-        addonUpdateOperation.installItem(item);
-        performAddonsOperation(addonUpdateOperation, parentComponent);
-    }
-
-    public void updateItem(ItemRecord item, Component parentComponent) {
-        AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
-        AddonRecord addonRecord;
-        try {
-            addonRecord = addonCatalogService.getAddonDependency(item.getId());
-            addonUpdateOperation.updateItem(addonRecord, item);
-        } catch (AddonCatalogServiceException ex) {
-            Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        performAddonsOperation(addonUpdateOperation, parentComponent);
-    }
-
-    public void removeItem(ItemRecord item, Component parentComponent) {
-        AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
-        addonUpdateOperation.removeItem(item);
-        performAddonsOperation(addonUpdateOperation, parentComponent);
-    }
-
-    public void installAddons(Set<String> toInstall, Component parentComponent) {
-        AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
-        if (toInstall.isEmpty()) {
-            for (ItemRecord addon : installedAddons) {
-                if (addon.isUpdateAvailable()) {
-                    AddonRecord addonRecord;
-                    try {
-                        addonRecord = addonCatalogService.getAddonDependency(addon.getId());
-                        addonUpdateOperation.updateItem(addonRecord, addon);
-                    } catch (AddonCatalogServiceException ex) {
-                        Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        } else {
-            for (String addonId : toInstall) {
-                AddonRecord addonRecord;
-                try {
-                    addonRecord = addonCatalogService.getAddonDependency(addonId);
-                    addonUpdateOperation.installItem(addonRecord);
-                } catch (AddonCatalogServiceException ex) {
-                    Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        performAddonsOperation(addonUpdateOperation, parentComponent);
-    }
-
-    public void updateAddons(Set<String> toUpdate, Component parentComponent) {
-        AddonUpdateOperation addonUpdateOperation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
-        if (toUpdate.isEmpty()) {
-            for (ItemRecord addon : installedAddons) {
-                if (addon.isUpdateAvailable()) {
-                    AddonRecord addonRecord;
-                    try {
-                        addonRecord = addonCatalogService.getAddonDependency(addon.getId());
-                        addonUpdateOperation.updateItem(addonRecord, addon);
-                    } catch (AddonCatalogServiceException ex) {
-                        Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        } else {
-            for (ItemRecord addon : installedAddons) {
-                if (toUpdate.contains(addon.getId())) {
-                    AddonRecord addonRecord;
-                    try {
-                        addonRecord = addonCatalogService.getAddonDependency(addon.getId());
-                        addonUpdateOperation.updateItem(addonRecord, addon);
-                    } catch (AddonCatalogServiceException ex) {
-                        Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        performAddonsOperation(addonUpdateOperation, parentComponent);
+    
+    public void addCartOperation(AddonOperation operation) {
+        cartOperations.add(operation);
     }
 
     @Nonnull
@@ -297,132 +206,6 @@ public class AddonManager {
         return searchResult;
     }
 
-    public void performAddonsOperation(Component parentComponent) {
-        AddonUpdateOperation operation = new AddonUpdateOperation(addonCatalogService, applicationModulesUsage, addonUpdateChanges);
-        performAddonsOperation(operation, parentComponent);
-    }
-
-    public void performAddonsOperation(AddonUpdateOperation addonUpdateOperation, Component parentComponent) {
-        MultiStepControlPanel controlPanel = new MultiStepControlPanel();
-        AddonOperationPanel operationPanel = new AddonOperationPanel();
-        operationPanel.setPreferredSize(new Dimension(600, 300));
-        // TODO
-/*        AddonOperationOverviewPanel panel = (AddonOperationOverviewPanel) operationPanel.getActiveComponent().get();
-        for (String operation : addonUpdateOperation.getOperations()) {
-            panel.addOperation(operation);
-        } */
-
-        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        final WindowHandler dialog = windowModule.createDialog(operationPanel, controlPanel);
-        windowModule.addHeaderPanel(dialog.getWindow(), operationPanel.getClass(), operationPanel.getResourceBundle());
-        windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
-        controlPanel.setController(new MultiStepControlController() {
-
-            private AddonOperationPanel.Step step = AddonOperationPanel.Step.OVERVIEW;
-            private DownloadOperation downloadOperation = null;
-
-            @Override
-            public void controlActionPerformed(MultiStepControlController.ControlActionType actionType) {
-                switch (actionType) {
-                    case CANCEL:
-                        if (downloadOperation != null) {
-                            downloadOperation.cancelOperation();
-                        }
-                        dialog.close();
-                        break;
-                    case NEXT:
-                        switch (step) {
-                            case OVERVIEW:
-                                List<LicenseItemRecord> licenseRecords = addonUpdateOperation.getLicenseRecords();
-                                if (!licenseRecords.isEmpty()) {
-                                    step = AddonOperationPanel.Step.LICENSE;
-                                    operationPanel.goToStep(step);
-                                    AddonOperationLicensePanel panel = (AddonOperationLicensePanel) operationPanel.getActiveComponent().get();
-                                    panel.setController(new AddonOperationLicensePanel.Controller() {
-                                        @Override
-                                        public void approvalStateChanged(int toApprove) {
-                                            controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, toApprove == 0);
-                                        }
-                                    });
-                                    panel.setLicenseRecords(licenseRecords);
-                                    controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
-                                    break;
-                                } // no break
-                            case LICENSE:
-                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, true);
-                                List<DownloadItemRecord> downloadRecords = addonUpdateOperation.getDownloadRecords();
-                                if (!downloadRecords.isEmpty()) {
-                                    goToDownload(downloadRecords);
-                                    break;
-                                } // no break
-                            case DOWNLOAD:
-                                step = AddonOperationPanel.Step.SUCCESS;
-                                operationPanel.goToStep(step);
-                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
-                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.CANCEL, false);
-                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.FINISH, true);
-                                break;
-                            default:
-                                throw new AssertionError();
-                        }
-                        break;
-                    case PREVIOUS:
-                        // TODO
-                        switch (step) {
-                            case LICENSE:
-                                step = AddonOperationPanel.Step.OVERVIEW;
-                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, false);
-                                operationPanel.goToStep(step);
-                                break;
-                            default:
-                                throw new AssertionError();
-                        }
-                        break;
-                    case FINISH:
-                        addonUpdateOperation.finished();
-//                        if (finishListener != null) {
-//                            finishListener.run();
-//                        }
-                        dialog.close();
-                        break;
-                    default:
-                        throw new AssertionError();
-                }
-            }
-
-            private void goToDownload(List<DownloadItemRecord> downloadRecords) {
-                step = AddonOperationPanel.Step.DOWNLOAD;
-                operationPanel.goToStep(step);
-                AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent().get();
-                panel.setDownloadedItemRecords(downloadRecords);
-                downloadOperation = new DownloadOperation(downloadRecords);
-                downloadOperation.setItemChangeListener(new DownloadOperation.ItemChangeListener() {
-                    @Override
-                    public void itemChanged(int itemIndex) {
-                        panel.notifyDownloadedItemChanged(itemIndex);
-                    }
-
-                    @Override
-                    public void progressChanged(int itemIndex) {
-                        DownloadItemRecord record = downloadRecords.get(itemIndex);
-                        panel.setProgress(record.getFileName(), downloadOperation.getOperationProgress(), false);
-                    }
-
-                });
-                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
-                Thread thread = new Thread(() -> {
-                    downloadOperation.run();
-                    controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, true);
-                });
-                thread.start();
-            }
-        });
-        controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, true);
-        controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.FINISH, false);
-        dialog.showCentered(parentComponent);
-        dialog.dispose();
-    }
-
     private void invokeCatalogOperation(CatalogOperation operation) {
 
     }
@@ -433,11 +216,11 @@ public class AddonManager {
     }
 
     @Nonnull
-    public List<CartOperation> getCartOperations() {
-        List<CartOperation> cartOperations = new ArrayList<>();
-        CartOperation operation = new CartOperation(CartOperationVariant.INSTALL, installedAddons.get(0));
-        cartOperations.add(operation);
-        return cartOperations;
+    public List<AddonOperation> getCartOperations() {
+        List<AddonOperation> addonOperations = new ArrayList<>();
+        AddonOperation operation = new AddonOperation(AddonOperationVariant.INSTALL, installedAddons.get(0));
+        addonOperations.add(operation);
+        return addonOperations;
     }
 
     private class CatalogThread extends Thread {

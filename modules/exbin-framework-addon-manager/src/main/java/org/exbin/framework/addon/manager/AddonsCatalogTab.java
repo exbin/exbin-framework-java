@@ -84,19 +84,19 @@ public class AddonsCatalogTab implements AddonManagerTab {
 
             @Override
             public void install(ItemRecord item) {
-                addonManager.installItem(item, addonsPanel);
+                addonManager.addCartOperation(new AddonOperation(AddonOperationVariant.INSTALL, item));
                 notifyItemsChanged();
             }
 
             @Override
             public void update(ItemRecord item) {
-                addonManager.updateItem(item, addonsPanel);
+                addonManager.addCartOperation(new AddonOperation(AddonOperationVariant.UPDATE, item));
                 notifyItemsChanged();
             }
 
             @Override
             public void remove(ItemRecord item) {
-                addonManager.removeItem(item, addonsPanel);
+                addonManager.addCartOperation(new AddonOperation(AddonOperationVariant.REMOVE, item));
                 notifyItemsChanged();
             }
 
@@ -143,6 +143,10 @@ public class AddonsCatalogTab implements AddonManagerTab {
     }
 
     private int getItemsCount() {
+        if (addonManager == null) {
+            return 0;
+        }
+
         if (searchResult == null) {
             try {
                 searchResult = addonManager.searchForAddons();
@@ -186,7 +190,7 @@ public class AddonsCatalogTab implements AddonManagerTab {
     }
 
     public void installAddons() {
-        addonManager.installAddons(toInstall, addonsPanel);
+        // TODO addonManager.installAddons(toInstall, addonsPanel);
         notifyItemsChanged();
     }
 
@@ -198,8 +202,9 @@ public class AddonsCatalogTab implements AddonManagerTab {
     public int getToInstallCount() {
         return toInstall.size();
     }
-    
+
     public interface ItemChangedListener {
+
         void itemChanged();
     }
 }

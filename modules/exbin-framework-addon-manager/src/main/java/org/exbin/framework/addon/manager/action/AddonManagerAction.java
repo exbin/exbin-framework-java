@@ -121,7 +121,7 @@ public class AddonManagerAction extends AbstractAction {
         cartPanel.setController(new AddonsCartPanel.Controller() {
             @Override
             public void runOperations() {
-                addonManager.performAddonsOperation(addonManagerPanel);
+                // addonManager.performAddonsOperation(addonManagerPanel);
 
                 AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
                 managerTab.notifyChanged();

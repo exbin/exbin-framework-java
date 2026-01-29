@@ -74,15 +74,16 @@ public class AddonsPanel extends javax.swing.JPanel {
         addonsListModel.setProvider(new AddonsListModel.RecordsProvider() {
             @Override
             public int getItemsCount() {
-                return controller.getItemsCount();
+                return AddonsPanel.this.controller.getItemsCount();
             }
 
             @Nonnull
             @Override
             public ItemRecord getItem(int index) {
-                return controller.getItem(index);
+                return AddonsPanel.this.controller.getItem(index);
             }
         });
+        addonsListModel.notifyItemsChanged();
         itemsList.setModel(addonsListModel);
         addonDetailsPanel.setController(new AddonDetailsPanel.Controller() {
             @Override
@@ -127,7 +128,7 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
         });
     }
-    
+
     private void notifyItemSelected() {
         int index = itemsList.getSelectedIndex();
         ItemRecord itemRecord = index >= 0 ? itemsList.getModel().getElementAt(index) : null;
@@ -158,7 +159,7 @@ public class AddonsPanel extends javax.swing.JPanel {
     }
 
     public void notifyItemsChanged() {
-        // TODO filterListPanel.notifyItemsChanged();
+        addonsListModel.notifyItemsChanged();
     }
 
     /**

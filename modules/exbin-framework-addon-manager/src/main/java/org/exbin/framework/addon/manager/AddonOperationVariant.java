@@ -15,33 +15,13 @@
  */
 package org.exbin.framework.addon.manager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.addon.manager.api.ItemRecord;
-
 /**
- * Cart operation record.
+ * Cart operation variant.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class CartOperation {
-
-    protected final CartOperationVariant variant;
-    protected final ItemRecord item;
-
-    public CartOperation(CartOperationVariant variant, ItemRecord item) {
-        this.variant = variant;
-        this.item = item;
-    }
-
-    @Nonnull
-    public CartOperationVariant getVariant() {
-        return variant;
-    }
-
-    @Nonnull
-    public ItemRecord getItem() {
-        return item;
-    }
+public enum AddonOperationVariant {
+    INSTALL,
+    UPDATE,
+    REMOVE
 }
