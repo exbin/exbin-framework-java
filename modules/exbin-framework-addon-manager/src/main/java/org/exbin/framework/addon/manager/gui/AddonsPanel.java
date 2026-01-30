@@ -23,6 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.AddonOperationVariant;
 import org.exbin.framework.addon.manager.model.AddonsListModel;
 import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -86,39 +87,15 @@ public class AddonsPanel extends javax.swing.JPanel {
         addonsListModel.notifyItemsChanged();
         itemsList.setModel(addonsListModel);
         addonDetailsPanel.setController(new AddonDetailsPanel.Controller() {
+
             @Override
-            public void changeEnablement() {
-                controller.changeEnablement(activeRecord);
+            public void addToCart(AddonOperationVariant variant) {
+                controller.addToCart(activeRecord, variant);
             }
 
             @Override
-            public boolean isAlreadyInstalled(String moduleId) {
-                return controller.isAlreadyInstalled(moduleId);
-            }
-
-            @Override
-            public boolean isAlreadyRemoved(String moduleId) {
-                return controller.isAlreadyRemoved(moduleId);
-            }
-
-            @Override
-            public void performInstall() {
-                controller.install(activeRecord);
-            }
-
-            @Override
-            public void performUpdate() {
-                controller.update(activeRecord);
-            }
-
-            @Override
-            public void performRemove() {
-                controller.remove(activeRecord);
-            }
-
-            @Override
-            public void changeSelection() {
-                controller.changeSelection(activeRecord);
+            public boolean isInCart(String moduleId, AddonOperationVariant variant) {
+                return controller.isInCart(moduleId, variant);
             }
 
             @Nonnull
@@ -136,7 +113,7 @@ public class AddonsPanel extends javax.swing.JPanel {
         if (activeRecord != itemRecord) {
             if (activeRecord == null) {
                 infoPanel.remove(noItemSelectedLabel);
-                addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
+                addonDetailsPanel.setRecord(itemRecord);
                 infoPanel.add(addonDetailsPanel, BorderLayout.CENTER);
                 infoPanel.revalidate();
                 infoPanel.repaint();
@@ -146,7 +123,7 @@ public class AddonsPanel extends javax.swing.JPanel {
                 infoPanel.revalidate();
                 infoPanel.repaint();
             } else {
-                addonDetailsPanel.setRecord(itemRecord, controller.isItemSelectedForOperation(itemRecord));
+                addonDetailsPanel.setRecord(itemRecord);
             }
             activeRecord = itemRecord;
         }
@@ -154,7 +131,7 @@ public class AddonsPanel extends javax.swing.JPanel {
 
     public void notifyItemChanged() {
         if (activeRecord != null) {
-            addonDetailsPanel.setRecord(activeRecord, controller.isItemSelectedForOperation(activeRecord));
+            addonDetailsPanel.setRecord(activeRecord);
         }
     }
 
@@ -216,21 +193,9 @@ public class AddonsPanel extends javax.swing.JPanel {
         @Nonnull
         ItemRecord getItem(int index);
 
-        boolean isAlreadyInstalled(String moduleId);
+        void addToCart(ItemRecord itemRecord, AddonOperationVariant variant);
 
-        boolean isAlreadyRemoved(String moduleId);
-
-        void install(ItemRecord item);
-
-        void update(ItemRecord item);
-
-        void remove(ItemRecord item);
-
-        void changeSelection(ItemRecord item);
-
-        void changeEnablement(ItemRecord item);
-
-        boolean isItemSelectedForOperation(ItemRecord item);
+        boolean isInCart(String moduleId, AddonOperationVariant variant);
 
         @Nonnull
         String getModuleDetails(ItemRecord itemRecord);

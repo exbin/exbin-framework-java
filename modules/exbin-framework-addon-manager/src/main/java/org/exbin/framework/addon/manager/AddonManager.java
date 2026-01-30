@@ -116,6 +116,15 @@ public class AddonManager {
 
         availableModuleUpdates.addChangeListener(availableModulesChangeListener);
         availableModuleUpdates.notifyChanged();
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
+        this.addonCatalogService = addonCatalogService;
 
         Thread thread = new Thread(() -> {
             try {
@@ -142,15 +151,6 @@ public class AddonManager {
         thread.start();
     }
 
-    @Nonnull
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
-    }
-
-    public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
-        this.addonCatalogService = addonCatalogService;
-    }
-
     public boolean isAlreadyInstalled(String moduleId) {
         return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
     }
@@ -158,9 +158,19 @@ public class AddonManager {
     public boolean isAlreadyRemoved(String moduleId) {
         return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
     }
-    
+
     public void addCartOperation(AddonOperation operation) {
         cartOperations.add(operation);
+    }
+
+    public boolean isInCart(String moduleId, AddonOperationVariant variant) {
+        for (AddonOperation cartOperation : cartOperations) {
+            if (moduleId.equals(cartOperation.getItem().getId()) && variant == cartOperation.getVariant()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Nonnull

@@ -17,10 +17,8 @@ package org.exbin.framework.addon.manager;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
@@ -42,7 +40,6 @@ import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 public class AddonsCatalogTab implements AddonManagerTab {
 
     private AddonsPanel addonsPanel = new AddonsPanel();
-    private Set<String> toInstall = new HashSet<>();
     private List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
 
     private AddonManager addonManager;
@@ -73,6 +70,17 @@ public class AddonsCatalogTab implements AddonManagerTab {
             }
 
             @Override
+            public void addToCart(ItemRecord itemRecord, AddonOperationVariant variant) {
+                addonManager.addCartOperation(new AddonOperation(variant, itemRecord));
+                notifyItemsChanged();
+            }
+
+            @Override
+            public boolean isInCart(String moduleId, AddonOperationVariant variant) {
+                return addonManager.isInCart(moduleId, variant);
+            }
+
+            /* @Override
             public boolean isAlreadyInstalled(String moduleId) {
                 return addonManager.isAlreadyInstalled(moduleId);
             }
@@ -83,44 +91,9 @@ public class AddonsCatalogTab implements AddonManagerTab {
             }
 
             @Override
-            public void install(ItemRecord item) {
-                addonManager.addCartOperation(new AddonOperation(AddonOperationVariant.INSTALL, item));
-                notifyItemsChanged();
-            }
-
-            @Override
-            public void update(ItemRecord item) {
-                addonManager.addCartOperation(new AddonOperation(AddonOperationVariant.UPDATE, item));
-                notifyItemsChanged();
-            }
-
-            @Override
-            public void remove(ItemRecord item) {
-                addonManager.addCartOperation(new AddonOperation(AddonOperationVariant.REMOVE, item));
-                notifyItemsChanged();
-            }
-
-            @Override
-            public void changeEnablement(ItemRecord item) {
-                // TODO
-            }
-
-            @Override
-            public void changeSelection(ItemRecord item) {
-                String moduleId = item.getId();
-                if (toInstall.contains(moduleId)) {
-                    toInstall.remove(moduleId);
-                } else {
-                    toInstall.add(moduleId);
-                }
-                // TODO installSelectionChanged(addonsManagerTab.getToInstallCount());
-            }
-
-            @Override
             public boolean isItemSelectedForOperation(ItemRecord item) {
-                return toInstall.contains(item.getId());
-            }
-
+                return false; // toInstall.contains(item.getId());
+            } */
             @Nonnull
             @Override
             public String getModuleDetails(ItemRecord itemRecord) {
@@ -187,20 +160,6 @@ public class AddonsCatalogTab implements AddonManagerTab {
             itemChangedListener.itemChanged();
         }
         addonsPanel.notifyItemsChanged();
-    }
-
-    public void installAddons() {
-        // TODO addonManager.installAddons(toInstall, addonsPanel);
-        notifyItemsChanged();
-    }
-
-    @Nonnull
-    public Set<String> getToInstall() {
-        return toInstall;
-    }
-
-    public int getToInstallCount() {
-        return toInstall.size();
     }
 
     public interface ItemChangedListener {

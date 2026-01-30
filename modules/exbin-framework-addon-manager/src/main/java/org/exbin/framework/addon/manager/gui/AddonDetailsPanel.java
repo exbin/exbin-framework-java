@@ -32,6 +32,7 @@ import javax.swing.text.html.HTMLDocument;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.AddonManagerModule;
+import org.exbin.framework.addon.manager.AddonOperationVariant;
 import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.api.AddonRecord;
@@ -108,7 +109,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         this.controller = control;
     }
 
-    public void setRecord(ItemRecord itemRecord, boolean selectedForOperation) {
+    public void setRecord(ItemRecord itemRecord) {
         recordChangeInProgress = true;
         addonNameLabel.setText(itemRecord.getName());
         versionLabel.setText(itemRecord.getVersion());
@@ -139,23 +140,17 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         }
         controlPanel.removeAll();
         if (itemRecord.isInstalled()) {
-            boolean alreadyRemoved = controller.isAlreadyRemoved(itemRecord.getId());
-            boolean alreadyInstalled = controller.isAlreadyInstalled(itemRecord.getId());
+            boolean alreadyRemoved = controller.isInCart(itemRecord.getId(), AddonOperationVariant.REMOVE);
+            boolean alreadyInstalled = controller.isInCart(itemRecord.getId(), AddonOperationVariant.INSTALL);
             removeButton.setEnabled(itemRecord.isAddon() && !alreadyRemoved);
             controlPanel.add(removeButton);
             enablementButton.setText(resourceBundle.getString(itemRecord.isEnabled() ? "disableButton.text" : "enableButton.text"));
             controlPanel.add(enablementButton);
-            updateCheckBox.setSelected(selectedForOperation);
-            updateCheckBox.setEnabled(itemRecord.isUpdateAvailable() && !alreadyInstalled);
-            controlPanel.add(updateCheckBox);
             updateButton.setEnabled(itemRecord.isUpdateAvailable() && !alreadyInstalled);
             controlPanel.add(updateButton);
         } else {
-            boolean isInstalled = controller.isAlreadyInstalled(itemRecord.getId());
-            installCheckBox.setSelected(selectedForOperation);
-            installCheckBox.setEnabled(!isInstalled);
+            boolean isInstalled = controller.isInCart(itemRecord.getId(), AddonOperationVariant.INSTALL);
             installButton.setEnabled(!isInstalled);
-            controlPanel.add(installCheckBox);
             controlPanel.add(installButton);
         }
         controlPanel.revalidate();
@@ -173,9 +168,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         installButton = new javax.swing.JButton();
-        installCheckBox = new javax.swing.JCheckBox();
         updateButton = new javax.swing.JButton();
-        updateCheckBox = new javax.swing.JCheckBox();
         enablementButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         controlPanel = new javax.swing.JPanel();
@@ -196,27 +189,11 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             }
         });
 
-        installCheckBox.setToolTipText(resourceBundle.getString("installCheckBox.toolTipText")); // NOI18N
-        installCheckBox.setMargin(new java.awt.Insets(2, 2, 2, 0));
-        installCheckBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                installCheckBoxItemStateChanged(evt);
-            }
-        });
-
         updateButton.setText(resourceBundle.getString("updateButton.text")); // NOI18N
         updateButton.setEnabled(false);
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
-            }
-        });
-
-        updateCheckBox.setToolTipText(resourceBundle.getString("updateCheckBox.toolTipText")); // NOI18N
-        updateCheckBox.setMargin(new java.awt.Insets(2, 2, 2, 0));
-        updateCheckBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateCheckBoxItemStateChanged(evt);
             }
         });
 
@@ -293,32 +270,20 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void enablementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enablementButtonActionPerformed
-        controller.changeEnablement();
+        // TODO controller.addToCart(AddonOperationVariant.ENABLE);
     }//GEN-LAST:event_enablementButtonActionPerformed
 
     private void installButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installButtonActionPerformed
-        controller.performInstall();
+        controller.addToCart(AddonOperationVariant.INSTALL);
     }//GEN-LAST:event_installButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        controller.performUpdate();
+        controller.addToCart(AddonOperationVariant.UPDATE);
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        controller.performRemove();
+        controller.addToCart(AddonOperationVariant.REMOVE);
     }//GEN-LAST:event_removeButtonActionPerformed
-
-    private void installCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_installCheckBoxItemStateChanged
-        if (!recordChangeInProgress) {
-            controller.changeSelection();
-        }
-    }//GEN-LAST:event_installCheckBoxItemStateChanged
-
-    private void updateCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_updateCheckBoxItemStateChanged
-        if (!recordChangeInProgress) {
-            controller.changeSelection();
-        }
-    }//GEN-LAST:event_updateCheckBoxItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addonNameLabel;
@@ -328,33 +293,21 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     private javax.swing.JButton enablementButton;
     private javax.swing.JPanel infoPanel;
     private javax.swing.JButton installButton;
-    private javax.swing.JCheckBox installCheckBox;
     private javax.swing.JScrollPane overviewScrollPane;
     private javax.swing.JTextPane overviewTextPane;
     private javax.swing.JLabel providerLabel;
     private javax.swing.JButton removeButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JButton updateButton;
-    private javax.swing.JCheckBox updateCheckBox;
     private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
     @ParametersAreNonnullByDefault
     public interface Controller {
 
-        boolean isAlreadyInstalled(String moduleId);
+        void addToCart(AddonOperationVariant variant);
 
-        boolean isAlreadyRemoved(String moduleId);
-
-        void changeEnablement();
-
-        void performInstall();
-
-        void performUpdate();
-
-        void performRemove();
-
-        void changeSelection();
+        boolean isInCart(String moduleId, AddonOperationVariant variant);
 
         @Nonnull
         String getModuleDetails(ItemRecord itemRecord);
