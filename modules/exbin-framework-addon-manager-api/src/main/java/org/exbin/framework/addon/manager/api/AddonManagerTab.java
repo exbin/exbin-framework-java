@@ -45,4 +45,11 @@ public interface AddonManagerTab {
      * Notifies content changed.
      */
     void notifyChanged();
+
+    /**
+     * Sets catalog base url.
+     *
+     * @param addonCatalogUrl addon catalog url
+     */
+    void setCatalogUrl(String addonCatalogUrl);
 }

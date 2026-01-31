@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,6 +39,9 @@ import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.ApplicationBundleKeys;
+import org.exbin.framework.addon.manager.api.AddonManagerTab;
+import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
+import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 
 /**
  * Addon manager.
@@ -47,16 +51,17 @@ import org.exbin.framework.ApplicationBundleKeys;
 @ParametersAreNonnullByDefault
 public class AddonManager {
 
-    private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManager.class);
+    protected java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManager.class);
 
-    private AddonCatalogService addonCatalogService;
-    private CatalogOperation catalogOperation = CatalogOperation.IDLE;
-    private ApplicationModulesUsage applicationModulesUsage;
-    private AvailableModuleUpdates availableModuleUpdates = new AvailableModuleUpdates();
-    private AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
-    private List<ItemRecord> installedAddons = new ArrayList<>();
-    private int serviceStatus = -1;
-    private List<AddonOperation> cartOperations = new ArrayList<>();
+    protected AddonCatalogService addonCatalogService;
+    protected AddonsManagerPanel addonsManagerPanel = new AddonsManagerPanel();
+    protected CatalogOperation catalogOperation = CatalogOperation.IDLE;
+    protected ApplicationModulesUsage applicationModulesUsage;
+    protected AvailableModuleUpdates availableModuleUpdates = new AvailableModuleUpdates();
+    protected AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
+    protected List<ItemRecord> installedAddons = new ArrayList<>();
+    protected int serviceStatus = -1;
+    protected final List<AddonOperation> cartOperations = new ArrayList<>();
 
     public AddonManager() {
     }
@@ -116,6 +121,69 @@ public class AddonManager {
 
         availableModuleUpdates.addChangeListener(availableModulesChangeListener);
         availableModuleUpdates.notifyChanged();
+
+        AddonsCartPanel cartPanel = new AddonsCartPanel();
+        addonsManagerPanel.setPreferredSize(new Dimension(800, 500));
+        addonsManagerPanel.setCartComponent(cartPanel);
+        addonsManagerPanel.setController(new AddonsManagerPanel.Controller() {
+            @Override
+            public void tabSwitched() {
+                AddonManagerTab managerTab = addonsManagerPanel.getActiveTab();
+                if (managerTab instanceof AddonsCatalogTab) {
+                    // controlPanel.setOperationCount(((AddonsCatalogTab) managerTab).getToInstallCount());
+                } else if (managerTab instanceof AddonsInstalledTab) {
+                    // controlPanel.setOperationCount(((AddonsInstalledTab) managerTab).getToUpdateCount());
+                } else {
+                    throw new IllegalStateException();
+                }
+            }
+
+            @Override
+            public void openCatalog() {
+                AddonManagerTab managerTab = addonsManagerPanel.getActiveTab();
+            }
+
+            @Override
+            public void openCart() {
+                cartPanel.setCartItems(getCartOperations());
+            }
+
+            @Override
+            public void setFilter(String filter, Runnable finished) {
+                // TODO
+            }
+
+            @Override
+            public void setSearch(String search, Runnable finished) {
+                // TODO
+            }
+        });
+
+        cartPanel.setController(new AddonsCartPanel.Controller() {
+            @Override
+            public void runOperations() {
+                // addonManager.performAddonsOperation(addonManagerPanel);
+
+                AddonManagerTab managerTab = addonsManagerPanel.getActiveTab();
+                managerTab.notifyChanged();
+
+//                if (managerTab instanceof AddonsCatalogTab) {
+//                    ((AddonsCatalogTab) managerTab).installAddons();
+//                } else if (managerTab instanceof AddonsInstalledTab) {
+//                    ((AddonsInstalledTab) managerTab).updateAddons();
+//                } else {
+//                    throw new IllegalStateException();
+//                }
+            }
+        });
+
+        AddonsCatalogTab addonsManagerTab = new AddonsCatalogTab();
+        addonsManagerTab.setAddonManager(this);
+        addonsManagerPanel.addManagerTab(addonsManagerTab);
+
+        AddonsInstalledTab installedManagerTab = new AddonsInstalledTab();
+        installedManagerTab.setAddonManager(this);
+        addonsManagerPanel.addManagerTab(installedManagerTab);
     }
 
     @Nonnull
@@ -123,8 +191,14 @@ public class AddonManager {
         return resourceBundle;
     }
 
+    @Nonnull
+    public AddonsManagerPanel getAddonsManagerPanel() {
+        return addonsManagerPanel;
+    }
+
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
         this.addonCatalogService = addonCatalogService;
+        addonsManagerPanel.setCatalogUrl(getServiceUrl());
 
         Thread thread = new Thread(() -> {
             try {
@@ -151,16 +225,17 @@ public class AddonManager {
         thread.start();
     }
 
-    public boolean isAlreadyInstalled(String moduleId) {
+    public boolean isModuleInstalled(String moduleId) {
         return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
     }
 
-    public boolean isAlreadyRemoved(String moduleId) {
+    public boolean isModuleRemoved(String moduleId) {
         return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
     }
 
     public void addCartOperation(AddonOperation operation) {
         cartOperations.add(operation);
+        addonsManagerPanel.setCartItemsCount(cartOperations.size());
     }
 
     public boolean isInCart(String moduleId, AddonOperationVariant variant) {
@@ -227,10 +302,7 @@ public class AddonManager {
 
     @Nonnull
     public List<AddonOperation> getCartOperations() {
-        List<AddonOperation> addonOperations = new ArrayList<>();
-        AddonOperation operation = new AddonOperation(AddonOperationVariant.INSTALL, installedAddons.get(0));
-        addonOperations.add(operation);
-        return addonOperations;
+        return cartOperations;
     }
 
     private class CatalogThread extends Thread {

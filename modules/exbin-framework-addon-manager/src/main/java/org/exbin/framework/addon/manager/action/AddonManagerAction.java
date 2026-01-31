@@ -27,7 +27,7 @@ import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.AddonManagerModule;
 import org.exbin.framework.addon.manager.AddonsCatalogTab;
-import org.exbin.framework.addon.manager.InstalledManagerTab;
+import org.exbin.framework.addon.manager.AddonsInstalledTab;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.window.api.WindowModuleApi;
@@ -80,69 +80,7 @@ public class AddonManagerAction extends AbstractAction {
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        AddonsManagerPanel addonManagerPanel = new AddonsManagerPanel();
-        AddonsCartPanel cartPanel = new AddonsCartPanel();
-        addonManagerPanel.setPreferredSize(new Dimension(800, 500));
-        addonManagerPanel.setCartComponent(cartPanel);
-        addonManagerPanel.setController(new AddonsManagerPanel.Controller() {
-            @Override
-            public void tabSwitched() {
-                AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
-                if (managerTab instanceof AddonsCatalogTab) {
-                    // controlPanel.setOperationCount(((AddonsCatalogTab) managerTab).getToInstallCount());
-                } else if (managerTab instanceof InstalledManagerTab) {
-                    // controlPanel.setOperationCount(((InstalledManagerTab) managerTab).getToUpdateCount());
-                } else {
-                    throw new IllegalStateException();
-                }
-            }
-
-            @Override
-            public void openCatalog() {
-                AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
-            }
-
-            @Override
-            public void openCart() {
-                cartPanel.setCartItems(addonManager.getCartOperations());
-            }
-
-            @Override
-            public void setFilter(String filter, Runnable finished) {
-                // TODO
-            }
-
-            @Override
-            public void setSearch(String search, Runnable finished) {
-                // TODO
-            }
-        });
-
-        cartPanel.setController(new AddonsCartPanel.Controller() {
-            @Override
-            public void runOperations() {
-                // addonManager.performAddonsOperation(addonManagerPanel);
-
-                AddonManagerTab managerTab = addonManagerPanel.getActiveTab();
-                managerTab.notifyChanged();
-
-//                if (managerTab instanceof AddonsCatalogTab) {
-//                    ((AddonsCatalogTab) managerTab).installAddons();
-//                } else if (managerTab instanceof InstalledManagerTab) {
-//                    ((InstalledManagerTab) managerTab).updateAddons();
-//                } else {
-//                    throw new IllegalStateException();
-//                }
-            }
-        });
-
-        AddonsCatalogTab addonsManagerTab = new AddonsCatalogTab();
-        addonsManagerTab.setAddonManager(addonManager);
-        addonManagerPanel.addManagerTab(addonsManagerTab);
-
-        InstalledManagerTab installedManagerTab = new InstalledManagerTab();
-        installedManagerTab.setAddonManager(addonManager);
-        addonManagerPanel.addManagerTab(installedManagerTab);
+        AddonsManagerPanel addonManagerPanel = addonManager.getAddonsManagerPanel();
 
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         controlPanel.setController(new AddonsControlPanel.Controller() {

@@ -72,7 +72,6 @@ public class AddonsCatalogTab implements AddonManagerTab {
             @Override
             public void addToCart(ItemRecord itemRecord, AddonOperationVariant variant) {
                 addonManager.addCartOperation(new AddonOperation(variant, itemRecord));
-                notifyItemsChanged();
             }
 
             @Override
@@ -81,13 +80,13 @@ public class AddonsCatalogTab implements AddonManagerTab {
             }
 
             /* @Override
-            public boolean isAlreadyInstalled(String moduleId) {
-                return addonManager.isAlreadyInstalled(moduleId);
+            public boolean isModuleInstalled(String moduleId) {
+                return addonManager.isModuleInstalled(moduleId);
             }
 
             @Override
-            public boolean isAlreadyRemoved(String moduleId) {
-                return addonManager.isAlreadyRemoved(moduleId);
+            public boolean isModuleRemoved(String moduleId) {
+                return addonManager.isModuleRemoved(moduleId);
             }
 
             @Override
@@ -113,6 +112,11 @@ public class AddonsCatalogTab implements AddonManagerTab {
     @Override
     public Component getComponent() {
         return addonsPanel;
+    }
+
+    @Override
+    public void setCatalogUrl(String addonCatalogUrl) {
+        addonsPanel.setCatalogUrl(addonCatalogUrl);
     }
 
     private int getItemsCount() {

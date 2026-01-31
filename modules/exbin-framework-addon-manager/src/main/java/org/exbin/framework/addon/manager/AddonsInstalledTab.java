@@ -31,20 +31,20 @@ import org.exbin.framework.addon.manager.api.ItemRecord;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class InstalledManagerTab implements AddonManagerTab {
+public class AddonsInstalledTab implements AddonManagerTab {
 
-    private AddonsPanel installedPanel = new AddonsPanel();
+    private AddonsPanel addonsPanel = new AddonsPanel();
     private List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
 
     private AddonManager addonManager;
     private List<Integer> filterItems = null;
 
-    public InstalledManagerTab() {
+    public AddonsInstalledTab() {
         init();
     }
 
     private void init() {
-        installedPanel.setController(new AddonsPanel.Controller() {
+        addonsPanel.setController(new AddonsPanel.Controller() {
 
             @Override
             public void setFilter(String filter, Runnable finished) {
@@ -67,19 +67,18 @@ public class InstalledManagerTab implements AddonManagerTab {
 
             @Override
             public int getItemsCount() {
-                return InstalledManagerTab.this.getItemsCount();
+                return AddonsInstalledTab.this.getItemsCount();
             }
 
             @Nonnull
             @Override
             public ItemRecord getItem(int index) {
-                return InstalledManagerTab.this.getItem(index);
+                return AddonsInstalledTab.this.getItem(index);
             }
 
             @Override
             public void addToCart(ItemRecord itemRecord, AddonOperationVariant variant) {
                 addonManager.addCartOperation(new AddonOperation(variant, itemRecord));
-                notifyItemsChanged();
             }
 
             @Override
@@ -88,13 +87,13 @@ public class InstalledManagerTab implements AddonManagerTab {
             }
 
             /* @Override
-            public boolean isAlreadyInstalled(String moduleId) {
-                return addonManager.isAlreadyInstalled(moduleId);
+            public boolean isModuleInstalled(String moduleId) {
+                return addonManager.isModuleInstalled(moduleId);
             }
 
             @Override
-            public boolean isAlreadyRemoved(String moduleId) {
-                return addonManager.isAlreadyRemoved(moduleId);
+            public boolean isModuleRemoved(String moduleId) {
+                return addonManager.isModuleRemoved(moduleId);
             }
 
             @Override
@@ -107,7 +106,7 @@ public class InstalledManagerTab implements AddonManagerTab {
                 return addonManager.getModuleDetails(itemRecord);
             }
         });
-        itemChangedListeners.add(installedPanel::notifyItemChanged);
+        itemChangedListeners.add(addonsPanel::notifyItemChanged);
     }
 
     private int getItemsCount() {
@@ -148,13 +147,13 @@ public class InstalledManagerTab implements AddonManagerTab {
     @Nonnull
     @Override
     public String getTitle() {
-        return installedPanel.getResourceBundle().getString("installedTab.title");
+        return addonsPanel.getResourceBundle().getString("installedTab.title");
     }
 
     @Nonnull
     @Override
     public Component getComponent() {
-        return installedPanel;
+        return addonsPanel;
     }
 
     @Override
@@ -162,11 +161,16 @@ public class InstalledManagerTab implements AddonManagerTab {
         notifyItemsChanged();
     }
 
+    @Override
+    public void setCatalogUrl(String addonCatalogUrl) {
+        addonsPanel.setCatalogUrl(addonCatalogUrl);
+    }
+
     private void notifyItemsChanged() {
         for (ItemChangedListener itemChangedListener : itemChangedListeners) {
             itemChangedListener.itemChanged();
         }
-        installedPanel.notifyItemsChanged();
+        addonsPanel.notifyItemsChanged();
     }
 
     public void updateAddons() {

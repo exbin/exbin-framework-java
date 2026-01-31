@@ -53,7 +53,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     protected Controller controller;
     protected MouseListener providerLinkListener;
     protected final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
-    protected boolean recordChangeInProgress = false;
     protected String providerLink = null;
     // TODO private final Thread detailsThread
 
@@ -69,16 +68,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
                 DesktopUtils.openDesktopURL(event.getURL().toExternalForm());
             }
         });
-        try {
-            AddonManagerModule addonManagerModule = (AddonManagerModule) App.getModule(AddonManagerModuleApi.class);
-            AddonManager addonManager = addonManagerModule.getAddonManager();
-            String addonServiceUrl = addonManager.getServiceUrl();
-            HTMLDocument htmlDocument = new HTMLDocument();
-            htmlDocument.setBase(new URI(addonServiceUrl).toURL());
-            overviewTextPane.setDocument(htmlDocument);
-        } catch (MalformedURLException | URISyntaxException ex) {
-            Logger.getLogger(AddonDetailsPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
         providerLinkListener = new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -109,8 +98,17 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         this.controller = control;
     }
 
+    public void setCatalogUrl(String addonServiceUrl) {
+        try {
+            HTMLDocument htmlDocument = new HTMLDocument();
+            htmlDocument.setBase(new URI(addonServiceUrl).toURL());
+            overviewTextPane.setDocument(htmlDocument);
+        } catch (MalformedURLException | URISyntaxException ex) {
+            Logger.getLogger(AddonDetailsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void setRecord(ItemRecord itemRecord) {
-        recordChangeInProgress = true;
         addonNameLabel.setText(itemRecord.getName());
         versionLabel.setText(itemRecord.getVersion());
         String provider = itemRecord.getProvider().orElse("");
@@ -138,6 +136,10 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         } else {
             dependenciesTableModel.setDependencies(null);
         }
+        updateRecordControlState(itemRecord);
+    }
+
+    public void updateRecordControlState(ItemRecord itemRecord) {
         controlPanel.removeAll();
         if (itemRecord.isInstalled()) {
             boolean alreadyRemoved = controller.isInCart(itemRecord.getId(), AddonOperationVariant.REMOVE);
@@ -155,7 +157,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         }
         controlPanel.revalidate();
         controlPanel.repaint();
-        recordChangeInProgress = false;
     }
 
     /**

@@ -91,6 +91,7 @@ public class AddonsPanel extends javax.swing.JPanel {
             @Override
             public void addToCart(AddonOperationVariant variant) {
                 controller.addToCart(activeRecord, variant);
+                addonDetailsPanel.updateRecordControlState(activeRecord);
             }
 
             @Override
@@ -104,6 +105,10 @@ public class AddonsPanel extends javax.swing.JPanel {
                 return controller.getModuleDetails(itemRecord);
             }
         });
+    }
+    
+    public void setCatalogUrl(String addonCatalogUrl) {
+        addonDetailsPanel.setCatalogUrl(addonCatalogUrl);
     }
 
     private void notifyItemSelected() {
