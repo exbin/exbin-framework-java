@@ -19,8 +19,6 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
@@ -32,16 +30,13 @@ import org.exbin.framework.addon.manager.api.DependencyRecord;
 import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.addon.manager.operation.ApplicationModulesUsage;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
-import org.exbin.framework.addon.manager.operation.UpdateAvailabilityOperation;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
-import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleRecord;
-import org.exbin.framework.ApplicationBundleKeys;
-import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
+import org.exbin.framework.addon.manager.api.AddonManagerPage;
 
 /**
  * Addon manager.
@@ -53,15 +48,14 @@ public class AddonManager {
 
     protected java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManager.class);
 
-    protected AddonCatalogService addonCatalogService;
     protected AddonsManagerPanel addonsManagerPanel = new AddonsManagerPanel();
-    protected CatalogOperation catalogOperation = CatalogOperation.IDLE;
-    protected ApplicationModulesUsage applicationModulesUsage;
     protected AvailableModuleUpdates availableModuleUpdates = new AvailableModuleUpdates();
     protected AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
+    protected ApplicationModulesUsage applicationModulesUsage;
     protected List<ItemRecord> installedAddons = new ArrayList<>();
-    protected int serviceStatus = -1;
+
     protected final List<AddonOperation> cartOperations = new ArrayList<>();
+    protected final List<AddonManagerPage> managerPages = new ArrayList<>();
 
     public AddonManager() {
     }
@@ -128,11 +122,11 @@ public class AddonManager {
         addonsManagerPanel.setController(new AddonsManagerPanel.Controller() {
             @Override
             public void tabSwitched() {
-                AddonManagerTab managerTab = addonsManagerPanel.getActiveTab();
-                if (managerTab instanceof AddonsCatalogTab) {
-                    // controlPanel.setOperationCount(((AddonsCatalogTab) managerTab).getToInstallCount());
-                } else if (managerTab instanceof AddonsInstalledTab) {
-                    // controlPanel.setOperationCount(((AddonsInstalledTab) managerTab).getToUpdateCount());
+                AddonManagerPage managerTab = addonsManagerPanel.getActiveTab();
+                if (managerTab instanceof AddonsCatalogPage) {
+                    // controlPanel.setOperationCount(((AddonsCatalogPage) managerTab).getToInstallCount());
+                } else if (managerTab instanceof AddonsInstalledPage) {
+                    // controlPanel.setOperationCount(((AddonsInstalledPage) managerTab).getToUpdateCount());
                 } else {
                     throw new IllegalStateException();
                 }
@@ -140,7 +134,7 @@ public class AddonManager {
 
             @Override
             public void openCatalog() {
-                AddonManagerTab managerTab = addonsManagerPanel.getActiveTab();
+                AddonManagerPage managerTab = addonsManagerPanel.getActiveTab();
             }
 
             @Override
@@ -150,12 +144,16 @@ public class AddonManager {
 
             @Override
             public void setFilter(String filter, Runnable finished) {
-                // TODO
+                for (AddonManagerPage managerPage : managerPages) {
+                    managerPage.setFilter(filter, finished);
+                }
             }
 
             @Override
             public void setSearch(String search, Runnable finished) {
-                // TODO
+                for (AddonManagerPage managerPage : managerPages) {
+                    managerPage.setSearch(search, finished);
+                }
             }
         });
 
@@ -164,26 +162,31 @@ public class AddonManager {
             public void runOperations() {
                 // addonManager.performAddonsOperation(addonManagerPanel);
 
-                AddonManagerTab managerTab = addonsManagerPanel.getActiveTab();
+                AddonManagerPage managerTab = addonsManagerPanel.getActiveTab();
                 managerTab.notifyChanged();
 
-//                if (managerTab instanceof AddonsCatalogTab) {
-//                    ((AddonsCatalogTab) managerTab).installAddons();
-//                } else if (managerTab instanceof AddonsInstalledTab) {
-//                    ((AddonsInstalledTab) managerTab).updateAddons();
+//                if (managerTab instanceof AddonsCatalogPage) {
+//                    ((AddonsCatalogPage) managerTab).installAddons();
+//                } else if (managerTab instanceof AddonsInstalledPage) {
+//                    ((AddonsInstalledPage) managerTab).updateAddons();
 //                } else {
 //                    throw new IllegalStateException();
 //                }
             }
         });
 
-        AddonsCatalogTab addonsManagerTab = new AddonsCatalogTab();
-        addonsManagerTab.setAddonManager(this);
-        addonsManagerPanel.addManagerTab(addonsManagerTab);
+        AddonsCatalogPage catalogPage = new AddonsCatalogPage();
+        catalogPage.setAddonManager(this);
+        addManagerPage(catalogPage);
 
-        AddonsInstalledTab installedManagerTab = new AddonsInstalledTab();
-        installedManagerTab.setAddonManager(this);
-        addonsManagerPanel.addManagerTab(installedManagerTab);
+        AddonsInstalledPage installedPage = new AddonsInstalledPage();
+        installedPage.setAddonManager(this);
+        addManagerPage(installedPage);
+    }
+
+    public void addManagerPage(AddonManagerPage page) {
+        managerPages.add(page);
+        addonsManagerPanel.addManagerPage(page);
     }
 
     @Nonnull
@@ -197,32 +200,18 @@ public class AddonManager {
     }
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
-        this.addonCatalogService = addonCatalogService;
-        addonsManagerPanel.setCatalogUrl(getServiceUrl());
+        addonsManagerPanel.setCatalogUrl(addonCatalogService.getCatalogPageUrl());
 
-        Thread thread = new Thread(() -> {
-            try {
-                ResourceBundle appBundle = App.getAppBundle();
-                String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-                serviceStatus = addonCatalogService.checkStatus(releaseString);
-            } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);
-                serviceStatus = -1;
+        for (AddonManagerPage managerPage : managerPages) {
+            if (managerPage instanceof AddonsCatalogPage) {
+                ((AddonsCatalogPage) managerPage).setAddonCatalogService(addonCatalogService);
             }
-            // TODO
-            // controlPanel.showLegacyWarning();
-            if (serviceStatus == -1) {
-                // TODO controlPanel.showManualOnlyWarning();
-            } else {
-                if (serviceStatus > availableModuleUpdates.getStatus()) {
-                    UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
-                    availabilityOperation.run();
-                    availableModuleUpdates.setLatestVersion(serviceStatus, availabilityOperation.getLatestVersions());
-                    availableModuleUpdates.writeConfigFile();
-                }
-            }
-        });
-        thread.start();
+        }
+    }
+
+    @Nonnull
+    public AvailableModuleUpdates getAvailableModuleUpdates() {
+        return availableModuleUpdates;
     }
 
     public boolean isModuleInstalled(String moduleId) {
@@ -258,79 +247,7 @@ public class AddonManager {
     }
 
     @Nonnull
-    public String getModuleDetails(ItemRecord itemRecord) {
-        if (itemRecord.isAddon()) {
-            try {
-                return addonCatalogService.getModuleDetails(itemRecord.getId());
-            } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        return "";
-    }
-
-    @Nonnull
-    public List<AddonRecord> searchForAddons() throws AddonCatalogServiceException {
-        if (serviceStatus == -1) {
-            return new ArrayList<>();
-        }
-
-        List<AddonRecord> searchResult = addonCatalogService.searchForAddons("");
-        for (int i = searchResult.size() - 1; i >= 0; i--) {
-            AddonRecord record = searchResult.get(i);
-            ModuleProvider moduleProvider = App.getModuleProvider();
-            if (((BasicModuleProvider) moduleProvider).hasModule(record.getId()) && !addonUpdateChanges.hasRemoveAddon(record.getId())) {
-                searchResult.remove(i);
-            } else {
-                if (availableModuleUpdates.getStatus() != -1) {
-                    record.setUpdateAvailable(availableModuleUpdates.isUpdateAvailable(record.getId(), record.getVersion()));
-                }
-            }
-        }
-        return searchResult;
-    }
-
-    private void invokeCatalogOperation(CatalogOperation operation) {
-
-    }
-
-    @Nonnull
-    public String getServiceUrl() {
-        return addonCatalogService.getCatalogPageUrl();
-    }
-
-    @Nonnull
     public List<AddonOperation> getCartOperations() {
         return cartOperations;
-    }
-
-    private class CatalogThread extends Thread {
-
-        public CatalogThread() {
-            super("AddonCatalogThread");
-        }
-
-        @Override
-        public void run() {
-            switch (catalogOperation) {
-                case CHECK:
-                    try {
-                        ResourceBundle appBundle = App.getAppBundle();
-                        String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-                        addonCatalogService.checkStatus(releaseString);
-                    } catch (AddonCatalogServiceException ex) {
-                        Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);
-                    }
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }
-    }
-
-    private enum CatalogOperation {
-        IDLE,
-        CHECK
     }
 }

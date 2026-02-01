@@ -26,15 +26,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.ImageIcon;
 import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.html.HTMLDocument;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.AddonManager;
-import org.exbin.framework.addon.manager.AddonManagerModule;
 import org.exbin.framework.addon.manager.AddonOperationVariant;
 import org.exbin.framework.menu.popup.api.MenuPopupModuleApi;
-import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.DependenciesTableModel;
 import org.exbin.framework.addon.manager.api.ItemRecord;
@@ -183,6 +181,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
         dependenciesScrollPane = new javax.swing.JScrollPane();
         dependenciesTable = new javax.swing.JTable();
 
+        installButton.setIcon(new ImageIcon(getClass().getResource(resourceBundle.getString("installButton.icon"))));
         installButton.setText(resourceBundle.getString("installButton.text")); // NOI18N
         installButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,6 +189,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             }
         });
 
+        updateButton.setIcon(new ImageIcon(getClass().getResource(resourceBundle.getString("updateButton.icon"))));
         updateButton.setText(resourceBundle.getString("updateButton.text")); // NOI18N
         updateButton.setEnabled(false);
         updateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -206,6 +206,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             }
         });
 
+        removeButton.setIcon(new ImageIcon(getClass().getResource(resourceBundle.getString("removeButton.icon"))));
         removeButton.setText(resourceBundle.getString("removeButton.text")); // NOI18N
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -27,11 +27,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import org.exbin.framework.App;
-import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.language.api.LanguageModuleApi;
+import org.exbin.framework.addon.manager.api.AddonManagerPage;
 
 /**
- * Addon manager panel.
+ * Addons manager panel.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -39,7 +39,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 public class AddonsManagerPanel extends javax.swing.JPanel {
 
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsManagerPanel.class);
-    protected final List<AddonManagerTab> managerTabs = new ArrayList<>();
+    protected final List<AddonManagerPage> managerTabs = new ArrayList<>();
     protected Controller controller;
     protected Component cartComponent;
 
@@ -141,20 +141,20 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
     }
 
     public void setCatalogUrl(String addonCatalogUrl) {
-        for (AddonManagerTab managerTab : managerTabs) {
+        for (AddonManagerPage managerTab : managerTabs) {
             managerTab.setCatalogUrl(addonCatalogUrl);
         }
     }
 
-    public void addManagerTab(AddonManagerTab managerTab) {
-        managerTabs.add(managerTab);
-        tabbedPane.add(managerTab.getTitle(), managerTab.getComponent());
+    public void addManagerPage(AddonManagerPage managerPage) {
+        managerTabs.add(managerPage);
+        tabbedPane.add(managerPage.getTitle(), managerPage.getComponent());
         tabbedPane.revalidate();
         tabbedPane.repaint();
     }
 
     @Nonnull
-    public AddonManagerTab getActiveTab() {
+    public AddonManagerPage getActiveTab() {
         int selectedIndex = tabbedPane.getSelectedIndex();
         return managerTabs.get(selectedIndex);
     }

@@ -106,7 +106,7 @@ public class AddonsPanel extends javax.swing.JPanel {
             }
         });
     }
-    
+
     public void setCatalogUrl(String addonCatalogUrl) {
         addonDetailsPanel.setCatalogUrl(addonCatalogUrl);
     }
@@ -190,8 +190,6 @@ public class AddonsPanel extends javax.swing.JPanel {
 
     @ParametersAreNonnullByDefault
     public interface Controller {
-
-        void setFilter(String filter, Runnable finished);
 
         int getItemsCount();
 

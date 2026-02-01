@@ -26,10 +26,9 @@ import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.action.api.DialogParentComponent;
 import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.AddonManagerModule;
-import org.exbin.framework.addon.manager.AddonsCatalogTab;
-import org.exbin.framework.addon.manager.AddonsInstalledTab;
+import org.exbin.framework.addon.manager.AddonsCatalogPage;
+import org.exbin.framework.addon.manager.AddonsInstalledPage;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
-import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
@@ -38,6 +37,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.context.api.ContextChangeRegistration;
 import org.exbin.framework.help.api.HelpLink;
+import org.exbin.framework.addon.manager.api.AddonManagerPage;
 
 /**
  * Addon manager action.

@@ -18,34 +18,28 @@ package org.exbin.framework.addon.manager;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JOptionPane;
-import org.exbin.framework.addon.manager.api.AddonManagerTab;
 import org.exbin.framework.addon.manager.gui.AddonsPanel;
-import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.addon.manager.api.ItemRecord;
-import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
+import org.exbin.framework.addon.manager.api.AddonManagerPage;
 
 /**
- * Addons manager tab.
+ * Installed manager page.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonsCatalogTab implements AddonManagerTab {
+public class AddonsInstalledPage implements AddonManagerPage {
 
-    private AddonsPanel addonsPanel = new AddonsPanel();
-    private List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
+    protected AddonsPanel addonsPanel = new AddonsPanel();
+    protected List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
 
-    private AddonManager addonManager;
-    private List<AddonRecord> searchResult;
+    protected AddonManager addonManager;
+    protected List<Integer> filterItems = null;
 
-    public AddonsCatalogTab() {
+    public AddonsInstalledPage() {
         init();
     }
 
@@ -53,20 +47,14 @@ public class AddonsCatalogTab implements AddonManagerTab {
         addonsPanel.setController(new AddonsPanel.Controller() {
 
             @Override
-            public void setFilter(String filter, Runnable finished) {
-                // TODO
-                finished.run();
-            }
-
-            @Override
             public int getItemsCount() {
-                return AddonsCatalogTab.this.getItemsCount();
+                return AddonsInstalledPage.this.getItemsCount();
             }
 
             @Nonnull
             @Override
             public ItemRecord getItem(int index) {
-                return AddonsCatalogTab.this.getItem(index);
+                return AddonsInstalledPage.this.getItem(index);
             }
 
             @Override
@@ -79,44 +67,14 @@ public class AddonsCatalogTab implements AddonManagerTab {
                 return addonManager.isInCart(moduleId, variant);
             }
 
-            /* @Override
-            public boolean isModuleInstalled(String moduleId) {
-                return addonManager.isModuleInstalled(moduleId);
-            }
-
-            @Override
-            public boolean isModuleRemoved(String moduleId) {
-                return addonManager.isModuleRemoved(moduleId);
-            }
-
-            @Override
-            public boolean isItemSelectedForOperation(ItemRecord item) {
-                return false; // toInstall.contains(item.getId());
-            } */
             @Nonnull
             @Override
             public String getModuleDetails(ItemRecord itemRecord) {
-                return addonManager.getModuleDetails(itemRecord);
+                // TODO
+                return "";
             }
         });
-        itemChangedListeners.add((ItemChangedListener) addonsPanel::notifyItemChanged);
-    }
-
-    @Nonnull
-    @Override
-    public String getTitle() {
-        return addonsPanel.getResourceBundle().getString("addonsTab.title");
-    }
-
-    @Nonnull
-    @Override
-    public Component getComponent() {
-        return addonsPanel;
-    }
-
-    @Override
-    public void setCatalogUrl(String addonCatalogUrl) {
-        addonsPanel.setCatalogUrl(addonCatalogUrl);
+        itemChangedListeners.add(addonsPanel::notifyItemChanged);
     }
 
     private int getItemsCount() {
@@ -124,22 +82,22 @@ public class AddonsCatalogTab implements AddonManagerTab {
             return 0;
         }
 
-        if (searchResult == null) {
-            try {
-                searchResult = addonManager.searchForAddons();
-            } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonsCatalogTab.class.getName()).log(Level.SEVERE, null, ex);
-                ResourceBundle resourceBundle = addonManager.getResourceBundle();
-                JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
-                return 0;
-            }
+        List<ItemRecord> installedAddons = addonManager.getInstalledAddons();
+        if (filterItems != null) {
+            return filterItems.size();
         }
-        return searchResult.size();
+
+        return installedAddons.size();
     }
 
     @Nonnull
     private ItemRecord getItem(int index) {
-        return searchResult.get(index);
+        List<ItemRecord> installedAddons = addonManager.getInstalledAddons();
+        if (filterItems != null) {
+            return installedAddons.get(filterItems.get(index));
+        }
+
+        return installedAddons.get(index);
     }
 
     public void setAddonManager(AddonManager addonManager) {
@@ -154,9 +112,51 @@ public class AddonsCatalogTab implements AddonManagerTab {
         notifyItemsChanged();
     }
 
+    @Nonnull
+    @Override
+    public String getTitle() {
+        return addonsPanel.getResourceBundle().getString("installedTab.title");
+    }
+
+    @Nonnull
+    @Override
+    public Component getComponent() {
+        return addonsPanel;
+    }
+
     @Override
     public void notifyChanged() {
         notifyItemsChanged();
+    }
+
+    @Override
+    public void setCatalogUrl(String addonCatalogUrl) {
+        addonsPanel.setCatalogUrl(addonCatalogUrl);
+    }
+
+    @Override
+    public void setFilter(Object filter, Runnable finished) {
+        // TODO
+        finished.run();
+    }
+
+    @Override
+    public void setSearch(String search, Runnable finished) {
+        // TODO Implement as background thread
+        List<ItemRecord> installedAddons = addonManager.getInstalledAddons();
+        List<Integer> items = null;
+        search = search.trim().toLowerCase();
+        if (!search.isEmpty()) {
+            items = new ArrayList<>();
+            for (int i = 0; i < installedAddons.size(); i++) {
+                ItemRecord record = installedAddons.get(i);
+                if (record.getName().toLowerCase().contains(search)) {
+                    items.add(i);
+                }
+            }
+        }
+        filterItems = items;
+        finished.run();
     }
 
     private void notifyItemsChanged() {
@@ -164,6 +164,11 @@ public class AddonsCatalogTab implements AddonManagerTab {
             itemChangedListener.itemChanged();
         }
         addonsPanel.notifyItemsChanged();
+    }
+
+    public void updateAddons() {
+        // TODO addonManager.updateAddons(toUpdate, installedPanel);
+        notifyItemsChanged();
     }
 
     public interface ItemChangedListener {

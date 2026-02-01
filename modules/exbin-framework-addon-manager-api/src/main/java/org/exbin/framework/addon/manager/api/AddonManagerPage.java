@@ -17,13 +17,15 @@ package org.exbin.framework.addon.manager.api;
 
 import java.awt.Component;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Addon manager tab.
+ * Addon manager page.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface AddonManagerTab {
+@ParametersAreNonnullByDefault
+public interface AddonManagerPage {
 
     /**
      * Returns tab title.
@@ -52,4 +54,20 @@ public interface AddonManagerTab {
      * @param addonCatalogUrl addon catalog url
      */
     void setCatalogUrl(String addonCatalogUrl);
+
+    /**
+     * Sets filter condition.
+     *
+     * @param filter filter condition
+     * @param finished finished method
+     */
+    void setFilter(Object filter, Runnable finished);
+
+    /**
+     * Sets search condition.
+     *
+     * @param search search condition
+     * @param finished finished method
+     */
+    void setSearch(String search, Runnable finished);
 }
