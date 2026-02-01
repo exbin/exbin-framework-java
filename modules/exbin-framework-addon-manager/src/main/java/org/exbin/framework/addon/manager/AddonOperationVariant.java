@@ -16,12 +16,14 @@
 package org.exbin.framework.addon.manager;
 
 /**
- * Cart operation variant.
+ * Addon operation variant.
  *
  * @author ExBin Project (https://exbin.org)
  */
 public enum AddonOperationVariant {
     INSTALL,
     UPDATE,
-    REMOVE
+    REMOVE,
+    ENABLE,
+    DISABLE
 }

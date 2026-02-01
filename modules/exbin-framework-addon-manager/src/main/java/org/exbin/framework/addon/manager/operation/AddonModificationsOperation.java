@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager.operation;
 
+import org.exbin.framework.addon.manager.ApplicationModulesUsage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,11 +55,11 @@ import org.exbin.framework.options.api.OptionsModuleApi;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonUpdateOperation {
-
-    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonUpdateOperation.class);
+public class AddonModificationsOperation {
 
     protected static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonModificationsOperation.class);
+
     protected final String primaryLicense = "Apache-2.0";
     protected final AddonCatalogService addonCatalogService;
     protected final AddonUpdateChanges addonUpdateChanges;
@@ -69,7 +70,7 @@ public class AddonUpdateOperation {
 
     protected final UpdateOperations updateOperations = new UpdateOperations();
 
-    public AddonUpdateOperation(AddonCatalogService addonCatalogService, ApplicationModulesUsage applicationModulesUsage, AddonUpdateChanges addonUpdateChanges) {
+    public AddonModificationsOperation(AddonCatalogService addonCatalogService, ApplicationModulesUsage applicationModulesUsage, AddonUpdateChanges addonUpdateChanges) {
         this.addonCatalogService = addonCatalogService;
         this.applicationModulesUsage = applicationModulesUsage;
         this.addonUpdateChanges = addonUpdateChanges;
@@ -116,7 +117,7 @@ public class AddonUpdateOperation {
             try {
                 record.setUrl(addonCatalogService.getLicenseDownloadUrl(record.getRemoteFile()));
             } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -133,7 +134,7 @@ public class AddonUpdateOperation {
                 record.setUrl(addonCatalogService.getFileDownloadUrl(moduleFile));
                 downloadRecords.add(record);
             } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         downloadItemDescription = resourceBundle.getString("downloadItemDescription.library");
@@ -143,7 +144,7 @@ public class AddonUpdateOperation {
                 record.setUrl(addonCatalogService.getFileDownloadUrl(library));
                 downloadRecords.add(record);
             } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         downloadItemDescription = resourceBundle.getString("downloadItemDescription.mavenLibrary");
@@ -151,10 +152,10 @@ public class AddonUpdateOperation {
             String libraryFile = BasicModuleProvider.mavenCodeToFileName(library);
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), libraryFile);
             try {
-                record.setUrl(new URI(AddonUpdateOperation.mavenCodeToDownloadUrl(library)).toURL());
+                record.setUrl(new URI(AddonModificationsOperation.mavenCodeToDownloadUrl(library)).toURL());
                 downloadRecords.add(record);
             } catch (MalformedURLException | URISyntaxException ex) {
-                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return downloadRecords;
@@ -171,7 +172,7 @@ public class AddonUpdateOperation {
                 updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonId));
                 updateOperations.installAddons.add(addonId);
             } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
             addAddonDependencies((AddonRecord) item);
         } else {
@@ -196,7 +197,7 @@ public class AddonUpdateOperation {
             try {
                 updateOperations.downloadModule.add(addonCatalogService.getAddonFile(item.getId()));
             } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
             addAddonDependencies((AddonRecord) item);
         } else {
@@ -271,10 +272,10 @@ public class AddonUpdateOperation {
                         } while (line != null);
                     } catch (FileNotFoundException ex) {
                     } catch (NumberFormatException | IOException ex) {
-                        Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, "Failed to read modules update cache", ex);
+                        Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, "Failed to read modules update cache", ex);
                     }
                 } catch (MalformedURLException | URISyntaxException ex) {
-                    Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -309,7 +310,7 @@ public class AddonUpdateOperation {
                             updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonRecord.getId()));
                             dependencies.addAll(addonRecord.getDependencies());
                         } catch (AddonCatalogServiceException ex) {
-                            Logger.getLogger(AddonUpdateOperation.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                     break;

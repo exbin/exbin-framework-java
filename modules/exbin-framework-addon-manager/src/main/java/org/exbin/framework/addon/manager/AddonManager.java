@@ -17,6 +17,7 @@ package org.exbin.framework.addon.manager;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -28,7 +29,6 @@ import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.api.DependencyRecord;
 import org.exbin.framework.addon.manager.api.ItemRecord;
-import org.exbin.framework.addon.manager.operation.ApplicationModulesUsage;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
@@ -37,6 +37,7 @@ import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
+import org.exbin.framework.addon.manager.operation.service.AddonOperationService;
 
 /**
  * Addon manager.
@@ -48,6 +49,7 @@ public class AddonManager {
 
     protected java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManager.class);
 
+    protected AddonCatalogService addonCatalogService;
     protected AddonsManagerPanel addonsManagerPanel = new AddonsManagerPanel();
     protected AvailableModuleUpdates availableModuleUpdates = new AvailableModuleUpdates();
     protected AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
@@ -160,11 +162,14 @@ public class AddonManager {
         cartPanel.setController(new AddonsCartPanel.Controller() {
             @Override
             public void runOperations() {
-                // addonManager.performAddonsOperation(addonManagerPanel);
+                AddonOperationService addonOperationService = new AddonOperationService(AddonManager.this);
+                addonOperationService.setAddonCatalogService(addonCatalogService);
+                addonOperationService.performAddonOperations(cartOperations, cartPanel);
 
-                AddonManagerPage managerTab = addonsManagerPanel.getActiveTab();
-                managerTab.notifyChanged();
-
+                // TODO
+//                AddonManagerPage managerTab = addonsManagerPanel.getActiveTab();
+//                managerTab.notifyChanged();
+//
 //                if (managerTab instanceof AddonsCatalogPage) {
 //                    ((AddonsCatalogPage) managerTab).installAddons();
 //                } else if (managerTab instanceof AddonsInstalledPage) {
@@ -172,6 +177,12 @@ public class AddonManager {
 //                } else {
 //                    throw new IllegalStateException();
 //                }
+            }
+
+            @Override
+            public void performRemove(int[] indices) {
+                cartPanel.removeIndices(indices);
+                removeIndices(indices);
             }
         });
 
@@ -182,6 +193,18 @@ public class AddonManager {
         AddonsInstalledPage installedPage = new AddonsInstalledPage();
         installedPage.setAddonManager(this);
         addManagerPage(installedPage);
+    }
+
+    private void removeIndices(int[] indices) {
+        if (indices.length == 0) {
+            return;
+        }
+
+        Arrays.sort(indices);
+        for (int i = indices.length - 1; i >= 0; i--) {
+            cartOperations.remove(i);
+        }
+        addonsManagerPanel.setCartItemsCount(cartOperations.size());
     }
 
     public void addManagerPage(AddonManagerPage page) {
@@ -200,6 +223,7 @@ public class AddonManager {
     }
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
+        this.addonCatalogService = addonCatalogService;
         addonsManagerPanel.setCatalogUrl(addonCatalogService.getCatalogPageUrl());
 
         for (AddonManagerPage managerPage : managerPages) {
@@ -212,6 +236,16 @@ public class AddonManager {
     @Nonnull
     public AvailableModuleUpdates getAvailableModuleUpdates() {
         return availableModuleUpdates;
+    }
+
+    @Nonnull
+    public AddonUpdateChanges getAddonUpdateChanges() {
+        return addonUpdateChanges;
+    }
+
+    @Nonnull
+    public ApplicationModulesUsage getApplicationModulesUsage() {
+        return applicationModulesUsage;
     }
 
     public boolean isModuleInstalled(String moduleId) {

@@ -198,23 +198,24 @@ public class AddonsCartPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_selectAllButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        removeIndices(itemsList.getSelectedIndices());
-        itemsList.clearSelection();
+        controller.performRemove(itemsList.getSelectedIndices());
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         controller.runOperations();
     }//GEN-LAST:event_runButtonActionPerformed
 
-    private void removeIndices(int[] indices) {
+    public void removeIndices(int[] indices) {
         if (indices.length == 0) {
             return;
         }
 
+        DefaultListModel<AddonOperation> model = (DefaultListModel<AddonOperation>) itemsList.getModel();
         Arrays.sort(indices);
         for (int i = indices.length - 1; i >= 0; i--) {
-            itemsList.remove(indices[i]);
+            model.remove(indices[i]);
         }
+        itemsList.clearSelection();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -227,6 +228,8 @@ public class AddonsCartPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public interface Controller {
+
+        void performRemove(int[] indices);
 
         void runOperations();
     }
