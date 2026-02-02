@@ -45,6 +45,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
     protected final java.util.ResourceBundle resourceBundle;
     protected Controller controller;
+    protected Component activeStatusComponent = null;
 
     public AddonsControlPanel() {
         this(App.getModule(LanguageModuleApi.class).getBundle(AddonsControlPanel.class));
@@ -137,8 +138,10 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         legacyModeLabel = new javax.swing.JLabel();
         manualOnlyModePanel = new javax.swing.JPanel();
         manualOnlyModeLabel = new javax.swing.JLabel();
-        buttonsPanel = new javax.swing.JPanel();
         operationLabel = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
+        buttonsPanel = new javax.swing.JPanel();
+        statusPanel = new javax.swing.JPanel();
         refreshButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
 
@@ -188,7 +191,11 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        progressBar.setIndeterminate(true);
+
         setLayout(new java.awt.BorderLayout());
+
+        statusPanel.setLayout(new java.awt.BorderLayout());
 
         refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/view-refresh-4.png")));
         refreshButton.setText(resourceBundle.getString("refreshButton.text")); // NOI18N
@@ -212,7 +219,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
             buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(buttonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(refreshButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -224,7 +231,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonsPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(operationLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(statusPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(closeButton)
                         .addComponent(refreshButton)))
@@ -250,7 +257,9 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     private javax.swing.JLabel manualOnlyModeLabel;
     private javax.swing.JPanel manualOnlyModePanel;
     private javax.swing.JLabel operationLabel;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton refreshButton;
+    private javax.swing.JPanel statusPanel;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -277,6 +286,38 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     @Override
     public void setCloseActionEnabled(boolean enablement) {
         closeButton.setEnabled(enablement);
+    }
+
+    public void setProgressStatus(String status) {
+        if (activeStatusComponent != null) {
+            statusPanel.remove(activeStatusComponent);
+        }
+
+        if (status.isEmpty()) {
+            activeStatusComponent = null;
+        } else {
+            progressBar.setString(status);
+            activeStatusComponent = progressBar;
+            statusPanel.add(activeStatusComponent, BorderLayout.CENTER);
+        }
+        statusPanel.revalidate();
+        statusPanel.repaint();
+    }
+
+    public void setOperationLabel(String text) {
+        if (activeStatusComponent != null) {
+            statusPanel.remove(activeStatusComponent);
+        }
+
+        if (text.isEmpty()) {
+            activeStatusComponent = null;
+        } else {
+            operationLabel.setText(text);
+            activeStatusComponent = operationLabel;
+            statusPanel.add(activeStatusComponent, BorderLayout.CENTER);
+        }
+        statusPanel.revalidate();
+        statusPanel.repaint();
     }
 
     public interface Controller extends CloseControlController {
