@@ -23,17 +23,11 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.ModuleProvider;
-import org.exbin.framework.addon.AddonModuleFileLocation;
-import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
-import org.exbin.framework.addon.manager.api.DependencyRecord;
 import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
-import org.exbin.framework.basic.BasicModuleProvider;
-import org.exbin.framework.basic.ModuleRecord;
 import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
@@ -49,82 +43,26 @@ public class AddonManager {
 
     protected java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManager.class);
 
-    protected AddonCatalogService addonCatalogService;
-    protected AddonsManagerPanel addonsManagerPanel = new AddonsManagerPanel();
-    protected AvailableModuleUpdates availableModuleUpdates = new AvailableModuleUpdates();
-    protected AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
-    protected ApplicationModulesUsage applicationModulesUsage;
-    protected List<ItemRecord> installedAddons = new ArrayList<>();
-
-    protected final List<AddonOperation> cartOperations = new ArrayList<>();
+    protected final AddonsManagerPanel managerPanel = new AddonsManagerPanel();
     protected final List<AddonManagerPage> managerPages = new ArrayList<>();
+    protected final List<AddonOperation> cartOperations = new ArrayList<>();
+
+    protected AddonCatalogService addonCatalogService;
+    protected final AddonsState addonsState = new AddonsState();
 
     public AddonManager() {
     }
 
     public void init() {
-        availableModuleUpdates.readConfigFile();
-        addonUpdateChanges.readConfigFile();
-
-        ModuleProvider moduleProvider = App.getModuleProvider();
-        if (moduleProvider instanceof BasicModuleProvider) {
-            List<ModuleRecord> basicModulesList = ((BasicModuleProvider) moduleProvider).getModulesList();
-            for (ModuleRecord moduleRecord : basicModulesList) {
-                AddonRecord itemRecord = new AddonRecord(moduleRecord.getModuleId(), moduleRecord.getName());
-                itemRecord.setInstalled(true);
-                itemRecord.setAddon(moduleRecord.getFileLocation() == AddonModuleFileLocation.ADDON);
-                itemRecord.setVersion(moduleRecord.getVersion());
-                itemRecord.setProvider(moduleRecord.getProvider().orElse(null));
-                itemRecord.setHomepage(moduleRecord.getHomepage().orElse(null));
-                itemRecord.setDescription(moduleRecord.getDescription().orElse(null));
-                itemRecord.setIcon(moduleRecord.getIcon().orElse(null));
-                List<DependencyRecord> dependencyRecords = new ArrayList<>();
-                for (String dependencyModuleId : moduleRecord.getDependencyModuleIds()) {
-                    dependencyRecords.add(new DependencyRecord(dependencyModuleId));
-                }
-                for (String dependencyLibraryId : moduleRecord.getDependencyLibraries()) {
-                    dependencyRecords.add(new DependencyRecord(DependencyRecord.Type.JAR_LIBRARY, dependencyLibraryId));
-                }
-                itemRecord.setDependencies(dependencyRecords);
-                installedAddons.add(itemRecord);
-                /*System.out.println(moduleRecord.getModuleId() + "," + moduleRecord.getName() + "," + moduleRecord.getDescription().orElse("") + "," + moduleRecord.getVersion() + "," + moduleRecord.getHomepage().orElse(""));
-                for (DependencyRecord dependency : dependencyRecords) {
-                    System.out.println("- " + dependency.getType().name() + ", " + dependency.getId());
-                } */
-            }
-            applicationModulesUsage = new ApplicationModulesUsage() {
-                @Override
-                public boolean hasModule(String moduleId) {
-                    return ((BasicModuleProvider) moduleProvider).hasModule(moduleId);
-                }
-
-                @Override
-                public boolean hasLibrary(String libraryFileName) {
-                    return ((BasicModuleProvider) moduleProvider).hasLibrary(libraryFileName);
-                }
-            };
-        }
-
-        AvailableModuleUpdates.AvailableModulesChangeListener availableModulesChangeListener = (AvailableModuleUpdates checker) -> {
-            int availableUpdates = 0;
-            for (ItemRecord installedAddon : installedAddons) {
-                if (checker.isUpdateAvailable(installedAddon.getId(), installedAddon.getVersion())) {
-                    availableUpdates++;
-                }
-            }
-            // TODO controlPanel.setAvailableUpdates(availableUpdates);
-        };
-
-        availableModuleUpdates.addChangeListener(availableModulesChangeListener);
-        availableModuleUpdates.notifyChanged();
+        addonsState.init();
 
         AddonsCartPanel cartPanel = new AddonsCartPanel();
-        addonsManagerPanel.setPreferredSize(new Dimension(800, 500));
-        addonsManagerPanel.setCartComponent(cartPanel);
-        addonsManagerPanel.setController(new AddonsManagerPanel.Controller() {
+        managerPanel.setPreferredSize(new Dimension(800, 500));
+        managerPanel.setCartComponent(cartPanel);
+        managerPanel.setController(new AddonsManagerPanel.Controller() {
             @Override
             public void tabSwitched() {
-                AddonManagerPage managerTab = addonsManagerPanel.getActiveTab();
+                AddonManagerPage managerTab = managerPanel.getActiveTab();
                 if (managerTab instanceof AddonsCatalogPage) {
                     // controlPanel.setOperationCount(((AddonsCatalogPage) managerTab).getToInstallCount());
                 } else if (managerTab instanceof AddonsInstalledPage) {
@@ -136,7 +74,7 @@ public class AddonManager {
 
             @Override
             public void openCatalog() {
-                AddonManagerPage managerTab = addonsManagerPanel.getActiveTab();
+                AddonManagerPage managerTab = managerPanel.getActiveTab();
             }
 
             @Override
@@ -167,7 +105,12 @@ public class AddonManager {
                 addonOperationService.performAddonOperations(cartOperations, cartPanel);
 
                 // TODO
-//                AddonManagerPage managerTab = addonsManagerPanel.getActiveTab();
+//                if (success) {
+//                    cartOperations.clear();
+//                }
+//                managerPanel.notifyCartContentChanged();
+//
+//                AddonManagerPage managerTab = managerPanel.getActiveTab();
 //                managerTab.notifyChanged();
 //
 //                if (managerTab instanceof AddonsCatalogPage) {
@@ -204,12 +147,12 @@ public class AddonManager {
         for (int i = indices.length - 1; i >= 0; i--) {
             cartOperations.remove(i);
         }
-        addonsManagerPanel.setCartItemsCount(cartOperations.size());
+        managerPanel.setCartItemsCount(cartOperations.size());
     }
 
     public void addManagerPage(AddonManagerPage page) {
         managerPages.add(page);
-        addonsManagerPanel.addManagerPage(page);
+        managerPanel.addManagerPage(page);
     }
 
     @Nonnull
@@ -218,13 +161,13 @@ public class AddonManager {
     }
 
     @Nonnull
-    public AddonsManagerPanel getAddonsManagerPanel() {
-        return addonsManagerPanel;
+    public AddonsManagerPanel getManagerPanel() {
+        return managerPanel;
     }
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
         this.addonCatalogService = addonCatalogService;
-        addonsManagerPanel.setCatalogUrl(addonCatalogService.getCatalogPageUrl());
+        managerPanel.setCatalogUrl(addonCatalogService.getCatalogPageUrl());
 
         for (AddonManagerPage managerPage : managerPages) {
             if (managerPage instanceof AddonsCatalogPage) {
@@ -235,30 +178,30 @@ public class AddonManager {
 
     @Nonnull
     public AvailableModuleUpdates getAvailableModuleUpdates() {
-        return availableModuleUpdates;
+        return addonsState.getAvailableModuleUpdates();
     }
 
     @Nonnull
     public AddonUpdateChanges getAddonUpdateChanges() {
-        return addonUpdateChanges;
+        return addonsState.getAddonUpdateChanges();
     }
 
     @Nonnull
     public ApplicationModulesUsage getApplicationModulesUsage() {
-        return applicationModulesUsage;
+        return addonsState.getApplicationModulesUsage();
     }
 
     public boolean isModuleInstalled(String moduleId) {
-        return addonUpdateChanges.hasInstallAddon(moduleId) && !addonUpdateChanges.hasRemoveAddon(moduleId);
+        return addonsState.isModuleInstalled(moduleId);
     }
 
     public boolean isModuleRemoved(String moduleId) {
-        return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
+        return addonsState.isModuleRemoved(moduleId);
     }
 
     public void addCartOperation(AddonOperation operation) {
         cartOperations.add(operation);
-        addonsManagerPanel.setCartItemsCount(cartOperations.size());
+        managerPanel.setCartItemsCount(cartOperations.size());
     }
 
     public boolean isInCart(String moduleId, AddonOperationVariant variant) {
@@ -273,11 +216,11 @@ public class AddonManager {
 
     @Nonnull
     public List<ItemRecord> getInstalledAddons() {
-        return installedAddons;
+        return addonsState.getInstalledAddons();
     }
 
     public void addUpdateAvailabilityListener(AvailableModuleUpdates.AvailableModulesChangeListener listener) {
-        availableModuleUpdates.addChangeListener(listener);
+        addonsState.addUpdateAvailabilityListener(listener);
     }
 
     @Nonnull

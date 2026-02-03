@@ -75,7 +75,7 @@ public class AddonManagerAction extends AbstractAction {
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        AddonsManagerPanel addonManagerPanel = addonManager.getAddonsManagerPanel();
+        AddonsManagerPanel addonManagerPanel = addonManager.getManagerPanel();
 
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         controlPanel.setController(new AddonsControlPanel.Controller() {
