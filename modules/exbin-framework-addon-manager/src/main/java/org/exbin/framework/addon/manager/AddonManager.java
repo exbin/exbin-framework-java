@@ -62,19 +62,12 @@ public class AddonManager {
         managerPanel.setController(new AddonsManagerPanel.Controller() {
             @Override
             public void tabSwitched() {
-                AddonManagerPage managerTab = managerPanel.getActiveTab();
-                if (managerTab instanceof AddonsCatalogPage) {
-                    // controlPanel.setOperationCount(((AddonsCatalogPage) managerTab).getToInstallCount());
-                } else if (managerTab instanceof AddonsInstalledPage) {
-                    // controlPanel.setOperationCount(((AddonsInstalledPage) managerTab).getToUpdateCount());
-                } else {
-                    throw new IllegalStateException();
-                }
+                notifyChanged();
             }
 
             @Override
             public void openCatalog() {
-                AddonManagerPage managerTab = managerPanel.getActiveTab();
+                notifyChanged();
             }
 
             @Override
@@ -83,16 +76,16 @@ public class AddonManager {
             }
 
             @Override
-            public void setFilter(String filter, Runnable finished) {
+            public void setFilter(String filter) {
                 for (AddonManagerPage managerPage : managerPages) {
-                    managerPage.setFilter(filter, finished);
+                    Runnable operation = managerPage.createFilterOperation(filter);
                 }
             }
 
             @Override
-            public void setSearch(String search, Runnable finished) {
+            public void setSearch(String search) {
                 for (AddonManagerPage managerPage : managerPages) {
-                    managerPage.setSearch(search, finished);
+                    Runnable operation = managerPage.createSearchOperation(search);
                 }
             }
         });
@@ -108,18 +101,8 @@ public class AddonManager {
 //                if (success) {
 //                    cartOperations.clear();
 //                }
-//                managerPanel.notifyCartContentChanged();
-//
-//                AddonManagerPage managerTab = managerPanel.getActiveTab();
-//                managerTab.notifyChanged();
-//
-//                if (managerTab instanceof AddonsCatalogPage) {
-//                    ((AddonsCatalogPage) managerTab).installAddons();
-//                } else if (managerTab instanceof AddonsInstalledPage) {
-//                    ((AddonsInstalledPage) managerTab).updateAddons();
-//                } else {
-//                    throw new IllegalStateException();
-//                }
+
+                notifyChanged();
             }
 
             @Override
@@ -148,6 +131,17 @@ public class AddonManager {
             cartOperations.remove(i);
         }
         managerPanel.setCartItemsCount(cartOperations.size());
+    }
+
+    public void notifyChanged() {
+        AddonManagerPage managerTab = managerPanel.getActiveTab();
+        managerTab.notifyChanged();
+        
+//        if (managerTab instanceof AddonsCatalogPage) {
+//            ((AddonsCatalogPage) managerTab).set
+//        } else if (managerTab instanceof AddonsInstalledPage) {
+//            ((AddonsInstalledPage) managerTab).set
+//        }
     }
 
     public void addManagerPage(AddonManagerPage page) {

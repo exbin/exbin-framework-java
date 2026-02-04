@@ -23,7 +23,7 @@ package org.exbin.framework.operation.api;
 public interface CancellableOperation {
 
     /**
-     * Cancels operation
+     * Cancels operation.
      */
     void cancelOperation();
 

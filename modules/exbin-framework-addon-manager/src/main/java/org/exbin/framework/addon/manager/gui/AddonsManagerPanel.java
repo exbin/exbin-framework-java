@@ -58,9 +58,6 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
         Document document = filterTextField.getDocument();
         document.addDocumentListener(new DocumentListener() {
 
-            private final Runnable filterFinished = () -> {
-                // TODO filterListModel.notifyItemsChanged();
-            };
             private String lastFilter = "";
 
             @Override
@@ -83,7 +80,7 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
                     String newFilter = filterTextField.getText();
                     if (!lastFilter.equals(newFilter)) {
                         lastFilter = newFilter;
-                        controller.setFilter(newFilter, filterFinished);
+                        controller.setFilter(newFilter);
                     }
                 }
             }
@@ -91,9 +88,6 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
         document = searchTextField.getDocument();
         document.addDocumentListener(new DocumentListener() {
 
-            private final Runnable searchFinished = () -> {
-                // TODO searchListModel.notifyItemsChanged();
-            };
             private String lastSearch = "";
 
             @Override
@@ -116,7 +110,7 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
                     String newSearch = searchTextField.getText();
                     if (!lastSearch.equals(newSearch)) {
                         lastSearch = newSearch;
-                        controller.setSearch(newSearch, searchFinished);
+                        controller.setSearch(newSearch);
                     }
                 }
             }
@@ -267,8 +261,18 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
 
         void tabSwitched();
 
-        void setFilter(String filter, Runnable finished);
+        /**
+         * Sets filter.
+         *
+         * @param filter filter
+         */
+        void setFilter(String filter);
 
-        void setSearch(String search, Runnable finished);
+        /**
+         * Sets search condition.
+         *
+         * @param search search condition
+         */
+        void setSearch(String search);
     }
 }

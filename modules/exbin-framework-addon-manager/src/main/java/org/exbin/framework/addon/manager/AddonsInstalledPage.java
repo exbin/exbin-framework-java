@@ -134,29 +134,33 @@ public class AddonsInstalledPage implements AddonManagerPage {
         addonsPanel.setCatalogUrl(addonCatalogUrl);
     }
 
+    @Nonnull
     @Override
-    public void setFilter(Object filter, Runnable finished) {
-        // TODO
-        finished.run();
+    public Runnable createFilterOperation(Object filter) {
+        return () -> {
+            // TODO
+        };
     }
 
+    @Nonnull
     @Override
-    public void setSearch(String search, Runnable finished) {
-        // TODO Implement as background thread
-        List<ItemRecord> installedAddons = addonManager.getInstalledAddons();
-        List<Integer> items = null;
-        search = search.trim().toLowerCase();
-        if (!search.isEmpty()) {
-            items = new ArrayList<>();
-            for (int i = 0; i < installedAddons.size(); i++) {
-                ItemRecord record = installedAddons.get(i);
-                if (record.getName().toLowerCase().contains(search)) {
-                    items.add(i);
+    public Runnable createSearchOperation(String search) {
+        return () -> {
+            // TODO Implement as background thread
+            List<ItemRecord> installedAddons = addonManager.getInstalledAddons();
+            List<Integer> items = null;
+            String searchCondition = search.trim().toLowerCase();
+            if (!searchCondition.isEmpty()) {
+                items = new ArrayList<>();
+                for (int i = 0; i < installedAddons.size(); i++) {
+                    ItemRecord record = installedAddons.get(i);
+                    if (record.getName().toLowerCase().contains(searchCondition)) {
+                        items.add(i);
+                    }
                 }
             }
-        }
-        filterItems = items;
-        finished.run();
+            filterItems = items;
+        };
     }
 
     private void notifyItemsChanged() {
@@ -164,11 +168,6 @@ public class AddonsInstalledPage implements AddonManagerPage {
             itemChangedListener.itemChanged();
         }
         addonsPanel.notifyItemsChanged();
-    }
-
-    public void updateAddons() {
-        // TODO addonManager.updateAddons(toUpdate, installedPanel);
-        notifyItemsChanged();
     }
 
     public interface ItemChangedListener {

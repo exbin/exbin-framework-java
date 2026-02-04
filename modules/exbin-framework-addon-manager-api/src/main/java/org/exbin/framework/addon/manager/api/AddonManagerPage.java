@@ -56,18 +56,20 @@ public interface AddonManagerPage {
     void setCatalogUrl(String addonCatalogUrl);
 
     /**
-     * Sets filter condition.
+     * Creates filter condition operation.
      *
      * @param filter filter condition
-     * @param finished finished method
+     * @return operation
      */
-    void setFilter(Object filter, Runnable finished);
+    @Nonnull
+    Runnable createFilterOperation(Object filter);
 
     /**
-     * Sets search condition.
+     * Creates search condition operation.
      *
      * @param search search condition
-     * @param finished finished method
+     * @return operation
      */
-    void setSearch(String search, Runnable finished);
+    @Nonnull
+    Runnable createSearchOperation(String search);
 }

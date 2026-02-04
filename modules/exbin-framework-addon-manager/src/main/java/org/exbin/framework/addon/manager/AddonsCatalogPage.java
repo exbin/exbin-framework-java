@@ -108,22 +108,16 @@ public class AddonsCatalogPage implements AddonManagerPage {
         addonsPanel.setCatalogUrl(addonCatalogUrl);
     }
 
-    @Override
-    public void setFilter(Object filter, Runnable finished) {
-        // TODO
-        finished.run();
-    }
-
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
         this.addonCatalogService = addonCatalogService;
 
+        // TODO Move to operations thread
         Thread thread = new Thread(() -> {
             try {
                 ResourceBundle appBundle = App.getAppBundle();
                 String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
                 serviceStatus = addonCatalogService.checkStatus(releaseString);
-                setSearch("", () -> {
-                });
+                createSearchOperation("").run();
             } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);
                 serviceStatus = -1;
@@ -145,17 +139,27 @@ public class AddonsCatalogPage implements AddonManagerPage {
         thread.start();
     }
 
+    @Nonnull
     @Override
-    public void setSearch(String search, Runnable finished) {
-        try {
-            searchResult = searchForAddons();
-        } catch (AddonCatalogServiceException ex) {
-            Logger.getLogger(AddonsCatalogPage.class.getName()).log(Level.SEVERE, null, ex);
-            ResourceBundle resourceBundle = addonManager.getResourceBundle();
-            JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
-        }
-        addonsPanel.notifyItemsChanged();
-        finished.run();
+    public Runnable createFilterOperation(Object filter) {
+        return () -> {
+            // TODO
+        };
+    }
+
+    @Nonnull
+    @Override
+    public Runnable createSearchOperation(String search) {
+        return () -> {
+            try {
+                searchResult = searchForAddons();
+            } catch (AddonCatalogServiceException ex) {
+                Logger.getLogger(AddonsCatalogPage.class.getName()).log(Level.SEVERE, null, ex);
+                ResourceBundle resourceBundle = addonManager.getResourceBundle();
+                JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
+            }
+            addonsPanel.notifyItemsChanged();
+        };
     }
 
     private int getItemsCount() {

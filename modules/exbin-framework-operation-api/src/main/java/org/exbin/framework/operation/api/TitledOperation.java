@@ -15,20 +15,20 @@
  */
 package org.exbin.framework.operation.api;
 
+import javax.annotation.Nonnull;
+
 /**
- * Pausable operation.
+ * Operation providing title.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface PausableOperation {
+public interface TitledOperation {
 
     /**
-     * Pauses operation.
+     * Returns operation title.
+     *
+     * @return title
      */
-    void pauseOperation();
-
-    /**
-     * Resumes operation.
-     */
-    void resumeOperation();
+    @Nonnull
+    String getTitle();
 }
