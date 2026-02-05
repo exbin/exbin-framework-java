@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
@@ -32,6 +34,8 @@ import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
 import org.exbin.framework.addon.manager.operation.service.AddonOperationService;
+import org.exbin.framework.operation.api.ProgressOperation;
+import org.exbin.framework.operation.api.TitledOperation;
 
 /**
  * Addon manager.
@@ -49,6 +53,7 @@ public class AddonManager {
 
     protected AddonCatalogService addonCatalogService;
     protected final AddonsState addonsState = new AddonsState();
+    protected AddonOperationStatusListener statusListener;
 
     public AddonManager() {
     }
@@ -79,6 +84,7 @@ public class AddonManager {
             public void setFilter(String filter) {
                 for (AddonManagerPage managerPage : managerPages) {
                     Runnable operation = managerPage.createFilterOperation(filter);
+                    runOperation(operation);
                 }
             }
 
@@ -86,6 +92,7 @@ public class AddonManager {
             public void setSearch(String search) {
                 for (AddonManagerPage managerPage : managerPages) {
                     Runnable operation = managerPage.createSearchOperation(search);
+                    runOperation(operation);
                 }
             }
         });
@@ -101,7 +108,6 @@ public class AddonManager {
 //                if (success) {
 //                    cartOperations.clear();
 //                }
-
                 notifyChanged();
             }
 
@@ -121,6 +127,10 @@ public class AddonManager {
         addManagerPage(installedPage);
     }
 
+    public void setStatusListener(AddonOperationStatusListener statusListener) {
+        this.statusListener = statusListener;
+    }
+
     private void removeIndices(int[] indices) {
         if (indices.length == 0) {
             return;
@@ -133,10 +143,31 @@ public class AddonManager {
         managerPanel.setCartItemsCount(cartOperations.size());
     }
 
+    private void runOperation(Runnable operation) {
+        // TODO queue
+        if (operation instanceof TitledOperation) {
+            if (operation instanceof ProgressOperation) {
+                statusListener.setProgressStatus(((TitledOperation) operation).getTitle());
+            } else {
+                statusListener.setOperationLabel(((TitledOperation) operation).getTitle());
+            }
+        }
+        Thread thread = new Thread(() -> {
+            operation.run();
+            statusListener.clear();
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void notifyChanged() {
         AddonManagerPage managerTab = managerPanel.getActiveTab();
         managerTab.notifyChanged();
-        
+
 //        if (managerTab instanceof AddonsCatalogPage) {
 //            ((AddonsCatalogPage) managerTab).set
 //        } else if (managerTab instanceof AddonsInstalledPage) {
@@ -220,5 +251,15 @@ public class AddonManager {
     @Nonnull
     public List<AddonOperation> getCartOperations() {
         return cartOperations;
+    }
+
+    @ParametersAreNonnullByDefault
+    public interface AddonOperationStatusListener {
+
+        void setProgressStatus(String status);
+
+        void setOperationLabel(String text);
+
+        void clear();
     }
 }

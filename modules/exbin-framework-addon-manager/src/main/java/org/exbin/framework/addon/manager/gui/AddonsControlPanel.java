@@ -73,7 +73,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                                 .addContainerGap()
                                 .addComponent(helpButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(operationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -88,7 +88,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                                         .addComponent(helpButton)
                                         .addComponent(closeButton)
                                         .addComponent(refreshButton)
-                                        .addComponent(operationLabel))
+                                        .addComponent(statusPanel))
                                 .addContainerGap())
         );
     }
@@ -297,6 +297,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
             activeStatusComponent = null;
         } else {
             progressBar.setString(status);
+            progressBar.setStringPainted(!status.isEmpty());
             activeStatusComponent = progressBar;
             statusPanel.add(activeStatusComponent, BorderLayout.CENTER);
         }

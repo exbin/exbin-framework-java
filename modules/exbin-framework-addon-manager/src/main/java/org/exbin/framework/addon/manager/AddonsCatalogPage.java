@@ -23,10 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JOptionPane;
 import org.exbin.framework.App;
 import org.exbin.framework.ApplicationBundleKeys;
-import org.exbin.framework.ModuleProvider;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
 import org.exbin.framework.addon.manager.gui.AddonsPanel;
 import org.exbin.framework.addon.manager.api.AddonRecord;
@@ -34,8 +32,8 @@ import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
+import org.exbin.framework.addon.manager.operation.CatalogSearchOperation;
 import org.exbin.framework.addon.manager.operation.UpdateAvailabilityOperation;
-import org.exbin.framework.basic.BasicModuleProvider;
 
 /**
  * Addons manager page.
@@ -150,16 +148,16 @@ public class AddonsCatalogPage implements AddonManagerPage {
     @Nonnull
     @Override
     public Runnable createSearchOperation(String search) {
-        return () -> {
-            try {
-                searchResult = searchForAddons();
-            } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonsCatalogPage.class.getName()).log(Level.SEVERE, null, ex);
-                ResourceBundle resourceBundle = addonManager.getResourceBundle();
-                JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
-            }
-            addonsPanel.notifyItemsChanged();
-        };
+        if (serviceStatus == -1) {
+            return () -> {
+                searchResult = new ArrayList<>();
+            };
+        }
+
+        return new CatalogSearchOperation(addonCatalogService, addonManager, search);
+//        addonsPanel.notifyItemsChanged();
+//        ResourceBundle resourceBundle = addonManager.getResourceBundle();
+//        JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
     }
 
     private int getItemsCount() {
@@ -210,28 +208,6 @@ public class AddonsCatalogPage implements AddonManagerPage {
         }
 
         return "";
-    }
-
-    @Nonnull
-    public List<AddonRecord> searchForAddons() throws AddonCatalogServiceException {
-        if (serviceStatus == -1) {
-            return new ArrayList<>();
-        }
-
-        List<AddonRecord> searchResult = addonCatalogService.searchForAddons("");
-        for (int i = searchResult.size() - 1; i >= 0; i--) {
-            AddonRecord record = searchResult.get(i);
-            ModuleProvider moduleProvider = App.getModuleProvider();
-            if (((BasicModuleProvider) moduleProvider).hasModule(record.getId()) && !addonManager.isModuleRemoved(record.getId())) {
-                searchResult.remove(i);
-            } else {
-                AvailableModuleUpdates availableModuleUpdates = addonManager.getAvailableModuleUpdates();
-                if (availableModuleUpdates.getStatus() != -1) {
-                    record.setUpdateAvailable(availableModuleUpdates.isUpdateAvailable(record.getId(), record.getVersion()));
-                }
-            }
-        }
-        return searchResult;
     }
 
     public interface ItemChangedListener {

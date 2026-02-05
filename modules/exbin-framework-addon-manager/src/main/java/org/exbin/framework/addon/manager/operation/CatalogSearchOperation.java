@@ -41,17 +41,19 @@ public class CatalogSearchOperation implements Runnable, CancellableOperation, T
     protected AddonManager addonManager;
     protected AddonCatalogService addonCatalogService;
     protected boolean cancelled = false;
+    protected final String searchCondition;
     protected List<AddonRecord> searchResult;
 
-    public CatalogSearchOperation(AddonCatalogService addonCatalogService, AddonManager addonManager) {
+    public CatalogSearchOperation(AddonCatalogService addonCatalogService, AddonManager addonManager, String searchCondition) {
         this.addonCatalogService = addonCatalogService;
         this.addonManager = addonManager;
+        this.searchCondition = searchCondition;
     }
 
     @Override
     public void run() {
         try {
-            searchResult = addonCatalogService.searchForAddons("");
+            searchResult = addonCatalogService.searchForAddons(searchCondition);
             for (int i = searchResult.size() - 1; i >= 0; i--) {
                 AddonRecord record = searchResult.get(i);
                 ModuleProvider moduleProvider = App.getModuleProvider();
