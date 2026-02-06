@@ -46,11 +46,10 @@ public class AddonsCatalogPage implements AddonManagerPage {
     protected AddonsPanel addonsPanel = new AddonsPanel();
     protected List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
     protected AddonCatalogService addonCatalogService;
-    protected CatalogOperation catalogOperation = CatalogOperation.IDLE;
-    protected int serviceStatus = -1;
+    protected int serviceRevision = -1;
 
     protected AddonManager addonManager;
-    protected List<AddonRecord> searchResult;
+    protected List<AddonRecord> addonItems;
 
     public AddonsCatalogPage() {
         init();
@@ -114,22 +113,22 @@ public class AddonsCatalogPage implements AddonManagerPage {
             try {
                 ResourceBundle appBundle = App.getAppBundle();
                 String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-                serviceStatus = addonCatalogService.checkStatus(releaseString);
+                serviceRevision = addonCatalogService.checkStatus(releaseString);
                 createSearchOperation("").run();
             } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);
-                serviceStatus = -1;
+                serviceRevision = -1;
             }
             // TODO
             // controlPanel.showLegacyWarning();
-            if (serviceStatus == -1) {
+            if (serviceRevision == -1) {
                 // TODO controlPanel.showManualOnlyWarning();
             } else {
                 AvailableModuleUpdates availableModuleUpdates = addonManager.getAvailableModuleUpdates();
-                if (serviceStatus > availableModuleUpdates.getStatus()) {
+                if (serviceRevision > availableModuleUpdates.getRevision()) {
                     UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
                     availabilityOperation.run();
-                    availableModuleUpdates.setLatestVersion(serviceStatus, availabilityOperation.getLatestVersions());
+                    availableModuleUpdates.setLatestVersion(serviceRevision, availabilityOperation.getLatestVersions());
                     availableModuleUpdates.writeConfigFile();
                 }
             }
@@ -148,29 +147,34 @@ public class AddonsCatalogPage implements AddonManagerPage {
     @Nonnull
     @Override
     public Runnable createSearchOperation(String search) {
-        if (serviceStatus == -1) {
+        if (serviceRevision == -1) {
             return () -> {
-                searchResult = new ArrayList<>();
+                setAddonItems(new ArrayList<>());
             };
         }
 
-        return new CatalogSearchOperation(addonCatalogService, addonManager, search);
+        return new CatalogSearchOperation(addonCatalogService, addonManager, search, this::setAddonItems);
 //        addonsPanel.notifyItemsChanged();
 //        ResourceBundle resourceBundle = addonManager.getResourceBundle();
 //        JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
     }
+    
+    public void setAddonItems(List<AddonRecord> addonItems) {
+        this.addonItems = addonItems;
+        notifyItemsChanged();
+    }
 
     private int getItemsCount() {
-        if (searchResult == null) {
+        if (addonItems == null) {
             return 0;
         }
 
-        return searchResult.size();
+        return addonItems.size();
     }
 
     @Nonnull
     private ItemRecord getItem(int index) {
-        return searchResult.get(index);
+        return addonItems.get(index);
     }
 
     public void setAddonManager(AddonManager addonManager) {
@@ -213,34 +217,5 @@ public class AddonsCatalogPage implements AddonManagerPage {
     public interface ItemChangedListener {
 
         void itemChanged();
-    }
-
-    private class CatalogThread extends Thread {
-
-        public CatalogThread() {
-            super("AddonCatalogThread");
-        }
-
-        @Override
-        public void run() {
-            switch (catalogOperation) {
-                case CHECK:
-                    try {
-                        ResourceBundle appBundle = App.getAppBundle();
-                        String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-                        addonCatalogService.checkStatus(releaseString);
-                    } catch (AddonCatalogServiceException ex) {
-                        Logger.getLogger(AddonsCatalogPage.class.getName()).log(Level.SEVERE, "Status check failed", ex);
-                    }
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }
-    }
-
-    private enum CatalogOperation {
-        IDLE,
-        CHECK
     }
 }

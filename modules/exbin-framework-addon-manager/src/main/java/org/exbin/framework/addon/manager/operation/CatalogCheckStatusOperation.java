@@ -15,40 +15,41 @@
  */
 package org.exbin.framework.addon.manager.operation;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.addon.manager.api.UpdateRecord;
+import org.exbin.framework.App;
+import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
 import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.operation.api.CancellableOperation;
+import org.exbin.framework.operation.api.TitledOperation;
 
 /**
- * Update availability operation.
+ * Operation to check status of catalog.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class UpdateAvailabilityOperation implements Runnable, CancellableOperation {
+public class CatalogCheckStatusOperation implements Runnable, CancellableOperation, TitledOperation {
 
     protected final AddonCatalogService addonCatalogService;
+    protected int catalogRevision = -1;
     protected boolean cancelled = false;
-    protected List<UpdateRecord> updateRecords;
 
-    public UpdateAvailabilityOperation(AddonCatalogService addonCatalogService) {
+    public CatalogCheckStatusOperation(AddonCatalogService addonCatalogService) {
         this.addonCatalogService = addonCatalogService;
     }
 
     @Override
     public void run() {
         try {
-            updateRecords = addonCatalogService.getUpdateRecords();
+            ResourceBundle appBundle = App.getAppBundle();
+            String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
+            catalogRevision = addonCatalogService.checkStatus(releaseString);
         } catch (AddonCatalogServiceException ex) {
-            Logger.getLogger(UpdateAvailabilityOperation.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CatalogCheckStatusOperation.class.getName()).log(Level.SEVERE, "Status check failed", ex);
         }
     }
 
@@ -62,19 +63,12 @@ public class UpdateAvailabilityOperation implements Runnable, CancellableOperati
         return cancelled;
     }
 
-    @Nonnull
-    public List<UpdateRecord> getUpdateRecords() {
-        return updateRecords;
+    public int getCatalogRevision() {
+        return catalogRevision;
     }
 
-    @Nonnull
-    public Map<String, String> getLatestVersions() {
-        Map<String, String> latestVersions = new HashMap<>();
-        if (updateRecords != null) {
-            for (UpdateRecord record : updateRecords) {
-                latestVersions.put(record.getModuleId(), record.getVersion());
-            }
-        }
-        return latestVersions;
+    @Override
+    public String getTitle() {
+        return "Checking catalog";
     }
 }

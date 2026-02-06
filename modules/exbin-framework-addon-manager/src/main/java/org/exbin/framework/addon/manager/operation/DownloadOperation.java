@@ -36,12 +36,12 @@ import org.exbin.framework.operation.api.ProgressOperation;
 @ParametersAreNonnullByDefault
 public class DownloadOperation implements Runnable, CancellableOperation, ProgressOperation {
 
-    private final List<DownloadItemRecord> records;
-    private DownloadOperation.ItemChangeListener listener;
-    private boolean cancelled = false;
-    private long totalDownloadSize = 0;
-    private long downloadProgress = 0;
-    private int lastProgress = 0;
+    protected final List<DownloadItemRecord> records;
+    protected DownloadOperation.ItemChangeListener listener;
+    protected boolean cancelled = false;
+    protected long totalDownloadSize = 0;
+    protected long downloadProgress = 0;
+    protected int lastProgress = 0;
 
     public DownloadOperation(List<DownloadItemRecord> records) {
         this.records = records;

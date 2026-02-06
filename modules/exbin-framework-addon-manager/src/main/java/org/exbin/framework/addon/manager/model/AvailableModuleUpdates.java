@@ -43,11 +43,11 @@ public class AvailableModuleUpdates {
 
     private static final String MODULE_UPDATES_FILE = "available-updates.cfg";
     private final Map<String, String> latestVersions = new HashMap<>();
-    private int status = -1;
+    private int revision = -1;
     private final List<AvailableModulesChangeListener> changeListeners = new ArrayList<>();
 
-    public int getStatus() {
-        return status;
+    public int getRevision() {
+        return revision;
     }
 
     /**
@@ -74,8 +74,8 @@ public class AvailableModuleUpdates {
         record.setUpdateAvailable(isUpdateAvailable(record.getId(), record.getVersion()));
     }
 
-    public void setLatestVersion(int status, Map<String, String> latestVersions) {
-        this.status = status;
+    public void setLatestVersion(int revision, Map<String, String> latestVersions) {
+        this.revision = revision;
         this.latestVersions.clear();
         this.latestVersions.putAll(latestVersions);
         notifyChanged();
@@ -84,12 +84,12 @@ public class AvailableModuleUpdates {
     public void readConfigFile() {
         File changesConfigFile = new File(App.getConfigDirectory(), MODULE_UPDATES_FILE);
         latestVersions.clear();
-        status = -1;
+        revision = -1;
         if (changesConfigFile.exists()) {
             String line;
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(changesConfigFile)))) {
                 line = reader.readLine();
-                status = Integer.parseInt(line);
+                revision = Integer.parseInt(line);
                 do {
                     line = reader.readLine();
                     if (line != null && !line.isEmpty()) {
@@ -110,7 +110,7 @@ public class AvailableModuleUpdates {
         }
         File changesConfigFile = new File(configDirectory, MODULE_UPDATES_FILE);
         try (OutputStreamWriter writer = new FileWriter(changesConfigFile)) {
-            writer.write(status + "\r\n");
+            writer.write(revision + "\r\n");
             for (Map.Entry<String, String> entry : latestVersions.entrySet()) {
                 writer.write(entry.getKey() + ":" + entry.getValue() + "\r\n");
             }

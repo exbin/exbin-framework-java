@@ -28,32 +28,34 @@ import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.operation.api.CancellableOperation;
+import org.exbin.framework.operation.api.ProgressOperation;
 import org.exbin.framework.operation.api.TitledOperation;
 
 /**
- * Search in catalog operation.
+ * Operation to search in catalog.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CatalogSearchOperation implements Runnable, CancellableOperation, TitledOperation {
+public class CatalogSearchOperation implements Runnable, CancellableOperation, ProgressOperation, TitledOperation {
 
-    protected AddonManager addonManager;
-    protected AddonCatalogService addonCatalogService;
+    protected final AddonManager addonManager;
+    protected final AddonCatalogService addonCatalogService;
+    protected final Output output;
     protected boolean cancelled = false;
     protected final String searchCondition;
-    protected List<AddonRecord> searchResult;
 
-    public CatalogSearchOperation(AddonCatalogService addonCatalogService, AddonManager addonManager, String searchCondition) {
+    public CatalogSearchOperation(AddonCatalogService addonCatalogService, AddonManager addonManager, String searchCondition, Output output) {
         this.addonCatalogService = addonCatalogService;
         this.addonManager = addonManager;
         this.searchCondition = searchCondition;
+        this.output = output;
     }
 
     @Override
     public void run() {
         try {
-            searchResult = addonCatalogService.searchForAddons(searchCondition);
+            List<AddonRecord> searchResult = addonCatalogService.searchForAddons(searchCondition);
             for (int i = searchResult.size() - 1; i >= 0; i--) {
                 AddonRecord record = searchResult.get(i);
                 ModuleProvider moduleProvider = App.getModuleProvider();
@@ -61,11 +63,12 @@ public class CatalogSearchOperation implements Runnable, CancellableOperation, T
                     searchResult.remove(i);
                 } else {
                     AvailableModuleUpdates availableModuleUpdates = addonManager.getAvailableModuleUpdates();
-                    if (availableModuleUpdates.getStatus() != -1) {
+                    if (availableModuleUpdates.getRevision() != -1) {
                         record.setUpdateAvailable(availableModuleUpdates.isUpdateAvailable(record.getId(), record.getVersion()));
                     }
                 }
             }
+            output.outputItems(searchResult);
         } catch (AddonCatalogServiceException ex) {
             Logger.getLogger(CatalogSearchOperation.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -84,5 +87,15 @@ public class CatalogSearchOperation implements Runnable, CancellableOperation, T
     @Override
     public String getTitle() {
         return "Searching";
+    }
+
+    @Override
+    public int getOperationProgress() {
+        return -1;
+    }
+
+    public interface Output {
+
+        void outputItems(List<AddonRecord> addonItems);
     }
 }

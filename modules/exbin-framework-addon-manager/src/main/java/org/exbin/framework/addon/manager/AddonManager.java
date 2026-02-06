@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
@@ -54,6 +54,8 @@ public class AddonManager {
     protected AddonCatalogService addonCatalogService;
     protected final AddonsState addonsState = new AddonsState();
     protected AddonOperationStatusListener statusListener;
+
+    protected final ExecutorService operationsExecutor = Executors.newFixedThreadPool(1);
 
     public AddonManager() {
     }
@@ -144,24 +146,18 @@ public class AddonManager {
     }
 
     private void runOperation(Runnable operation) {
-        // TODO queue
-        if (operation instanceof TitledOperation) {
-            if (operation instanceof ProgressOperation) {
-                statusListener.setProgressStatus(((TitledOperation) operation).getTitle());
-            } else {
-                statusListener.setOperationLabel(((TitledOperation) operation).getTitle());
+        operationsExecutor.submit(() -> {
+            if (operation instanceof TitledOperation) {
+                if (operation instanceof ProgressOperation) {
+                    statusListener.setProgressStatus(((TitledOperation) operation).getTitle());
+                } else {
+                    statusListener.setOperationLabel(((TitledOperation) operation).getTitle());
+                }
             }
-        }
-        Thread thread = new Thread(() -> {
+
             operation.run();
             statusListener.clear();
         });
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     public void notifyChanged() {
