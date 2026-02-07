@@ -50,7 +50,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
 
 /**
- * Addon update operation.
+ * Addon modifications operation.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -68,7 +68,7 @@ public class AddonModificationsOperation {
     protected final Set<String> licenseCodes = new HashSet<>();
     protected final Set<String> availableUpdates = new HashSet<>();
 
-    protected final UpdateOperations updateOperations = new UpdateOperations();
+    protected final ModificationOperations modificationOperations = new ModificationOperations();
 
     public AddonModificationsOperation(AddonCatalogService addonCatalogService, ApplicationModulesUsage applicationModulesUsage, AddonUpdateChanges addonUpdateChanges) {
         this.addonCatalogService = addonCatalogService;
@@ -85,27 +85,27 @@ public class AddonModificationsOperation {
     public List<String> getOperations() {
         List<String> operations = new ArrayList<>();
         String operationMessage = resourceBundle.getString("operationMessage.installModule");
-        for (String moduleId : updateOperations.installAddons) {
+        for (String moduleId : modificationOperations.installAddons) {
             operations.add(String.format(operationMessage, moduleId));
         }
         operationMessage = resourceBundle.getString("operationMessage.removeModule");
-        for (String moduleId : updateOperations.removeAddons) {
+        for (String moduleId : modificationOperations.removeAddons) {
             operations.add(String.format(operationMessage, moduleId));
         }
         operationMessage = resourceBundle.getString("operationMessage.dependencyAddon");
-        for (String moduleId : updateOperations.dependencyAddons) {
+        for (String moduleId : modificationOperations.dependencyAddons) {
             operations.add(String.format(operationMessage, moduleId));
         }
         operationMessage = resourceBundle.getString("operationMessage.downloadLibrary");
-        for (String libraryFile : updateOperations.downloadLibraries) {
+        for (String libraryFile : modificationOperations.downloadLibraries) {
             operations.add(String.format(operationMessage, libraryFile));
         }
         operationMessage = resourceBundle.getString("operationMessage.downloadMavenLibrary");
-        for (String libraryFile : updateOperations.downloadMavenLibraries) {
+        for (String libraryFile : modificationOperations.downloadMavenLibraries) {
             operations.add(String.format(operationMessage, libraryFile));
         }
         operationMessage = resourceBundle.getString("operationMessage.removeLibrary");
-        for (String libraryFile : updateOperations.removeLibraries) {
+        for (String libraryFile : modificationOperations.removeLibraries) {
             operations.add(String.format(operationMessage, libraryFile));
         }
         return operations;
@@ -128,7 +128,7 @@ public class AddonModificationsOperation {
     public List<DownloadItemRecord> getDownloadRecords() {
         List<DownloadItemRecord> downloadRecords = new ArrayList<>();
         String downloadItemDescription = resourceBundle.getString("downloadItemDescription.module");
-        for (String moduleFile : updateOperations.downloadModule) {
+        for (String moduleFile : modificationOperations.downloadModule) {
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, moduleFile), moduleFile);
             try {
                 record.setUrl(addonCatalogService.getFileDownloadUrl(moduleFile));
@@ -138,7 +138,7 @@ public class AddonModificationsOperation {
             }
         }
         downloadItemDescription = resourceBundle.getString("downloadItemDescription.library");
-        for (String library : updateOperations.downloadLibraries) {
+        for (String library : modificationOperations.downloadLibraries) {
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), library);
             try {
                 record.setUrl(addonCatalogService.getFileDownloadUrl(library));
@@ -148,7 +148,7 @@ public class AddonModificationsOperation {
             }
         }
         downloadItemDescription = resourceBundle.getString("downloadItemDescription.mavenLibrary");
-        for (String library : updateOperations.downloadMavenLibraries) {
+        for (String library : modificationOperations.downloadMavenLibraries) {
             String libraryFile = BasicModuleProvider.mavenCodeToFileName(library);
             DownloadItemRecord record = new DownloadItemRecord(String.format(downloadItemDescription, library), libraryFile);
             try {
@@ -169,8 +169,8 @@ public class AddonModificationsOperation {
             }
             processAddonLicense((AddonRecord) item);
             try {
-                updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonId));
-                updateOperations.installAddons.add(addonId);
+                modificationOperations.downloadModule.add(addonCatalogService.getAddonFile(addonId));
+                modificationOperations.installAddons.add(addonId);
             } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -186,16 +186,16 @@ public class AddonModificationsOperation {
             if (addonUpdateChanges.hasInstallAddon(addonId)) {
                 throw new IllegalStateException("Addon already queued for installation: " + addonId);
             }
-            updateOperations.installAddons.add(addonId);
+            modificationOperations.installAddons.add(addonId);
             processAddonLicense((AddonRecord) item);
             if (previousItem.isAddon()) {
                 String addonFile = findAddonFileName(item.getId());
                 if (addonFile != null) {
-                    updateOperations.removeLibraries.add(addonFile);
+                    modificationOperations.removeLibraries.add(addonFile);
                 }
             }
             try {
-                updateOperations.downloadModule.add(addonCatalogService.getAddonFile(item.getId()));
+                modificationOperations.downloadModule.add(addonCatalogService.getAddonFile(item.getId()));
             } catch (AddonCatalogServiceException ex) {
                 Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -211,10 +211,10 @@ public class AddonModificationsOperation {
             if (addonUpdateChanges.hasRemoveAddon(addonId)) {
                 throw new IllegalStateException("Addon already queued for removal: " + addonId);
             }
-            updateOperations.removeAddons.add(addonId);
+            modificationOperations.removeAddons.add(addonId);
             String addonFile = findAddonFileName(item.getId());
             if (addonFile != null) {
-                updateOperations.removeLibraries.add(addonFile);
+                modificationOperations.removeLibraries.add(addonFile);
             }
         } else {
             throw new IllegalStateException("Unable to install non-addon item");
@@ -295,7 +295,7 @@ public class AddonModificationsOperation {
                 case PLUGIN:
                     boolean include = true;
 
-                    if (updateOperations.installAddons.contains(dependencyId) || updateOperations.dependencyAddons.contains(dependencyId)) {
+                    if (modificationOperations.installAddons.contains(dependencyId) || modificationOperations.dependencyAddons.contains(dependencyId)) {
                         include = false;
                     } else if (applicationModulesUsage.hasModule(dependencyId) && !availableUpdates.contains(dependencyId)) {
                         include = false;
@@ -305,9 +305,9 @@ public class AddonModificationsOperation {
                         AddonRecord addonRecord;
                         try {
                             addonRecord = addonCatalogService.getAddonDependency(dependencyId);
-                            updateOperations.dependencyAddons.add(addonRecord.getId());
+                            modificationOperations.dependencyAddons.add(addonRecord.getId());
                             processAddonLicense(addonRecord);
-                            updateOperations.downloadModule.add(addonCatalogService.getAddonFile(addonRecord.getId()));
+                            modificationOperations.downloadModule.add(addonCatalogService.getAddonFile(addonRecord.getId()));
                             dependencies.addAll(addonRecord.getDependencies());
                         } catch (AddonCatalogServiceException ex) {
                             Logger.getLogger(AddonModificationsOperation.class.getName()).log(Level.SEVERE, null, ex);
@@ -315,13 +315,13 @@ public class AddonModificationsOperation {
                     }
                     break;
                 case JAR_LIBRARY:
-                    if (!applicationModulesUsage.hasLibrary(dependencyId) && !updateOperations.downloadLibraries.contains(dependencyId)) {
-                        updateOperations.downloadLibraries.add(dependencyId);
+                    if (!applicationModulesUsage.hasLibrary(dependencyId) && !modificationOperations.downloadLibraries.contains(dependencyId)) {
+                        modificationOperations.downloadLibraries.add(dependencyId);
                     }
                     break;
                 case MAVEN_LIBRARY:
-                    if (!applicationModulesUsage.hasLibrary(BasicModuleProvider.mavenCodeToFileName(dependencyId)) && !updateOperations.downloadMavenLibraries.contains(dependencyId)) {
-                        updateOperations.downloadMavenLibraries.add(dependencyId);
+                    if (!applicationModulesUsage.hasLibrary(BasicModuleProvider.mavenCodeToFileName(dependencyId)) && !modificationOperations.downloadMavenLibraries.contains(dependencyId)) {
+                        modificationOperations.downloadMavenLibraries.add(dependencyId);
                     }
                     break;
             }
@@ -340,28 +340,28 @@ public class AddonModificationsOperation {
     }
 
     public void finished() {
-        for (String moduleId : updateOperations.installAddons) {
+        for (String moduleId : modificationOperations.installAddons) {
             addonUpdateChanges.removeRemoveAddon(moduleId);
             addonUpdateChanges.addInstallAddon(moduleId);
         }
-        for (String moduleId : updateOperations.dependencyAddons) {
+        for (String moduleId : modificationOperations.dependencyAddons) {
             addonUpdateChanges.removeRemoveAddon(moduleId);
             addonUpdateChanges.addInstallAddon(moduleId);
         }
-        for (String moduleFile : updateOperations.downloadModule) {
+        for (String moduleFile : modificationOperations.downloadModule) {
             addonUpdateChanges.removeRemoveFile(moduleFile);
             addonUpdateChanges.addUpdateFile(moduleFile);
         }
-        for (String libraryFile : updateOperations.downloadLibraries) {
+        for (String libraryFile : modificationOperations.downloadLibraries) {
             addonUpdateChanges.removeRemoveFile(libraryFile);
             addonUpdateChanges.addUpdateFile(libraryFile);
         }
-        for (String mavenLibrary : updateOperations.downloadMavenLibraries) {
+        for (String mavenLibrary : modificationOperations.downloadMavenLibraries) {
             String libraryFile = BasicModuleProvider.mavenCodeToFileName(mavenLibrary);
             addonUpdateChanges.removeRemoveFile(libraryFile);
             addonUpdateChanges.addUpdateFile(libraryFile);
         }
-        for (String moduleId : updateOperations.removeAddons) {
+        for (String moduleId : modificationOperations.removeAddons) {
             addonUpdateChanges.removeInstallAddon(moduleId);
             if ("org.exbin.framework.addon.manager.AddonManagerModule".equals(moduleId)) {
                 OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
@@ -370,7 +370,7 @@ public class AddonModificationsOperation {
             }
             addonUpdateChanges.addRemoveAddon(moduleId);
         }
-        for (String file : updateOperations.removeLibraries) {
+        for (String file : modificationOperations.removeLibraries) {
             addonUpdateChanges.removeUpdateFile(file);
             // TODO delete file
             addonUpdateChanges.addRemoveFile(file);
@@ -408,7 +408,7 @@ public class AddonModificationsOperation {
         return builder.toString();
     }
 
-    private static class UpdateOperations {
+    private static class ModificationOperations {
 
         final List<String> installAddons = new ArrayList<>();
         final List<String> dependencyAddons = new ArrayList<>();

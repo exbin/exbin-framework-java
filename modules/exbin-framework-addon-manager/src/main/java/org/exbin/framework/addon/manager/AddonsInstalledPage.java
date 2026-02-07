@@ -160,6 +160,7 @@ public class AddonsInstalledPage implements AddonManagerPage {
                 }
             }
             filterItems = items;
+            notifyItemsChanged();
         };
     }
 

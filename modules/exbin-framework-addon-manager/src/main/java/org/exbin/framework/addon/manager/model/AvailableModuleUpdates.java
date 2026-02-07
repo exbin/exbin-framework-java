@@ -41,10 +41,10 @@ import org.exbin.framework.utils.VersionUtils;
 @ParametersAreNonnullByDefault
 public class AvailableModuleUpdates {
 
-    private static final String MODULE_UPDATES_FILE = "available-updates.cfg";
-    private final Map<String, String> latestVersions = new HashMap<>();
-    private int revision = -1;
-    private final List<AvailableModulesChangeListener> changeListeners = new ArrayList<>();
+    protected static final String MODULE_UPDATES_FILE = "available-updates.cfg";
+    protected final Map<String, String> latestVersions = new HashMap<>();
+    protected int revision = -1;
+    protected final List<AvailableModulesChangeListener> changeListeners = new ArrayList<>();
 
     public int getRevision() {
         return revision;
@@ -133,6 +133,7 @@ public class AvailableModuleUpdates {
         }
     }
 
+    @ParametersAreNonnullByDefault
     public interface AvailableModulesChangeListener {
 
         void changed(AvailableModuleUpdates availableModuleUpdates);

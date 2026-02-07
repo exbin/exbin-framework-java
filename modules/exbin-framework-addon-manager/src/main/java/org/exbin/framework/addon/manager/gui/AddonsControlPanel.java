@@ -46,6 +46,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     protected final java.util.ResourceBundle resourceBundle;
     protected Controller controller;
     protected Component activeStatusComponent = null;
+    protected Component defaultStatusComponent = null;
 
     public AddonsControlPanel() {
         this(App.getModule(LanguageModuleApi.class).getBundle(AddonsControlPanel.class));
@@ -95,6 +96,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
     public void showLegacyWarning() {
         add(legacyModePanel, BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
 
     public void showManualOnlyWarning() {
@@ -119,6 +122,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
             }
         });
         add(manualOnlyModePanel, BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
 
     public void setController(Controller controller) {
@@ -138,7 +143,10 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         legacyModeLabel = new javax.swing.JLabel();
         manualOnlyModePanel = new javax.swing.JPanel();
         manualOnlyModeLabel = new javax.swing.JLabel();
-        operationLabel = new javax.swing.JLabel();
+        updatesAvailablePanel = new javax.swing.JPanel();
+        updatesAvailableLabel = new javax.swing.JLabel();
+        updateAllButton = new javax.swing.JButton();
+        statusLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         buttonsPanel = new javax.swing.JPanel();
         statusPanel = new javax.swing.JPanel();
@@ -191,13 +199,36 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        updatesAvailableLabel.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        updatesAvailableLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("updatesAvailableLabel.icon"))));
+        updatesAvailableLabel.setText(resourceBundle.getString("updatesAvailableLabel.text")); // NOI18N
+
+        updateAllButton.setText(resourceBundle.getString("updateAllButton.text")); // NOI18N
+        updateAllButton.setToolTipText(resourceBundle.getString("updateAllButton.toolTip")); // NOI18N
+
+        javax.swing.GroupLayout updatesAvailablePanelLayout = new javax.swing.GroupLayout(updatesAvailablePanel);
+        updatesAvailablePanel.setLayout(updatesAvailablePanelLayout);
+        updatesAvailablePanelLayout.setHorizontalGroup(
+            updatesAvailablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, updatesAvailablePanelLayout.createSequentialGroup()
+                .addComponent(updateAllButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(updatesAvailableLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        updatesAvailablePanelLayout.setVerticalGroup(
+            updatesAvailablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updatesAvailablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(updateAllButton)
+                .addComponent(updatesAvailableLabel))
+        );
+
         progressBar.setIndeterminate(true);
 
         setLayout(new java.awt.BorderLayout());
 
         statusPanel.setLayout(new java.awt.BorderLayout());
 
-        refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/manager/resources/icons/open_icon_library/icons/png/16x16/view-refresh-4.png")));
+        refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("refreshButton.icon"))));
         refreshButton.setText(resourceBundle.getString("refreshButton.text")); // NOI18N
         refreshButton.setEnabled(false);
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
@@ -256,10 +287,13 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
     private javax.swing.JPanel legacyModePanel;
     private javax.swing.JLabel manualOnlyModeLabel;
     private javax.swing.JPanel manualOnlyModePanel;
-    private javax.swing.JLabel operationLabel;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton refreshButton;
+    private javax.swing.JLabel statusLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JButton updateAllButton;
+    private javax.swing.JLabel updatesAvailableLabel;
+    private javax.swing.JPanel updatesAvailablePanel;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -305,7 +339,7 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         statusPanel.repaint();
     }
 
-    public void setOperationLabel(String text) {
+    public void setStatusLabel(String text) {
         if (activeStatusComponent != null) {
             statusPanel.remove(activeStatusComponent);
         }
@@ -313,8 +347,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         if (text.isEmpty()) {
             activeStatusComponent = null;
         } else {
-            operationLabel.setText(text);
-            activeStatusComponent = operationLabel;
+            statusLabel.setText(text);
+            activeStatusComponent = statusLabel;
             statusPanel.add(activeStatusComponent, BorderLayout.CENTER);
         }
         statusPanel.revalidate();

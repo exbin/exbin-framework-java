@@ -73,20 +73,21 @@ public class AddonManagerAction extends AbstractAction {
 
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
-        addonManager.setStatusListener(new AddonManager.AddonOperationStatusListener() {
+        addonManager.refreshCatalog();
+        addonManager.setStatusListener(new AddonManager.AddonManagerStatusListener() {
             @Override
             public void setProgressStatus(String status) {
                 controlPanel.setProgressStatus(status);
             }
 
             @Override
-            public void setOperationLabel(String text) {
-                controlPanel.setOperationLabel(text);
+            public void setStatusLabel(String text) {
+                controlPanel.setStatusLabel(text);
             }
 
             @Override
             public void clear() {
-                controlPanel.setOperationLabel("");
+                controlPanel.setStatusLabel("");
             }
         });
 
@@ -104,7 +105,7 @@ public class AddonManagerAction extends AbstractAction {
                 dialog.close();
             }
         });
-
+        
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, addonManagerPanel.getResourceBundle());
         dialog.showCentered(dialogParentComponent.getComponent());

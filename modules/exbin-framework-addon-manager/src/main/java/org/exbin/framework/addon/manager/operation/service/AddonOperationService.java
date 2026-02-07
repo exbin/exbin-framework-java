@@ -43,6 +43,7 @@ import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.AddonOperation;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.ApplicationModulesUsage;
+import org.exbin.framework.addon.manager.operation.AddonModificationStep;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
 import org.exbin.framework.window.api.gui.MultiStepControlPanel;
 import org.exbin.framework.window.api.controller.MultiStepControlController;
@@ -204,7 +205,7 @@ public class AddonOperationService {
         windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
         controlPanel.setController(new MultiStepControlController() {
 
-            private AddonOperationPanel.Step step = AddonOperationPanel.Step.OVERVIEW;
+            private AddonModificationStep step = AddonModificationStep.OVERVIEW;
             private DownloadOperation downloadOperation = null;
 
             @Override
@@ -221,7 +222,7 @@ public class AddonOperationService {
                             case OVERVIEW:
                                 List<LicenseItemRecord> licenseRecords = modificationsOperation.getLicenseRecords();
                                 if (!licenseRecords.isEmpty()) {
-                                    step = AddonOperationPanel.Step.LICENSE;
+                                    step = AddonModificationStep.LICENSE;
                                     operationPanel.goToStep(step);
                                     AddonOperationLicensePanel panel = (AddonOperationLicensePanel) operationPanel.getActiveComponent().get();
                                     panel.setController(new AddonOperationLicensePanel.Controller() {
@@ -242,7 +243,7 @@ public class AddonOperationService {
                                     break;
                                 } // no break
                             case DOWNLOAD:
-                                step = AddonOperationPanel.Step.SUCCESS;
+                                step = AddonModificationStep.SUCCESS;
                                 operationPanel.goToStep(step);
                                 controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
                                 controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.CANCEL, false);
@@ -256,7 +257,7 @@ public class AddonOperationService {
                         // TODO
                         switch (step) {
                             case LICENSE:
-                                step = AddonOperationPanel.Step.OVERVIEW;
+                                step = AddonModificationStep.OVERVIEW;
                                 controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, false);
                                 operationPanel.goToStep(step);
                                 break;
@@ -277,7 +278,7 @@ public class AddonOperationService {
             }
 
             private void goToDownload(List<DownloadItemRecord> downloadRecords) {
-                step = AddonOperationPanel.Step.DOWNLOAD;
+                step = AddonModificationStep.DOWNLOAD;
                 operationPanel.goToStep(step);
                 AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent().get();
                 panel.setDownloadedItemRecords(downloadRecords);

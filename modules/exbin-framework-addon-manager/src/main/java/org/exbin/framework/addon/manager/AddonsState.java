@@ -31,7 +31,7 @@ import org.exbin.framework.basic.BasicModuleProvider;
 import org.exbin.framework.basic.ModuleRecord;
 
 /**
- * Addons target state including qeued changes.
+ * Addons target state including queued changes.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -88,19 +88,6 @@ public class AddonsState {
                 }
             };
         }
-
-        AvailableModuleUpdates.AvailableModulesChangeListener availableModulesChangeListener = (AvailableModuleUpdates checker) -> {
-            int availableUpdates = 0;
-            for (ItemRecord installedAddon : installedAddons) {
-                if (checker.isUpdateAvailable(installedAddon.getId(), installedAddon.getVersion())) {
-                    availableUpdates++;
-                }
-            }
-            // TODO controlPanel.setAvailableUpdates(availableUpdates);
-        };
-
-        availableModuleUpdates.addChangeListener(availableModulesChangeListener);
-        availableModuleUpdates.notifyChanged();
     }
 
     @Nonnull

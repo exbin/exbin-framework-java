@@ -35,11 +35,12 @@ import org.exbin.framework.operation.api.TitledOperation;
 public class CatalogCheckStatusOperation implements Runnable, CancellableOperation, TitledOperation {
 
     protected final AddonCatalogService addonCatalogService;
-    protected int catalogRevision = -1;
+    protected final Output output;
     protected boolean cancelled = false;
 
-    public CatalogCheckStatusOperation(AddonCatalogService addonCatalogService) {
+    public CatalogCheckStatusOperation(AddonCatalogService addonCatalogService, Output output) {
         this.addonCatalogService = addonCatalogService;
+        this.output = output;
     }
 
     @Override
@@ -47,9 +48,11 @@ public class CatalogCheckStatusOperation implements Runnable, CancellableOperati
         try {
             ResourceBundle appBundle = App.getAppBundle();
             String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-            catalogRevision = addonCatalogService.checkStatus(releaseString);
+            int catalogRevision = addonCatalogService.checkStatus(releaseString);
+            output.outputStatus(catalogRevision);
         } catch (AddonCatalogServiceException ex) {
             Logger.getLogger(CatalogCheckStatusOperation.class.getName()).log(Level.SEVERE, "Status check failed", ex);
+            output.outputStatus(-1);
         }
     }
 
@@ -63,12 +66,13 @@ public class CatalogCheckStatusOperation implements Runnable, CancellableOperati
         return cancelled;
     }
 
-    public int getCatalogRevision() {
-        return catalogRevision;
-    }
-
     @Override
     public String getTitle() {
         return "Checking catalog";
+    }
+
+    public interface Output {
+
+        void outputStatus(int status);
     }
 }

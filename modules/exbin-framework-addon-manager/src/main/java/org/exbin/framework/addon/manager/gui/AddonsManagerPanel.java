@@ -175,6 +175,7 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
 
         cartButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("cartButton.icon"))));
         cartButton.setText("(0)");
+        cartButton.setToolTipText(resourceBundle.getString("cartButton.toolTipText")); // NOI18N
         cartButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cartButtonActionPerformed(evt);
@@ -253,6 +254,7 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
+    @ParametersAreNonnullByDefault
     public interface Controller {
 
         void openCatalog();

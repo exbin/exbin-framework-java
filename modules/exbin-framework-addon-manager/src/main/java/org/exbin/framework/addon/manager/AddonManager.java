@@ -33,6 +33,9 @@ import org.exbin.framework.addon.manager.api.AddonCatalogService;
 import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
+import org.exbin.framework.addon.manager.operation.CatalogAvailableUpdatesOperation;
+import org.exbin.framework.addon.manager.operation.CatalogCheckStatusOperation;
+import org.exbin.framework.addon.manager.operation.CatalogSearchOperation;
 import org.exbin.framework.addon.manager.operation.service.AddonOperationService;
 import org.exbin.framework.operation.api.ProgressOperation;
 import org.exbin.framework.operation.api.TitledOperation;
@@ -53,7 +56,7 @@ public class AddonManager {
 
     protected AddonCatalogService addonCatalogService;
     protected final AddonsState addonsState = new AddonsState();
-    protected AddonOperationStatusListener statusListener;
+    protected AddonManagerStatusListener statusListener;
 
     protected final ExecutorService operationsExecutor = Executors.newFixedThreadPool(1);
 
@@ -127,9 +130,24 @@ public class AddonManager {
         AddonsInstalledPage installedPage = new AddonsInstalledPage();
         installedPage.setAddonManager(this);
         addManagerPage(installedPage);
+
+        // TODO
+        /* AvailableModuleUpdates.AvailableModulesChangeListener availableModulesChangeListener = (AvailableModuleUpdates checker) -> {
+            int availableUpdates = 0;
+            for (ItemRecord installedAddon : installedAddons) {
+                if (checker.isUpdateAvailable(installedAddon.getId(), installedAddon.getVersion())) {
+                    availableUpdates++;
+                }
+            }
+            controlPanel.setAvailableUpdates(availableUpdates);
+        };
+
+        AvailableModuleUpdates availableModuleUpdates = addonsState.getAvailableModuleUpdates();
+        availableModuleUpdates.addChangeListener(availableModulesChangeListener);
+        availableModuleUpdates.notifyChanged(); */
     }
 
-    public void setStatusListener(AddonOperationStatusListener statusListener) {
+    public void setStatusListener(AddonManagerStatusListener statusListener) {
         this.statusListener = statusListener;
     }
 
@@ -151,7 +169,7 @@ public class AddonManager {
                 if (operation instanceof ProgressOperation) {
                     statusListener.setProgressStatus(((TitledOperation) operation).getTitle());
                 } else {
-                    statusListener.setOperationLabel(((TitledOperation) operation).getTitle());
+                    statusListener.setStatusLabel(((TitledOperation) operation).getTitle());
                 }
             }
 
@@ -189,10 +207,19 @@ public class AddonManager {
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
         this.addonCatalogService = addonCatalogService;
         managerPanel.setCatalogUrl(addonCatalogService.getCatalogPageUrl());
+    }
 
+    public void refreshCatalog() {
         for (AddonManagerPage managerPage : managerPages) {
             if (managerPage instanceof AddonsCatalogPage) {
                 ((AddonsCatalogPage) managerPage).setAddonCatalogService(addonCatalogService);
+
+                runOperation(new CatalogCheckStatusOperation(addonCatalogService, (status) -> {
+                    if (status >= 0) {
+                        runOperation(new CatalogAvailableUpdatesOperation(addonCatalogService, this, status));
+                        runOperation(new CatalogSearchOperation(addonCatalogService, this, "", ((AddonsCatalogPage) managerPage)::setAddonItems));
+                    }
+                }));
             }
         }
     }
@@ -250,11 +277,11 @@ public class AddonManager {
     }
 
     @ParametersAreNonnullByDefault
-    public interface AddonOperationStatusListener {
+    public interface AddonManagerStatusListener {
 
         void setProgressStatus(String status);
 
-        void setOperationLabel(String text);
+        void setStatusLabel(String text);
 
         void clear();
     }

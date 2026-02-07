@@ -19,14 +19,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -92,7 +96,18 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
     @Override
     public List<AddonRecord> searchForAddons(String searchCondition) throws AddonCatalogServiceException {
         List<AddonRecord> searchResult = new ArrayList<>();
-        URL searchUrl = createApiCall("list");
+        URL searchUrl;
+        if (searchCondition.isEmpty()) {
+            searchUrl = createApiCall("list");
+        } else {
+            try {
+                searchUrl = createApiCall("search", "query=" + URLEncoder.encode(searchCondition, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                return searchResult;
+            }
+        }
+
         try (InputStream searchStream = searchUrl.openStream()) {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

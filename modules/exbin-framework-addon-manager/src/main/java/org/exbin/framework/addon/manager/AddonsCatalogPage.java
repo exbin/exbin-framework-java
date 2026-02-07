@@ -18,13 +18,10 @@ package org.exbin.framework.addon.manager;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
-import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
 import org.exbin.framework.addon.manager.gui.AddonsPanel;
 import org.exbin.framework.addon.manager.api.AddonRecord;
@@ -33,7 +30,6 @@ import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
 import org.exbin.framework.addon.manager.operation.CatalogSearchOperation;
-import org.exbin.framework.addon.manager.operation.UpdateAvailabilityOperation;
 
 /**
  * Addons manager page.
@@ -46,7 +42,6 @@ public class AddonsCatalogPage implements AddonManagerPage {
     protected AddonsPanel addonsPanel = new AddonsPanel();
     protected List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
     protected AddonCatalogService addonCatalogService;
-    protected int serviceRevision = -1;
 
     protected AddonManager addonManager;
     protected List<AddonRecord> addonItems;
@@ -107,33 +102,6 @@ public class AddonsCatalogPage implements AddonManagerPage {
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
         this.addonCatalogService = addonCatalogService;
-
-        // TODO Move to operations thread
-        Thread thread = new Thread(() -> {
-            try {
-                ResourceBundle appBundle = App.getAppBundle();
-                String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-                serviceRevision = addonCatalogService.checkStatus(releaseString);
-                createSearchOperation("").run();
-            } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, "Status check failed", ex);
-                serviceRevision = -1;
-            }
-            // TODO
-            // controlPanel.showLegacyWarning();
-            if (serviceRevision == -1) {
-                // TODO controlPanel.showManualOnlyWarning();
-            } else {
-                AvailableModuleUpdates availableModuleUpdates = addonManager.getAvailableModuleUpdates();
-                if (serviceRevision > availableModuleUpdates.getRevision()) {
-                    UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
-                    availabilityOperation.run();
-                    availableModuleUpdates.setLatestVersion(serviceRevision, availabilityOperation.getLatestVersions());
-                    availableModuleUpdates.writeConfigFile();
-                }
-            }
-        });
-        thread.start();
     }
 
     @Nonnull
@@ -147,18 +115,12 @@ public class AddonsCatalogPage implements AddonManagerPage {
     @Nonnull
     @Override
     public Runnable createSearchOperation(String search) {
-        if (serviceRevision == -1) {
-            return () -> {
-                setAddonItems(new ArrayList<>());
-            };
-        }
-
         return new CatalogSearchOperation(addonCatalogService, addonManager, search, this::setAddonItems);
 //        addonsPanel.notifyItemsChanged();
 //        ResourceBundle resourceBundle = addonManager.getResourceBundle();
 //        JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
     }
-    
+
     public void setAddonItems(List<AddonRecord> addonItems) {
         this.addonItems = addonItems;
         notifyItemsChanged();

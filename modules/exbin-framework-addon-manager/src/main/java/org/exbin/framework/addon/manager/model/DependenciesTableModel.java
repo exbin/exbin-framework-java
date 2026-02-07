@@ -18,6 +18,7 @@ package org.exbin.framework.addon.manager.model;
 import org.exbin.framework.addon.manager.api.DependencyRecord;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.table.AbstractTableModel;
@@ -54,6 +55,7 @@ public class DependenciesTableModel extends AbstractTableModel {
         return 3;
     }
 
+    @Nonnull
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
@@ -67,6 +69,7 @@ public class DependenciesTableModel extends AbstractTableModel {
         }
     }
 
+    @Nonnull
     @Override
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
@@ -81,6 +84,7 @@ public class DependenciesTableModel extends AbstractTableModel {
         }
     }
 
+    @Nonnull
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         DependencyRecord record = dependencies.get(rowIndex);

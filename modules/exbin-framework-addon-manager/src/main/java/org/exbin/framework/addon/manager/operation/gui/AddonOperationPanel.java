@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
+import org.exbin.framework.addon.manager.operation.AddonModificationStep;
 import org.exbin.framework.language.api.LanguageModuleApi;
 
 /**
@@ -32,15 +33,14 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonOperationPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationPanel.class);
-    private Controller controller;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationPanel.class);
 
-    private final AddonOperationOverviewPanel overviewPanel = new AddonOperationOverviewPanel();
-    private final AddonOperationLicensePanel licensePanel = new AddonOperationLicensePanel();
-    private final AddonOperationDownloadPanel downloadPanel = new AddonOperationDownloadPanel();
-    private final AddonOperationSuccessPanel successPanel = new AddonOperationSuccessPanel();
-    
-    private JComponent activePanel = null;
+    protected final AddonOperationOverviewPanel overviewPanel = new AddonOperationOverviewPanel();
+    protected final AddonOperationLicensePanel licensePanel = new AddonOperationLicensePanel();
+    protected final AddonOperationDownloadPanel downloadPanel = new AddonOperationDownloadPanel();
+    protected final AddonOperationSuccessPanel successPanel = new AddonOperationSuccessPanel();
+
+    protected JComponent activePanel = null;
 
     public AddonOperationPanel() {
         initComponents();
@@ -48,7 +48,7 @@ public class AddonOperationPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        goToStep(Step.OVERVIEW);
+        goToStep(AddonModificationStep.OVERVIEW);
     }
 
     @Nonnull
@@ -56,15 +56,11 @@ public class AddonOperationPanel extends javax.swing.JPanel {
         return resourceBundle;
     }
 
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-    
-    public void goToStep(Step step) {
+    public void goToStep(AddonModificationStep step) {
         if (activePanel != null) {
             remove(activePanel);
         }
-        
+
         switch (step) {
             case OVERVIEW:
                 activePanel = overviewPanel;
@@ -81,17 +77,17 @@ public class AddonOperationPanel extends javax.swing.JPanel {
             default:
                 throw new AssertionError();
         }
-        
+
         add(activePanel, BorderLayout.CENTER);
         revalidate();
         repaint();
     }
-    
+
     @Nonnull
     public Optional<JComponent> getActiveComponent() {
         return Optional.ofNullable(activePanel);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -106,14 +102,4 @@ public class AddonOperationPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public interface Controller {
-
-    }
-    
-    public enum Step {
-        OVERVIEW,
-        LICENSE,
-        DOWNLOAD,
-        SUCCESS
-    }
 }
