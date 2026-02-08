@@ -41,18 +41,18 @@ import org.exbin.framework.window.api.controller.CloseControlController;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class AddonsControlPanel extends javax.swing.JPanel implements CloseControlController.CloseControlComponent {
+public class AddonsManagerControlPanel extends javax.swing.JPanel implements CloseControlController.CloseControlComponent {
 
     protected final java.util.ResourceBundle resourceBundle;
     protected Controller controller;
     protected Component activeStatusComponent = null;
     protected Component defaultStatusComponent = null;
 
-    public AddonsControlPanel() {
-        this(App.getModule(LanguageModuleApi.class).getBundle(AddonsControlPanel.class));
+    public AddonsManagerControlPanel() {
+        this(App.getModule(LanguageModuleApi.class).getBundle(AddonsManagerControlPanel.class));
     }
 
-    public AddonsControlPanel(java.util.ResourceBundle resourceBundle) {
+    public AddonsManagerControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
     }
@@ -128,6 +128,8 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
     public void setController(Controller controller) {
         this.controller = controller;
+        refreshButton.setEnabled(true);
+        updateAllButton.setEnabled(true);
     }
 
     /**
@@ -205,6 +207,11 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
 
         updateAllButton.setText(resourceBundle.getString("updateAllButton.text")); // NOI18N
         updateAllButton.setToolTipText(resourceBundle.getString("updateAllButton.toolTip")); // NOI18N
+        updateAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateAllButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout updatesAvailablePanelLayout = new javax.swing.GroupLayout(updatesAvailablePanel);
         updatesAvailablePanel.setLayout(updatesAvailablePanelLayout);
@@ -280,6 +287,10 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         controller.performRefresh();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
+    private void updateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateAllButtonActionPerformed
+        controller.performUpdateAll();
+    }//GEN-LAST:event_updateAllButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JButton closeButton;
@@ -328,7 +339,10 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         }
 
         if (status.isEmpty()) {
-            activeStatusComponent = null;
+            activeStatusComponent = defaultStatusComponent;
+            if (activeStatusComponent != null) {
+                statusPanel.add(activeStatusComponent, BorderLayout.CENTER);
+            }
         } else {
             progressBar.setString(status);
             progressBar.setStringPainted(!status.isEmpty());
@@ -345,7 +359,10 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         }
 
         if (text.isEmpty()) {
-            activeStatusComponent = null;
+            activeStatusComponent = defaultStatusComponent;
+            if (activeStatusComponent != null) {
+                statusPanel.add(activeStatusComponent, BorderLayout.CENTER);
+            }
         } else {
             statusLabel.setText(text);
             activeStatusComponent = statusLabel;
@@ -355,7 +372,32 @@ public class AddonsControlPanel extends javax.swing.JPanel implements CloseContr
         statusPanel.repaint();
     }
 
+    public void setAvailableUpdates(int updatesAvailableCount) {
+        updatesAvailableLabel.setText(String.format(resourceBundle.getString("updatesAvailableLabel.text"), updatesAvailableCount));
+        if (updatesAvailableCount > 0) {
+            if (defaultStatusComponent == null) {
+                defaultStatusComponent = updatesAvailablePanel;
+                if (activeStatusComponent == null) {
+                    activeStatusComponent = defaultStatusComponent;
+                    statusPanel.add(activeStatusComponent, BorderLayout.CENTER);
+                }
+            }
+        } else {
+            if (defaultStatusComponent != null) {
+                if (activeStatusComponent == defaultStatusComponent) {
+                    statusPanel.remove(activeStatusComponent);
+                    activeStatusComponent = null;
+                }
+                defaultStatusComponent = null;
+            }
+        }
+        statusPanel.revalidate();
+        statusPanel.repaint();
+    }
+
     public interface Controller extends CloseControlController {
+
+        void performUpdateAll();
 
         void performRefresh();
     }

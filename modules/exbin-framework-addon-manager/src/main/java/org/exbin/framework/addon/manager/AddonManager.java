@@ -224,6 +224,27 @@ public class AddonManager {
         }
     }
 
+    public void updateAll() {
+        List<AddonOperation> updateOperations = new ArrayList<>();
+        List<ItemRecord> installedAddons = addonsState.getInstalledAddons();
+        AvailableModuleUpdates availableModuleUpdates = addonsState.getAvailableModuleUpdates();
+        for (ItemRecord installedAddon : installedAddons) {
+            if (availableModuleUpdates.isUpdateAvailable(installedAddon.getId(), installedAddon.getVersion())) {
+                updateOperations.add(new AddonOperation(AddonOperationVariant.UPDATE, installedAddon));
+            }
+        }
+
+        AddonOperationService addonOperationService = new AddonOperationService(AddonManager.this);
+        addonOperationService.setAddonCatalogService(addonCatalogService);
+        addonOperationService.performAddonOperations(updateOperations, managerPanel);
+
+        // TODO
+//        if (success) {
+//            cartOperations.clear();
+//        }
+        notifyChanged();
+    }
+
     @Nonnull
     public AvailableModuleUpdates getAvailableModuleUpdates() {
         return addonsState.getAvailableModuleUpdates();

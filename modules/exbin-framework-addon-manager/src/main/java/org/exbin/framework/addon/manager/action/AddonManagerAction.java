@@ -28,7 +28,7 @@ import org.exbin.framework.addon.manager.AddonManagerModule;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
-import org.exbin.framework.addon.manager.gui.AddonsControlPanel;
+import org.exbin.framework.addon.manager.gui.AddonsManagerControlPanel;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.window.api.WindowHandler;
 import org.exbin.framework.context.api.ContextChangeRegistration;
@@ -68,7 +68,7 @@ public class AddonManagerAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO: Extract to separate class to not share fields
-        AddonsControlPanel controlPanel = new AddonsControlPanel();
+        AddonsManagerControlPanel controlPanel = new AddonsManagerControlPanel();
         controlPanel.addHelpButton(new HelpLink(HELP_ID));
 
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
@@ -95,9 +95,15 @@ public class AddonManagerAction extends AbstractAction {
         AddonsManagerPanel addonManagerPanel = addonManager.getManagerPanel();
 
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
-        controlPanel.setController(new AddonsControlPanel.Controller() {
+        controlPanel.setController(new AddonsManagerControlPanel.Controller() {
             @Override
             public void performRefresh() {
+                addonManager.refreshCatalog();
+            }
+
+            @Override
+            public void performUpdateAll() {
+                addonManager.updateAll();
             }
 
             @Override
