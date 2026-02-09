@@ -237,11 +237,6 @@ public class AddonManager {
         AddonOperationService addonOperationService = new AddonOperationService(AddonManager.this);
         addonOperationService.setAddonCatalogService(addonCatalogService);
         addonOperationService.performAddonOperations(updateOperations, managerPanel);
-
-        // TODO
-//        if (success) {
-//            cartOperations.clear();
-//        }
         notifyChanged();
     }
 

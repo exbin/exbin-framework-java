@@ -131,7 +131,7 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
     }
 
     public void setCartItemsCount(int itemsCount) {
-        cartButton.setText("(" + itemsCount + ")");
+        ((CartButton) cartButton).setChangesCount(itemsCount);
     }
 
     public void setCatalogUrl(String addonCatalogUrl) {
@@ -164,23 +164,14 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
 
         tabbedPane = new javax.swing.JTabbedPane();
         headerPanel = new javax.swing.JPanel();
-        cartButton = new javax.swing.JToggleButton();
         filterLabel = new javax.swing.JLabel();
         filterTextField = new javax.swing.JTextField();
         searchLabel = new javax.swing.JLabel();
         searchTextField = new javax.swing.JTextField();
+        cartButton = new CartButton();
 
         setLayout(new java.awt.BorderLayout());
         add(tabbedPane, java.awt.BorderLayout.CENTER);
-
-        cartButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("cartButton.icon"))));
-        cartButton.setText("(0)");
-        cartButton.setToolTipText(resourceBundle.getString("cartButton.toolTipText")); // NOI18N
-        cartButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cartButtonActionPerformed(evt);
-            }
-        });
 
         filterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("filterLabel.icon"))));
         filterLabel.setToolTipText(resourceBundle.getString("filterLabel.toolTipText")); // NOI18N
@@ -189,6 +180,15 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
 
         searchLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("searchLabel.icon"))));
         searchLabel.setToolTipText(resourceBundle.getString("searchLabel.toolTipText")); // NOI18N
+
+        cartButton.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("cartButton.icon"))));
+        cartButton.setText(resourceBundle.getString("cartButton.text")); // NOI18N
+        cartButton.setToolTipText(resourceBundle.getString("cartButton.toolTipText")); // NOI18N
+        cartButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cartButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout headerPanelLayout = new javax.swing.GroupLayout(headerPanel);
         headerPanel.setLayout(headerPanelLayout);
