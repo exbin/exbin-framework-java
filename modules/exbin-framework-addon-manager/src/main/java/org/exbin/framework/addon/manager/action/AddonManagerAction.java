@@ -67,7 +67,6 @@ public class AddonManagerAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO: Extract to separate class to not share fields
         AddonsManagerControlPanel controlPanel = new AddonsManagerControlPanel();
         controlPanel.addHelpButton(new HelpLink(HELP_ID));
 
@@ -88,6 +87,11 @@ public class AddonManagerAction extends AbstractAction {
             @Override
             public void clear() {
                 controlPanel.setStatusLabel("");
+            }
+
+            @Override
+            public void setAvailableUpdates(int updatesCount) {
+                controlPanel.setAvailableUpdates(updatesCount);
             }
         });
 
@@ -111,7 +115,7 @@ public class AddonManagerAction extends AbstractAction {
                 dialog.close();
             }
         });
-        
+
         windowModule.addHeaderPanel(dialog.getWindow(), addonManagerPanel.getClass(), addonManagerPanel.getResourceBundle());
         windowModule.setWindowTitle(dialog, addonManagerPanel.getResourceBundle());
         dialog.showCentered(dialogParentComponent.getComponent());

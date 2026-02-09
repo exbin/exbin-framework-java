@@ -52,7 +52,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     protected MouseListener providerLinkListener;
     protected final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
     protected String providerLink = null;
-    // TODO private final Thread detailsThread
 
     public AddonDetailsPanel() {
         initComponents();
@@ -123,18 +122,22 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             providerLink = null;
         }
         providerLabel.setText(provider);
-        String description = itemRecord.getDescription().orElse("");
-        String details = controller.getModuleDetails(itemRecord);
-        if (!details.isEmpty()) {
-            details = "<hr/>" + details;
-        }
-        overviewTextPane.setText("<html><body><p>" + description + "<br/>id: " + itemRecord.getId() + "</p>" + details + "</body></html>");
+        setModuleDetail(itemRecord, "");
+        controller.requestModuleDetail(itemRecord);
         if (itemRecord instanceof AddonRecord) {
             dependenciesTableModel.setDependencies(((AddonRecord) itemRecord).getDependencies());
         } else {
             dependenciesTableModel.setDependencies(null);
         }
         updateRecordControlState(itemRecord);
+    }
+
+    public void setModuleDetail(ItemRecord itemRecord, String details) {
+        String description = itemRecord.getDescription().orElse("");
+        if (!details.isEmpty()) {
+            details = "<hr/>" + details;
+        }
+        overviewTextPane.setText("<html><body><p>" + description + "<br/>id: " + itemRecord.getId() + "</p>" + details + "</body></html>");
     }
 
     public void updateRecordControlState(ItemRecord itemRecord) {
@@ -311,7 +314,6 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
 
         boolean isInCart(String moduleId, AddonOperationVariant variant);
 
-        @Nonnull
-        String getModuleDetails(ItemRecord itemRecord);
+        void requestModuleDetail(ItemRecord itemRecord);
     }
 }

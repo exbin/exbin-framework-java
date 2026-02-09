@@ -33,8 +33,10 @@ import org.exbin.framework.addon.manager.api.AddonCatalogService;
 import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
+import org.exbin.framework.addon.manager.gui.AddonsPanel;
 import org.exbin.framework.addon.manager.operation.CatalogAvailableUpdatesOperation;
 import org.exbin.framework.addon.manager.operation.CatalogCheckStatusOperation;
+import org.exbin.framework.addon.manager.operation.CatalogModuleDetailOperation;
 import org.exbin.framework.addon.manager.operation.CatalogSearchOperation;
 import org.exbin.framework.addon.manager.operation.service.AddonOperationService;
 import org.exbin.framework.operation.api.ProgressOperation;
@@ -130,21 +132,6 @@ public class AddonManager {
         AddonsInstalledPage installedPage = new AddonsInstalledPage();
         installedPage.setAddonManager(this);
         addManagerPage(installedPage);
-
-        // TODO
-        /* AvailableModuleUpdates.AvailableModulesChangeListener availableModulesChangeListener = (AvailableModuleUpdates checker) -> {
-            int availableUpdates = 0;
-            for (ItemRecord installedAddon : installedAddons) {
-                if (checker.isUpdateAvailable(installedAddon.getId(), installedAddon.getVersion())) {
-                    availableUpdates++;
-                }
-            }
-            controlPanel.setAvailableUpdates(availableUpdates);
-        };
-
-        AvailableModuleUpdates availableModuleUpdates = addonsState.getAvailableModuleUpdates();
-        availableModuleUpdates.addChangeListener(availableModulesChangeListener);
-        availableModuleUpdates.notifyChanged(); */
     }
 
     public void setStatusListener(AddonManagerStatusListener statusListener) {
@@ -214,9 +201,9 @@ public class AddonManager {
             if (managerPage instanceof AddonsCatalogPage) {
                 ((AddonsCatalogPage) managerPage).setAddonCatalogService(addonCatalogService);
 
-                runOperation(new CatalogCheckStatusOperation(addonCatalogService, (status) -> {
+                runOperation(new CatalogCheckStatusOperation(this, addonCatalogService, (status) -> {
                     if (status >= 0) {
-                        runOperation(new CatalogAvailableUpdatesOperation(addonCatalogService, this, status));
+                        runOperation(new CatalogAvailableUpdatesOperation(addonCatalogService, this, status, this::updateLatestVersions));
                         runOperation(new CatalogSearchOperation(addonCatalogService, this, "", ((AddonsCatalogPage) managerPage)::setAddonItems));
                     }
                 }));
@@ -292,6 +279,22 @@ public class AddonManager {
         return cartOperations;
     }
 
+    private void updateLatestVersions() {
+        AvailableModuleUpdates availableModuleUpdates = getAvailableModuleUpdates();
+        List<ItemRecord> installedAddons = addonsState.getInstalledAddons();
+        int availableUpdates = 0;
+        for (ItemRecord installedAddon : installedAddons) {
+            if (availableModuleUpdates.isUpdateAvailable(installedAddon.getId(), installedAddon.getVersion())) {
+                availableUpdates++;
+            }
+        }
+        statusListener.setAvailableUpdates(availableUpdates);
+    }
+
+    public void requestModuleDetail(ItemRecord itemRecord, AddonsPanel addonsPanel) {
+        runOperation(new CatalogModuleDetailOperation(addonCatalogService, this, itemRecord, (details) -> addonsPanel.setModuleDetail(itemRecord, details)));
+    }
+
     @ParametersAreNonnullByDefault
     public interface AddonManagerStatusListener {
 
@@ -300,5 +303,7 @@ public class AddonManager {
         void setStatusLabel(String text);
 
         void clear();
+
+        void setAvailableUpdates(int updatesCount);
     }
 }

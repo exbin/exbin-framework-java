@@ -18,6 +18,7 @@ package org.exbin.framework.addon.manager.operation;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleProvider;
@@ -84,9 +85,10 @@ public class CatalogSearchOperation implements Runnable, CancellableOperation, P
         return cancelled;
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
-        return "Searching";
+        return addonManager.getResourceBundle().getString("catalogSearchOperation");
     }
 
     @Override

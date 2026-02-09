@@ -15,49 +15,50 @@
  */
 package org.exbin.framework.addon.manager.operation;
 
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
-import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
 import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
+import org.exbin.framework.addon.manager.api.ItemRecord;
 import org.exbin.framework.operation.api.CancellableOperation;
+import org.exbin.framework.operation.api.ProgressOperation;
 import org.exbin.framework.operation.api.TitledOperation;
 
 /**
- * Operation to check status of catalog.
+ * Operation to receive details about module from catalog.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class CatalogCheckStatusOperation implements Runnable, CancellableOperation, TitledOperation {
+public class CatalogModuleDetailOperation implements Runnable, CancellableOperation, ProgressOperation, TitledOperation {
 
     protected final AddonManager addonManager;
     protected final AddonCatalogService addonCatalogService;
     protected final Output output;
     protected boolean cancelled = false;
+    protected final ItemRecord itemRecord;
 
-    public CatalogCheckStatusOperation(AddonManager addonManager, AddonCatalogService addonCatalogService, Output output) {
-        this.addonManager = addonManager;
+    public CatalogModuleDetailOperation(AddonCatalogService addonCatalogService, AddonManager addonManager, ItemRecord itemRecord, Output output) {
         this.addonCatalogService = addonCatalogService;
+        this.addonManager = addonManager;
+        this.itemRecord = itemRecord;
         this.output = output;
     }
 
     @Override
     public void run() {
-        try {
-            ResourceBundle appBundle = App.getAppBundle();
-            String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-            int catalogRevision = addonCatalogService.checkStatus(releaseString);
-            output.outputStatus(catalogRevision);
-        } catch (AddonCatalogServiceException ex) {
-            Logger.getLogger(CatalogCheckStatusOperation.class.getName()).log(Level.SEVERE, "Status check failed", ex);
-            output.outputStatus(-1);
+        if (itemRecord.isAddon()) {
+            try {
+                String moduleDetail = addonCatalogService.getModuleDetails(itemRecord.getId());
+                output.outputModuleDetail(moduleDetail);
+            } catch (AddonCatalogServiceException ex) {
+                Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }
 
     @Override
@@ -73,11 +74,16 @@ public class CatalogCheckStatusOperation implements Runnable, CancellableOperati
     @Nonnull
     @Override
     public String getTitle() {
-        return addonManager.getResourceBundle().getString("catalogCheckStatusOperation");
+        return addonManager.getResourceBundle().getString("catalogModuleDetailOperation");
+    }
+
+    @Override
+    public int getOperationProgress() {
+        return -1;
     }
 
     public interface Output {
 
-        void outputStatus(int status);
+        void outputModuleDetail(String details);
     }
 }

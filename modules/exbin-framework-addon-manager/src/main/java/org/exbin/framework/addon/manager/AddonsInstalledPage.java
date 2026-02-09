@@ -67,11 +67,9 @@ public class AddonsInstalledPage implements AddonManagerPage {
                 return addonManager.isInCart(moduleId, variant);
             }
 
-            @Nonnull
             @Override
-            public String getModuleDetails(ItemRecord itemRecord) {
-                // TODO
-                return "";
+            public void requestModuleDetail(ItemRecord itemRecord) {
+                addonManager.requestModuleDetail(itemRecord, addonsPanel);
             }
         });
         itemChangedListeners.add(addonsPanel::notifyItemChanged);

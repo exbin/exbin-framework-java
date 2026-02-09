@@ -99,10 +99,9 @@ public class AddonsPanel extends javax.swing.JPanel {
                 return controller.isInCart(moduleId, variant);
             }
 
-            @Nonnull
             @Override
-            public String getModuleDetails(ItemRecord itemRecord) {
-                return controller.getModuleDetails(itemRecord);
+            public void requestModuleDetail(ItemRecord itemRecord) {
+                controller.requestModuleDetail(itemRecord);
             }
         });
     }
@@ -142,6 +141,10 @@ public class AddonsPanel extends javax.swing.JPanel {
 
     public void notifyItemsChanged() {
         addonsListModel.notifyItemsChanged();
+    }
+
+    public void setModuleDetail(ItemRecord itemRecord, String details) {
+        addonDetailsPanel.setModuleDetail(itemRecord, details);
     }
 
     /**
@@ -200,7 +203,6 @@ public class AddonsPanel extends javax.swing.JPanel {
 
         boolean isInCart(String moduleId, AddonOperationVariant variant);
 
-        @Nonnull
-        String getModuleDetails(ItemRecord itemRecord);
+        void requestModuleDetail(ItemRecord itemRecord);
     }
 }

@@ -54,7 +54,7 @@ public class CartButton extends JToggleButton {
                 int x = getWidth() - 34;
                 int y = getHeight() / 2 - 10;
                 g.setColor(changesCount == 0 ? noChangesBg : changesCountBg);
-                g.fillOval(x, y, 24, 20);
+                g.fillOval(x, y, 25, 20);
                 g.setColor(changesCount == 0 ? noChangesFg : changesCountFg);
                 Font font = getFont().deriveFont(Font.BOLD);
                 g.setFont(font);

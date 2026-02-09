@@ -18,8 +18,6 @@ package org.exbin.framework.addon.manager;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
@@ -27,7 +25,6 @@ import org.exbin.framework.addon.manager.gui.AddonsPanel;
 import org.exbin.framework.addon.manager.api.AddonRecord;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.addon.manager.api.ItemRecord;
-import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
 import org.exbin.framework.addon.manager.operation.CatalogSearchOperation;
 
@@ -74,10 +71,9 @@ public class AddonsCatalogPage implements AddonManagerPage {
                 return addonManager.isInCart(moduleId, variant);
             }
 
-            @Nonnull
             @Override
-            public String getModuleDetails(ItemRecord itemRecord) {
-                return AddonsCatalogPage.this.getModuleDetails(itemRecord);
+            public void requestModuleDetail(ItemRecord itemRecord) {
+                addonManager.requestModuleDetail(itemRecord, addonsPanel);
             }
         });
         itemChangedListeners.add((ItemChangedListener) addonsPanel::notifyItemChanged);
@@ -161,19 +157,6 @@ public class AddonsCatalogPage implements AddonManagerPage {
             itemChangedListener.itemChanged();
         }
         addonsPanel.notifyItemsChanged();
-    }
-
-    @Nonnull
-    public String getModuleDetails(ItemRecord itemRecord) {
-        if (itemRecord.isAddon()) {
-            try {
-                return addonCatalogService.getModuleDetails(itemRecord.getId());
-            } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        return "";
     }
 
     public interface ItemChangedListener {

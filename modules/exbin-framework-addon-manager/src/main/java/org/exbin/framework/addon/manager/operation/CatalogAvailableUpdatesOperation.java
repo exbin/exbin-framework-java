@@ -15,15 +15,10 @@
  */
 package org.exbin.framework.addon.manager.operation;
 
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.App;
-import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.addon.manager.AddonManager;
 import org.exbin.framework.addon.manager.api.AddonCatalogService;
-import org.exbin.framework.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.framework.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.framework.operation.api.CancellableOperation;
 import org.exbin.framework.operation.api.TitledOperation;
@@ -39,29 +34,25 @@ public class CatalogAvailableUpdatesOperation implements Runnable, CancellableOp
     protected final AddonCatalogService addonCatalogService;
     protected final AddonManager addonManager;
     protected final int catalogRevision;
+    protected final Output output;
     protected boolean cancelled = false;
 
-    public CatalogAvailableUpdatesOperation(AddonCatalogService addonCatalogService, AddonManager addonManager, int catalogRevision) {
+    public CatalogAvailableUpdatesOperation(AddonCatalogService addonCatalogService, AddonManager addonManager, int catalogRevision, Output output) {
         this.addonCatalogService = addonCatalogService;
         this.addonManager = addonManager;
         this.catalogRevision = catalogRevision;
+        this.output = output;
     }
 
     @Override
     public void run() {
-        try {
-            AvailableModuleUpdates availableModuleUpdates = addonManager.getAvailableModuleUpdates();
-            if (catalogRevision > availableModuleUpdates.getRevision()) {
-                UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
-                availabilityOperation.run();
-                availableModuleUpdates.setLatestVersion(catalogRevision, availabilityOperation.getLatestVersions());
-                availableModuleUpdates.writeConfigFile();
-            }
-            ResourceBundle appBundle = App.getAppBundle();
-            String releaseString = appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
-            addonCatalogService.checkStatus(releaseString);
-        } catch (AddonCatalogServiceException ex) {
-            Logger.getLogger(CatalogAvailableUpdatesOperation.class.getName()).log(Level.SEVERE, "Status check failed", ex);
+        AvailableModuleUpdates availableModuleUpdates = addonManager.getAvailableModuleUpdates();
+        if (catalogRevision > availableModuleUpdates.getRevision()) {
+            UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
+            availabilityOperation.run();
+            availableModuleUpdates.setLatestVersion(catalogRevision, availabilityOperation.getLatestVersions());
+            availableModuleUpdates.writeConfigFile();
+            output.latestVersionsChanged();
         }
     }
 
@@ -75,8 +66,15 @@ public class CatalogAvailableUpdatesOperation implements Runnable, CancellableOp
         return cancelled;
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
-        return "Getting updates";
+        return addonManager.getResourceBundle().getString("catalogAvailableUpdatesOperation");
+    }
+
+    @ParametersAreNonnullByDefault
+    public interface Output {
+
+        void latestVersionsChanged();
     }
 }

@@ -246,6 +246,7 @@ public class AddonOperationService {
                                 step = AddonModificationStep.SUCCESS;
                                 operationPanel.goToStep(step);
                                 controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, false);
                                 controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.CANCEL, false);
                                 controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.FINISH, true);
                                 break;
