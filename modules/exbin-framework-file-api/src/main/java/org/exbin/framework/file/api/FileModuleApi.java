@@ -120,6 +120,14 @@ public interface FileModuleApi extends Module {
     boolean showAskToOverwrite(Component parentComponent);
 
     /**
+     * Shows file not found message.
+     *
+     * @param parentComponent parent component
+     * @param filePath file path
+     */
+    void showFileNotFound(Component parentComponent, String filePath);
+
+    /**
      * Shows unable to save message.
      *
      * @param parentComponent parent component

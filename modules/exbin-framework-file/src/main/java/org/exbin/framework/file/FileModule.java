@@ -172,14 +172,14 @@ public class FileModule implements FileModuleApi {
     @Override
     public boolean showSaveModified(Component parentComponent) {
         Object[] options = {
-            resourceBundle.getString("Question.modified_save"),
-            resourceBundle.getString("Question.modified_discard"),
-            resourceBundle.getString("Question.modified_cancel")
+            resourceBundle.getString("saveModifiedQuestion.action_save"),
+            resourceBundle.getString("saveModifiedQuestion.action_discard"),
+            resourceBundle.getString("saveModifiedQuestion.action_cancel")
         };
         int result = JOptionPane.showOptionDialog(
                 parentComponent,
-                resourceBundle.getString("Question.modified"),
-                resourceBundle.getString("Question.modified_title"),
+                resourceBundle.getString("saveModifiedQuestion.message"),
+                resourceBundle.getString("saveModifiedQuestion.title"),
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null, options, options[0]);
@@ -190,14 +190,14 @@ public class FileModule implements FileModuleApi {
     @Override
     public boolean showAskToOverwrite(Component parentComponent) {
         Object[] options = {
-            resourceBundle.getString("Question.overwrite_save"),
-            resourceBundle.getString("Question.modified_cancel")
+            resourceBundle.getString("owerwriteFileQuestion.action_save"),
+            resourceBundle.getString("owerwriteFileQuestion.action_cancel")
         };
 
         int result = JOptionPane.showOptionDialog(
                 parentComponent,
-                resourceBundle.getString("Question.overwrite"),
-                resourceBundle.getString("Question.overwrite_title"),
+                resourceBundle.getString("owerwriteFileQuestion.message"),
+                resourceBundle.getString("owerwriteFileQuestion.title"),
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null, options, options[0]);
@@ -212,12 +212,22 @@ public class FileModule implements FileModuleApi {
     }
 
     @Override
+    public void showFileNotFound(Component parentComponent, String filePath) {
+        JOptionPane.showOptionDialog(parentComponent,
+                resourceBundle.getString("fileNotFound.title"),
+                String.format(resourceBundle.getString("fileNotFound.message"), filePath),
+                JOptionPane.CLOSED_OPTION,
+                JOptionPane.ERROR_MESSAGE,
+                null, null, null);
+    }
+
+    @Override
     public void showUnableToSave(Component parentComponent, Exception ex) {
         String errorMessage = ex.getLocalizedMessage();
         JOptionPane.showMessageDialog(
                 parentComponent,
-                resourceBundle.getString("Question.unable_to_save") + ": " + ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage),
-                resourceBundle.getString("Question.unable_to_save"), JOptionPane.ERROR_MESSAGE
+                String.format(resourceBundle.getString("unableToSaveMessage.message"), ex.getClass().getCanonicalName() + (errorMessage == null || errorMessage.isEmpty() ? "" : errorMessage)),
+                resourceBundle.getString("unableToSaveMessage.title"), JOptionPane.ERROR_MESSAGE
         );
     }
 }

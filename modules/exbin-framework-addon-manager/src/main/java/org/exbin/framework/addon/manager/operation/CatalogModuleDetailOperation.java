@@ -55,7 +55,7 @@ public class CatalogModuleDetailOperation implements Runnable, CancellableOperat
                 String moduleDetail = addonCatalogService.getModuleDetails(itemRecord.getId());
                 output.outputModuleDetail(moduleDetail);
             } catch (AddonCatalogServiceException ex) {
-                Logger.getLogger(AddonManager.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CatalogModuleDetailOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

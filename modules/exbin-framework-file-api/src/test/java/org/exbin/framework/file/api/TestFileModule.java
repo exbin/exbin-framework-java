@@ -90,6 +90,11 @@ public class TestFileModule implements FileModuleApi {
     }
 
     @Override
+    public void showFileNotFound(Component parentComponent, String filePath) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void showUnableToSave(Component parentComponent, Exception ex) {
         throw new UnsupportedOperationException();
     }

@@ -30,8 +30,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonOperationOverviewPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationOverviewPanel.class);
-    private Controller controller;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationOverviewPanel.class);
 
     public AddonOperationOverviewPanel() {
         initComponents();
@@ -45,10 +44,6 @@ public class AddonOperationOverviewPanel extends javax.swing.JPanel {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
     public void addOperation(String operation) {
@@ -103,7 +98,4 @@ public class AddonOperationOverviewPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
 
-    public interface Controller {
-
-    }
 }

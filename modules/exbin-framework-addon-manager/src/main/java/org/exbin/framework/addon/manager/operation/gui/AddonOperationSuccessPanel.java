@@ -29,8 +29,7 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonOperationSuccessPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationSuccessPanel.class);
-    private Controller controller;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationSuccessPanel.class);
 
     public AddonOperationSuccessPanel() {
         initComponents();
@@ -39,10 +38,6 @@ public class AddonOperationSuccessPanel extends javax.swing.JPanel {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
     /**
@@ -87,8 +82,4 @@ public class AddonOperationSuccessPanel extends javax.swing.JPanel {
     private javax.swing.JLabel messageLabel;
     private javax.swing.JLabel restartAppLabel;
     // End of variables declaration//GEN-END:variables
-
-    public interface Controller {
-
-    }
 }

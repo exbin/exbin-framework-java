@@ -37,9 +37,8 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 @ParametersAreNonnullByDefault
 public class AddonOperationDownloadPanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationDownloadPanel.class);
-    private Controller controller;
-    private ListModel listModel = new ListModel();
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationDownloadPanel.class);
+    protected final ListModel listModel = new ListModel();
 
     public AddonOperationDownloadPanel() {
         initComponents();
@@ -111,10 +110,6 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
     @Nonnull
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
     /**
@@ -189,10 +184,6 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
     private javax.swing.JProgressBar downloadProgressBar;
     private javax.swing.JPanel overallStatusPanel;
     // End of variables declaration//GEN-END:variables
-
-    public interface Controller {
-
-    }
 
     private static class ListModel extends DefaultListModel<DownloadItemRecord> {
 

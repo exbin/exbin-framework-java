@@ -38,10 +38,10 @@ import org.exbin.framework.utils.DesktopUtils;
 @ParametersAreNonnullByDefault
 public class AddonOperationLicensePanel extends javax.swing.JPanel {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationLicensePanel.class);
-    private Controller controller;
-    private List<LicenseItemRecord> licenseRecords;
-    private int toApprove;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonOperationLicensePanel.class);
+    protected Controller controller;
+    protected List<LicenseItemRecord> licenseRecords;
+    protected int toApprove;
 
     public AddonOperationLicensePanel() {
         initComponents();

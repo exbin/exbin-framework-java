@@ -176,7 +176,9 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
     @Override
     public void closeAllDocuments() {
         if (releaseAllDocuments()) {
-            for (Document document : openDocuments) {
+            List<Document> allDocuments = new ArrayList<>();
+            allDocuments.addAll(openDocuments);
+            for (Document document : allDocuments) {
                 closeDocument(document);
             }
         }
@@ -185,8 +187,10 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
     @Override
     public void closeOtherDocuments(Document exceptionDocument) {
         if (releaseOtherDocuments(exceptionDocument)) {
-            for (int i = openDocuments.size() - 1; i >= 0; i--) {
-                if (openDocuments.get(i) != exceptionDocument) {
+            List<Document> allDocuments = new ArrayList<>();
+            allDocuments.addAll(openDocuments);
+            for (int i = allDocuments.size() - 1; i >= 0; i--) {
+                if (allDocuments.get(i) != exceptionDocument) {
                     openDocuments.remove(i);
                     documentPanel.removeDocumentAtIndex(i);
                 }
