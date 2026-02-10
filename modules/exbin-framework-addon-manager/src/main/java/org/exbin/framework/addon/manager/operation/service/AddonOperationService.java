@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JOptionPane;
 import org.exbin.framework.App;
 import org.exbin.framework.window.api.WindowModuleApi;
 import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
@@ -299,8 +300,16 @@ public class AddonOperationService {
                 });
                 controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
                 Thread thread = new Thread(() -> {
-                    downloadOperation.run();
-                    controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, true);
+                    try {
+                        downloadOperation.run();
+                        controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, true);
+                    } catch (Throwable tw) {
+                        JOptionPane.showMessageDialog(parentComponent,
+                                String.format(resourceBundle.getString("downloadFailedError.message"), tw.getLocalizedMessage()),
+                                resourceBundle.getString("downloadFailedError.title"),
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
                 });
                 thread.start();
             }

@@ -90,8 +90,9 @@ public class AddonsPanel extends javax.swing.JPanel {
 
             @Override
             public void addToCart(AddonOperationVariant variant) {
-                controller.addToCart(activeRecord, variant);
-                addonDetailsPanel.updateRecordControlState(activeRecord);
+                ItemRecord record = activeRecord;
+                controller.addToCart(record, variant);
+                addonDetailsPanel.updateRecordControlState(record);
             }
 
             @Override

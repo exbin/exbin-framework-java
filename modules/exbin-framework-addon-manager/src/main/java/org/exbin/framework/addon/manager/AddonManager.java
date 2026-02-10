@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JOptionPane;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.manager.model.AddonUpdateChanges;
 import org.exbin.framework.addon.manager.api.ItemRecord;
@@ -107,15 +108,7 @@ public class AddonManager {
         cartPanel.setController(new AddonsCartPanel.Controller() {
             @Override
             public void runOperations() {
-                AddonOperationService addonOperationService = new AddonOperationService(AddonManager.this);
-                addonOperationService.setAddonCatalogService(addonCatalogService);
-                addonOperationService.performAddonOperations(cartOperations, cartPanel);
-
-                // TODO
-//                if (success) {
-//                    cartOperations.clear();
-//                }
-                notifyChanged();
+                runCartModifications();
             }
 
             @Override
@@ -253,6 +246,35 @@ public class AddonManager {
     public void addCartOperation(AddonOperation operation) {
         cartOperations.add(operation);
         managerPanel.setCartItemsCount(cartOperations.size());
+
+        if (cartOperations.size() == 1) {
+            int result = JOptionPane.showOptionDialog(managerPanel,
+                    resourceBundle.getString("runModificationsQuestion.message"),
+                    resourceBundle.getString("runModificationsQuestion.title"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new String[]{
+                        resourceBundle.getString("runModificationsQuestion.continue"),
+                        resourceBundle.getString("runModificationsQuestion.run")
+                    },
+                    resourceBundle.getString("runModificationsQuestion.run"));
+            if (result == 1) {
+                runCartModifications();
+            }
+        }
+    }
+
+    public void runCartModifications() {
+        AddonOperationService addonOperationService = new AddonOperationService(AddonManager.this);
+        addonOperationService.setAddonCatalogService(addonCatalogService);
+        addonOperationService.performAddonOperations(cartOperations, managerPanel);
+
+        // TODO
+//        if (success) {
+//            cartOperations.clear();
+//        }
+        notifyChanged();
     }
 
     public boolean isInCart(String moduleId, AddonOperationVariant variant) {
