@@ -26,7 +26,6 @@ import javax.swing.Action;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.update.service.CheckForUpdateService;
 import org.exbin.framework.addon.update.service.impl.CheckForUpdateServiceImpl;
-import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.addon.update.action.CheckForUpdateAction;
 import org.exbin.framework.addon.update.api.AddonUpdateModuleApi;
 import org.exbin.framework.addon.update.settings.CheckForUpdateOptions;
@@ -34,6 +33,7 @@ import org.exbin.framework.addon.update.settings.CheckForUpdateSettingsComponent
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.ApplicationBundleKeys;
+import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
@@ -52,6 +52,8 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
 
     public static final String SETTINGS_PAGE_ID = "checkForUpdate";
 
+    private java.util.ResourceBundle resourceBundle = null;
+
     private CheckForUpdateAction checkUpdateAction;
 
     private URL checkUpdateUrl;
@@ -61,6 +63,15 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     private CheckForUpdateService checkForUpdateService;
 
     public AddonUpdateModule() {
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonUpdateModule.class);
+        }
+
+        return resourceBundle;
     }
 
     @Nonnull
@@ -91,7 +102,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
         settingsManagement.registerOptionsSettings(CheckForUpdateOptions.class, (optionsStorage) -> new CheckForUpdateOptions(optionsStorage));
 
-        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, null);
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(CheckForUpdateSettingsComponent.COMPONENT_ID, new CheckForUpdateSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));

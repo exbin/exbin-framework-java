@@ -30,6 +30,7 @@ import org.exbin.framework.action.api.ActionContextChange;
 import org.exbin.framework.context.api.ContextChangeRegistration;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.api.DocumentDocking;
+import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.document.api.DocumentSource;
@@ -46,6 +47,7 @@ public class SaveAsFileAction extends AbstractAction {
     public static final String ACTION_ID = "saveAsFileAction";
 
     protected DocumentDocking documentDocking;
+    protected Document document;
 
     public SaveAsFileAction() {
     }
@@ -63,21 +65,25 @@ public class SaveAsFileAction extends AbstractAction {
                     documentDocking = instance instanceof DocumentDocking ? (DocumentDocking) instance : null;
                     setEnabled(documentDocking != null);
                 });
+                registrar.registerUpdateListener(ContextDocument.class, (instance) -> {
+                    document = instance instanceof Document ? (Document) instance : null;
+                    updateByContext();
+                });
             }
         });
     }
 
+    protected void updateByContext() {
+        setEnabled(documentDocking != null && document != null);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional<Document> activeDocument = documentDocking.getActiveDocument();
-        if (activeDocument.isPresent()) {
+        if (document instanceof EditableDocument) {
             DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
-            Document document = activeDocument.get();
-            if (document instanceof EditableDocument) {
-                Optional<DocumentSource> optDocumentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
-                if (optDocumentSource.isPresent()) {
-                    ((EditableDocument) document).saveTo(optDocumentSource.get());
-                }
+            Optional<DocumentSource> optDocumentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
+            if (optDocumentSource.isPresent()) {
+                ((EditableDocument) document).saveTo(optDocumentSource.get());
             }
         }
     }

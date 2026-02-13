@@ -159,6 +159,12 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
     @Override
     public void closeDocument(Document document) {
         if (releaseDocument(document)) {
+            Document activeDocument = getDocument();
+            if (activeDocument == document) {
+                if (activeDocument instanceof ContextActivable) {
+                    ((ContextActivable) activeDocument).notifyDeactivated(contextManager);
+                }
+            }
             int index = openDocuments.indexOf(document);
             if (index >= 0) {
                 openDocuments.remove(index);

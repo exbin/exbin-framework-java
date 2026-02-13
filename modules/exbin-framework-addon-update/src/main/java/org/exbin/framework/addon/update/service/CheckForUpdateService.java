@@ -53,8 +53,18 @@ public interface CheckForUpdateService {
     @Nullable
     VersionNumbers getUpdateVersion();
 
+    /**
+     * Performs check for updates.
+     *
+     * @param listener check listener
+     */
     void performCheckForUpdates(BackgroundCheckListener listener);
 
+    /**
+     * Returns update download URL.
+     *
+     * @return URL
+     */
     @Nullable
     URL getDownloadUrl();
 
