@@ -15,7 +15,6 @@
  */
 package org.exbin.framework.sidebar;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;

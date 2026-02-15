@@ -120,6 +120,7 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         }
     }
 
+    @Override
     public boolean releaseDocument(Document document) {
         if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
             DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);

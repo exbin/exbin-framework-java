@@ -28,7 +28,7 @@ import org.exbin.framework.utils.ComponentProvider;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DocumentDocking extends SidePanelDocking, ComponentProvider {
+public interface DocumentDocking extends ComponentProvider {
 
     /**
      * Returns active document.
@@ -59,6 +59,14 @@ public interface DocumentDocking extends SidePanelDocking, ComponentProvider {
      */
     @Nonnull
     Document openNewDocument();
+
+    /**
+     * Releases document from docking.
+     *
+     * @param document document
+     * @return true if released
+     */
+    boolean releaseDocument(Document document);
 
     public enum ChangeType implements StateChangeType {
         DOCUMENT_LIST

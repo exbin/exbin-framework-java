@@ -49,6 +49,7 @@ import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.context.api.ContextActivable;
 import org.exbin.framework.context.api.ContextModuleApi;
+import org.exbin.framework.docking.api.SidePanelDocking;
 import org.exbin.framework.docking.multi.api.DockingMultiModuleApi;
 import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.document.api.EditableDocument;
@@ -66,7 +67,7 @@ import org.exbin.framework.utils.WindowClosingListener;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultMultiDocking implements MultiDocking, WindowClosingListener {
+public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, WindowClosingListener {
 
     protected final List<Document> openDocuments = new ArrayList<>();
     protected final DockingPanel docking = new DockingPanel();
@@ -227,6 +228,7 @@ public class DefaultMultiDocking implements MultiDocking, WindowClosingListener 
         return !openDocuments.isEmpty();
     }
 
+    @Override
     public boolean releaseDocument(Document document) {
         if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
             DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
