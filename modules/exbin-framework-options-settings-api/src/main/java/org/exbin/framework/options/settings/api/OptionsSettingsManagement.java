@@ -107,6 +107,13 @@ public interface OptionsSettingsManagement {
     void registerApplySettingRule(ApplySettingsContribution applySettingsContribution, ApplySettingsDependsOnRule applySettingsRule);
 
     /**
+     * Registers apply settings listener.
+     *
+     * @param listener apply settings listener
+     */
+    void registerApplyListener(ApplySettingsListener listener);
+
+    /**
      * Applies options for specific instance and value.
      *
      * @param instanceClass instance class
@@ -116,12 +123,12 @@ public interface OptionsSettingsManagement {
     void applyOptions(Class<?> instanceClass, Object targetObject, SettingsOptionsProvider provider);
 
     /**
-     * Appies all options.
+     * Applies all options.
      *
      * @param contextManager context manager
      * @param provider settings options provider
      */
-//    void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider provider);
+    void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider provider);
 
     /**
      * Returns settings options provider.

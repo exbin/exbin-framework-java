@@ -21,7 +21,6 @@ import org.exbin.framework.options.preferences.PreferencesWrapper;
 import org.exbin.framework.options.preferences.StreamPreferences;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.options.api.OptionsStorage;

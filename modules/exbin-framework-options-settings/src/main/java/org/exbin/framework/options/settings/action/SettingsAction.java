@@ -159,7 +159,7 @@ public class SettingsAction extends AbstractAction {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         ComponentFrame frameHandler = frameModule.getFrameHandler();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
-        
+
         for (SettingsPage page : pages) {
             try {
                 page.loadAll(settingsOptionsProvider, contextManager);
@@ -178,7 +178,7 @@ public class SettingsAction extends AbstractAction {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         ComponentFrame frameHandler = frameModule.getFrameHandler();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
-        
+
         for (SettingsPage page : pages) {
             try {
                 page.saveAll(settingsOptionsProvider, contextManager);
@@ -186,6 +186,8 @@ public class SettingsAction extends AbstractAction {
                 Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+        mainSettingsManager.applyAllOptions(contextManager, settingsOptionsProvider);
     }
 
     private void applyOnlyAll(Collection<SettingsPage> pages) {
@@ -193,7 +195,7 @@ public class SettingsAction extends AbstractAction {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         ComponentFrame frameHandler = frameModule.getFrameHandler();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
-        
+
         SettingsOptionsStorage settingsOptionsStorage = new SettingsOptionsStorage();
         for (SettingsPage page : pages) {
             try {
@@ -202,6 +204,10 @@ public class SettingsAction extends AbstractAction {
                 Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+        OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        OptionsSettingsManagement mainSettingsManager = optionsSettingsModule.getMainSettingsManager();
+        mainSettingsManager.applyAllOptions(contextManager, settingsOptionsStorage);
     }
 
     public void setDialogParentComponent(DialogParentComponent dialogParentComponent) {
