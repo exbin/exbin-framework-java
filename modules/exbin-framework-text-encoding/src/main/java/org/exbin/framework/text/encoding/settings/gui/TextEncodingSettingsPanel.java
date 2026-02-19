@@ -18,9 +18,9 @@ package org.exbin.framework.text.encoding.settings.gui;
 import org.exbin.framework.text.encoding.gui.TextEncodingListPanel;
 import java.awt.BorderLayout;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.text.encoding.settings.TextEncodingOptions;
@@ -29,13 +29,9 @@ import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
-import org.exbin.framework.context.api.ActiveContextProvider;
 import org.exbin.framework.options.settings.api.SettingsPanelUpdater;
-import org.exbin.framework.text.encoding.ContextEncoding;
-import org.exbin.framework.text.encoding.CharsetEncodingState;
-import org.exbin.framework.text.encoding.CharsetListEncodingState;
-import org.exbin.framework.text.encoding.settings.TextEncodingListSettingsApplier;
-import org.exbin.framework.text.encoding.settings.TextEncodingSettingsApplier;
+import org.exbin.framework.text.encoding.settings.TextEncodingContextOptions;
+import org.exbin.framework.text.encoding.settings.TextEncodingsContextOptions;
 
 /**
  * Text encoding settings panel.
@@ -45,11 +41,12 @@ import org.exbin.framework.text.encoding.settings.TextEncodingSettingsApplier;
 @ParametersAreNonnullByDefault
 public class TextEncodingSettingsPanel extends javax.swing.JPanel implements SettingsComponent, VerticallyExpandable {
 
-    private SettingsModifiedListener settingsModifiedListener;
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingSettingsPanel.class);
-    private final TextEncodingListPanel encodingPanel;
-    private final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
-    private ContextEncoding availableContextEncoding = null;
+    protected SettingsModifiedListener settingsModifiedListener;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingSettingsPanel.class);
+    protected final TextEncodingListPanel encodingPanel;
+    protected final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
+    protected TextEncodingContextOptions encodingContextOptions = null;
+    protected TextEncodingsContextOptions encodingsContextOptions = null;
 
     public TextEncodingSettingsPanel() {
         encodingPanel = new TextEncodingListPanel();
@@ -78,41 +75,37 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
-        encodingPanel.loadFromOptions(settingsOptionsProvider, contextProvider);
+        encodingPanel.loadFromOptions(settingsOptionsProvider);
         defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
 
-        if (contextProvider != null) {
-            ContextEncoding contextEncoding = contextProvider.getActiveState(ContextEncoding.class);
-            if (contextEncoding instanceof CharsetEncodingState) {
-                SettingsPanelUpdater updater = new SettingsPanelUpdater(this::notifyModified);
-                CharsetEncodingState state = (CharsetEncodingState) contextEncoding;
-                updater.setComboBoxValue(defaultEncodingComboBox, state.getEncoding());
-            }
-            if (contextEncoding instanceof CharsetListEncodingState) {
-                CharsetListEncodingState state = (CharsetListEncodingState) contextEncoding;
-                List<String> encodings = state.getEncodings();
-                if (!encodings.equals(encodingPanel.getEncodingList())) {
-                    encodingPanel.setEncodingList(encodings);
-                    notifyModified();
-                }
+        Optional<TextEncodingContextOptions> optContextOptions = settingsOptionsProvider.getContextOptions(TextEncodingContextOptions.class);
+        if (optContextOptions.isPresent()) {
+            TextEncodingContextOptions contextOptions = optContextOptions.get();
+            SettingsPanelUpdater updater = new SettingsPanelUpdater(this::notifyModified);
+            updater.setComboBoxValue(defaultEncodingComboBox, contextOptions.getEncoding());
+        }
+
+        Optional<TextEncodingsContextOptions> optContextEncodingsOptions = settingsOptionsProvider.getContextOptions(TextEncodingsContextOptions.class);
+        if (optContextEncodingsOptions.isPresent()) {
+            TextEncodingsContextOptions contextOptions = optContextEncodingsOptions.get();
+            List<String> encodings = contextOptions.getEncodings();
+            if (!encodings.equals(encodingPanel.getEncodingList())) {
+                encodingPanel.setEncodingList(encodings);
+                notifyModified();
             }
         }
 
         boolean fillCurrentEncoding = false;
         boolean fillCurrentEncodings = false;
-        if (contextProvider != null) {
-            ContextEncoding contextEncoding = contextProvider.getActiveState(ContextEncoding.class);
-            if (contextEncoding != null) {
-                this.availableContextEncoding = contextEncoding;
-                if (contextEncoding instanceof CharsetEncodingState) {
-                    fillCurrentEncoding = true;
-                }
-                if (contextEncoding instanceof CharsetListEncodingState) {
-                    fillCurrentEncodings = true;
-                }
-            }
+        if (optContextOptions.isPresent()) {
+            encodingContextOptions = optContextOptions.get();
+            fillCurrentEncoding = true;
+        }
+        if (optContextEncodingsOptions.isPresent()) {
+            encodingsContextOptions = optContextEncodingsOptions.get();
+            fillCurrentEncodings = true;
         }
         fillCurrentEncodingButton.setEnabled(fillCurrentEncoding);
         fillCurrentEncodingsButton.setEnabled(fillCurrentEncodings);
@@ -120,23 +113,21 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
-        encodingPanel.saveToOptions(settingsOptionsProvider, contextProvider);
+        encodingPanel.saveToOptions(settingsOptionsProvider);
         options.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());
 
-        if (contextProvider != null) {
-            ContextEncoding contextEncoding = contextProvider.getActiveState(ContextEncoding.class);
-            if (contextEncoding instanceof CharsetEncodingState) {
-                TextEncodingSettingsApplier applier = new TextEncodingSettingsApplier();
-                applier.applySettings(contextEncoding, settingsOptionsProvider);
-                contextProvider.notifyStateChange(ContextEncoding.class, CharsetEncodingState.ChangeType.ENCODING);
-            }
-            if (contextEncoding instanceof CharsetListEncodingState) {
-                TextEncodingListSettingsApplier applier = new TextEncodingListSettingsApplier();
-                applier.applySettings(contextEncoding, settingsOptionsProvider);
-                contextProvider.notifyStateChange(ContextEncoding.class, CharsetListEncodingState.ChangeType.ENCODING_LIST);
-            }
+        Optional<TextEncodingContextOptions> optContextOptions = settingsOptionsProvider.getContextOptions(TextEncodingContextOptions.class);
+        if (optContextOptions.isPresent()) {
+            TextEncodingContextOptions contextOptions = optContextOptions.get();
+            contextOptions.setEncoding((String) defaultEncodingComboBox.getSelectedItem());
+        }
+
+        Optional<TextEncodingsContextOptions> optContextEncodingsOptions = settingsOptionsProvider.getContextOptions(TextEncodingsContextOptions.class);
+        if (optContextEncodingsOptions.isPresent()) {
+            TextEncodingsContextOptions contextOptions = optContextEncodingsOptions.get();
+            contextOptions.setEncodings(encodingPanel.getEncodingList());
         }
     }
 
@@ -239,14 +230,14 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }// </editor-fold>//GEN-END:initComponents
 
     private void fillCurrentEncodingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingsButtonActionPerformed
-        encodingPanel.setEncodingList(((CharsetListEncodingState) availableContextEncoding).getEncodings());
+        encodingPanel.setEncodingList(encodingsContextOptions.getEncodings());
         encodingPanel.repaint();
         updateEncodings();
         notifyModified();
     }//GEN-LAST:event_fillCurrentEncodingsButtonActionPerformed
 
     private void fillCurrentEncodingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingButtonActionPerformed
-        defaultEncodingComboBox.setSelectedItem(((CharsetEncodingState) availableContextEncoding).getEncoding());
+        defaultEncodingComboBox.setSelectedItem(encodingContextOptions.getEncoding());
         defaultEncodingComboBox.repaint();
         notifyModified();
     }//GEN-LAST:event_fillCurrentEncodingButtonActionPerformed

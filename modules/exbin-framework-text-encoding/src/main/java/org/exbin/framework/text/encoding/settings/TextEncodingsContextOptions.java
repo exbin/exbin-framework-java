@@ -13,37 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options.settings.api;
+package org.exbin.framework.text.encoding.settings;
 
-import java.util.Optional;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
- * Settings options provider interface.
+ * Text editor encodings context options.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface SettingsOptionsProvider {
+public interface TextEncodingsContextOptions extends SettingsOptions {
 
-    /**
-     * Returns instance of settings options of the given type.
-     *
-     * @param <T> setting options type
-     * @param settingsClass settings options class
-     * @return settings options instance
-     */
     @Nonnull
-    <T extends SettingsOptions> T getSettingsOptions(Class<T> settingsClass);
+    List<String> getEncodings();
 
-    /**
-     * Returns instance of context options of the given type if available.
-     *
-     * @param <T> setting options type
-     * @param settingsClass settings options class
-     * @return settings options instance
-     */
-    @Nonnull
-    <T extends SettingsOptions> Optional<T> getContextOptions(Class<T> settingsClass);
+    void setEncodings(List<String> encodings);
 }

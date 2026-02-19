@@ -49,13 +49,13 @@ public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implement
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         CheckForUpdateOptions options = settingsOptionsProvider.getSettingsOptions(CheckForUpdateOptions.class);
         checkForUpdatesOnStartCheckBox.setSelected(options.isShouldCheckForUpdate());
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         CheckForUpdateOptions options = settingsOptionsProvider.getSettingsOptions(CheckForUpdateOptions.class);
         options.setShouldCheckForUpdate(checkForUpdatesOnStartCheckBox.isSelected());
     }

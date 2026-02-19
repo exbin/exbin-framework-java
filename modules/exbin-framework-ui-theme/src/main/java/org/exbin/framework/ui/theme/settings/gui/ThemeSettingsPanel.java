@@ -71,7 +71,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         this.settingsOptionsProvider = settingsOptionsProvider;
         ThemeOptions options = settingsOptionsProvider.getSettingsOptions(ThemeOptions.class);
         visualThemeComboBox.setSelectedIndex(findMatchingElement(visualThemeComboBox.getModel(), options.getLookAndFeel()));
@@ -96,7 +96,7 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         ThemeOptions options = settingsOptionsProvider.getSettingsOptions(ThemeOptions.class);
         options.setLookAndFeel((String) visualThemeComboBox.getSelectedItem());
         options.setIconSet((String) iconSetComboBox.getSelectedItem());

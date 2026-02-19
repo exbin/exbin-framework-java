@@ -59,7 +59,7 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         Integer rgb;
         try {
@@ -98,7 +98,7 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         } catch (NumberFormatException e) {
         }
 
-        if (contextProvider != null) {
+        /* if (contextProvider != null) {
             ContextComponent contextComponent = contextProvider.getActiveState(ContextComponent.class);
             if (contextComponent instanceof TextColorState) {
                 TextColorState state = (TextColorState) contextComponent;
@@ -113,11 +113,11 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
                 fillCurrentButton.setEnabled(true);
                 fillDefaultButton.setEnabled(true);
             }
-        }
+        } */
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextColorOptions options = settingsOptionsProvider.getSettingsOptions(TextColorOptions.class);
         options.setTextColor(getTextColor().getRGB());
         options.setTextBackgroundColor(getTextBackgroundColor().getRGB());
@@ -125,14 +125,14 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         options.setSelectionBackgroundColor(getSelectionBackgroundColor().getRGB());
         options.setFoundBackgroundColor(getFoundBackgroundColor().getRGB());
 
-        if (contextProvider != null) {
+        /* if (contextProvider != null) {
             ContextComponent contextComponent = contextProvider.getActiveState(ContextComponent.class);
             if (contextComponent instanceof TextColorState) {
                 TextColorSettingsApplier applier = new TextColorSettingsApplier();
                 applier.applySettings(contextComponent, settingsOptionsProvider);
                 contextProvider.notifyStateChange(ContextComponent.class, TextColorState.ChangeType.TEXT_COLOR);
             }
-        }
+        } */
     }
 
     public Color getTextColor() {

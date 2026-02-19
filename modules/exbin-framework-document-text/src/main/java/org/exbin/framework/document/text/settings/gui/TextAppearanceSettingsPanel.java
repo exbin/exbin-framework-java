@@ -49,13 +49,13 @@ public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements S
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(TextAppearanceOptions.class);
         wordWrapCheckBox.setSelected(options.isWordWrapping());
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(TextAppearanceOptions.class);
         options.setWordWrapping(wordWrapCheckBox.isSelected());
     }

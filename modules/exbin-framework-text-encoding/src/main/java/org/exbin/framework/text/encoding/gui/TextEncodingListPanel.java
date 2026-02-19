@@ -95,13 +95,13 @@ public class TextEncodingListPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
         setEncodingList(options.getEncodings());
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
         options.setEncodings(getEncodingList());
     }

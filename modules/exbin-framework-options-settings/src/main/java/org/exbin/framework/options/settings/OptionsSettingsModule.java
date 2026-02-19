@@ -22,6 +22,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.context.api.ContextModuleApi;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
@@ -97,9 +99,11 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
 
     @Override
     public void initialLoadFromPreferences() {
-        // TODO
-//        getMainSettingsManager().initialLoadFromPreferences();
-//        notifyOptionsChanged();
+        ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
+        OptionsSettingsManager mainSettingsManager = getMainSettingsManager();
+        SettingsOptionsProvider settingsOptionsProvider = mainSettingsManager.getSettingsOptionsProvider();
+        ActiveContextManagement mainContextManager = contextModule.getMainContextManager();
+        mainSettingsManager.applyAllOptions(mainContextManager, settingsOptionsProvider);
     }
 
     @Override

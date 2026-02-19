@@ -27,7 +27,6 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
-import org.exbin.framework.context.api.ActiveContextProvider;
 import org.exbin.framework.text.font.ContextFont;
 import org.exbin.framework.text.font.TextFontState;
 import org.exbin.framework.text.font.settings.TextFontSettingsApplier;
@@ -66,20 +65,20 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         boolean useDefaultFont = options.isUseDefaultFont();
         defaultFontCheckBox.setSelected(useDefaultFont);
 
         textFontState = null;
-        if (contextProvider != null) {
+        /* if (contextProvider != null) {
             ContextFont contextFont = contextProvider.getActiveState(ContextFont.class);
             textFontState = contextFont instanceof TextFontState ? (TextFontState) contextFont : null;
-        }
+        } */
 
         codeFont = textFontState == null ? options.getFont(new Font(Font.MONOSPACED, Font.PLAIN, 12)) : textFontState.getDefaultFont().deriveFont(options.getFontAttributes());
 
-        if (contextProvider != null) {
+        /* if (contextProvider != null) {
             ContextFont contextFont = contextProvider.getActiveState(ContextFont.class);
             if (contextFont instanceof TextFontState) {
                 TextFontState state = (TextFontState) contextFont;
@@ -88,26 +87,26 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
                     notifyModified();
                 }
             }
-        }
+        } */
 
         setEnabled(!useDefaultFont);
         updateFontFields();
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         TextFontOptions options = settingsOptionsProvider.getSettingsOptions(TextFontOptions.class);
         options.setUseDefaultFont(defaultFontCheckBox.isSelected());
         options.setFontAttributes(codeFont != null ? codeFont.getAttributes() : null);
 
-        if (contextProvider != null) {
+        /* if (contextProvider != null) {
             ContextFont contextFont = contextProvider.getActiveState(ContextFont.class);
             if (contextFont instanceof TextFontState) {
                 TextFontSettingsApplier applier = new TextFontSettingsApplier();
                 applier.applySettings(contextFont, settingsOptionsProvider);
                 contextProvider.notifyStateChange(ContextFont.class, TextFontState.ChangeType.FONT);
             }
-        }
+        } */
     }
 
     @Override

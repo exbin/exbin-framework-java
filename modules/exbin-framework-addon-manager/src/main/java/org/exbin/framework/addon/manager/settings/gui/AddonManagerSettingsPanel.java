@@ -49,12 +49,12 @@ public class AddonManagerSettingsPanel extends javax.swing.JPanel implements Set
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         AddonManagerOptions options = settingsOptionsProvider.getSettingsOptions(AddonManagerOptions.class);
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
     }
 
     /**

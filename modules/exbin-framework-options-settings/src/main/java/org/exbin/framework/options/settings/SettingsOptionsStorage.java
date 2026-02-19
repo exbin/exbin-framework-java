@@ -17,6 +17,8 @@ package org.exbin.framework.options.settings;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.options.api.OptionsModuleApi;
@@ -56,5 +58,12 @@ public class SettingsOptionsStorage implements SettingsOptionsProvider {
         }
 
         return (T) instance;
+    }
+
+    @Nonnull
+    @Override
+    public <T extends SettingsOptions> Optional<T> getContextOptions(Class<T> settingsClass) {
+        // TODO
+        return Optional.empty();
     }
 }

@@ -16,10 +16,10 @@
 package org.exbin.framework.options.settings;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
@@ -179,6 +179,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
 
                 Map<Class<?>, SettingsOptions> settingsOptions = new HashMap<>();
 
+                @Nonnull
                 @Override
                 @SuppressWarnings("unchecked")
                 public <T extends SettingsOptions> T getSettingsOptions(Class<T> settingsClass) {
@@ -190,6 +191,12 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
                     }
 
                     return (T) instance;
+                }
+
+                @Nonnull
+                @Override
+                public <T extends SettingsOptions> Optional<T> getContextOptions(Class<T> settingsClass) {
+                    return Optional.empty();
                 }
             };
         }

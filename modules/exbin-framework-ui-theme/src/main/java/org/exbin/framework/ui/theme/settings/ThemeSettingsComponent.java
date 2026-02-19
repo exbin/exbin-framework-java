@@ -197,7 +197,7 @@ public class ThemeSettingsComponent implements SettingsComponentProvider {
             if (settingsComponent == null) {
                 SettingsComponentProvider settingsComponentProvider = lafProvider.getSettingsComponentProvider();
                 settingsComponent = settingsComponentProvider.createComponent();
-                settingsComponent.loadFromOptions(settingsOptionsProvider, null);
+                settingsComponent.loadFromOptions(settingsOptionsProvider);
             }
             final SettingsComponent finalSettingsComponent = settingsComponent;
 

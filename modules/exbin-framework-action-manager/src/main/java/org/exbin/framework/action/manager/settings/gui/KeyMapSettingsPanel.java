@@ -76,11 +76,11 @@ public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsC
     }// </editor-fold>//GEN-END:initComponents
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
     }
 
     private void notifyModified() {

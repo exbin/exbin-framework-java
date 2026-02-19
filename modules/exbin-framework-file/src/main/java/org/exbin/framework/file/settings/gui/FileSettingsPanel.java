@@ -78,13 +78,13 @@ public class FileSettingsPanel extends javax.swing.JPanel implements SettingsCom
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         FileOptions options = settingsOptionsProvider.getSettingsOptions(FileOptions.class);
         fileDialogsComboBox.setSelectedIndex(findMatchingElement(fileDialogsComboBox.getModel(), options.getFileDialogs()));
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         FileOptions options = settingsOptionsProvider.getSettingsOptions(FileOptions.class);
         options.setFileDialogs((String) fileDialogsComboBox.getSelectedItem());
     }

@@ -108,13 +108,13 @@ public class SettingsPage {
 
     public void loadAll(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
         for (SettingsComponent component : components) {
-            component.loadFromOptions(settingsProvider, contextProvider);
+            component.loadFromOptions(settingsProvider);
         }
     }
 
     public void saveAll(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
         for (SettingsComponent component : modified) {
-            component.saveToOptions(settingsProvider, contextProvider);
+            component.saveToOptions(settingsProvider);
         }
     }
 

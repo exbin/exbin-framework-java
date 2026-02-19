@@ -17,7 +17,6 @@ package org.exbin.framework.frame.settings.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.language.api.LanguageModuleApi;
@@ -26,11 +25,6 @@ import org.exbin.framework.frame.settings.FrameAppearanceOptions;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
-import org.exbin.framework.context.api.ActiveContextProvider;
-import org.exbin.framework.frame.api.ContextFrame;
-import org.exbin.framework.frame.settings.FrameAppearanceSettingsApplier;
-import org.exbin.framework.options.settings.api.SettingsPanelUpdater;
-import org.exbin.framework.frame.api.ComponentFrame;
 
 /**
  * Frame appearance settings panel.
@@ -54,13 +48,13 @@ public class FrameAppearanceSettingsPanel extends javax.swing.JPanel implements 
     }
 
     @Override
-    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadFromOptions(SettingsOptionsProvider settingsOptionsProvider) {
         FrameAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(FrameAppearanceOptions.class);
         showToolbarCheckBox.setSelected(options.isShowToolBar());
         showCaptionsCheckBox.setSelected(options.isShowToolBarCaptions());
         showStatusbarCheckBox.setSelected(options.isShowStatusBar());
 
-        if (contextProvider != null) {
+        /* if (contextProvider != null) {
             ContextFrame contextFrame = contextProvider.getActiveState(ContextFrame.class);
             if (contextFrame instanceof ComponentFrame) {
                 SettingsPanelUpdater updater = new SettingsPanelUpdater(this::notifyModified);
@@ -69,24 +63,24 @@ public class FrameAppearanceSettingsPanel extends javax.swing.JPanel implements 
                 updater.setCheckBoxSelected(showCaptionsCheckBox, frame.isToolBarCaptionsVisible());
                 updater.setCheckBoxSelected(showStatusbarCheckBox, frame.isStatusBarVisible());
             }
-        }
+        } */
     }
 
     @Override
-    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {
         FrameAppearanceOptions options = settingsOptionsProvider.getSettingsOptions(FrameAppearanceOptions.class);
         options.setShowToolBar(showToolbarCheckBox.isSelected());
         options.setShowToolBarCaptions(showCaptionsCheckBox.isSelected());
         options.setShowStatusBar(showStatusbarCheckBox.isSelected());
 
-        if (contextProvider != null) {
+        /* if (contextProvider != null) {
             ContextFrame contextFrame = contextProvider.getActiveState(ContextFrame.class);
             if (contextFrame instanceof ComponentFrame) {
                 FrameAppearanceSettingsApplier applier = new FrameAppearanceSettingsApplier();
                 applier.applySettings(contextFrame, settingsOptionsProvider);
                 contextProvider.notifyStateChange(ContextFrame.class, ContextFrame.ChangeType.BARS_LAYOUT_CHANGE);
             }
-        }
+        } */
     }
 
     /**
