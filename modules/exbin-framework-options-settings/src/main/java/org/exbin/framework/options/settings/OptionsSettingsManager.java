@@ -34,6 +34,7 @@ import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.ApplySettingsDependsOnRule;
 import org.exbin.framework.options.settings.api.ApplySettingsListener;
+import org.exbin.framework.options.settings.api.InferenceOptions;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsComponentContribution;
@@ -195,7 +196,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
 
                 @Nonnull
                 @Override
-                public <T extends SettingsOptions> Optional<T> getContextOptions(Class<T> settingsClass) {
+                public <T extends InferenceOptions> Optional<T> getInference(Class<T> inferenceClass) {
                     return Optional.empty();
                 }
             };

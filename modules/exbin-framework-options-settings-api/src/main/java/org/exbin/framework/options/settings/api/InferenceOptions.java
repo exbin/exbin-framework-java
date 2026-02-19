@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.encoding.settings;
-
-import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.options.settings.api.SettingsOptions;
+package org.exbin.framework.options.settings.api;
 
 /**
- * Text editor encodings context options.
+ * Interface for inference options.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface TextEncodingsContextOptions extends SettingsOptions {
+public interface InferenceOptions {
 
-    @Nonnull
-    List<String> getEncodings();
-
-    void setEncodings(List<String> encodings);
 }

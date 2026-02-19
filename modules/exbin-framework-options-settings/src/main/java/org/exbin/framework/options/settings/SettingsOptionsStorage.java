@@ -23,6 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.api.OptionsStorage;
+import org.exbin.framework.options.settings.api.InferenceOptions;
 import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.framework.options.settings.api.SettingsOptions;
@@ -62,7 +63,7 @@ public class SettingsOptionsStorage implements SettingsOptionsProvider {
 
     @Nonnull
     @Override
-    public <T extends SettingsOptions> Optional<T> getContextOptions(Class<T> settingsClass) {
+    public <T extends InferenceOptions> Optional<T> getInference(Class<T> inferenceClass) {
         // TODO
         return Optional.empty();
     }

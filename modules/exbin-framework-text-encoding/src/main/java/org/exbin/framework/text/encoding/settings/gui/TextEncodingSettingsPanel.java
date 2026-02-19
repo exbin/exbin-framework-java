@@ -30,8 +30,8 @@ import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
 import org.exbin.framework.options.settings.api.SettingsPanelUpdater;
-import org.exbin.framework.text.encoding.settings.TextEncodingContextOptions;
-import org.exbin.framework.text.encoding.settings.TextEncodingsContextOptions;
+import org.exbin.framework.text.encoding.settings.TextEncodingInference;
+import org.exbin.framework.text.encoding.settings.TextEncodingsInference;
 
 /**
  * Text encoding settings panel.
@@ -45,8 +45,8 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingSettingsPanel.class);
     protected final TextEncodingListPanel encodingPanel;
     protected final DefaultEncodingComboBoxModel encodingComboBoxModel = new DefaultEncodingComboBoxModel();
-    protected TextEncodingContextOptions encodingContextOptions = null;
-    protected TextEncodingsContextOptions encodingsContextOptions = null;
+    protected TextEncodingInference encodingInference = null;
+    protected TextEncodingsInference encodingsInference = null;
 
     public TextEncodingSettingsPanel() {
         encodingPanel = new TextEncodingListPanel();
@@ -80,16 +80,16 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
         encodingPanel.loadFromOptions(settingsOptionsProvider);
         defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
 
-        Optional<TextEncodingContextOptions> optContextOptions = settingsOptionsProvider.getContextOptions(TextEncodingContextOptions.class);
+        Optional<TextEncodingInference> optContextOptions = settingsOptionsProvider.getInference(TextEncodingInference.class);
         if (optContextOptions.isPresent()) {
-            TextEncodingContextOptions contextOptions = optContextOptions.get();
+            TextEncodingInference contextOptions = optContextOptions.get();
             SettingsPanelUpdater updater = new SettingsPanelUpdater(this::notifyModified);
             updater.setComboBoxValue(defaultEncodingComboBox, contextOptions.getEncoding());
         }
 
-        Optional<TextEncodingsContextOptions> optContextEncodingsOptions = settingsOptionsProvider.getContextOptions(TextEncodingsContextOptions.class);
+        Optional<TextEncodingsInference> optContextEncodingsOptions = settingsOptionsProvider.getInference(TextEncodingsInference.class);
         if (optContextEncodingsOptions.isPresent()) {
-            TextEncodingsContextOptions contextOptions = optContextEncodingsOptions.get();
+            TextEncodingsInference contextOptions = optContextEncodingsOptions.get();
             List<String> encodings = contextOptions.getEncodings();
             if (!encodings.equals(encodingPanel.getEncodingList())) {
                 encodingPanel.setEncodingList(encodings);
@@ -100,11 +100,11 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
         boolean fillCurrentEncoding = false;
         boolean fillCurrentEncodings = false;
         if (optContextOptions.isPresent()) {
-            encodingContextOptions = optContextOptions.get();
+            encodingInference = optContextOptions.get();
             fillCurrentEncoding = true;
         }
         if (optContextEncodingsOptions.isPresent()) {
-            encodingsContextOptions = optContextEncodingsOptions.get();
+            encodingsInference = optContextEncodingsOptions.get();
             fillCurrentEncodings = true;
         }
         fillCurrentEncodingButton.setEnabled(fillCurrentEncoding);
@@ -117,18 +117,6 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
         TextEncodingOptions options = settingsOptionsProvider.getSettingsOptions(TextEncodingOptions.class);
         encodingPanel.saveToOptions(settingsOptionsProvider);
         options.setSelectedEncoding((String) defaultEncodingComboBox.getSelectedItem());
-
-        Optional<TextEncodingContextOptions> optContextOptions = settingsOptionsProvider.getContextOptions(TextEncodingContextOptions.class);
-        if (optContextOptions.isPresent()) {
-            TextEncodingContextOptions contextOptions = optContextOptions.get();
-            contextOptions.setEncoding((String) defaultEncodingComboBox.getSelectedItem());
-        }
-
-        Optional<TextEncodingsContextOptions> optContextEncodingsOptions = settingsOptionsProvider.getContextOptions(TextEncodingsContextOptions.class);
-        if (optContextEncodingsOptions.isPresent()) {
-            TextEncodingsContextOptions contextOptions = optContextEncodingsOptions.get();
-            contextOptions.setEncodings(encodingPanel.getEncodingList());
-        }
     }
 
     /**
@@ -230,14 +218,14 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
     }// </editor-fold>//GEN-END:initComponents
 
     private void fillCurrentEncodingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingsButtonActionPerformed
-        encodingPanel.setEncodingList(encodingsContextOptions.getEncodings());
+        encodingPanel.setEncodingList(encodingsInference.getEncodings());
         encodingPanel.repaint();
         updateEncodings();
         notifyModified();
     }//GEN-LAST:event_fillCurrentEncodingsButtonActionPerformed
 
     private void fillCurrentEncodingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentEncodingButtonActionPerformed
-        defaultEncodingComboBox.setSelectedItem(encodingContextOptions.getEncoding());
+        defaultEncodingComboBox.setSelectedItem(encodingInference.getEncoding());
         defaultEncodingComboBox.repaint();
         notifyModified();
     }//GEN-LAST:event_fillCurrentEncodingButtonActionPerformed

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.options.settings.api.InferenceOptions;
 import org.exbin.framework.options.settings.api.SettingsOptions;
 import org.exbin.framework.options.settings.api.SettingsOptionsOverrides;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -59,7 +60,7 @@ public class DefaultSettingsOptionsOverrides implements SettingsOptionsOverrides
 
     @Nonnull
     @Override
-    public <T extends SettingsOptions> Optional<T> getContextOptions(Class<T> settingsClass) {
-        return (Optional<T>) settingsOptionsProvider.getContextOptions(settingsClass);
+    public <T extends InferenceOptions> Optional<T> getInference(Class<T> inferenceClass) {
+        return (Optional<T>) settingsOptionsProvider.getInference(inferenceClass);
     }
 }

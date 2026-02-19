@@ -38,12 +38,12 @@ public interface SettingsOptionsProvider {
     <T extends SettingsOptions> T getSettingsOptions(Class<T> settingsClass);
 
     /**
-     * Returns instance of context options of the given type if available.
+     * Returns instance of inference options of the given type if available.
      *
-     * @param <T> setting options type
-     * @param settingsClass settings options class
-     * @return settings options instance
+     * @param <T> inference options type
+     * @param inferenceClass inference options class
+     * @return inference options instance
      */
     @Nonnull
-    <T extends SettingsOptions> Optional<T> getContextOptions(Class<T> settingsClass);
+    <T extends InferenceOptions> Optional<T> getInference(Class<T> inferenceClass);
 }

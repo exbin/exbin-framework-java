@@ -15,48 +15,42 @@
  */
 package org.exbin.framework.text.encoding.settings;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ActiveContextProvider;
-import org.exbin.framework.options.settings.api.SettingsOptions;
-import org.exbin.framework.text.encoding.CharsetEncodingState;
+import org.exbin.framework.text.encoding.CharsetListEncodingState;
 import org.exbin.framework.text.encoding.ContextEncoding;
 
 /**
- * Text editor encodings context options.
+ * Text editor encodings context inference.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultTextEncodingContextOptions implements TextEncodingContextOptions {
+public class TextEncodingsContextInference implements TextEncodingsInference {
 
     protected ActiveContextProvider contextProvider;
 
-    public DefaultTextEncodingContextOptions(ActiveContextProvider contextProvider) {
+    public TextEncodingsContextInference(ActiveContextProvider contextProvider) {
         this.contextProvider = contextProvider;
     }
 
     @Nonnull
     @Override
-    public String getEncoding() {
+    public List<String> getEncodings() {
         ContextEncoding contextEncoding = contextProvider.getActiveState(ContextEncoding.class);
-        CharsetEncodingState state = (CharsetEncodingState) contextEncoding;
-        return state.getEncoding();
+        CharsetListEncodingState state = (CharsetListEncodingState) contextEncoding;
+        return state.getEncodings();
     }
 
-    @Override
-    public void setEncoding(String encoding) {
+/*    @Override
+    public void setEncodings(List<String> encodings) {
         ContextEncoding contextEncoding = contextProvider.getActiveState(ContextEncoding.class);
-        if (contextEncoding instanceof CharsetEncodingState) {
-            TextEncodingSettingsApplier applier = new TextEncodingSettingsApplier();
+        if (contextEncoding instanceof CharsetListEncodingState) {
+            TextEncodingListSettingsApplier applier = new TextEncodingListSettingsApplier();
             // applier.applySettings(contextEncoding, settingsOptionsProvider);
-            contextProvider.notifyStateChange(ContextEncoding.class, CharsetEncodingState.ChangeType.ENCODING);
+            contextProvider.notifyStateChange(ContextEncoding.class, CharsetListEncodingState.ChangeType.ENCODING_LIST);
         }
-    }
-
-    @Override
-    public void copyTo(SettingsOptions options) {
-        TextEncodingContextOptions with = (TextEncodingContextOptions) options;
-        with.setEncoding(getEncoding());
-    }
+    } */
 }

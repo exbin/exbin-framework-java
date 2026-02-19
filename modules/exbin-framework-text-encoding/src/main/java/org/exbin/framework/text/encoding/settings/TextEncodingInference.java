@@ -16,19 +16,15 @@
 package org.exbin.framework.text.encoding.settings;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.options.settings.api.SettingsOptions;
+import org.exbin.framework.options.settings.api.InferenceOptions;
 
 /**
- * Text editor encoding context options.
+ * Text editor encoding inference options.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface TextEncodingContextOptions extends SettingsOptions {
+public interface TextEncodingInference extends InferenceOptions {
 
     @Nonnull
     String getEncoding();
-
-    void setEncoding(String encoding);
 }
