@@ -196,7 +196,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
 
                 @Nonnull
                 @Override
-                public <T extends InferenceOptions> Optional<T> getInference(Class<T> inferenceClass) {
+                public <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass) {
                     return Optional.empty();
                 }
             };

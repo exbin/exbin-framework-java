@@ -80,14 +80,14 @@ public class TextEncodingSettingsPanel extends javax.swing.JPanel implements Set
         encodingPanel.loadFromOptions(settingsOptionsProvider);
         defaultEncodingComboBox.setSelectedItem(options.getSelectedEncoding());
 
-        Optional<TextEncodingInference> optContextOptions = settingsOptionsProvider.getInference(TextEncodingInference.class);
+        Optional<TextEncodingInference> optContextOptions = settingsOptionsProvider.getInferenceOptions(TextEncodingInference.class);
         if (optContextOptions.isPresent()) {
             TextEncodingInference contextOptions = optContextOptions.get();
             SettingsPanelUpdater updater = new SettingsPanelUpdater(this::notifyModified);
             updater.setComboBoxValue(defaultEncodingComboBox, contextOptions.getEncoding());
         }
 
-        Optional<TextEncodingsInference> optContextEncodingsOptions = settingsOptionsProvider.getInference(TextEncodingsInference.class);
+        Optional<TextEncodingsInference> optContextEncodingsOptions = settingsOptionsProvider.getInferenceOptions(TextEncodingsInference.class);
         if (optContextEncodingsOptions.isPresent()) {
             TextEncodingsInference contextOptions = optContextEncodingsOptions.get();
             List<String> encodings = contextOptions.getEncodings();

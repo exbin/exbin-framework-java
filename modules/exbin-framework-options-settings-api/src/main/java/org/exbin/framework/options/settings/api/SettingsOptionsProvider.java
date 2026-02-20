@@ -45,5 +45,5 @@ public interface SettingsOptionsProvider {
      * @return inference options instance
      */
     @Nonnull
-    <T extends InferenceOptions> Optional<T> getInference(Class<T> inferenceClass);
+    <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass);
 }

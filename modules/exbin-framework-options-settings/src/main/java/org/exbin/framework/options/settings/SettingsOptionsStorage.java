@@ -63,7 +63,7 @@ public class SettingsOptionsStorage implements SettingsOptionsProvider {
 
     @Nonnull
     @Override
-    public <T extends InferenceOptions> Optional<T> getInference(Class<T> inferenceClass) {
+    public <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass) {
         // TODO
         return Optional.empty();
     }

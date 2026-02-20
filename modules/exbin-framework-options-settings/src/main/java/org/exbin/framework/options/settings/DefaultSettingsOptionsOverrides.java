@@ -60,7 +60,7 @@ public class DefaultSettingsOptionsOverrides implements SettingsOptionsOverrides
 
     @Nonnull
     @Override
-    public <T extends InferenceOptions> Optional<T> getInference(Class<T> inferenceClass) {
-        return (Optional<T>) settingsOptionsProvider.getInference(inferenceClass);
+    public <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass) {
+        return (Optional<T>) settingsOptionsProvider.getInferenceOptions(inferenceClass);
     }
 }

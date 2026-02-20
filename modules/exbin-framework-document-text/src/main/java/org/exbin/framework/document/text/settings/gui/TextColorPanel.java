@@ -17,23 +17,19 @@ package org.exbin.framework.document.text.settings.gui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.exbin.framework.App;
-import org.exbin.framework.action.api.ContextComponent;
 import org.exbin.framework.document.text.settings.TextColorOptions;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
-import org.exbin.framework.context.api.ActiveContextProvider;
-import org.exbin.framework.document.text.TextColorState;
-import org.exbin.framework.document.text.settings.TextColorSettingsApplier;
+import org.exbin.framework.document.text.settings.TextColorInference;
 
 /**
  * Text color selection panel.
@@ -46,7 +42,7 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     private SettingsModifiedListener settingsModifiedListener;
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorPanel.class);
     private static final String RESOURCE_COLOR_CHOOSER_TITLE = "JColorChooser.title";
-    private TextColorState currentState;
+    private TextColorInference textColorInference;
 
     public TextColorPanel() {
         initComponents();
@@ -98,22 +94,12 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         } catch (NumberFormatException e) {
         }
 
-        /* if (contextProvider != null) {
-            ContextComponent contextComponent = contextProvider.getActiveState(ContextComponent.class);
-            if (contextComponent instanceof TextColorState) {
-                TextColorState state = (TextColorState) contextComponent;
-                Color[] arrayFromColors = getArrayFromColors();
-                Color[] currentTextColors = state.getCurrentTextColors();
-                if (!Arrays.equals(arrayFromColors, currentTextColors)) {
-                    setColorsFromArray(currentTextColors);
-                    notifyModified();
-                }
-
-                currentState = (TextColorState) contextComponent;
-                fillCurrentButton.setEnabled(true);
-                fillDefaultButton.setEnabled(true);
-            }
-        } */
+        Optional<TextColorInference> optContextOptions = settingsOptionsProvider.getInferenceOptions(TextColorInference.class);
+        if (optContextOptions.isPresent()) {
+            textColorInference = optContextOptions.get();
+            fillCurrentButton.setEnabled(true);
+            fillDefaultButton.setEnabled(true);
+        }
     }
 
     @Override
@@ -124,15 +110,6 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         options.setSelectionTextColor(getSelectionTextColor().getRGB());
         options.setSelectionBackgroundColor(getSelectionBackgroundColor().getRGB());
         options.setFoundBackgroundColor(getFoundBackgroundColor().getRGB());
-
-        /* if (contextProvider != null) {
-            ContextComponent contextComponent = contextProvider.getActiveState(ContextComponent.class);
-            if (contextComponent instanceof TextColorState) {
-                TextColorSettingsApplier applier = new TextColorSettingsApplier();
-                applier.applySettings(contextComponent, settingsOptionsProvider);
-                contextProvider.notifyStateChange(ContextComponent.class, TextColorState.ChangeType.TEXT_COLOR);
-            }
-        } */
     }
 
     public Color getTextColor() {
@@ -192,8 +169,8 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         selectSelectionBackgroundColorButton.setEnabled(enabled);
         selectTextColorButton.setEnabled(enabled);
         selectFoundBackgroundColorButton.setEnabled(enabled);
-        fillCurrentButton.setEnabled(enabled && currentState != null);
-        fillDefaultButton.setEnabled(enabled && currentState != null);
+        fillCurrentButton.setEnabled(enabled && textColorInference != null);
+        fillDefaultButton.setEnabled(enabled && textColorInference != null);
     }
 
     /**
@@ -543,13 +520,13 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
     }//GEN-LAST:event_selectFoundBackgroundColorButtonActionPerformed
 
     private void fillCurrentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillCurrentButtonActionPerformed
-        Color[] currentColors = currentState.getCurrentTextColors();
+        Color[] currentColors = textColorInference.getCurrentTextColors();
         setColorsFromArray(currentColors);
         notifyModified();
     }//GEN-LAST:event_fillCurrentButtonActionPerformed
 
     private void fillDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillDefaultButtonActionPerformed
-        Color[] defaultColors = currentState.getDefaultTextColors();
+        Color[] defaultColors = textColorInference.getDefaultTextColors();
         setColorsFromArray(defaultColors);
         notifyModified();
     }//GEN-LAST:event_fillDefaultButtonActionPerformed
