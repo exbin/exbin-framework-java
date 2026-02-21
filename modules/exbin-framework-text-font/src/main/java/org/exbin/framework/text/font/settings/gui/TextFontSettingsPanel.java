@@ -75,6 +75,7 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
             Optional<Font> currentFont = textFontInference.getCurrentFont();
             if (currentFont.isPresent()) {
                 codeFont = currentFont.get();
+                notifyModified();
             } else {
                 Optional<Font> defaultFont = textFontInference.getDefaultFont();
                 codeFont = defaultFont.isPresent() ? defaultFont.get().deriveFont(options.getFontAttributes()) : new Font(Font.MONOSPACED, Font.PLAIN, 12);

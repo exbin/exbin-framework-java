@@ -17,6 +17,7 @@ package org.exbin.framework.document.text.settings.gui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -97,6 +98,13 @@ public class TextColorPanel extends javax.swing.JPanel implements SettingsCompon
         Optional<TextColorInference> optContextOptions = settingsOptionsProvider.getInferenceOptions(TextColorInference.class);
         if (optContextOptions.isPresent()) {
             textColorInference = optContextOptions.get();
+            Color[] arrayFromColors = getArrayFromColors();
+            Color[] currentTextColors = textColorInference.getCurrentTextColors();
+            if (!Arrays.equals(arrayFromColors, currentTextColors)) {
+                setColorsFromArray(currentTextColors);
+                notifyModified();
+            }
+
             fillCurrentButton.setEnabled(true);
             fillDefaultButton.setEnabled(true);
         }
