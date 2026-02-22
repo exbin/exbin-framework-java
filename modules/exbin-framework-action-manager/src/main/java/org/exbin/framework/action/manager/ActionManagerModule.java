@@ -68,7 +68,7 @@ public class ActionManagerModule implements org.exbin.framework.Module {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(ActionManagerOptions.class, (optionsStorage) -> new ActionManagerOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(ActionManagerOptions.class, (optionsStorage) -> new ActionManagerOptions(optionsStorage));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);

@@ -89,7 +89,7 @@ public class DocumentModule implements DocumentModuleApi {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManager = settingsModule.getMainSettingsManager();
 
-        settingsManager.registerOptionsSettings(StartupOptions.class, (optionsStorage) -> new StartupOptions(optionsStorage));
+        settingsManager.registerSettingsOptions(StartupOptions.class, (optionsStorage) -> new StartupOptions(optionsStorage));
         settingsManager.registerComponent(StartupSettingsComponent.COMPONENT_ID, new StartupSettingsComponent());
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);

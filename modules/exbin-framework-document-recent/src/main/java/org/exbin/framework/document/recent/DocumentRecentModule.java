@@ -120,6 +120,6 @@ public class DocumentRecentModule implements Module {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(RecentFilesOptions.class, (optionsStorage) -> new RecentFilesOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(RecentFilesOptions.class, (optionsStorage) -> new RecentFilesOptions(optionsStorage));
     }
 }

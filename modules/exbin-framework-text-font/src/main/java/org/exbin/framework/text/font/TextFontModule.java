@@ -68,7 +68,7 @@ public class TextFontModule implements Module {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(TextFontOptions.class, (optionsStorage) -> new TextFontOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(TextFontOptions.class, (optionsStorage) -> new TextFontOptions(optionsStorage));
 
         settingsManagement.registerApplySetting(ContextFont.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
 

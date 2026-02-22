@@ -159,7 +159,7 @@ public class FileModule implements FileModuleApi {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(FileOptions.class, (optionsStorage) -> new FileOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(FileOptions.class, (optionsStorage) -> new FileOptions(optionsStorage));
 
         settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new FileSettingsApplier()));
 

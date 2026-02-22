@@ -380,7 +380,7 @@ public class FrameModule implements FrameModuleApi {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(FrameAppearanceOptions.class, (optionsStorage) -> new FrameAppearanceOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(FrameAppearanceOptions.class, (optionsStorage) -> new FrameAppearanceOptions(optionsStorage));
 
         settingsManagement.registerApplySetting(ContextFrame.class, new ApplySettingsContribution(FrameAppearanceSettingsApplier.APPLIER_ID, new FrameAppearanceSettingsApplier()));
 

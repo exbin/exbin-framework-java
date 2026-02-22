@@ -82,7 +82,7 @@ public class TextEncodingModule implements Module {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(TextEncodingOptions.class, (optionsStorage) -> new TextEncodingOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(TextEncodingOptions.class, (optionsStorage) -> new TextEncodingOptions(optionsStorage));
 
         settingsManagement.registerApplySetting(ContextEncoding.class, new ApplySettingsContribution(TextEncodingSettingsApplier.APPLIER_ID, new TextEncodingSettingsApplier()));
 

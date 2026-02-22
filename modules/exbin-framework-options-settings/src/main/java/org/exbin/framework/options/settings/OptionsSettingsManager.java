@@ -53,7 +53,8 @@ import org.exbin.framework.utils.ObjectUtils;
 @ParametersAreNonnullByDefault
 public class OptionsSettingsManager extends TreeContributionSequenceBuilder implements OptionsSettingsManagement {
 
-    protected final Map<Class<? extends SettingsOptions>, SettingsOptionsBuilder> optionsSettings = new HashMap<>();
+    protected final Map<Class<? extends SettingsOptions>, SettingsOptionsBuilder> settingsOptions = new HashMap<>();
+    protected final Map<Class<? extends InferenceOptions>, InferenceOptions> inferenceOptions = new HashMap<>();
 
     protected final Map<Class<?>, List<ApplySettingsContribution>> applySettingsContributions = new HashMap<>();
     protected final Map<ApplySettingsContribution, List<ApplySettingsDependsOnRule>> applySettingsContributionRules = new HashMap<>();
@@ -66,8 +67,13 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
     }
 
     @Override
-    public <T extends SettingsOptions> void registerOptionsSettings(Class<T> settingsClass, SettingsOptionsBuilder<T> builder) {
-        optionsSettings.put(settingsClass, builder);
+    public <T extends SettingsOptions> void registerSettingsOptions(Class<T> settingsClass, SettingsOptionsBuilder<T> builder) {
+        settingsOptions.put(settingsClass, builder);
+    }
+
+    @Override
+    public <T extends InferenceOptions> void registerInferenceOptions(Class<T> inferenceClass, T inference) {
+        inferenceOptions.put(inferenceClass, inference);
     }
 
     @Nonnull
@@ -122,8 +128,14 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
 
     @Nonnull
     @Override
-    public SettingsOptionsBuilder getOptionsSettingsBuilder(Class<? extends SettingsOptions> settingsClass) {
-        return ObjectUtils.requireNonNull(optionsSettings.get(settingsClass), "Missing options settings builder: " + settingsClass.getCanonicalName());
+    public SettingsOptionsBuilder getSettingsOptionsBuilder(Class<? extends SettingsOptions> settingsClass) {
+        return ObjectUtils.requireNonNull(settingsOptions.get(settingsClass), "Missing options settings builder: " + settingsClass.getCanonicalName());
+    }
+
+    @Nonnull
+    @Override
+    public <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass) {
+        return Optional.ofNullable(inferenceClass.cast(inferenceOptions.get(inferenceClass)));
     }
 
     @Override
@@ -178,17 +190,18 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
         if (settingsOptionsProvider == null) {
             settingsOptionsProvider = new SettingsOptionsProvider() {
 
-                Map<Class<?>, SettingsOptions> settingsOptions = new HashMap<>();
+                Map<Class<?>, SettingsOptions> settingsOptionsCache = new HashMap<>();
 
                 @Nonnull
                 @Override
                 @SuppressWarnings("unchecked")
                 public <T extends SettingsOptions> T getSettingsOptions(Class<T> settingsClass) {
-                    SettingsOptions instance = settingsOptions.get(settingsClass);
+                    SettingsOptions instance = settingsOptionsCache.get(settingsClass);
                     if (instance == null) {
-                        SettingsOptionsBuilder builder = optionsSettings.get(settingsClass);
+                        SettingsOptionsBuilder builder = settingsOptions.get(settingsClass);
                         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
                         instance = builder.createInstance(optionsModule.getAppOptions());
+                        settingsOptionsCache.put(settingsClass, instance);
                     }
 
                     return (T) instance;
@@ -197,7 +210,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
                 @Nonnull
                 @Override
                 public <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass) {
-                    return Optional.empty();
+                    return Optional.ofNullable(inferenceClass.cast(inferenceOptions.get(inferenceClass)));
                 }
             };
         }

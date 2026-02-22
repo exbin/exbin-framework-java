@@ -54,7 +54,7 @@ public class SettingsOptionsStorage implements SettingsOptionsProvider {
     public <T extends SettingsOptions> T getSettingsOptions(Class<T> settingsClass) {
         SettingsOptions instance = settingsOptions.get(settingsClass);
         if (instance == null) {
-            SettingsOptionsBuilder optionsSettingsBuilder = mainSettingsManager.getOptionsSettingsBuilder(settingsClass);
+            SettingsOptionsBuilder optionsSettingsBuilder = mainSettingsManager.getSettingsOptionsBuilder(settingsClass);
             instance = optionsSettingsBuilder.createInstance(optionsStorage);
         }
 
@@ -64,7 +64,6 @@ public class SettingsOptionsStorage implements SettingsOptionsProvider {
     @Nonnull
     @Override
     public <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass) {
-        // TODO
-        return Optional.empty();
+        return mainSettingsManager.getInferenceOptions(inferenceClass);
     }
 }

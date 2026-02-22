@@ -150,8 +150,8 @@ public class DocumentTextModule implements Module {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(TextAppearanceOptions.class, (optionsStorage) -> new TextAppearanceOptions(optionsStorage));
-        settingsManagement.registerOptionsSettings(TextColorOptions.class, (optionsStorage) -> new TextColorOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(TextAppearanceOptions.class, (optionsStorage) -> new TextAppearanceOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(TextColorOptions.class, (optionsStorage) -> new TextColorOptions(optionsStorage));
 
         settingsManagement.registerApplySetting(EditorTextPanelComponent.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new TextAppearanceSettingsApplier()));
         settingsManagement.registerApplySetting(EditorTextPanelComponent.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new TextColorSettingsApplier()));

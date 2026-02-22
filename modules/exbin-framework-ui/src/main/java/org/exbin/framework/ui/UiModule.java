@@ -108,7 +108,7 @@ public class UiModule implements UiModuleApi {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(LanguageOptions.class, (optionsStorage) -> new LanguageOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(LanguageOptions.class, (optionsStorage) -> new LanguageOptions(optionsStorage));
         
         settingsManagement.registerComponent(LanguageSettingsComponent.COMPONENT_ID, new LanguageSettingsComponent());
     }

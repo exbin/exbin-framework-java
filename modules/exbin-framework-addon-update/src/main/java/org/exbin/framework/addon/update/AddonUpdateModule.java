@@ -100,7 +100,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     public void registerSettings() {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
-        settingsManagement.registerOptionsSettings(CheckForUpdateOptions.class, (optionsStorage) -> new CheckForUpdateOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(CheckForUpdateOptions.class, (optionsStorage) -> new CheckForUpdateOptions(optionsStorage));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);

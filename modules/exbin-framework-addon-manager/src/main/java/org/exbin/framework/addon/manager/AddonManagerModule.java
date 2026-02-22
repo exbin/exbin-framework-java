@@ -78,7 +78,7 @@ public class AddonManagerModule implements AddonManagerModuleApi {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(AddonManagerOptions.class, (optionsStorage) -> new AddonManagerOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(AddonManagerOptions.class, (optionsStorage) -> new AddonManagerOptions(optionsStorage));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, null);
         settingsManagement.registerPage(pageContribution);

@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options.settings.api;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ActiveContextManagement;
@@ -37,7 +38,16 @@ public interface OptionsSettingsManagement {
      * @param settingsClass settings options class
      * @param builder settings options builder
      */
-    <T extends SettingsOptions> void registerOptionsSettings(Class<T> settingsClass, SettingsOptionsBuilder<T> builder);
+    <T extends SettingsOptions> void registerSettingsOptions(Class<T> settingsClass, SettingsOptionsBuilder<T> builder);
+
+    /**
+     * Registers inference options.
+     *
+     * @param <T> inference options type
+     * @param inferenceClass inference options class
+     * @param inference inference options instance
+     */
+    <T extends InferenceOptions> void registerInferenceOptions(Class<T> inferenceClass, T inference);
 
     /**
      * Registers settings component.
@@ -88,7 +98,17 @@ public interface OptionsSettingsManagement {
      * @return options settings builder
      */
     @Nonnull
-    SettingsOptionsBuilder getOptionsSettingsBuilder(Class<? extends SettingsOptions> settingsClass);
+    SettingsOptionsBuilder getSettingsOptionsBuilder(Class<? extends SettingsOptions> settingsClass);
+
+    /**
+     * Returns inference options instance if available.
+     *
+     * @param <T> inference options type
+     * @param inferenceClass inference class
+     * @return inference options instance
+     */
+    @Nonnull
+    <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass);
 
     /**
      * Registers apply settings method.

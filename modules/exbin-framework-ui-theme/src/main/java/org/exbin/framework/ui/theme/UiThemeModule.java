@@ -199,7 +199,7 @@ public class UiThemeModule implements UiThemeModuleApi {
         OptionsSettingsModuleApi settingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement settingsManagement = settingsModule.getMainSettingsManager();
 
-        settingsManagement.registerOptionsSettings(ThemeOptions.class, (optionsStorage) -> new ThemeOptions(optionsStorage));
+        settingsManagement.registerSettingsOptions(ThemeOptions.class, (optionsStorage) -> new ThemeOptions(optionsStorage));
 
         settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
 
