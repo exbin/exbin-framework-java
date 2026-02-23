@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.text.encoding.settings;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.context.api.ActiveContextProvider;
@@ -37,10 +38,14 @@ public class TextEncodingContextInference implements TextEncodingInference {
 
     @Nonnull
     @Override
-    public String getEncoding() {
+    public Optional<String> getEncoding() {
         ContextEncoding contextEncoding = contextProvider.getActiveState(ContextEncoding.class);
+        if (contextEncoding == null) {
+            return Optional.empty();
+        }
+
         CharsetEncodingState state = (CharsetEncodingState) contextEncoding;
-        return state.getEncoding();
+        return Optional.of(state.getEncoding());
     }
 
 /*    @Override

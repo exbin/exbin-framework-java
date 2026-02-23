@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.text.encoding.settings;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.exbin.framework.options.settings.api.InferenceOptions;
 
@@ -26,5 +27,5 @@ import org.exbin.framework.options.settings.api.InferenceOptions;
 public interface TextEncodingInference extends InferenceOptions {
 
     @Nonnull
-    String getEncoding();
+    Optional<String> getEncoding();
 }
