@@ -15,8 +15,6 @@ package org.exbin.framework.docking.multi.gui;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -25,6 +23,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.framework.App;
 import org.exbin.framework.document.api.Document;
+import org.exbin.framework.document.api.NamedDocument;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.utils.WindowUtils;
 
@@ -68,8 +67,8 @@ public class ModifiedDocumentsPanel extends javax.swing.JPanel {
         this.documents = documents;
         DefaultListModel<String> listModel = new DefaultListModel<>();
         for (Document document : documents) {
-            // TODO
-            listModel.addElement("Document");
+            String documentName = document instanceof NamedDocument ? ((NamedDocument) document).getDocumentName() : "-";
+            listModel.addElement(documentName);
         }
         filesList.setModel(listModel);
         filesList.invalidate();

@@ -40,6 +40,7 @@ import org.exbin.framework.document.api.ComponentDocument;
 import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.document.api.EditableDocument;
+import org.exbin.framework.document.api.NamedDocument;
 import org.exbin.framework.file.api.FileDocument;
 import org.exbin.framework.file.api.FileDocumentSource;
 import org.exbin.framework.text.encoding.ContextEncoding;
@@ -51,7 +52,7 @@ import org.exbin.framework.text.font.TextFontState;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextDocument implements ContextDocument, ComponentDocument, FileDocument, EditableDocument {
+public class TextDocument implements NamedDocument, ContextDocument, ComponentDocument, FileDocument, EditableDocument {
 
     protected final TextPanel textPanel = new TextPanel();
 
@@ -181,6 +182,12 @@ public class TextDocument implements ContextDocument, ComponentDocument, FileDoc
     @Override
     public Optional<URI> getFileUri() {
         return Optional.ofNullable(null);
+    }
+
+    @Nonnull
+    @Override
+    public String getDocumentName() {
+        return getTitle();
     }
 
     @Nonnull

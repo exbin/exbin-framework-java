@@ -69,15 +69,15 @@ public class EncodingsManager {
     public void init() {
         encodingButtonGroup = new ButtonGroup();
 
-//        encodingActionListener = (ActionEvent e) -> {
-//            textEncodingService.setSelectedEncoding(((JRadioButtonMenuItem) e.getSource()).getText());
-//        };
+        encodingActionListener = (ActionEvent e) -> {
+            encodingState.setEncoding(((JRadioButtonMenuItem) e.getSource()).getText());
+        };
         utfEncodingRadioButtonMenuItem = UiUtils.createRadioButtonMenuItem();
         utfEncodingRadioButtonMenuItem.setSelected(true);
         utfEncodingRadioButtonMenuItem.setText(resourceBundle.getString("defaultEncoding.text"));
         utfEncodingRadioButtonMenuItem.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{ENCODING_UTF8}));
-//        utfEncodingActionListener = (java.awt.event.ActionEvent evt) -> textEncodingService.setSelectedEncoding(ENCODING_UTF8);
-//        utfEncodingRadioButtonMenuItem.addActionListener(utfEncodingActionListener);
+        utfEncodingActionListener = (java.awt.event.ActionEvent evt) -> encodingState.setEncoding(ENCODING_UTF8);
+        utfEncodingRadioButtonMenuItem.addActionListener(utfEncodingActionListener);
 
         encodingButtonGroup.add(utfEncodingRadioButtonMenuItem);
         manageEncodingsAction = new ManageEncodingsAction();

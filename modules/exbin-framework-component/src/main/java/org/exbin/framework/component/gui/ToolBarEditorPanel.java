@@ -35,6 +35,7 @@ public class ToolBarEditorPanel extends javax.swing.JPanel {
     private JToolBar toolBar = null;
 
     public ToolBarEditorPanel() {
+        // TODO Replace with toolbar contributions
         initComponents();
     }
 
