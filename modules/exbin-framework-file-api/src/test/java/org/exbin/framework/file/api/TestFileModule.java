@@ -79,8 +79,9 @@ public class TestFileModule implements FileModuleApi {
         throw new UnsupportedOperationException();
     }
 
+    @Nonnull
     @Override
-    public boolean showSaveModified(Component parentComponent) {
+    public SaveModifiedResult showSaveModified(Component parentComponent) {
         throw new UnsupportedOperationException();
     }
 

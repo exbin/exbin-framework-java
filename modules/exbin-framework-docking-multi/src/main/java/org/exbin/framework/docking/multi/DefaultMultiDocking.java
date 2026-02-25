@@ -56,7 +56,12 @@ import org.exbin.framework.document.api.EditableDocument;
 import org.exbin.framework.document.api.LoadableDocument;
 import org.exbin.framework.document.api.MemoryDocumentSource;
 import org.exbin.framework.file.api.FileDocument;
+import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.FileSourceIdentifier;
+import org.exbin.framework.file.api.SaveModifiedResult;
+import static org.exbin.framework.file.api.SaveModifiedResult.CANCEL;
+import static org.exbin.framework.file.api.SaveModifiedResult.DISCARD;
+import static org.exbin.framework.file.api.SaveModifiedResult.SAVE;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.utils.WindowClosingListener;
@@ -253,7 +258,26 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
         }
 
         if (openDocuments.size() == 1) {
-            return (openDocuments.get(0) == exceptionDocument) || releaseDocument(openDocuments.get(0));
+            if (openDocuments.get(0) == exceptionDocument) {
+                return true;
+            }
+
+            Document document = openDocuments.get(0);
+
+            if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
+                FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+                SaveModifiedResult result = fileModule.showSaveModified(docking);
+                switch (result) {
+                    case SAVE:
+                        return releaseDocument(document);
+                    case DISCARD:
+                        return true;
+                    case CANCEL:
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         List<Document> modifiedDocuments = new ArrayList<>();
@@ -356,6 +380,6 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
 
     @Override
     public boolean windowClosing() {
-        return true;
+        return releaseAllDocuments();
     }
 }

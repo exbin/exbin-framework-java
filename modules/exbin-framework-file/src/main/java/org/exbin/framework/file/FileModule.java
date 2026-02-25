@@ -38,6 +38,7 @@ import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.file.api.FileSourceIdentifier;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.file.api.SaveModifiedResult;
 import org.exbin.framework.file.settings.FileOptions;
 import org.exbin.framework.file.settings.FileSettingsApplier;
 import org.exbin.framework.file.settings.FileSettingsComponent;
@@ -169,8 +170,9 @@ public class FileModule implements FileModuleApi {
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 
+    @Nonnull
     @Override
-    public boolean showSaveModified(Component parentComponent) {
+    public SaveModifiedResult showSaveModified(Component parentComponent) {
         Object[] options = {
             resourceBundle.getString("saveModifiedQuestion.action_save"),
             resourceBundle.getString("saveModifiedQuestion.action_discard"),
@@ -184,7 +186,12 @@ public class FileModule implements FileModuleApi {
                 JOptionPane.QUESTION_MESSAGE,
                 null, options, options[0]);
 
-        return result == JOptionPane.NO_OPTION;
+        if (result == JOptionPane.YES_OPTION) {
+            return SaveModifiedResult.SAVE;
+        } else if (result == JOptionPane.NO_OPTION) {
+            return SaveModifiedResult.DISCARD;
+        }
+        return SaveModifiedResult.CANCEL;
     }
 
     @Override

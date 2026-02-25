@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.addon.manager;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,13 +36,26 @@ import org.exbin.framework.addon.manager.gui.AddonsCartPanel;
 import org.exbin.framework.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.framework.addon.manager.api.AddonManagerPage;
 import org.exbin.framework.addon.manager.gui.AddonsPanel;
+import org.exbin.framework.addon.manager.operation.AddonModificationStep;
+import org.exbin.framework.addon.manager.operation.AddonModificationsOperation;
 import org.exbin.framework.addon.manager.operation.CatalogAvailableUpdatesOperation;
 import org.exbin.framework.addon.manager.operation.CatalogCheckStatusOperation;
 import org.exbin.framework.addon.manager.operation.CatalogModuleDetailOperation;
 import org.exbin.framework.addon.manager.operation.CatalogSearchOperation;
+import org.exbin.framework.addon.manager.operation.DownloadOperation;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationDownloadPanel;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationLicensePanel;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationOverviewPanel;
+import org.exbin.framework.addon.manager.operation.gui.AddonOperationPanel;
+import org.exbin.framework.addon.manager.operation.model.DownloadItemRecord;
+import org.exbin.framework.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.framework.addon.manager.operation.service.AddonOperationService;
 import org.exbin.framework.operation.api.ProgressOperation;
 import org.exbin.framework.operation.api.TitledOperation;
+import org.exbin.framework.window.api.WindowHandler;
+import org.exbin.framework.window.api.WindowModuleApi;
+import org.exbin.framework.window.api.controller.MultiStepControlController;
+import org.exbin.framework.window.api.gui.MultiStepControlPanel;
 
 /**
  * Addon manager.
@@ -216,8 +230,10 @@ public class AddonManager {
 
         AddonOperationService addonOperationService = new AddonOperationService(AddonManager.this);
         addonOperationService.setAddonCatalogService(addonCatalogService);
-        addonOperationService.performAddonOperations(updateOperations, managerPanel);
-        notifyChanged();
+        AddonModificationsOperation modificationsOperations = addonOperationService.performAddonOperations(updateOperations);
+        if (performAddonsOperation(modificationsOperations, managerPanel)) {
+            notifyChanged();
+        }
     }
 
     @Nonnull
@@ -268,13 +284,142 @@ public class AddonManager {
     public void runCartModifications() {
         AddonOperationService addonOperationService = new AddonOperationService(AddonManager.this);
         addonOperationService.setAddonCatalogService(addonCatalogService);
-        addonOperationService.performAddonOperations(cartOperations, managerPanel);
+        AddonModificationsOperation modificationsOerations = addonOperationService.performAddonOperations(cartOperations);
+        if (performAddonsOperation(modificationsOerations, managerPanel)) {
+            cartOperations.clear();
+            notifyChanged();
+        }
+    }
 
-        // TODO
-//        if (success) {
-//            cartOperations.clear();
-//        }
-        notifyChanged();
+    public boolean performAddonsOperation(AddonModificationsOperation modificationsOperation, Component parentComponent) {
+        boolean[] success = new boolean[]{false};
+        MultiStepControlPanel controlPanel = new MultiStepControlPanel();
+        AddonOperationPanel operationPanel = new AddonOperationPanel();
+        operationPanel.setPreferredSize(new Dimension(600, 300));
+
+        AddonOperationOverviewPanel panel = (AddonOperationOverviewPanel) operationPanel.getActiveComponent().get();
+        for (String operation : modificationsOperation.getOperations()) {
+            panel.addOperation(operation);
+        }
+
+        WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+        final WindowHandler dialog = windowModule.createDialog(operationPanel, controlPanel);
+        windowModule.addHeaderPanel(dialog.getWindow(), operationPanel.getClass(), operationPanel.getResourceBundle());
+        windowModule.setWindowTitle(dialog, operationPanel.getResourceBundle());
+        controlPanel.setController(new MultiStepControlController() {
+
+            private AddonModificationStep step = AddonModificationStep.OVERVIEW;
+            private DownloadOperation downloadOperation = null;
+
+            @Override
+            public void controlActionPerformed(MultiStepControlController.ControlActionType actionType) {
+                switch (actionType) {
+                    case CANCEL:
+                        if (downloadOperation != null) {
+                            downloadOperation.cancelOperation();
+                        }
+                        dialog.close();
+                        break;
+                    case NEXT:
+                        switch (step) {
+                            case OVERVIEW:
+                                List<LicenseItemRecord> licenseRecords = modificationsOperation.getLicenseRecords();
+                                if (!licenseRecords.isEmpty()) {
+                                    step = AddonModificationStep.LICENSE;
+                                    operationPanel.goToStep(step);
+                                    AddonOperationLicensePanel panel = (AddonOperationLicensePanel) operationPanel.getActiveComponent().get();
+                                    panel.setController(new AddonOperationLicensePanel.Controller() {
+                                        @Override
+                                        public void approvalStateChanged(int toApprove) {
+                                            controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, toApprove == 0);
+                                        }
+                                    });
+                                    panel.setLicenseRecords(licenseRecords);
+                                    controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
+                                    break;
+                                } // no break
+                            case LICENSE:
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, true);
+                                List<DownloadItemRecord> downloadRecords = modificationsOperation.getDownloadRecords();
+                                if (!downloadRecords.isEmpty()) {
+                                    goToDownload(downloadRecords);
+                                    break;
+                                } // no break
+                            case DOWNLOAD:
+                                step = AddonModificationStep.SUCCESS;
+                                operationPanel.goToStep(step);
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, false);
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.CANCEL, false);
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.FINISH, true);
+                                break;
+                            default:
+                                throw new AssertionError();
+                        }
+                        break;
+                    case PREVIOUS:
+                        // TODO
+                        switch (step) {
+                            case LICENSE:
+                                step = AddonModificationStep.OVERVIEW;
+                                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.PREVIOUS, false);
+                                operationPanel.goToStep(step);
+                                break;
+                            default:
+                                throw new AssertionError();
+                        }
+                        break;
+                    case FINISH:
+                        modificationsOperation.finished();
+                        success[0] = true;
+                        dialog.close();
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
+
+            private void goToDownload(List<DownloadItemRecord> downloadRecords) {
+                step = AddonModificationStep.DOWNLOAD;
+                operationPanel.goToStep(step);
+                AddonOperationDownloadPanel panel = (AddonOperationDownloadPanel) operationPanel.getActiveComponent().get();
+                panel.setDownloadedItemRecords(downloadRecords);
+                downloadOperation = new DownloadOperation(downloadRecords);
+                downloadOperation.setItemChangeListener(new DownloadOperation.ItemChangeListener() {
+                    @Override
+                    public void itemChanged(int itemIndex) {
+                        panel.notifyDownloadedItemChanged(itemIndex);
+                    }
+
+                    @Override
+                    public void progressChanged(int itemIndex) {
+                        DownloadItemRecord record = downloadRecords.get(itemIndex);
+                        panel.setProgress(record.getFileName(), downloadOperation.getOperationProgress(), false);
+                    }
+
+                });
+                controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, false);
+                Thread thread = new Thread(() -> {
+                    try {
+                        downloadOperation.run();
+                        controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, true);
+                    } catch (Throwable tw) {
+                        JOptionPane.showMessageDialog(parentComponent,
+                                String.format(resourceBundle.getString("downloadFailedError.message"), tw.getLocalizedMessage()),
+                                resourceBundle.getString("downloadFailedError.title"),
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                });
+                thread.start();
+            }
+        });
+        controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.NEXT, true);
+        controlPanel.setActionEnabled(MultiStepControlController.ControlActionType.FINISH, false);
+        dialog.showCentered(parentComponent);
+        dialog.dispose();
+
+        return success[0];
     }
 
     public boolean isInCart(String moduleId, AddonOperationVariant variant) {

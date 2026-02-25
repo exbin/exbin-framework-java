@@ -109,7 +109,8 @@ public interface FileModuleApi extends Module {
      * @param parentComponent
      * @return
      */
-    boolean showSaveModified(Component parentComponent);
+    @Nonnull
+    SaveModifiedResult showSaveModified(Component parentComponent);
 
     /**
      * Asks whether it's allowed to overwrite file.

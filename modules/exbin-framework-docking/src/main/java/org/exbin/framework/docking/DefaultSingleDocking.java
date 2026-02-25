@@ -33,6 +33,9 @@ import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.document.api.EditableDocument;
+import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.file.api.SaveModifiedResult;
+import org.exbin.framework.utils.WindowClosingListener;
 
 /**
  * Default implementation of the document docking supporting single document
@@ -41,7 +44,7 @@ import org.exbin.framework.document.api.EditableDocument;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, DocumentDocking {
+public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, DocumentDocking, WindowClosingListener {
 
     protected final DockingPanel docking = new DockingPanel();
     protected Document currentDocument = null;
@@ -133,5 +136,31 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         }
 
         return true;
+    }
+
+    public boolean releaseDocument() {
+        if (currentDocument == null) {
+            return true;
+        }
+
+        if (currentDocument instanceof EditableDocument && ((EditableDocument) currentDocument).isModified()) {
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+            SaveModifiedResult result = fileModule.showSaveModified(docking);
+            switch (result) {
+                case SAVE:
+                    return releaseDocument(currentDocument);
+                case DISCARD:
+                    return true;
+                case CANCEL:
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean windowClosing() {
+        return releaseDocument();
     }
 }
