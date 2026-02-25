@@ -59,9 +59,6 @@ import org.exbin.framework.file.api.FileDocument;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.api.FileSourceIdentifier;
 import org.exbin.framework.file.api.SaveModifiedResult;
-import static org.exbin.framework.file.api.SaveModifiedResult.CANCEL;
-import static org.exbin.framework.file.api.SaveModifiedResult.DISCARD;
-import static org.exbin.framework.file.api.SaveModifiedResult.SAVE;
 import org.exbin.framework.menu.api.MenuModuleApi;
 import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.utils.WindowClosingListener;
@@ -176,6 +173,10 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
                 openDocuments.remove(index);
                 documentPanel.removeDocumentAtIndex(index);
             }
+            activeDocument = getDocument();
+            if (activeDocument != null) {
+                ((ContextActivable) activeDocument).notifyActivated(contextManager);
+            }
         }
     }
 
@@ -218,9 +219,12 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
 
         for (Document document : openDocuments) {
             if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
-                Optional<DocumentSource> documentSource = ((EditableDocument) document).getDocumentSource();
-                if (documentSource.isPresent()) {
-                    ((EditableDocument) document).saveTo(documentSource.get());
+                Optional<DocumentSource> optDocumentSource = ((EditableDocument) document).getDocumentSource();
+                if (optDocumentSource.isPresent()) {
+                    DocumentSource documentSource = optDocumentSource.get();
+                    if (!(documentSource instanceof MemoryDocumentSource)) {
+                        ((EditableDocument) document).saveTo(documentSource);
+                    }
                 }
             }
         }
@@ -236,12 +240,23 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
     @Override
     public boolean releaseDocument(Document document) {
         if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
-            DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
-            Optional<DocumentSource> documentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
-            if (documentSource.isPresent()) {
-                ((EditableDocument) document).saveTo(documentSource.get());
-                return true;
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+            SaveModifiedResult result = fileModule.showSaveModified(docking);
+            switch (result) {
+                case SAVE:
+                    DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+                    Optional<DocumentSource> documentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
+                    if (documentSource.isPresent()) {
+                        ((EditableDocument) document).saveTo(documentSource.get());
+                        return true;
+                    }
+                    return false;
+                case DISCARD:
+                    return true;
+                case CANCEL:
+                    return false;
             }
+
             return false;
         }
 
@@ -262,22 +277,7 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
                 return true;
             }
 
-            Document document = openDocuments.get(0);
-
-            if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
-                FileModuleApi fileModule = App.getModule(FileModuleApi.class);
-                SaveModifiedResult result = fileModule.showSaveModified(docking);
-                switch (result) {
-                    case SAVE:
-                        return releaseDocument(document);
-                    case DISCARD:
-                        return true;
-                    case CANCEL:
-                        return false;
-                }
-            }
-
-            return true;
+            return releaseDocument(openDocuments.get(0));
         }
 
         List<Document> modifiedDocuments = new ArrayList<>();

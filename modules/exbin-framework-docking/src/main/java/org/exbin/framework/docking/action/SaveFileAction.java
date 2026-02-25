@@ -83,7 +83,7 @@ public class SaveFileAction extends AbstractAction {
             if (optDocumentSource.isPresent()) {
                 DocumentSource documentSource = optDocumentSource.get();
                 if (!(documentSource instanceof MemoryDocumentSource)) {
-                    ((EditableDocument) document).saveTo(optDocumentSource.get());
+                    ((EditableDocument) document).saveTo(documentSource);
                     return;
                 }
             }

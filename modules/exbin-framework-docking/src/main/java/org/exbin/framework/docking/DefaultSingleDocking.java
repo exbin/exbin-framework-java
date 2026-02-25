@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.context.api.ActiveContextManagement;
+import org.exbin.framework.context.api.ContextActivable;
 import org.exbin.framework.docking.api.ContextDocking;
 import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.docking.api.SidePanelDocking;
@@ -114,6 +115,7 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
 
         currentDocument = document;
         docking.setContentComponent(((ComponentDocument) document).getComponent());
+        ((ContextActivable) currentDocument).notifyActivated(contextManager);
     }
 
     @Override
@@ -126,12 +128,23 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
     @Override
     public boolean releaseDocument(Document document) {
         if (document instanceof EditableDocument && ((EditableDocument) document).isModified()) {
-            DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
-            Optional<DocumentSource> documentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
-            if (documentSource.isPresent()) {
-                ((EditableDocument) document).saveTo(documentSource.get());
-                return true;
+            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+            SaveModifiedResult result = fileModule.showSaveModified(docking);
+            switch (result) {
+                case SAVE:
+                    DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
+                    Optional<DocumentSource> documentSource = documentModule.getMainDocumentManager().saveDocumentAs(document);
+                    if (documentSource.isPresent()) {
+                        ((EditableDocument) document).saveTo(documentSource.get());
+                        return true;
+                    }
+                    return false;
+                case DISCARD:
+                    return true;
+                case CANCEL:
+                    return false;
             }
+
             return false;
         }
 
@@ -143,20 +156,7 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
             return true;
         }
 
-        if (currentDocument instanceof EditableDocument && ((EditableDocument) currentDocument).isModified()) {
-            FileModuleApi fileModule = App.getModule(FileModuleApi.class);
-            SaveModifiedResult result = fileModule.showSaveModified(docking);
-            switch (result) {
-                case SAVE:
-                    return releaseDocument(currentDocument);
-                case DISCARD:
-                    return true;
-                case CANCEL:
-                    return false;
-            }
-        }
-
-        return true;
+        return releaseDocument(currentDocument);
     }
 
     @Override

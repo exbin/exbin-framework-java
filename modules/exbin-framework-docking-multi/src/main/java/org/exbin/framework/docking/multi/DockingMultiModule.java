@@ -36,6 +36,7 @@ import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentModuleApi;
 import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.document.api.EditableDocument;
+import org.exbin.framework.document.api.MemoryDocumentSource;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuDefinitionManagement;
 import org.exbin.framework.menu.api.MenuModuleApi;
@@ -87,7 +88,7 @@ public class DockingMultiModule implements DockingMultiModuleApi {
             public boolean saveFile(Document document) {
                 EditableDocument editableDocument = (EditableDocument) document;
                 Optional<DocumentSource> optDocumentSource = editableDocument.getDocumentSource();
-                if (optDocumentSource.isPresent()) {
+                if (optDocumentSource.isPresent() && !(optDocumentSource.get() instanceof MemoryDocumentSource)) {
                     editableDocument.saveTo(optDocumentSource.get());
                     return true;
                 } else {
