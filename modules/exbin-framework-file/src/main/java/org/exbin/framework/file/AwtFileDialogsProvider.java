@@ -20,6 +20,7 @@ import java.awt.Dialog;
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -37,6 +38,18 @@ import org.exbin.framework.frame.api.FrameModuleApi;
  */
 @ParametersAreNonnullByDefault
 public class AwtFileDialogsProvider implements FileDialogsProvider {
+
+    protected final ResourceBundle resourceBundle;
+
+    public AwtFileDialogsProvider(ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+    }
+
+    @Nonnull
+    @Override
+    public String getProviderName() {
+        return resourceBundle.getString("fileDialogs.awt");
+    }
 
     @Nonnull
     @Override

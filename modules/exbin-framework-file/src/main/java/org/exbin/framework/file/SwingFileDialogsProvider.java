@@ -47,6 +47,12 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
 
     @Nonnull
     @Override
+    public String getProviderName() {
+        return resourceBundle.getString("fileDialogs.swing");
+    }
+
+    @Nonnull
+    @Override
     public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         JFileChooser openFileChooser = new JFileChooser();

@@ -29,6 +29,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface FileDialogsProvider {
 
     /**
+     * Returns provider name.
+     *
+     * @return provider name
+     */
+    @Nonnull
+    String getProviderName();
+
+    /**
      * Shows open file dialog.
      *
      * @param fileTypes file types

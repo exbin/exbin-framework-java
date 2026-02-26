@@ -17,14 +17,13 @@ package org.exbin.framework.file.settings;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
-import org.exbin.framework.file.FileDialogsType;
-import org.exbin.framework.file.FileModule;
+import org.exbin.framework.file.api.FileDialogsProvider;
+import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.file.settings.gui.FileSettingsPanel;
-import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsComponentProvider;
 
@@ -42,14 +41,16 @@ public class FileSettingsComponent implements SettingsComponentProvider {
     @Override
     public SettingsComponent createComponent() {
         FileSettingsPanel fileSettingsPanel = new FileSettingsPanel();
-        // TODO Move resources
-        ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FileModule.class);
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        Map<String, FileDialogsProvider> fileDialogsProviders = fileModule.getFileDialogsProviders();
         List<String> fileDialogsKeys = new ArrayList<>();
-        fileDialogsKeys.add(FileDialogsType.SWING.name());
-        fileDialogsKeys.add(FileDialogsType.AWT.name());
         List<String> fileDialogsNames = new ArrayList<>();
-        fileDialogsNames.add(resourceBundle.getString("fileDialogs.swing"));
-        fileDialogsNames.add(resourceBundle.getString("fileDialogs.swt"));
+        for (Map.Entry<String, FileDialogsProvider> entry : fileDialogsProviders.entrySet()) {
+            String providerId = entry.getKey();
+            FileDialogsProvider provider = entry.getValue();
+            fileDialogsKeys.add(providerId);
+            fileDialogsNames.add(provider.getProviderName());
+        }
         fileSettingsPanel.setFileDialogs(fileDialogsKeys, fileDialogsNames);
         return fileSettingsPanel;
     }

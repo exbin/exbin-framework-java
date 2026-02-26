@@ -18,6 +18,7 @@ package org.exbin.framework.file.api;
 import java.awt.Component;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
@@ -55,6 +56,14 @@ public interface FileModuleApi extends Module {
      * @param provider file dialog provider
      */
     void registerFileDialogsProvider(String providerId, FileDialogsProvider provider);
+
+    /**
+     * Returns file dialog providers.
+     *
+     * @return file dialogs providers
+     */
+    @Nonnull
+    Map<String, FileDialogsProvider> getFileDialogsProviders();
 
     /**
      * Retuns preferred file dialog provider id.

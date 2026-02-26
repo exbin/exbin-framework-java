@@ -19,6 +19,7 @@ import java.awt.Component;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -54,6 +55,12 @@ public class TestFileModule implements FileModuleApi {
 
     @Override
     public void registerFileDialogsProvider(String providerId, FileDialogsProvider provider) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, FileDialogsProvider> getFileDialogsProviders() {
         throw new UnsupportedOperationException();
     }
 

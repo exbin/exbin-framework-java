@@ -82,12 +82,18 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         this.contextManager = contextManager;
         contextManager.changeActiveState(ContextDocking.class, this);
         contextManager.changeActiveState(ContextDocument.class, (ContextDocument) currentDocument);
+        if (currentDocument instanceof ContextActivable) {
+            ((ContextActivable) currentDocument).notifyActivated(contextManager);
+        }
     }
 
     @Override
     public void notifyDeactivated(ActiveContextManagement contextManager) {
-        contextManager.changeActiveState(ContextDocking.class, null);
+        if (currentDocument instanceof ContextActivable) {
+            ((ContextActivable) currentDocument).notifyDeactivated(contextManager);
+        }
         contextManager.changeActiveState(ContextDocument.class, null);
+        contextManager.changeActiveState(ContextDocking.class, null);
         this.contextManager = null;
     }
 

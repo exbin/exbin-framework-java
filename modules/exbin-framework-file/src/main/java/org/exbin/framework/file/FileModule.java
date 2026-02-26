@@ -101,6 +101,12 @@ public class FileModule implements FileModuleApi {
 
     @Nonnull
     @Override
+    public Map<String, FileDialogsProvider> getFileDialogsProviders() {
+        return fileDialogsProviders;
+    }
+
+    @Nonnull
+    @Override
     public String getFileDialogProviderId() {
         return fileDialogProviderId;
     }
@@ -147,6 +153,7 @@ public class FileModule implements FileModuleApi {
     public void registerFileProviders() {
         ensureSetup();
         registerFileDialogsProvider(FileDialogsType.SWING.name(), new SwingFileDialogsProvider(resourceBundle));
+        registerFileDialogsProvider(FileDialogsType.AWT.name(), new AwtFileDialogsProvider(resourceBundle));
         setFileDialogProviderId(FileDialogsType.SWING.name());
 
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);

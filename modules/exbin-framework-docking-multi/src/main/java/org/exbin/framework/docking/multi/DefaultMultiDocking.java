@@ -332,8 +332,6 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
 
     @Override
     public void notifyDeactivated(ActiveContextManagement contextManager) {
-        contextManager.changeActiveState(ContextDocking.class, null);
-        contextManager.changeActiveState(ContextDocument.class, null);
         Optional<Document> optActiveDocument = getActiveDocument();
         if (optActiveDocument.isPresent()) {
             Document activeDocument = optActiveDocument.get();
@@ -341,6 +339,8 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
                 ((ContextActivable) activeDocument).notifyDeactivated(contextManager);
             }
         }
+        contextManager.changeActiveState(ContextDocument.class, null);
+        contextManager.changeActiveState(ContextDocking.class, null);
         this.contextManager = null;
     }
 
