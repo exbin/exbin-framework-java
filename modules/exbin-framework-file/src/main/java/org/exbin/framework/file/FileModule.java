@@ -152,6 +152,7 @@ public class FileModule implements FileModuleApi {
     @Override
     public void registerFileProviders() {
         ensureSetup();
+        getResourceBundle();
         registerFileDialogsProvider(FileDialogsType.SWING.name(), new SwingFileDialogsProvider(resourceBundle));
         registerFileDialogsProvider(FileDialogsType.AWT.name(), new AwtFileDialogsProvider(resourceBundle));
         setFileDialogProviderId(FileDialogsType.SWING.name());
