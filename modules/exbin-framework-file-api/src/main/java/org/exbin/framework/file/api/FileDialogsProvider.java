@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.file.api;
 
+import java.awt.Component;
 import java.io.File;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,6 +40,7 @@ public interface FileDialogsProvider {
     /**
      * Shows open file dialog.
      *
+     * @param parentComponent parent component
      * @param fileTypes file types
      * @param selectedFile selected file
      * @param usedDirectory used directory
@@ -46,11 +48,12 @@ public interface FileDialogsProvider {
      * @return open file result
      */
     @Nonnull
-    OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName);
+    OpenFileResult showOpenFileDialog(Component parentComponent, FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName);
 
     /**
      * Shows save file dialog.
      *
+     * @param parentComponent parent component
      * @param fileTypes file types
      * @param selectedFile selected file
      * @param usedDirectory used directory
@@ -58,5 +61,5 @@ public interface FileDialogsProvider {
      * @return open file result
      */
     @Nonnull
-    OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName);
+    OpenFileResult showSaveFileDialog(Component parentComponent, FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName);
 }

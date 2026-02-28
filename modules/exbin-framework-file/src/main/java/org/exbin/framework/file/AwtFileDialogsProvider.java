@@ -15,9 +15,11 @@
  */
 package org.exbin.framework.file;
 
+import java.awt.Component;
 import org.exbin.framework.file.api.FileDialogsProvider;
 import java.awt.Dialog;
 import java.awt.FileDialog;
+import java.awt.Frame;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ResourceBundle;
@@ -25,11 +27,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
-import org.exbin.framework.App;
+import javax.swing.SwingUtilities;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.file.api.OpenFileResult;
 import org.exbin.framework.file.api.UsedDirectoryApi;
-import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * AWT file dialogs provider.
@@ -53,9 +54,10 @@ public class AwtFileDialogsProvider implements FileDialogsProvider {
 
     @Nonnull
     @Override
-    public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        FileDialog fileDialog = new FileDialog(frameModule.getFrame());
+    public OpenFileResult showOpenFileDialog(Component parentComponent, FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
+        Component rootComponent = SwingUtilities.getRoot(parentComponent);
+        Frame frame = (Frame) rootComponent;
+        FileDialog fileDialog = new FileDialog(frame);
         fileDialog.setMode(FileDialog.LOAD);
         fileDialog.setMultipleMode(false);
         FilenameFilter filter = (File file, String string) -> true;
@@ -72,7 +74,7 @@ public class AwtFileDialogsProvider implements FileDialogsProvider {
         fileDialog.setModal(true);
         fileDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         fileDialog.setLocationByPlatform(true);
-        fileDialog.setLocationRelativeTo(frameModule.getFrame());
+        fileDialog.setLocationRelativeTo(parentComponent);
         fileDialog.setVisible(true);
         String file = fileDialog.getFile();
         return new OpenFileResult(
@@ -83,9 +85,10 @@ public class AwtFileDialogsProvider implements FileDialogsProvider {
     }
 
     @Override
-    public OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        FileDialog fileDialog = new FileDialog(frameModule.getFrame());
+    public OpenFileResult showSaveFileDialog(Component parentComponent, FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
+        Component rootComponent = SwingUtilities.getRoot(parentComponent);
+        Frame frame = (Frame) rootComponent;
+        FileDialog fileDialog = new FileDialog(frame);
         fileDialog.setMode(FileDialog.SAVE);
         fileDialog.setMultipleMode(false);
         FilenameFilter filter = (File file, String string) -> true;
@@ -102,7 +105,7 @@ public class AwtFileDialogsProvider implements FileDialogsProvider {
         fileDialog.setModal(true);
         fileDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         fileDialog.setLocationByPlatform(true);
-        fileDialog.setLocationRelativeTo(frameModule.getFrame());
+        fileDialog.setLocationRelativeTo(parentComponent);
         fileDialog.setVisible(true);
         String file = fileDialog.getFile();
         return new OpenFileResult(

@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.file;
 
+import java.awt.Component;
 import org.exbin.framework.file.api.FileDialogsProvider;
 import java.io.File;
 import java.util.ResourceBundle;
@@ -23,12 +24,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import org.exbin.framework.App;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileTypes;
 import org.exbin.framework.file.api.OpenFileResult;
 import org.exbin.framework.file.api.UsedDirectoryApi;
-import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
  * Swing file dialogs provider.
@@ -53,8 +52,7 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
 
     @Nonnull
     @Override
-    public OpenFileResult showOpenFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+    public OpenFileResult showOpenFileDialog(Component parentComponent, FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         JFileChooser openFileChooser = new JFileChooser();
         setupFileFilters(openFileChooser, fileTypes);
         if (usedDirectory != null) {
@@ -66,7 +64,7 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
         if (dialogName != null) {
             openFileChooser.setDialogTitle(dialogName);
         }
-        int dialogResult = openFileChooser.showOpenDialog(frameModule.getFrame());
+        int dialogResult = openFileChooser.showOpenDialog(parentComponent);
         FileFilter fileFilter = openFileChooser.getFileFilter();
         return new OpenFileResult(
                 dialogResult, openFileChooser.getSelectedFile(),
@@ -75,8 +73,7 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
     }
 
     @Override
-    public OpenFileResult showSaveFileDialog(FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+    public OpenFileResult showSaveFileDialog(Component parentComponent, FileTypes fileTypes, @Nullable File selectedFile, @Nullable UsedDirectoryApi usedDirectory, @Nullable String dialogName) {
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         setupFileFilters(saveFileChooser, fileTypes);
@@ -89,7 +86,7 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
         if (dialogName != null) {
             saveFileChooser.setDialogTitle(dialogName);
         }
-        int dialogResult = saveFileChooser.showSaveDialog(frameModule.getFrame());
+        int dialogResult = saveFileChooser.showSaveDialog(parentComponent);
         FileFilter fileFilter = saveFileChooser.getFileFilter();
         return new OpenFileResult(
                 dialogResult, saveFileChooser.getSelectedFile(),
