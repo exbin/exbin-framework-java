@@ -16,6 +16,7 @@
 package org.exbin.framework.options.settings;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,6 +164,12 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
     public void registerApplyListener(ApplySettingsListener listener) {
         applySettingsListeners.add(listener);
     }
+    
+    @Nonnull
+    @Override
+    public Collection<Class<? extends SettingsOptions>> getOptionsClasses() {
+        return settingsOptions.keySet();
+    }
 
     @Override
     public void applyOptions(Class<?> instanceClass, Object targetObject, SettingsOptionsProvider provider) {
@@ -173,6 +180,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
 
         for (ApplySettingsContribution applySettings : classApplySettings) {
             SettingsApplier settingsApplier = applySettings.getSettingsApplier();
+            System.out.println("Apply: " + settingsApplier.getClass().getCanonicalName());
             settingsApplier.applySettings(targetObject, provider);
         }
     }

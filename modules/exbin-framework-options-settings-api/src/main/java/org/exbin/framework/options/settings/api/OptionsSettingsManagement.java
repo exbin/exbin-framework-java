@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options.settings.api;
 
+import java.util.Collection;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -109,6 +110,14 @@ public interface OptionsSettingsManagement {
      */
     @Nonnull
     <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass);
+
+    /**
+     * Returns collection of options settings classes.
+     *
+     * @return options settings classes
+     */
+    @Nonnull
+    Collection<Class<? extends SettingsOptions>> getOptionsClasses();
 
     /**
      * Registers apply settings method.
