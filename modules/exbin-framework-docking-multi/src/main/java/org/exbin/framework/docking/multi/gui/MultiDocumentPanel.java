@@ -65,13 +65,9 @@ public class MultiDocumentPanel extends javax.swing.JPanel {
     }
 
     public void removeDocumentAtIndex(int index) {
-        int indexAfter = -1;
-        if (index < activeIndex) {
-            indexAfter = activeIndex - 1;
-        }
         changeActiveIndex(-1);
         tabbedPane.removeTabAt(index);
-        changeActiveIndex(indexAfter);
+        changeActiveIndex(tabbedPane.getSelectedIndex());
     }
 
     public void removeAllDocuments() {

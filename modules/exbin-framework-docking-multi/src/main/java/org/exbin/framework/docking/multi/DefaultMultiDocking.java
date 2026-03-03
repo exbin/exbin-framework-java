@@ -175,6 +175,7 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
             }
             activeDocument = getDocument();
             if (activeDocument != null) {
+                contextManager.changeActiveState(ContextDocument.class, (ContextDocument) activeDocument);
                 ((ContextActivable) activeDocument).notifyActivated(contextManager);
             }
         }
