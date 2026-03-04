@@ -44,12 +44,30 @@ public interface AddonManagerModuleApi extends Module {
      */
     void registerAddonManagerMenuItem();
 
+    /**
+     * Returns true if development mode is active.
+     *
+     * @return development mode
+     */
     boolean isDevMode();
 
+    /**
+     * Sets active development mode.
+     *
+     * @param devMode development mode
+     */
     void setDevMode(boolean devMode);
 
     /**
      * Registers settings.
      */
     void registerSettings();
+
+    /**
+     * Returns link URL for manual addon download page.
+     *
+     * @return link
+     */
+    @Nonnull
+    String getManualLegacyUrl();
 }

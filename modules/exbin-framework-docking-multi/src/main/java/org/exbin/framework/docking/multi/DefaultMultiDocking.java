@@ -161,23 +161,21 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
 
     @Override
     public void closeDocument(Document document) {
-        if (releaseDocument(document)) {
-            Document activeDocument = getDocument();
-            if (activeDocument == document) {
-                if (activeDocument instanceof ContextActivable) {
-                    ((ContextActivable) activeDocument).notifyDeactivated(contextManager);
-                }
+        Document activeDocument = getDocument();
+        if (activeDocument == document) {
+            if (activeDocument instanceof ContextActivable) {
+                ((ContextActivable) activeDocument).notifyDeactivated(contextManager);
             }
-            int index = openDocuments.indexOf(document);
-            if (index >= 0) {
-                openDocuments.remove(index);
-                documentPanel.removeDocumentAtIndex(index);
-            }
-            activeDocument = getDocument();
-            if (activeDocument != null) {
-                contextManager.changeActiveState(ContextDocument.class, (ContextDocument) activeDocument);
-                ((ContextActivable) activeDocument).notifyActivated(contextManager);
-            }
+        }
+        int index = openDocuments.indexOf(document);
+        if (index >= 0) {
+            openDocuments.remove(index);
+            documentPanel.removeDocumentAtIndex(index);
+        }
+        activeDocument = getDocument();
+        if (activeDocument != null) {
+            contextManager.changeActiveState(ContextDocument.class, (ContextDocument) activeDocument);
+            ((ContextActivable) activeDocument).notifyActivated(contextManager);
         }
     }
 

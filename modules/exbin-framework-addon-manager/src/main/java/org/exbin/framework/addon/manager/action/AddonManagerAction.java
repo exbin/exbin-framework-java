@@ -72,6 +72,7 @@ public class AddonManagerAction extends AbstractAction {
 
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
+        AddonsManagerPanel addonManagerPanel = addonManager.getManagerPanel();
         addonManager.refreshCatalog();
         addonManager.setStatusListener(new AddonManager.AddonManagerStatusListener() {
             @Override
@@ -93,15 +94,25 @@ public class AddonManagerAction extends AbstractAction {
             public void setAvailableUpdates(int updatesCount) {
                 controlPanel.setAvailableUpdates(updatesCount);
             }
+
+            @Override
+            public void setManualOnlyMode() {
+                controlPanel.showManualOnlyWarning();
+            }
+
+            @Override
+            public void setCatalogNotAvailable() {
+                controlPanel.setConnectionFailed();
+            }
         });
 
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-        AddonsManagerPanel addonManagerPanel = addonManager.getManagerPanel();
 
         final WindowHandler dialog = windowModule.createDialog(addonManagerPanel, controlPanel);
         controlPanel.setController(new AddonsManagerControlPanel.Controller() {
             @Override
             public void performRefresh() {
+                controlPanel.clearStatus();
                 addonManager.refreshCatalog();
             }
 

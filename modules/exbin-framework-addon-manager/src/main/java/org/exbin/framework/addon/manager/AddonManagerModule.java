@@ -15,10 +15,12 @@
  */
 package org.exbin.framework.addon.manager;
 
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.framework.App;
+import org.exbin.framework.ApplicationBundleKeys;
 import org.exbin.framework.addon.manager.action.AddonManagerAction;
 import org.exbin.framework.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.framework.addon.manager.settings.AddonManagerOptions;
@@ -42,6 +44,7 @@ import org.exbin.framework.menu.api.MenuDefinitionManagement;
 public class AddonManagerModule implements AddonManagerModuleApi {
 
     public static final String SETTINGS_PAGE_ID = "addonManager";
+    private String manualLegacyGitHubUrl = "https://github.com/exbin/bined/releases/tag/";
 
     private static boolean devMode = false;
     private AddonManager addonManager = null;
@@ -93,5 +96,12 @@ public class AddonManagerModule implements AddonManagerModuleApi {
             addonManager.init();
         }
         return addonManager;
+    }
+
+    @Nonnull
+    @Override
+    public String getManualLegacyUrl() {
+        ResourceBundle appBundle = App.getAppBundle();
+        return manualLegacyGitHubUrl + appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
     }
 }

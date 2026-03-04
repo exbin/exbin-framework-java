@@ -126,9 +126,11 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
 
     @Override
     public void closeDocument(Document document) {
-        if (releaseDocument(document)) {
-            currentDocument = null;
+        if (document instanceof ContextActivable) {
+            ((ContextActivable) document).notifyDeactivated(contextManager);
         }
+        currentDocument = null;
+        contextManager.changeActiveState(ContextDocument.class, null);
     }
 
     @Override

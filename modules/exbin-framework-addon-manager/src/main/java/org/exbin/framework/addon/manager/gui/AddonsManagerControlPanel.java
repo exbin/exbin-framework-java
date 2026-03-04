@@ -21,6 +21,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
@@ -55,6 +56,11 @@ public class AddonsManagerControlPanel extends javax.swing.JPanel implements Clo
     public AddonsManagerControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 
     public void addHelpButton(HelpLink helpLink) {
@@ -102,7 +108,7 @@ public class AddonsManagerControlPanel extends javax.swing.JPanel implements Clo
 
     public void showManualOnlyWarning() {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
-        String link = ""; // TODO addonManagerModule.getManualLegacyUrl();
+        String link = addonManagerModule.getManualLegacyUrl();
         manualOnlyModeLabel.setText(String.format(resourceBundle.getString("manualOnlyModeLabel.text"), link));
         manualOnlyModeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -150,6 +156,8 @@ public class AddonsManagerControlPanel extends javax.swing.JPanel implements Clo
         updateAllButton = new javax.swing.JButton();
         statusLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
+        connectionFailedPanel = new javax.swing.JPanel();
+        connectionFailedLabel = new javax.swing.JLabel();
         buttonsPanel = new javax.swing.JPanel();
         statusPanel = new javax.swing.JPanel();
         refreshButton = new javax.swing.JButton();
@@ -231,6 +239,21 @@ public class AddonsManagerControlPanel extends javax.swing.JPanel implements Clo
 
         progressBar.setIndeterminate(true);
 
+        connectionFailedLabel.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        connectionFailedLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("connectionFailedLabel.icon"))));
+        connectionFailedLabel.setText(resourceBundle.getString("connectionFailedLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout connectionFailedPanelLayout = new javax.swing.GroupLayout(connectionFailedPanel);
+        connectionFailedPanel.setLayout(connectionFailedPanelLayout);
+        connectionFailedPanelLayout.setHorizontalGroup(
+            connectionFailedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(connectionFailedLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        connectionFailedPanelLayout.setVerticalGroup(
+            connectionFailedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(connectionFailedLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
         setLayout(new java.awt.BorderLayout());
 
         statusPanel.setLayout(new java.awt.BorderLayout());
@@ -294,6 +317,8 @@ public class AddonsManagerControlPanel extends javax.swing.JPanel implements Clo
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JButton closeButton;
+    private javax.swing.JLabel connectionFailedLabel;
+    private javax.swing.JPanel connectionFailedPanel;
     private javax.swing.JLabel legacyModeLabel;
     private javax.swing.JPanel legacyModePanel;
     private javax.swing.JLabel manualOnlyModeLabel;
@@ -393,6 +418,31 @@ public class AddonsManagerControlPanel extends javax.swing.JPanel implements Clo
         }
         statusPanel.revalidate();
         statusPanel.repaint();
+    }
+    
+    public void setConnectionFailed() {
+        if (defaultStatusComponent == null) {
+            defaultStatusComponent = connectionFailedPanel;
+            if (activeStatusComponent == null) {
+                activeStatusComponent = defaultStatusComponent;
+                statusPanel.add(activeStatusComponent, BorderLayout.CENTER);
+            }
+            statusPanel.revalidate();
+            statusPanel.repaint();
+        }
+    }
+    
+    public void clearStatus() {
+        if (activeStatusComponent != null) {
+            statusPanel.remove(activeStatusComponent);
+            activeStatusComponent = null;
+            statusPanel.revalidate();
+            statusPanel.repaint();
+        }
+
+        if (defaultStatusComponent != null) {
+            defaultStatusComponent = null;
+        }
     }
 
     public interface Controller extends CloseControlController {

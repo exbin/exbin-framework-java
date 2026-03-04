@@ -209,9 +209,15 @@ public class AddonManager {
                 ((AddonsCatalogPage) managerPage).setAddonCatalogService(addonCatalogService);
 
                 runOperation(new CatalogCheckStatusOperation(this, addonCatalogService, (status) -> {
-                    if (status >= 0) {
+                    if (status > 0) {
                         runOperation(new CatalogAvailableUpdatesOperation(addonCatalogService, this, status, this::updateLatestVersions));
                         runOperation(new CatalogSearchOperation(addonCatalogService, this, "", ((AddonsCatalogPage) managerPage)::setAddonItems));
+                    } else if (status == 0) {
+                        statusListener.setManualOnlyMode();
+                        ((AddonsCatalogPage) managerPage).setAddonItems(new ArrayList<>());
+                    } else {
+                        statusListener.setCatalogNotAvailable();
+                        ((AddonsCatalogPage) managerPage).setAddonItems(new ArrayList<>());
                     }
                 }));
             }
@@ -472,5 +478,9 @@ public class AddonManager {
         void clear();
 
         void setAvailableUpdates(int updatesCount);
+
+        void setManualOnlyMode();
+
+        void setCatalogNotAvailable();
     }
 }

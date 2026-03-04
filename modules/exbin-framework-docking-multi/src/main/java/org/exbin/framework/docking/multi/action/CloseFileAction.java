@@ -73,6 +73,8 @@ public class CloseFileAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        multiDocking.closeDocument(document);
+        if (multiDocking.releaseDocument(document)) {
+            multiDocking.closeDocument(document);
+        }
     }
 }

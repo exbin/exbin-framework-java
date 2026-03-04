@@ -159,7 +159,7 @@ public class ActionManager implements ActionManagement {
 
         @Override
         public <T> void registerUpdateListener(Class<T> contextClass, ContextChangeListener<T> listener) {
-            // TODO
+            // TODO Drop?
             registerListener(contextClass, listener);
         }
 
