@@ -31,6 +31,7 @@ import org.exbin.framework.contribution.api.GroupSequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContribution;
 import org.exbin.framework.contribution.api.SequenceContributionRule;
 import org.exbin.framework.contribution.api.TreeContributionSequenceOutput;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.api.OptionsModuleApi;
 import org.exbin.framework.options.settings.api.ApplySettingsContribution;
 import org.exbin.framework.options.settings.api.ApplySettingsDependsOnRule;
@@ -57,7 +58,8 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
     protected final Map<Class<? extends SettingsOptions>, SettingsOptionsBuilder> settingsOptions = new HashMap<>();
     protected final Map<Class<? extends InferenceOptions>, InferenceOptions> inferenceOptions = new HashMap<>();
 
-    protected final Map<Class<?>, List<ApplySettingsContribution>> applySettingsContributions = new HashMap<>();
+    protected final Map<Class<? extends SettingsOptions>, List<ApplySettingsContribution>> applySettingsContributions = new HashMap<>();
+    protected final Map<Class<?>, List<ApplySettingsContribution>> applyContextSettingsContributions = new HashMap<>();
     protected final Map<ApplySettingsContribution, List<ApplySettingsDependsOnRule>> applySettingsContributionRules = new HashMap<>();
     protected final List<ApplySettingsListener> applySettingsListeners = new ArrayList<>();
     protected SettingsOptionsProvider settingsOptionsProvider;
@@ -140,14 +142,25 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
     }
 
     @Override
-    public void registerApplySetting(Class<?> instanceClass, ApplySettingsContribution applySetting) {
-        List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
-        if (classApplySettings == null) {
-            classApplySettings = new ArrayList<>();
-            applySettingsContributions.put(instanceClass, classApplySettings);
+    public void registerApplySetting(Class<? extends SettingsOptions> settingsClass, ApplySettingsContribution applySettingContribution) {
+        List<ApplySettingsContribution> contributions = applySettingsContributions.get(settingsClass);
+        if (contributions == null) {
+            contributions = new ArrayList<>();
+            applySettingsContributions.put(settingsClass, contributions);
         }
 
-        classApplySettings.add(applySetting);
+        contributions.add(applySettingContribution);
+    }
+
+    @Override
+    public void registerApplyContextSetting(Class<?> contextTypeClass, ApplySettingsContribution applySettingContribution) {
+        List<ApplySettingsContribution> contributions = applyContextSettingsContributions.get(contextTypeClass);
+        if (contributions == null) {
+            contributions = new ArrayList<>();
+            applyContextSettingsContributions.put(contextTypeClass, contributions);
+        }
+
+        contributions.add(applySettingContribution);
     }
 
     @Override
@@ -164,7 +177,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
     public void registerApplyListener(ApplySettingsListener listener) {
         applySettingsListeners.add(listener);
     }
-    
+
     @Nonnull
     @Override
     public Collection<Class<? extends SettingsOptions>> getOptionsClasses() {
@@ -172,16 +185,36 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
     }
 
     @Override
-    public void applyOptions(Class<?> instanceClass, Object targetObject, SettingsOptionsProvider provider) {
-        List<ApplySettingsContribution> classApplySettings = applySettingsContributions.get(instanceClass);
-        if (classApplySettings == null) {
+    public void applyContextOptions(Class<?> contextTypeClass, Object contextInstance, SettingsOptionsProvider settingsProvider) {
+        List<ApplySettingsContribution> contribution = applyContextSettingsContributions.get(contextTypeClass);
+        if (contribution == null) {
             return;
         }
 
-        for (ApplySettingsContribution applySettings : classApplySettings) {
+        // TODO Rework for context provider parameter?
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ActiveContextManagement contextProvider = frameModule.getFrameHandler().getContextManager();
+
+        for (ApplySettingsContribution applySettings : contribution) {
             SettingsApplier settingsApplier = applySettings.getSettingsApplier();
-            System.out.println("Apply: " + settingsApplier.getClass().getCanonicalName());
-            settingsApplier.applySettings(targetObject, provider);
+            settingsApplier.applySettings(contextProvider, settingsProvider);
+        }
+    }
+
+    @Override
+    public void applyOptions(Class<? extends SettingsOptions> optionsClass, SettingsOptionsProvider settingsProvider) {
+        List<ApplySettingsContribution> contribution = applySettingsContributions.get(optionsClass);
+        if (contribution == null) {
+            return;
+        }
+
+        // TODO Rework for context provider parameter?
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        ActiveContextManagement contextProvider = frameModule.getFrameHandler().getContextManager();
+
+        for (ApplySettingsContribution applySettings : contribution) {
+            SettingsApplier settingsApplier = applySettings.getSettingsApplier();
+            settingsApplier.applySettings(contextProvider, settingsProvider);
         }
     }
 

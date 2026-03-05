@@ -65,7 +65,7 @@ import org.exbin.framework.utils.ComponentProvider;
 import org.exbin.framework.utils.WindowClosingListener;
 
 /**
- * Module frame handling.
+ * Module for window frame support.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -236,9 +236,6 @@ public class FrameModule implements FrameModuleApi {
             applicationFrame.setApplicationExitHandler(exitHandler);
             appIcon = applicationFrame.getIconImage();
 
-            OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
-            OptionsSettingsManagement mainSettingsManager = optionsSettingsModule.getMainSettingsManager();
-            mainSettingsManager.applyOptions(ContextFrame.class, applicationFrame, mainSettingsManager.getSettingsOptionsProvider());
             FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
             ActiveContextManagement contextManager = frameModule.getFrameHandler().getContextManager();
             contextManager.changeActiveState(ContextFrame.class, applicationFrame);
@@ -249,6 +246,10 @@ public class FrameModule implements FrameModuleApi {
                     return applicationFrame;
                 }
             });
+
+            OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
+            OptionsSettingsManagement mainSettingsManager = optionsSettingsModule.getMainSettingsManager();
+            mainSettingsManager.applyContextOptions(ContextFrame.class, applicationFrame, mainSettingsManager.getSettingsOptionsProvider());
         }
 
         return applicationFrame;
@@ -382,7 +383,8 @@ public class FrameModule implements FrameModuleApi {
 
         settingsManagement.registerSettingsOptions(FrameAppearanceOptions.class, (optionsStorage) -> new FrameAppearanceOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(ContextFrame.class, new ApplySettingsContribution(FrameAppearanceSettingsApplier.APPLIER_ID, new FrameAppearanceSettingsApplier()));
+        settingsManagement.registerApplySetting(FrameAppearanceOptions.class, new ApplySettingsContribution(FrameAppearanceSettingsApplier.APPLIER_ID, new FrameAppearanceSettingsApplier()));
+        settingsManagement.registerApplyContextSetting(ContextFrame.class, new ApplySettingsContribution(FrameAppearanceSettingsApplier.APPLIER_ID, new FrameAppearanceSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(FrameModuleApi.SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);

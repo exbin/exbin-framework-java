@@ -201,7 +201,8 @@ public class UiThemeModule implements UiThemeModuleApi {
 
         settingsManagement.registerSettingsOptions(ThemeOptions.class, (optionsStorage) -> new ThemeOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
+        settingsManagement.registerApplySetting(ThemeOptions.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
+        settingsManagement.registerApplyContextSetting(Object.class, new ApplySettingsContribution(ThemeSettingsApplier.APPLIER_ID, new ThemeSettingsApplier()));
 
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(ThemeSettingsComponent.COMPONENT_ID, new ThemeSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(FrameModuleApi.SETTINGS_PAGE_ID));

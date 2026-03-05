@@ -127,9 +127,6 @@ public class EncodingsManager {
         List<String> encodings = listEncodingState == null ? null : listEncodingState.getEncodings();
         if (encodings == null || encodings.isEmpty()) {
             toolsEncodingMenu.add(utfEncodingRadioButtonMenuItem, 0);
-            if (encodingState != null) {
-                encodingState.setEncoding(ENCODING_UTF8);
-            }
             utfEncodingRadioButtonMenuItem.setSelected(true);
         } else {
             int selectedEncodingIndex = encodings.indexOf(encodingState.getEncoding());

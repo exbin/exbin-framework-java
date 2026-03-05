@@ -35,6 +35,7 @@ import org.exbin.framework.App;
 import org.exbin.framework.document.api.Document;
 import org.exbin.framework.document.api.DocumentManagement;
 import org.exbin.framework.document.api.DocumentModuleApi;
+import org.exbin.framework.file.api.ContextFileDialogs;
 import org.exbin.framework.file.api.FileSourceIdentifier;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
@@ -170,7 +171,8 @@ public class FileModule implements FileModuleApi {
 
         settingsManagement.registerSettingsOptions(FileOptions.class, (optionsStorage) -> new FileOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(Object.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new FileSettingsApplier()));
+        settingsManagement.registerApplySetting(FileOptions.class, new ApplySettingsContribution(FileSettingsApplier.APPLIER_ID, new FileSettingsApplier()));
+        settingsManagement.registerApplyContextSetting(ContextFileDialogs.class, new ApplySettingsContribution(FileSettingsApplier.APPLIER_ID, new FileSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);

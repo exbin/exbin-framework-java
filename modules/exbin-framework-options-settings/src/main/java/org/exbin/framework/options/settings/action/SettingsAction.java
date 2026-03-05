@@ -43,6 +43,7 @@ import org.exbin.framework.options.settings.api.OptionsSettingsManagement;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.context.api.ContextChangeRegistration;
 import org.exbin.framework.frame.api.ComponentFrame;
+import org.exbin.framework.options.settings.api.SettingsOptions;
 
 /**
  * Options settings action.
@@ -108,7 +109,7 @@ public class SettingsAction extends AbstractAction {
                             break;
                         }
                         case APPLY_ONCE: {
-                            applyOnlyAll(settingsListPanel.getSettingsPages());
+                            applyOnlyOnce(settingsListPanel.getSettingsPages());
                             break;
                         }
                     }
@@ -138,7 +139,7 @@ public class SettingsAction extends AbstractAction {
                             break;
                         }
                         case APPLY_ONCE: {
-                            applyOnlyAll(settingsTreePanel.getSettingsPages());
+                            applyOnlyOnce(settingsTreePanel.getSettingsPages());
                             break;
                         }
                     }
@@ -187,10 +188,10 @@ public class SettingsAction extends AbstractAction {
             }
         }
 
-        mainSettingsManager.applyAllOptions(contextManager, settingsOptionsProvider);
+        applyAllOptions(contextManager, settingsOptionsProvider);
     }
 
-    private void applyOnlyAll(Collection<SettingsPage> pages) {
+    private void applyOnlyOnce(Collection<SettingsPage> pages) {
         // TODO Run in top context
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         ComponentFrame frameHandler = frameModule.getFrameHandler();
@@ -204,10 +205,17 @@ public class SettingsAction extends AbstractAction {
                 Logger.getLogger(SettingsAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        applyAllOptions(contextManager, settingsOptionsStorage);
+    }
 
+    private void applyAllOptions(ActiveContextManagement contextManager, SettingsOptionsProvider settingsOptionsProvider) {
         OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
         OptionsSettingsManagement mainSettingsManager = optionsSettingsModule.getMainSettingsManager();
-        mainSettingsManager.applyAllOptions(contextManager, settingsOptionsStorage);
+        for (Class<? extends SettingsOptions> optionsClass : mainSettingsManager.getOptionsClasses()) {
+            mainSettingsManager.applyOptions(optionsClass, settingsOptionsProvider);
+        }
+
+        mainSettingsManager.applyAllOptions(contextManager, settingsOptionsProvider);
     }
 
     public void setDialogParentComponent(DialogParentComponent dialogParentComponent) {

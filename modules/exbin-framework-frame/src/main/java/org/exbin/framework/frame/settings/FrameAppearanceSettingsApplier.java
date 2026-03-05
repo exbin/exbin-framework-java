@@ -16,9 +16,11 @@
 package org.exbin.framework.frame.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.context.api.ActiveContextProvider;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.frame.api.ComponentFrame;
+import org.exbin.framework.frame.api.ContextFrame;
 
 /**
  * Frame appearance settings applier.
@@ -31,7 +33,8 @@ public class FrameAppearanceSettingsApplier implements SettingsApplier {
     public static final String APPLIER_ID = "frameAppearance";
 
     @Override
-    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+    public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
+        ContextFrame instance = contextProvider.getActiveState(ContextFrame.class);
         if (instance instanceof ComponentFrame) {
             FrameAppearanceOptions options = settingsProvider.getSettingsOptions(FrameAppearanceOptions.class);
             ComponentFrame frame = (ComponentFrame) instance;

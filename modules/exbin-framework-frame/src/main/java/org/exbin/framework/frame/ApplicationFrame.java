@@ -297,6 +297,9 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameActionManager);
         toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, actionContextRegistrar);
+        if (!captionsVisible) {
+            setToolBarCaptionsVisible(false);
+        }
     }
 
     @Override

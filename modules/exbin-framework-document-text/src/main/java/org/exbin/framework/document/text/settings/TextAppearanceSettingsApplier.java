@@ -16,6 +16,8 @@
 package org.exbin.framework.document.text.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.context.api.ActiveContextProvider;
 import org.exbin.framework.document.text.TextAppearanceState;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -28,8 +30,11 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 @ParametersAreNonnullByDefault
 public class TextAppearanceSettingsApplier implements SettingsApplier {
 
+    public static final String APPLIER_ID = "textAppearance";
+
     @Override
-    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+    public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
+        ContextComponent instance = contextProvider.getActiveState(ContextComponent.class);
         if (!(instance instanceof TextAppearanceState)) {
             return;
         }

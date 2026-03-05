@@ -84,7 +84,8 @@ public class TextEncodingModule implements Module {
 
         settingsManagement.registerSettingsOptions(TextEncodingOptions.class, (optionsStorage) -> new TextEncodingOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(ContextEncoding.class, new ApplySettingsContribution(TextEncodingSettingsApplier.APPLIER_ID, new TextEncodingSettingsApplier()));
+        settingsManagement.registerApplySetting(TextEncodingOptions.class, new ApplySettingsContribution(TextEncodingSettingsApplier.APPLIER_ID, new TextEncodingSettingsApplier()));
+        settingsManagement.registerApplyContextSetting(ContextEncoding.class, new ApplySettingsContribution(TextEncodingSettingsApplier.APPLIER_ID, new TextEncodingSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);

@@ -34,6 +34,7 @@ import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.action.api.ActionContextRegistration;
 import org.exbin.framework.action.api.ActionModuleApi;
+import org.exbin.framework.action.api.ContextComponent;
 import org.exbin.framework.document.text.gui.TextPanel;
 import org.exbin.framework.document.text.gui.TextStatusPanel;
 import org.exbin.framework.document.text.action.EditSelectionAction;
@@ -153,8 +154,10 @@ public class DocumentTextModule implements Module {
         settingsManagement.registerSettingsOptions(TextAppearanceOptions.class, (optionsStorage) -> new TextAppearanceOptions(optionsStorage));
         settingsManagement.registerSettingsOptions(TextColorOptions.class, (optionsStorage) -> new TextColorOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(EditorTextPanelComponent.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new TextAppearanceSettingsApplier()));
-        settingsManagement.registerApplySetting(EditorTextPanelComponent.class, new ApplySettingsContribution(SETTINGS_PAGE_ID, new TextColorSettingsApplier()));
+        settingsManagement.registerApplySetting(TextAppearanceOptions.class, new ApplySettingsContribution(TextAppearanceSettingsApplier.APPLIER_ID, new TextAppearanceSettingsApplier()));
+        settingsManagement.registerApplyContextSetting(ContextComponent.class, new ApplySettingsContribution(TextAppearanceSettingsApplier.APPLIER_ID, new TextAppearanceSettingsApplier()));
+        settingsManagement.registerApplySetting(TextColorOptions.class, new ApplySettingsContribution(TextColorSettingsApplier.APPLIER_ID, new TextColorSettingsApplier()));
+        settingsManagement.registerApplyContextSetting(ContextComponent.class, new ApplySettingsContribution(TextColorSettingsApplier.APPLIER_ID, new TextColorSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);

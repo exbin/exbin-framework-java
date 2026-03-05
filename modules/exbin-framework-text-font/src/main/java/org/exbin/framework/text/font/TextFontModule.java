@@ -70,7 +70,8 @@ public class TextFontModule implements Module {
 
         settingsManagement.registerSettingsOptions(TextFontOptions.class, (optionsStorage) -> new TextFontOptions(optionsStorage));
 
-        settingsManagement.registerApplySetting(ContextFont.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
+        settingsManagement.registerApplySetting(TextFontOptions.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
+        settingsManagement.registerApplyContextSetting(ContextFont.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
 
         SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
         settingsManagement.registerPage(pageContribution);

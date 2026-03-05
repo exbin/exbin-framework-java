@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.options.settings.api;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.framework.context.api.ActiveContextProvider;
+package org.exbin.framework.file.api;
 
 /**
- * Interface for settings applier.
+ * Interface for file dialogs context.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public interface SettingsApplier {
+public interface ContextFileDialogs {
 
-    /**
-     * Applies settings to specific context.
-     *
-     * @param contextProvider context provider
-     * @param settingsProvider options settings provider
-     */
-    void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider);
 }

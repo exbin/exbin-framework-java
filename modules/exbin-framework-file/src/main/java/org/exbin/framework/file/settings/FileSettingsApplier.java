@@ -17,6 +17,8 @@ package org.exbin.framework.file.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
+import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.context.api.ActiveContextProvider;
 import org.exbin.framework.file.FileModule;
 import org.exbin.framework.file.api.FileModuleApi;
 import org.exbin.framework.options.settings.api.SettingsApplier;
@@ -30,8 +32,11 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 @ParametersAreNonnullByDefault
 public class FileSettingsApplier implements SettingsApplier {
 
+    public static final String APPLIER_ID = "fileManager";
+
     @Override
-    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+    public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
+        ContextComponent instance = contextProvider.getActiveState(ContextComponent.class);
         FileOptions fileOptions = settingsProvider.getSettingsOptions(FileOptions.class);
         String fileDialogs = fileOptions.getFileDialogs();
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);

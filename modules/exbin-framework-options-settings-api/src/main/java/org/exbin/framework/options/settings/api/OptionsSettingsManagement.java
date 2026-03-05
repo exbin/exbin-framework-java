@@ -122,10 +122,18 @@ public interface OptionsSettingsManagement {
     /**
      * Registers apply settings method.
      *
-     * @param instanceClass instance class
+     * @param settingsClass settings class
      * @param applySettingContribution apply settings method
      */
-    void registerApplySetting(Class<?> instanceClass, ApplySettingsContribution applySettingContribution);
+    void registerApplySetting(Class<? extends SettingsOptions> settingsClass, ApplySettingsContribution applySettingContribution);
+
+    /**
+     * Registers apply settings method.
+     *
+     * @param contextClass context type class
+     * @param applySettingContribution apply settings method
+     */
+    void registerApplyContextSetting(Class<?> contextClass, ApplySettingsContribution applySettingContribution);
 
     /**
      * Registers apply settings rule.
@@ -145,11 +153,19 @@ public interface OptionsSettingsManagement {
     /**
      * Applies options for specific instance and value.
      *
-     * @param instanceClass instance class
-     * @param targetObject instance value
+     * @param contextTypeClass context type class
+     * @param contextInstance context instance
      * @param provider settings options provider
      */
-    void applyOptions(Class<?> instanceClass, Object targetObject, SettingsOptionsProvider provider);
+    void applyContextOptions(Class<?> contextTypeClass, Object contextInstance, SettingsOptionsProvider provider);
+
+    /**
+     * Applies options for specific options class.
+     *
+     * @param optionsClass options class
+     * @param provider settings options provider
+     */
+    void applyOptions(Class<? extends SettingsOptions> optionsClass, SettingsOptionsProvider provider);
 
     /**
      * Applies all options.

@@ -18,6 +18,8 @@ package org.exbin.framework.document.text.settings;
 import java.awt.Color;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.action.api.ContextComponent;
+import org.exbin.framework.context.api.ActiveContextProvider;
 import org.exbin.framework.document.text.TextColorState;
 import org.exbin.framework.options.settings.api.SettingsApplier;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
@@ -30,8 +32,11 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 @ParametersAreNonnullByDefault
 public class TextColorSettingsApplier implements SettingsApplier {
 
+    public static final String APPLIER_ID = "textColor";
+
     @Override
-    public void applySettings(Object instance, SettingsOptionsProvider settingsProvider) {
+    public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
+        ContextComponent instance = contextProvider.getActiveState(ContextComponent.class);
         if (!(instance instanceof TextColorState)) {
             return;
         }
