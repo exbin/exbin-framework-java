@@ -33,8 +33,8 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 @ParametersAreNonnullByDefault
 public class TextAppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
-    private SettingsModifiedListener settingsModifiedListener;
-    private ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceSettingsPanel.class);
+    protected ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextAppearanceSettingsPanel.class);
+    protected SettingsModifiedListener settingsModifiedListener;
 
     public TextAppearanceSettingsPanel() {
         initComponents();

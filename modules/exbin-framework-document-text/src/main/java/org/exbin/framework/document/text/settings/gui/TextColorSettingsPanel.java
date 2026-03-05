@@ -35,9 +35,10 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 @ParametersAreNonnullByDefault
 public class TextColorSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
-    private SettingsModifiedListener settingsModifiedListener;
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorSettingsPanel.class);
-    private final TextColorPanel colorPanel;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorSettingsPanel.class);
+
+    protected SettingsModifiedListener settingsModifiedListener;
+    protected final TextColorPanel colorPanel;
 
     public TextColorSettingsPanel() {
         colorPanel = new TextColorPanel();

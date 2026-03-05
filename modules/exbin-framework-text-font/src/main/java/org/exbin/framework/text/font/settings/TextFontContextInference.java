@@ -58,14 +58,4 @@ public class TextFontContextInference implements TextFontInference {
 
         return Optional.empty();
     }
-
-    /* TODO
-        if (contextProvider != null) {
-            ContextFont contextFont = contextProvider.getActiveState(ContextFont.class);
-            if (contextFont instanceof TextFontState) {
-                TextFontSettingsApplier applier = new TextFontSettingsApplier();
-                applier.applySettings(contextFont, settingsOptionsProvider);
-                contextProvider.notifyStateChange(ContextFont.class, TextFontState.ChangeType.FONT);
-            }
-        } */
 }

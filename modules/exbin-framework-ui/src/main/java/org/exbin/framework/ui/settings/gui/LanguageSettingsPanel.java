@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -35,7 +34,6 @@ import org.exbin.framework.ui.settings.LanguageOptions;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
-import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * Language settings panel.
@@ -45,9 +43,10 @@ import org.exbin.framework.context.api.ActiveContextProvider;
 @ParametersAreNonnullByDefault
 public class LanguageSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
-    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(LanguageSettingsPanel.class);
-    private SettingsModifiedListener settingsModifiedListener;
-    private String defaultLocaleName = "";
+    protected final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(LanguageSettingsPanel.class);
+
+    protected SettingsModifiedListener settingsModifiedListener;
+    protected String defaultLocaleName = "";
 
     public LanguageSettingsPanel() {
         init();

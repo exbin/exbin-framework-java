@@ -194,6 +194,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
         // TODO Rework for context provider parameter?
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         ActiveContextManagement contextProvider = frameModule.getFrameHandler().getContextManager();
+        contextProvider.changeActiveState((Class) contextTypeClass, contextInstance);
 
         for (ApplySettingsContribution applySettings : contribution) {
             SettingsApplier settingsApplier = applySettings.getSettingsApplier();

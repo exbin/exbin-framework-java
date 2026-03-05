@@ -19,7 +19,6 @@ import java.awt.BorderLayout;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.action.manager.gui.KeyMapTablePanel;
@@ -29,7 +28,6 @@ import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 import org.exbin.framework.options.settings.api.VerticallyExpandable;
-import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * Keymap settings panel.
@@ -39,10 +37,10 @@ import org.exbin.framework.context.api.ActiveContextProvider;
 @ParametersAreNonnullByDefault
 public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsComponent, VerticallyExpandable {
 
-    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(KeyMapSettingsPanel.class);
+    protected final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(KeyMapSettingsPanel.class);
 
-    private final KeyMapTablePanel keyMap = new KeyMapTablePanel();
-    private SettingsModifiedListener settingsModifiedListener;
+    protected SettingsModifiedListener settingsModifiedListener;
+    protected final KeyMapTablePanel keyMap = new KeyMapTablePanel();
 
     public KeyMapSettingsPanel() {
         initComponents();

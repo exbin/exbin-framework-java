@@ -34,8 +34,9 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 @ParametersAreNonnullByDefault
 public class FrameAppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent, ComponentResourceProvider {
 
-    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FrameAppearanceSettingsPanel.class);
-    private SettingsModifiedListener settingsModifiedListener;
+    protected final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FrameAppearanceSettingsPanel.class);
+
+    protected SettingsModifiedListener settingsModifiedListener;
 
     public FrameAppearanceSettingsPanel() {
         initComponents();

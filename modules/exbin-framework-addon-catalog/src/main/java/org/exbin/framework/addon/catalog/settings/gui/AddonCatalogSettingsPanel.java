@@ -17,7 +17,6 @@ package org.exbin.framework.addon.catalog.settings.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.App;
 import org.exbin.framework.addon.catalog.settings.AddonCatalogOptions;
@@ -25,7 +24,6 @@ import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
-import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * Addon manager settings panel.
@@ -35,9 +33,10 @@ import org.exbin.framework.context.api.ActiveContextProvider;
 @ParametersAreNonnullByDefault
 public class AddonCatalogSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
-    private SettingsModifiedListener settingsModifiedListener;
-    private ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonCatalogSettingsPanel.class);
+    protected ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonCatalogSettingsPanel.class);
 
+    protected SettingsModifiedListener settingsModifiedListener;
+    
     public AddonCatalogSettingsPanel() {
         initComponents();
     }

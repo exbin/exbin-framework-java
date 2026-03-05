@@ -40,10 +40,10 @@ import org.exbin.framework.document.text.settings.TextColorInference;
 @ParametersAreNonnullByDefault
 public class TextColorPanel extends javax.swing.JPanel implements SettingsComponent {
 
-    private SettingsModifiedListener settingsModifiedListener;
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorPanel.class);
-    private static final String RESOURCE_COLOR_CHOOSER_TITLE = "JColorChooser.title";
-    private TextColorInference textColorInference;
+    protected SettingsModifiedListener settingsModifiedListener;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextColorPanel.class);
+    protected static final String RESOURCE_COLOR_CHOOSER_TITLE = "JColorChooser.title";
+    protected TextColorInference textColorInference;
 
     public TextColorPanel() {
         initComponents();

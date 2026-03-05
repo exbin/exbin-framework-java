@@ -36,7 +36,6 @@ import org.exbin.framework.utils.DesktopUtils;
 import org.exbin.framework.options.settings.api.SettingsComponent;
 import org.exbin.framework.options.settings.api.SettingsModifiedListener;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
-import org.exbin.framework.context.api.ActiveContextProvider;
 
 /**
  * UI theme options panel.
@@ -46,11 +45,12 @@ import org.exbin.framework.context.api.ActiveContextProvider;
 @ParametersAreNonnullByDefault
 public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
-    private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ThemeSettingsPanel.class);
-    private SettingsModifiedListener settingsModifiedListener;
-    private Controller controller;
-    private SettingsOptionsProvider settingsOptionsProvider;
-    private Map<String, ConfigurableLafProvider> themeOptions = null;
+    protected final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ThemeSettingsPanel.class);
+
+    protected SettingsModifiedListener settingsModifiedListener;
+    protected Controller controller;
+    protected SettingsOptionsProvider settingsOptionsProvider;
+    protected Map<String, ConfigurableLafProvider> themeOptions = null;
 
     public ThemeSettingsPanel() {
         init();
@@ -353,6 +353,11 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
 
         guiScalingSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0f, null, null, 1.0f));
         guiScalingSpinner.setEnabled(false);
+        guiScalingSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                guiScalingSpinnerStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
@@ -476,6 +481,10 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
             controller.configureTheme(lafProvider, settingsOptionsProvider);
         }
     }//GEN-LAST:event_visualThemeOptionsButtonActionPerformed
+
+    private void guiScalingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_guiScalingSpinnerStateChanged
+        notifyModified();
+    }//GEN-LAST:event_guiScalingSpinnerStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> fontAntialiasingComboBox;

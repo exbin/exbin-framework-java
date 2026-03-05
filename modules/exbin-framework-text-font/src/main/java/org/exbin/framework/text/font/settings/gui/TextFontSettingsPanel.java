@@ -38,10 +38,11 @@ import org.exbin.framework.text.font.settings.TextFontInference;
 @ParametersAreNonnullByDefault
 public class TextFontSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
-    private SettingsModifiedListener settingsModifiedListener;
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextFontSettingsPanel.class);
-    private TextFontInference textFontInference = null;
-    private Font codeFont;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextFontSettingsPanel.class);
+
+    protected SettingsModifiedListener settingsModifiedListener;
+    protected TextFontInference textFontInference = null;
+    protected Font codeFont;
     protected Controller controller;
 
     public TextFontSettingsPanel() {
@@ -69,9 +70,9 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
         boolean useDefaultFont = options.isUseDefaultFont();
         defaultFontCheckBox.setSelected(useDefaultFont);
 
-        Optional<TextFontInference> optContextOptions = settingsOptionsProvider.getInferenceOptions(TextFontInference.class);
-        if (optContextOptions.isPresent()) {
-            textFontInference = optContextOptions.get();
+        Optional<TextFontInference> optInference = settingsOptionsProvider.getInferenceOptions(TextFontInference.class);
+        if (optInference.isPresent()) {
+            textFontInference = optInference.get();
             Optional<Font> currentFont = textFontInference.getCurrentFont();
             if (currentFont.isPresent()) {
                 codeFont = currentFont.get();
