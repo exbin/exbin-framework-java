@@ -87,4 +87,12 @@ public interface DockingModuleApi extends Module {
      */
     @Nonnull
     AbstractAction createSaveAsFileAction();
+
+    /**
+     * Creates close file action.
+     *
+     * @return close file action
+     */
+    @Nonnull
+    AbstractAction createCloseFileAction();
 }

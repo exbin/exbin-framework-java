@@ -47,13 +47,19 @@ public class DockingPanel extends javax.swing.JPanel {
         this.controller = controller;
     }
 
-    public void setContentComponent(Component contentComponent) {
+    public void setContentComponent(@Nullable Component contentComponent) {
+        if (this.contentComponent != null && !sidePanelVisible) {
+            remove(this.contentComponent);
+        }
+
         this.contentComponent = contentComponent;
 
         if (sidePanelVisible) {
             splitPane.setRightComponent(contentComponent);
         } else {
-            add(contentComponent, BorderLayout.CENTER);
+            if (contentComponent != null) {
+                add(contentComponent, BorderLayout.CENTER);
+            }
         }
         revalidate();
         repaint();

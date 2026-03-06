@@ -23,6 +23,7 @@ import org.exbin.framework.ModuleUtils;
 import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.docking.action.CloseFileAction;
 import org.exbin.framework.docking.action.NewFileAction;
 import org.exbin.framework.docking.action.OpenFileAction;
 import org.exbin.framework.docking.action.SaveAsFileAction;
@@ -83,6 +84,8 @@ public class DockingModule implements DockingModuleApi {
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
         contribution = mgmt.registerMenuItem(createSaveAsFileAction());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
+        contribution = mgmt.registerMenuItem(createCloseFileAction());
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
     }
 
     @Override
@@ -139,5 +142,14 @@ public class DockingModule implements DockingModuleApi {
         SaveAsFileAction saveAsFileAction = new SaveAsFileAction();
         saveAsFileAction.init(resourceBundle);
         return saveAsFileAction;
+    }
+
+    @Nonnull
+    @Override
+    public CloseFileAction createCloseFileAction() {
+        CloseFileAction closeFileAction = new CloseFileAction();
+        ensureSetup();
+        closeFileAction.setup(resourceBundle);
+        return closeFileAction;
     }
 }

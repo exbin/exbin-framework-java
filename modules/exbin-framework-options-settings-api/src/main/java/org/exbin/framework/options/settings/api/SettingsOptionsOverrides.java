@@ -34,4 +34,14 @@ public interface SettingsOptionsOverrides extends SettingsOptionsProvider {
      * @param overrideClass settings override class
      */
     <T extends SettingsOptions, U extends SettingsOptions> void overrideSettingsOptions(Class<T> settingsClass, Class<U> overrideClass);
+
+    /**
+     * Add inference options override.
+     *
+     * @param <T> inference options type
+     * @param <U> inference options type
+     * @param inferenceClass inference options class
+     * @param overrideClass inference override class
+     */
+    <T extends InferenceOptions, U extends InferenceOptions> void overrideInferenceOptions(Class<T> inferenceClass, Class<U> overrideClass);
 }

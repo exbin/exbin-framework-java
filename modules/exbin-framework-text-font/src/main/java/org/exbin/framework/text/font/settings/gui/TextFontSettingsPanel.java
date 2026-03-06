@@ -89,6 +89,11 @@ public class TextFontSettingsPanel extends javax.swing.JPanel implements Setting
         setEnabled(!useDefaultFont);
         updateFontFields();
     }
+    
+    public void setCodeFont(Font font) {
+        codeFont = font;
+        updateFontFields();
+    }
 
     @Override
     public void saveToOptions(SettingsOptionsProvider settingsOptionsProvider) {

@@ -24,11 +24,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.ModuleUtils;
-import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.docking.api.DockingModuleApi;
 import org.exbin.framework.docking.multi.action.CloseAllFilesAction;
-import org.exbin.framework.docking.multi.action.CloseFileAction;
 import org.exbin.framework.docking.multi.action.CloseOtherFilesAction;
 import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.docking.multi.api.DockingMultiModuleApi;
@@ -124,15 +123,6 @@ public class DockingMultiModule implements DockingMultiModuleApi {
 
     @Nonnull
     @Override
-    public CloseFileAction createCloseFileAction() {
-        CloseFileAction closeFileAction = new CloseFileAction();
-        ensureSetup();
-        closeFileAction.setup(resourceBundle);
-        return closeFileAction;
-    }
-
-    @Nonnull
-    @Override
     public CloseAllFilesAction createCloseAllFilesAction() {
         CloseAllFilesAction closeAllFilesAction = new CloseAllFilesAction();
         ensureSetup();
@@ -152,17 +142,10 @@ public class DockingMultiModule implements DockingMultiModuleApi {
     @Override
     public void registerMenuFileCloseActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        {
-            MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-            SequenceContribution contribution = mgmt.registerMenuGroup(DocumentModuleApi.FILE_MENU_GROUP_ID);
-            mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-            contribution = mgmt.registerMenuItem(createCloseFileAction());
-            mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
-        }
-
+        DockingModuleApi dockingModule = App.getModule(DockingModuleApi.class);
         menuModule.registerMenu(FILE_CONTEXT_MENU_ID, MODULE_ID);
         MenuDefinitionManagement mgmt = menuModule.getMenuManager(FILE_CONTEXT_MENU_ID, MODULE_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createCloseFileAction());
+        SequenceContribution contribution = mgmt.registerMenuItem(dockingModule.createCloseFileAction());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = mgmt.registerMenuItem(createCloseAllFilesAction());
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));

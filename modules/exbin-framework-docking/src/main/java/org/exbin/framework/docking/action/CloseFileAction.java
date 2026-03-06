@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.docking.multi.action;
+package org.exbin.framework.docking.action;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -26,8 +26,8 @@ import org.exbin.framework.action.api.ActionConsts;
 import org.exbin.framework.action.api.ActionModuleApi;
 import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.context.api.ContextChangeRegistration;
-import org.exbin.framework.docking.multi.DefaultMultiDocking;
 import org.exbin.framework.docking.api.ContextDocking;
+import org.exbin.framework.docking.api.DocumentDocking;
 import org.exbin.framework.document.api.ContextDocument;
 import org.exbin.framework.document.api.Document;
 
@@ -41,7 +41,7 @@ public class CloseFileAction extends AbstractAction {
 
     public static final String ACTION_ID = "fileCloseAction";
 
-    protected DefaultMultiDocking multiDocking;
+    protected DocumentDocking docking;
     protected Document document;
 
     public CloseFileAction() {
@@ -56,7 +56,7 @@ public class CloseFileAction extends AbstractAction {
             @Override
             public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
-                    multiDocking = instance instanceof DefaultMultiDocking ? (DefaultMultiDocking) instance : null;
+                    docking = instance instanceof DocumentDocking ? (DocumentDocking) instance : null;
                     updateByContext();
                 });
                 registrar.registerUpdateListener(ContextDocument.class, (instance) -> {
@@ -68,13 +68,13 @@ public class CloseFileAction extends AbstractAction {
     }
 
     protected void updateByContext() {
-        setEnabled(multiDocking != null && document != null);
+        setEnabled(docking != null && document != null);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (multiDocking.releaseDocument(document)) {
-            multiDocking.closeDocument(document);
+        if (docking.releaseDocument(document)) {
+            docking.closeDocument(document);
         }
     }
 }

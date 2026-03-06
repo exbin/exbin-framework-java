@@ -46,14 +46,6 @@ public interface DockingMultiModuleApi extends Module {
     void registerMenuFileCloseActions();
 
     /**
-     * Creates close file action.
-     *
-     * @return close file action
-     */
-    @Nonnull
-    AbstractAction createCloseFileAction();
-
-    /**
      * Creates close all files action.
      *
      * @return close all files action

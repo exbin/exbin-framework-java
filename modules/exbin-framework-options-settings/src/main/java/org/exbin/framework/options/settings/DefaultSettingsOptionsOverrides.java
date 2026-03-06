@@ -26,7 +26,7 @@ import org.exbin.framework.options.settings.api.SettingsOptionsOverrides;
 import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 
 /**
- * Default settings options overrides.
+ * Default settings options settingsOverrides.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -34,23 +34,28 @@ import org.exbin.framework.options.settings.api.SettingsOptionsProvider;
 public class DefaultSettingsOptionsOverrides implements SettingsOptionsOverrides {
 
     protected final SettingsOptionsProvider settingsOptionsProvider;
-    protected final Map<Class<? extends SettingsOptions>, Class<? extends SettingsOptions>> overrides = new HashMap<>();
+    protected final Map<Class<? extends SettingsOptions>, Class<? extends SettingsOptions>> settingsOverrides = new HashMap<>();
+    protected final Map<Class<? extends InferenceOptions>, Class<? extends InferenceOptions>> inferenceOverrides = new HashMap<>();
 
     public DefaultSettingsOptionsOverrides(SettingsOptionsProvider settingsOptionsProvider) {
         this.settingsOptionsProvider = settingsOptionsProvider;
     }
 
-    @Nonnull
     @Override
     public <T extends SettingsOptions, U extends SettingsOptions> void overrideSettingsOptions(Class<T> settingsClass, Class<U> overrideClass) {
-        overrides.put(settingsClass, overrideClass);
+        settingsOverrides.put(settingsClass, overrideClass);
+    }
+
+    @Override
+    public <T extends InferenceOptions, U extends InferenceOptions> void overrideInferenceOptions(Class<T> inferenceClass, Class<U> overrideClass) {
+        inferenceOverrides.put(inferenceClass, overrideClass);
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
     @Override
     public <T extends SettingsOptions> T getSettingsOptions(Class<T> settingsClass) {
-        Class<? extends SettingsOptions> override = overrides.get(settingsClass);
+        Class<? extends SettingsOptions> override = settingsOverrides.get(settingsClass);
         if (override != null) {
             return (T) settingsOptionsProvider.getSettingsOptions(override);
         }
@@ -61,6 +66,11 @@ public class DefaultSettingsOptionsOverrides implements SettingsOptionsOverrides
     @Nonnull
     @Override
     public <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass) {
+        Class<? extends InferenceOptions> override = inferenceOverrides.get(inferenceClass);
+        if (override != null) {
+            return (Optional<T>) settingsOptionsProvider.getInferenceOptions(override);
+        }
+
         return (Optional<T>) settingsOptionsProvider.getInferenceOptions(inferenceClass);
     }
 }

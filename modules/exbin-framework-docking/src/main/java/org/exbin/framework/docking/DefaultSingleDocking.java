@@ -86,7 +86,7 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
             ((ContextActivable) currentDocument).notifyActivated(contextManager);
         }
     }
-
+    
     @Override
     public void notifyDeactivated(ActiveContextManagement contextManager) {
         if (currentDocument instanceof ContextActivable) {
@@ -96,6 +96,27 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         contextManager.changeActiveState(ContextDocking.class, null);
         this.contextManager = null;
     }
+    
+    void changeToDocument(@Nullable Document document) {
+        if (currentDocument != null) {
+            if (currentDocument instanceof ContextActivable) {
+                ((ContextActivable) currentDocument).notifyDeactivated(contextManager);
+            }
+        }
+        
+        currentDocument = document;
+        if (document == null) {
+            docking.setContentComponent(null);
+        } else {
+            if (document instanceof ComponentDocument) {
+                docking.setContentComponent(((ComponentDocument) document).getComponent());
+            }
+            if (document instanceof ContextActivable) {
+                ((ContextActivable) currentDocument).notifyActivated(contextManager);
+            }
+        }
+        contextManager.changeActiveState(ContextDocument.class, (ContextDocument) document);
+    }
 
     @Nonnull
     @Override
@@ -103,34 +124,37 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         return Optional.ofNullable(currentDocument);
     }
 
-    @Nonnull
     @Override
-    public Document openNewDocument() {
+    public void openNewDocument() {
+        if (currentDocument != null) {
+            if (!releaseDocument(currentDocument)) {
+                return;
+            }
+            closeDocument(currentDocument);
+        }
+
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         DocumentManagement documentManager = documentModule.getMainDocumentManager();
-        return documentManager.createDefaultDocument();
+        Document document = documentManager.createDefaultDocument();
+        
+        changeToDocument(document);
     }
 
     @Override
     public void openDocument(Document document) {
         if (currentDocument != null) {
-            if (!releaseDocument(document)) {
+            if (!releaseDocument(currentDocument)) {
                 return;
             }
+            closeDocument(currentDocument);
         }
 
-        currentDocument = document;
-        docking.setContentComponent(((ComponentDocument) document).getComponent());
-        ((ContextActivable) currentDocument).notifyActivated(contextManager);
+        changeToDocument(document);
     }
 
     @Override
     public void closeDocument(Document document) {
-        if (document instanceof ContextActivable) {
-            ((ContextActivable) document).notifyDeactivated(contextManager);
-        }
-        currentDocument = null;
-        contextManager.changeActiveState(ContextDocument.class, null);
+        changeToDocument(null);
     }
 
     @Override

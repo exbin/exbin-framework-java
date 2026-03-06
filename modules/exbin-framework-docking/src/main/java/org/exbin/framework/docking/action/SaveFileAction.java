@@ -62,7 +62,7 @@ public class SaveFileAction extends AbstractAction {
             public void register(ContextChangeRegistration registrar) {
                 registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
                     documentDocking = instance instanceof DocumentDocking ? (DocumentDocking) instance : null;
-                    setEnabled(documentDocking != null);
+                    updateByContext();
                 });
                 registrar.registerUpdateListener(ContextDocument.class, (instance) -> {
                     document = instance instanceof Document ? (Document) instance : null;

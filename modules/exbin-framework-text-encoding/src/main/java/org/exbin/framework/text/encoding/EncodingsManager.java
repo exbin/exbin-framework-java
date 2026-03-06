@@ -198,15 +198,17 @@ public class EncodingsManager {
     public void popupEncodingsMenu(MouseEvent mouseEvent) {
         JPopupMenu popupMenu = UiUtils.createPopupMenu();
 
-        String selectedEncoding = encodingState.getEncoding();
+        String selectedEncoding = encodingState != null ? encodingState.getEncoding() : "";
         List<String> encodings = listEncodingState == null ? null : listEncodingState.getEncodings();
         if (encodings == null || encodings.isEmpty()) {
-            JRadioButtonMenuItem utfEncoding = UiUtils.createRadioButtonMenuItem();
-            utfEncoding.setText(resourceBundle.getString("defaultEncoding.text"));
-            utfEncoding.setSelected(ENCODING_UTF8.equals(selectedEncoding));
-            utfEncoding.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{ENCODING_UTF8}));
-            utfEncoding.addActionListener(utfEncodingActionListener);
-            popupMenu.add(utfEncoding);
+            if (encodingState != null) {
+                JRadioButtonMenuItem utfEncoding = UiUtils.createRadioButtonMenuItem();
+                utfEncoding.setText(resourceBundle.getString("defaultEncoding.text"));
+                utfEncoding.setSelected(ENCODING_UTF8.equals(selectedEncoding));
+                utfEncoding.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{ENCODING_UTF8}));
+                utfEncoding.addActionListener(utfEncodingActionListener);
+                popupMenu.add(utfEncoding);
+            }
         } else {
             int selectedEncodingIndex = encodings.indexOf(selectedEncoding);
             for (int index = 0; index < encodings.size(); index++) {
@@ -225,5 +227,13 @@ public class EncodingsManager {
         popupMenu.add(actionModule.actionToMenuItem(manageEncodingsAction));
 
         popupMenu.show((Component) mouseEvent.getSource(), mouseEvent.getX(), mouseEvent.getY());
+    }
+
+    public void setListEncodingState(CharsetListEncodingState listEncodingState) {
+        this.listEncodingState = listEncodingState;
+    }
+
+    public void setEncodingState(CharsetEncodingState encodingState) {
+        this.encodingState = encodingState;
     }
 }
