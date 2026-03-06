@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.options.settings.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -80,6 +81,10 @@ public class SettingsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        openSettingsDialog(dialogParentComponent.getComponent());
+    }
+    
+    public void openSettingsDialog(Component parentComponent) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
         SettingsPanelType settingsPanelType = optionsSettingsModule.getSettingsPanelType();
@@ -115,7 +120,7 @@ public class SettingsAction extends AbstractAction {
                     }
                     dialog.close();
                 });
-                dialog.showCentered(dialogParentComponent.getComponent());
+                dialog.showCentered(parentComponent);
                 break;
             case TREE:
                 SettingsTreePanel settingsTreePanel = new SettingsTreePanel();
@@ -145,7 +150,7 @@ public class SettingsAction extends AbstractAction {
                     }
                     dialog.close();
                 });
-                dialog.showCentered(dialogParentComponent.getComponent());
+                dialog.showCentered(parentComponent);
                 break;
             default:
                 throw new IllegalStateException("Illegal options panel type " + settingsPanelType.name());

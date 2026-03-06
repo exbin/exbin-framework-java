@@ -16,10 +16,8 @@
 package org.exbin.framework.about;
 
 import com.formdev.flatlaf.extras.FlatDesktop;
-import java.awt.event.ActionEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import javax.swing.JComponent;
 import org.exbin.framework.App;
 import org.exbin.framework.about.action.AboutAction;
@@ -51,7 +49,7 @@ public class AboutModule implements AboutModuleApi {
 
     @Nonnull
     @Override
-    public Action createAboutAction() {
+    public AboutAction createAboutAction() {
         AboutAction aboutAction = new AboutAction();
         if (sideComponent != null) {
             aboutAction.setAboutDialogSideComponent(sideComponent);
@@ -62,18 +60,19 @@ public class AboutModule implements AboutModuleApi {
     @Override
     public void registerDefaultMenuItem() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         boolean aboutActionRegistered = false;
 
         if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             // From: https://www.formdev.com/flatlaf/macos/
             FlatDesktop.setAboutHandler(() -> {
-                createAboutAction().actionPerformed(new ActionEvent(frameModule.getFrame(), 0, ""));
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                createAboutAction().openAboutDialog(frameModule.getFrame());
             });
             /* // TODO: Replace after migration to Java 9+
             Desktop desktop = Desktop.getDesktop();
             desktop.setAboutHandler((e) -> {
-                getAboutAction().actionPerformed(new ActionEvent(frameModule.getFrame(), 0, ""));
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                getAboutAction().openAboutDialog(frameModule.getFrame());
             }); */
             aboutActionRegistered = true;
         }

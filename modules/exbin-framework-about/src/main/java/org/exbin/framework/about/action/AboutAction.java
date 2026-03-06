@@ -15,6 +15,7 @@
  */
 package org.exbin.framework.about.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -65,6 +66,10 @@ public class AboutAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        openAboutDialog(dialogParentComponent.getComponent());
+    }
+
+    public void openAboutDialog(Component parentComponent) {
         WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
         AboutPanel aboutPanel = new AboutPanel();
         aboutPanel.setSideComponent(sideComponent);
@@ -73,7 +78,7 @@ public class AboutAction extends AbstractAction {
         final WindowHandler aboutDialog = windowModule.createDialog(aboutPanel, controlPanel);
         ((JDialog) aboutDialog.getWindow()).setTitle(resourceBundle.getString("aboutAction.dialogTitle"));
         controlPanel.setController(aboutDialog::close);
-        aboutDialog.showCentered(dialogParentComponent.getComponent());
+        aboutDialog.showCentered(parentComponent);
         aboutDialog.dispose();
     }
 

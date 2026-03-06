@@ -28,6 +28,7 @@ import org.exbin.framework.contribution.api.GroupSequenceContributionRule;
 import org.exbin.framework.contribution.api.PositionSequenceContributionRule;
 import org.exbin.framework.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.framework.contribution.api.SequenceContribution;
+import org.exbin.framework.frame.api.FrameModuleApi;
 import org.exbin.framework.options.settings.api.SettingsPanelType;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.menu.api.MenuModuleApi;
@@ -119,12 +120,14 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
         boolean optionsActionRegistered = false;
         if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             FlatDesktop.setPreferencesHandler(() -> {
-                optionsAction.actionPerformed(null);
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                optionsAction.openSettingsDialog(frameModule.getFrame());
             });
             /* // TODO: Replace after migration to Java 9+
             Desktop desktop = Desktop.getDesktop();
             desktop.setPreferencesHandler((e) -> {
-                optionsAction.actionPerformed(null);
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+                optionsAction.openSettingsDialog(frameModule.getFrame());
             }); */
             optionsActionRegistered = true;
         }
