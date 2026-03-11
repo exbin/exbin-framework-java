@@ -52,6 +52,7 @@ public class RecentFilesActions {
     protected OptionsStorage optionsStorage;
 
     protected List<RecentItem> recentFiles = null;
+    protected List<JMenu> fileOpenRecentMenus = new ArrayList<>();
 
     public RecentFilesActions() {
     }
@@ -68,7 +69,7 @@ public class RecentFilesActions {
     }
 
     @Nonnull
-    public JMenu getOpenRecentMenu() {
+    public JMenu createOpenRecentMenu() {
         Action fileOpenRecentAction = new AbstractAction(resourceBundle.getString("openRecentMenu.text")) {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -99,6 +100,7 @@ public class RecentFilesActions {
             recent++;
         }
         rebuildRecentFilesMenu(fileOpenRecentMenu);
+        fileOpenRecentMenus.add(fileOpenRecentMenu);
     }
 
     private void saveState() {
@@ -200,7 +202,11 @@ public class RecentFilesActions {
             if (recentFiles.size() > 15) {
                 recentFiles.remove(15);
             }
-            // TODO rebuildRecentFilesMenu();
+            
+            // TODO Replace with state change
+            for (JMenu fileOpenRecentMenu : fileOpenRecentMenus) {
+                rebuildRecentFilesMenu(fileOpenRecentMenu);
+            }
         }
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.syntax;
+package org.exbin.framework.document.syntax;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -31,7 +31,7 @@ import org.exbin.framework.utils.ActionUtils;
 import org.exbin.framework.action.api.ContextComponent;
 import org.exbin.framework.text.encoding.CharsetEncodingState;
 import org.exbin.framework.text.font.TextFontState;
-import org.exbin.framework.text.syntax.gui.SyntaxTextPanel;
+import org.exbin.framework.document.syntax.gui.SyntaxTextPanel;
 
 /**
  * Text panel component.

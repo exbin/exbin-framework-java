@@ -13,34 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.file.api;
+package org.exbin.framework.file;
 
 import java.io.File;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.framework.file.api.UsedDirectoryApi;
 
 /**
- * Interface for last used directory support.
+ * File used directory.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UsedDirectoryApi {
+public class DefaultLastUsedDirectory implements UsedDirectoryApi {
 
-    /**
-     * Returns last directory used for save or open.
-     *
-     * @return directory or empty
-     */
+    protected File lastUsedDirectory = null;
+
     @Nonnull
-    Optional<File> getLastUsedDirectory();
+    @Override
+    public Optional<File> getLastUsedDirectory() {
+        return Optional.ofNullable(lastUsedDirectory);
+    }
 
-    /**
-     * Sets last used directory.
-     *
-     * @param directory directory
-     */
-    void setLastUsedDirectory(@Nullable File directory);
+    @Override
+    public void setLastUsedDirectory(@Nullable File directory) {
+        lastUsedDirectory = directory;
+    }
 }

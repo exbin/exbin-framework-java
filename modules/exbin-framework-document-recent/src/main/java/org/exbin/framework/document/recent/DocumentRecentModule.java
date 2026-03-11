@@ -71,14 +71,19 @@ public class DocumentRecentModule implements Module {
         return resourceBundle;
     }
 
+    public void registerRecentFilesUpdate() {
+        FileModuleApi fileModule = App.getModule(FileModuleApi.class);
+        fileModule.addFileUsageListener(this::updateRecentFilesList);
+    }
+
     /**
      * Registers list of last opened files into file menu.
      */
-    public void registerRecenFilesMenuActions() {
+    public void registerRecentFilesMenuActions() {
         getRecentFilesActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(() -> recentFilesActions.getOpenRecentMenu());
+        SequenceContribution contribution = mgmt.registerMenuItem(() -> recentFilesActions.createOpenRecentMenu());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
         mgmt.registerMenuRule(contribution, new RelativeSequenceContributionRule(RelativeSequenceContributionRule.NextToMode.AFTER, "openFileAction")); // OpenFileAction.ACTION_ID
     }

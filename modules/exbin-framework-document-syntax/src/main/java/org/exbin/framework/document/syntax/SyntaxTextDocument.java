@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.syntax;
+package org.exbin.framework.document.syntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -43,7 +43,7 @@ import org.exbin.framework.file.api.FileDocument;
 import org.exbin.framework.file.api.FileDocumentSource;
 import org.exbin.framework.text.encoding.ContextEncoding;
 import org.exbin.framework.text.font.TextFontState;
-import org.exbin.framework.text.syntax.gui.SyntaxTextPanel;
+import org.exbin.framework.document.syntax.gui.SyntaxTextPanel;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;

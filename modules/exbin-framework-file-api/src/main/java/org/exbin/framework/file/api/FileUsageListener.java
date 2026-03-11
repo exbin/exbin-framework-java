@@ -15,32 +15,23 @@
  */
 package org.exbin.framework.file.api;
 
-import java.io.File;
-import java.util.Optional;
-import javax.annotation.Nonnull;
+import java.net.URI;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for last used directory support.
+ * Interface for last used file listener.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface UsedDirectoryApi {
+public interface FileUsageListener {
 
     /**
-     * Returns last directory used for save or open.
+     * File used event.
      *
-     * @return directory or empty
+     * @param fileUri file Uri
+     * @param fileType file type
      */
-    @Nonnull
-    Optional<File> getLastUsedDirectory();
-
-    /**
-     * Sets last used directory.
-     *
-     * @param directory directory
-     */
-    void setLastUsedDirectory(@Nullable File directory);
+    void fileUsed(URI fileUri, @Nullable FileType fileType);
 }

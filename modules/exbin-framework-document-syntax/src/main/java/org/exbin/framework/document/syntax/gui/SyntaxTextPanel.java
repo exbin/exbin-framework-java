@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.framework.text.syntax.gui;
+package org.exbin.framework.document.syntax.gui;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -44,7 +44,7 @@ import org.exbin.framework.utils.UiUtils;
 import org.exbin.framework.language.api.LanguageModuleApi;
 import org.exbin.framework.text.encoding.EncodingsManager;
 import org.exbin.framework.action.api.clipboard.ClipboardStateListener;
-import org.exbin.framework.text.syntax.TextPanelCompoundUndoManager;
+import org.exbin.framework.document.syntax.TextPanelCompoundUndoManager;
 
 /**
  * Text editor panel.

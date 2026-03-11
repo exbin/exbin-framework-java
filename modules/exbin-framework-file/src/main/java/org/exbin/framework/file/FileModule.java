@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JOptionPane;
 import org.exbin.framework.App;
@@ -39,6 +40,7 @@ import org.exbin.framework.file.api.ContextFileDialogs;
 import org.exbin.framework.file.api.FileSourceIdentifier;
 import org.exbin.framework.file.api.FileType;
 import org.exbin.framework.file.api.FileModuleApi;
+import org.exbin.framework.file.api.FileUsageListener;
 import org.exbin.framework.file.api.SaveModifiedResult;
 import org.exbin.framework.file.settings.FileOptions;
 import org.exbin.framework.file.settings.FileSettingsApplier;
@@ -63,6 +65,7 @@ public class FileModule implements FileModuleApi {
     private java.util.ResourceBundle resourceBundle = null;
 
     private final List<FileType> registeredFileTypes = new ArrayList<>();
+    private final List<FileUsageListener> fileUsageListeners = new ArrayList<>();
     private final Map<String, FileDialogsProvider> fileDialogsProviders = new HashMap<>();
     private String fileDialogProviderId = "";
 
@@ -178,6 +181,24 @@ public class FileModule implements FileModuleApi {
         settingsManagement.registerPage(pageContribution);
         SettingsComponentContribution settingsComponent = settingsManagement.registerComponent(FileSettingsComponent.COMPONENT_ID, new FileSettingsComponent());
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
+    }
+
+    @Override
+    public void addFileUsageListener(FileUsageListener listener) {
+        fileUsageListeners.add(listener);
+    }
+
+    @Override
+    public void removeFileUsageListener(FileUsageListener listener) {
+        fileUsageListeners.remove(listener);
+    }
+
+    @Override
+    public void notifyFileUsed(URI fileUri, @Nullable FileType fileType) {
+        // TODO Replace with messaging
+        for (FileUsageListener fileUsageListener : fileUsageListeners) {
+            fileUsageListener.fileUsed(fileUri, fileType);
+        }
     }
 
     @Nonnull

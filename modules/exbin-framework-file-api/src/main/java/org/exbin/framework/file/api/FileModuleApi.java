@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.framework.Module;
 import org.exbin.framework.ModuleUtils;
@@ -89,6 +90,33 @@ public interface FileModuleApi extends Module {
     FileDialogsProvider getFileDialogsProvider();
 
     /**
+     * Registers file providers.
+     */
+    void registerFileProviders();
+
+    /**
+     * Adds file usage listener.
+     *
+     * @param listener file usage listener
+     */
+    void addFileUsageListener(FileUsageListener listener);
+
+    /**
+     * Removes file usage listener.
+     *
+     * @param listener file usage listener
+     */
+    void removeFileUsageListener(FileUsageListener listener);
+
+    /**
+     * Notifies about file usage event.
+     *
+     * @param fileUri file Uri
+     * @param fileType file type
+     */
+    void notifyFileUsed(URI fileUri, @Nullable FileType fileType);
+
+    /**
      * Attempts to open given file URI to active panel.
      *
      * @param fileUri file URI
@@ -101,11 +129,6 @@ public interface FileModuleApi extends Module {
      * @param filename filename
      */
     void openFile(String filename);
-
-    /**
-     * Registers file providers.
-     */
-    void registerFileProviders();
 
     /**
      * Registers settings.

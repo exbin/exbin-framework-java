@@ -33,6 +33,7 @@ import org.exbin.framework.document.api.SourceIdentifier;
 import org.exbin.framework.document.api.DocumentSource;
 import org.exbin.framework.document.api.LoadableDocument;
 import org.exbin.framework.document.api.MemoryDocumentSource;
+import org.exbin.framework.file.api.UsedDirectoryApi;
 import org.exbin.framework.frame.api.FrameModuleApi;
 
 /**
@@ -42,6 +43,8 @@ import org.exbin.framework.frame.api.FrameModuleApi;
  */
 @ParametersAreNonnullByDefault
 public class FileDocumentProvider implements DocumentProvider {
+    
+    private final UsedDirectoryApi usedDirectory = new DefaultLastUsedDirectory();
 
     @Nonnull
     @Override
@@ -59,7 +62,7 @@ public class FileDocumentProvider implements DocumentProvider {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);        
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         FileDialogsProvider fileDialogsProvider = fileModule.getFileDialogsProvider();
-        OpenFileResult openFileResult = fileDialogsProvider.showOpenFileDialog(frameModule.getFrame(), new DefaultFileTypes(fileModule.getFileTypes()), null, null, null);
+        OpenFileResult openFileResult = fileDialogsProvider.showOpenFileDialog(frameModule.getFrame(), new DefaultFileTypes(fileModule.getFileTypes()), null, usedDirectory, null);
         if (openFileResult.getDialogResult() == JFileChooser.APPROVE_OPTION) {
             return Optional.of(new FileDocumentSource(openFileResult.getSelectedFile().get()));
         }
@@ -83,7 +86,7 @@ public class FileDocumentProvider implements DocumentProvider {
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);        
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         FileDialogsProvider fileDialogsProvider = fileModule.getFileDialogsProvider();
-        OpenFileResult openFileResult = fileDialogsProvider.showSaveFileDialog(frameModule.getFrame(), new DefaultFileTypes(fileModule.getFileTypes()), suggestedFile, null, null);
+        OpenFileResult openFileResult = fileDialogsProvider.showSaveFileDialog(frameModule.getFrame(), new DefaultFileTypes(fileModule.getFileTypes()), suggestedFile, usedDirectory, null);
         if (openFileResult.getDialogResult() == JFileChooser.APPROVE_OPTION) {
             return Optional.of(new FileDocumentSource(openFileResult.getSelectedFile().get()));
         }

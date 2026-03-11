@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -83,6 +84,21 @@ public class TestFileModule implements FileModuleApi {
 
     @Override
     public void registerFileProviders() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addFileUsageListener(FileUsageListener listener) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeFileUsageListener(FileUsageListener listener) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void notifyFileUsed(URI fileUri, @Nullable FileType fileType) {
         throw new UnsupportedOperationException();
     }
 
