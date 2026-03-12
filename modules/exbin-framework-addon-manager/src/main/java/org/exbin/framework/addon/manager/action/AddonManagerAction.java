@@ -72,6 +72,7 @@ public class AddonManagerAction extends AbstractAction {
 
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
+        addonManager.init();
         AddonsManagerPanel addonManagerPanel = addonManager.getManagerPanel();
         addonManager.refreshCatalog();
         addonManager.setStatusListener(new AddonManager.AddonManagerStatusListener() {

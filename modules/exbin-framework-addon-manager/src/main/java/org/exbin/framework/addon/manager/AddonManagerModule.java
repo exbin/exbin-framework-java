@@ -93,7 +93,6 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     public AddonManager getAddonManager() {
         if (addonManager == null) {
             addonManager = new AddonManager();
-            addonManager.init();
         }
         return addonManager;
     }

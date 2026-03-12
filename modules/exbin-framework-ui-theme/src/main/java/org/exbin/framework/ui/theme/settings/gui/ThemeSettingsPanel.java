@@ -108,6 +108,10 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
             options.setMacOsAppearance((String) macOsAppearanceComboBox.getSelectedItem());
             options.setUseScreenMenuBar(useScreenMenuBarCheckBox.isSelected());
         }
+
+        if (controller != null) {
+            controller.saveModifiedThemes(settingsOptionsProvider);
+        }
     }
 
     public void setThemes(List<String> themeKeys, List<String> themeNames, Map<String, ConfigurableLafProvider> themeOptions) {
@@ -534,5 +538,12 @@ public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsCo
          * @param settingsOptionsProvider settings options provider
          */
         void configureTheme(ConfigurableLafProvider lafProvider, SettingsOptionsProvider settingsOptionsProvider);
+
+        /**
+         * Saves modified theme configurations.
+         *
+         * @param settingsOptionsProvider settings options provider
+         */
+        void saveModifiedThemes(SettingsOptionsProvider settingsOptionsProvider);
     }
 }

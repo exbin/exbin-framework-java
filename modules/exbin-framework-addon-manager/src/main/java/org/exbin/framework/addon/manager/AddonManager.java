@@ -67,7 +67,7 @@ public class AddonManager {
 
     protected java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManager.class);
 
-    protected final AddonsManagerPanel managerPanel = new AddonsManagerPanel();
+    protected AddonsManagerPanel managerPanel;
     protected final List<AddonManagerPage> managerPages = new ArrayList<>();
     protected final List<AddonOperation> cartOperations = new ArrayList<>();
 
@@ -81,8 +81,13 @@ public class AddonManager {
     }
 
     public void init() {
+        if (managerPanel != null) {
+            return;
+        }
+
         addonsState.init();
 
+        managerPanel = new AddonsManagerPanel();
         AddonsCartPanel cartPanel = new AddonsCartPanel();
         managerPanel.setPreferredSize(new Dimension(800, 500));
         managerPanel.setCartComponent(cartPanel);
@@ -118,6 +123,9 @@ public class AddonManager {
                 }
             }
         });
+        if (addonCatalogService != null) {
+            managerPanel.setCatalogUrl(addonCatalogService.getCatalogPageUrl());
+        }
 
         cartPanel.setController(new AddonsCartPanel.Controller() {
             @Override
@@ -200,7 +208,9 @@ public class AddonManager {
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
         this.addonCatalogService = addonCatalogService;
-        managerPanel.setCatalogUrl(addonCatalogService.getCatalogPageUrl());
+        if (managerPanel != null) {
+            managerPanel.setCatalogUrl(addonCatalogService.getCatalogPageUrl());
+        }
     }
 
     public void refreshCatalog() {

@@ -90,10 +90,10 @@ public class TextFontAction extends AbstractAction {
         controlPanel.setController((OptionsControlController.ControlActionType actionType) -> {
             if (actionType != OptionsControlController.ControlActionType.CANCEL) {
                 if (actionType == OptionsControlController.ControlActionType.SAVE) {
-                    OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
-                    TextFontOptions parameters = new TextFontOptions(preferencesModule.getAppOptions());
-                    parameters.setUseDefaultFont(false);
-                    parameters.setFont(fontPanel.getStoredFont());
+                    OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
+                    TextFontOptions fontOptions = new TextFontOptions(optionsModule.getAppOptions());
+                    fontOptions.setUseDefaultFont(false);
+                    fontOptions.setFont(fontPanel.getStoredFont());
                 }
                 textFontSupported.setCurrentFont(fontPanel.getStoredFont());
             }

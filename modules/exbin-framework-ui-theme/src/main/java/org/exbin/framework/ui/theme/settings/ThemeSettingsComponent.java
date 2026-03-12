@@ -192,39 +192,48 @@ public class ThemeSettingsComponent implements SettingsComponentProvider {
         if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             themeOptionsPanel.setMacOsAppearances(guiMacOsAppearanceKeys, guiMacOsAppearanceNames);
         }
-        themeOptionsPanel.setController((ConfigurableLafProvider lafProvider, SettingsOptionsProvider settingsOptionsProvider) -> {
-            SettingsComponent settingsComponent = themeOptionsComponents.get(lafProvider.getLafId());
-            if (settingsComponent == null) {
-                SettingsComponentProvider settingsComponentProvider = lafProvider.getSettingsComponentProvider();
-                settingsComponent = settingsComponentProvider.createComponent();
-                settingsComponent.loadFromOptions(settingsOptionsProvider);
-            }
-            final SettingsComponent finalSettingsComponent = settingsComponent;
-
-            DefaultControlPanel controlPanel = new DefaultControlPanel();
-            WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
-            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-
-            final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, (JComponent) settingsComponent, controlPanel);
-            UiThemeModule themeModule = (UiThemeModule) App.getModule(UiThemeModuleApi.class);
-            ResourceBundle resourceBundle = themeModule.getResourceBundle();
-            ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString("theme.optionsWindow.title"));
-            controlPanel.setController((actionType) -> {
-                switch (actionType) {
-                    case OK: {
-                        themeOptionsComponents.put(lafProvider.getLafId(), finalSettingsComponent);
-                        break;
-                    }
-                    case CANCEL: {
-                        // ignore
-                        break;
-                    }
+        themeOptionsPanel.setController(new ThemeSettingsPanel.Controller() {
+            @Override
+            public void configureTheme(ConfigurableLafProvider lafProvider, SettingsOptionsProvider settingsOptionsProvider) {
+                SettingsComponent settingsComponent = themeOptionsComponents.get(lafProvider.getLafId());
+                if (settingsComponent == null) {
+                    SettingsComponentProvider settingsComponentProvider = lafProvider.getSettingsComponentProvider();
+                    settingsComponent = settingsComponentProvider.createComponent();
+                    settingsComponent.loadFromOptions(settingsOptionsProvider);
                 }
-                dialog.close();
-            });
+                final SettingsComponent finalSettingsComponent = settingsComponent;
 
-            dialog.showCentered(frameModule.getFrame());
+                DefaultControlPanel controlPanel = new DefaultControlPanel();
+                WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
 
+                final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, (JComponent) settingsComponent, controlPanel);
+                UiThemeModule themeModule = (UiThemeModule) App.getModule(UiThemeModuleApi.class);
+                ResourceBundle resourceBundle = themeModule.getResourceBundle();
+                ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString("theme.optionsWindow.title"));
+                controlPanel.setController((actionType) -> {
+                    switch (actionType) {
+                        case OK: {
+                            themeOptionsComponents.put(lafProvider.getLafId(), finalSettingsComponent);
+                            break;
+                        }
+                        case CANCEL: {
+                            // ignore
+                            break;
+                        }
+                    }
+                    dialog.close();
+                });
+
+                dialog.showCentered(frameModule.getFrame());
+            }
+
+            @Override
+            public void saveModifiedThemes(SettingsOptionsProvider settingsOptionsProvider) {
+                for (SettingsComponent component : themeOptionsComponents.values()) {
+                    component.saveToOptions(settingsOptionsProvider);
+                }
+            }
         });
         return themeOptionsPanel;
     }
