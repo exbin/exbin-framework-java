@@ -121,16 +121,32 @@ public class ActionManager implements ActionManagement {
     public void requestUpdateForAction(Action action) {
         String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
         ActionRecord actionRecord = actions.get(actionId);
-        if (actionRecord == null) {
-            return;
-        }
-
-        // TODO Restrict to specific action listeners
-        for (Class<?> stateClass : contextManager.getStateClasses()) {
-            Object instance = contextManager.getActiveState(stateClass);
-            ContextChangeListener listener = actionRecord.contextChangeListeners.get(stateClass);
-            if (listener != null) {
-                listener.stateChanged(instance);
+        if (actionRecord != null) {
+            // TODO Restrict to specific action listeners
+            for (Class<?> stateClass : contextManager.getStateClasses()) {
+                Object instance = contextManager.getActiveState(stateClass);
+                ContextChangeListener listener = actionRecord.contextChangeListeners.get(stateClass);
+                if (listener != null) {
+                    listener.stateChanged(instance);
+                }
+            }
+        } else {
+            // TODO Temporary workaround for non-registered actions or action without action ID
+            ActionContextChange actionContextChange = (ActionContextChange) action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
+            if (actionContextChange == null) {
+                return;
+            }
+            
+            actionRecord = new ActionRecord();
+            ContextChangeRegistration registrar = new DefaultActionContextChangeRegistrar(actionRecord);
+            actionContextChange.register(registrar);
+            
+            for (Class<?> stateClass : contextManager.getStateClasses()) {
+                Object instance = contextManager.getActiveState(stateClass);
+                ContextChangeListener listener = actionRecord.contextChangeListeners.get(stateClass);
+                if (listener != null) {
+                    listener.stateChanged(instance);
+                }
             }
         }
     }
