@@ -120,8 +120,12 @@ public class ActionManager implements ActionManagement {
     @Override
     public void requestUpdateForAction(Action action) {
         String actionId = (String) action.getValue(ActionConsts.ACTION_ID);
-        ActionRecord actionRecord = actions.get(actionId);
-        if (actionRecord != null) {
+        if (actionId != null) {
+            ActionRecord actionRecord = actions.get(actionId);
+            if (actionRecord == null) {
+                return;
+            }
+
             // TODO Restrict to specific action listeners
             for (Class<?> stateClass : contextManager.getStateClasses()) {
                 Object instance = contextManager.getActiveState(stateClass);
@@ -137,7 +141,7 @@ public class ActionManager implements ActionManagement {
                 return;
             }
             
-            actionRecord = new ActionRecord();
+            ActionRecord actionRecord = new ActionRecord();
             ContextChangeRegistration registrar = new DefaultActionContextChangeRegistrar(actionRecord);
             actionContextChange.register(registrar);
             
