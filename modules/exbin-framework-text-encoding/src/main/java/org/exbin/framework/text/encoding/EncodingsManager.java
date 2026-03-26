@@ -118,6 +118,11 @@ public class EncodingsManager {
         return toolsEncodingMenu;
     }
 
+    @Nonnull
+    public ManageEncodingsAction getManageEncodingsAction() {
+        return manageEncodingsAction;
+    }
+
     public void rebuildEncodings() {
         for (int i = toolsEncodingMenu.getItemCount() - 3; i >= 0; i--) {
             encodingButtonGroup.remove(toolsEncodingMenu.getItem(i));

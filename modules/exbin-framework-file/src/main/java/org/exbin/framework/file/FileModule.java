@@ -204,6 +204,7 @@ public class FileModule implements FileModuleApi {
     @Nonnull
     @Override
     public SaveModifiedResult showSaveModified(Component parentComponent) {
+        getResourceBundle();
         Object[] options = {
             resourceBundle.getString("saveModifiedQuestion.action_save"),
             resourceBundle.getString("saveModifiedQuestion.action_discard"),
@@ -227,6 +228,7 @@ public class FileModule implements FileModuleApi {
 
     @Override
     public boolean showAskToOverwrite(Component parentComponent) {
+        getResourceBundle();
         Object[] options = {
             resourceBundle.getString("owerwriteFileQuestion.action_save"),
             resourceBundle.getString("owerwriteFileQuestion.action_cancel")
@@ -251,6 +253,7 @@ public class FileModule implements FileModuleApi {
 
     @Override
     public void showFileNotFound(Component parentComponent, String filePath) {
+        getResourceBundle();
         JOptionPane.showOptionDialog(parentComponent,
                 resourceBundle.getString("fileNotFound.title"),
                 String.format(resourceBundle.getString("fileNotFound.message"), filePath),
@@ -261,6 +264,7 @@ public class FileModule implements FileModuleApi {
 
     @Override
     public void showUnableToSave(Component parentComponent, Exception ex) {
+        getResourceBundle();
         String errorMessage = ex.getLocalizedMessage();
         JOptionPane.showMessageDialog(
                 parentComponent,
