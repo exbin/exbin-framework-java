@@ -1,0 +1,33 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group = 'org.exbin.jaguif'
+ext.libraryName = 'ExBin Framework Core Library'
+ext.libraryDescription = 'Library for core functionality in ExBin Framework'
+
+apply from: '../jaguif-modules.gradle'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+repositories {
+    flatDir {
+        dirs "../../lib"
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    api moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-contribution-api')
+    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'core', 'jaguif')
+    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-utils')
+    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-language-api')
+    implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'modules', 'component-dropdownbutton')
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testImplementation group : 'junit', name: 'junit', version: '4.13.2'
+}

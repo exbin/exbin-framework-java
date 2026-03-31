@@ -1,7 +1,14 @@
-ExBin Framework Libraries
-=========================
+Java GUI Framework for ExBin
+============================
 
-Framework provides various libraries for swing desktop applications support.
+Framework for Java Swing applications for ExBin project.
+
+Modular framework for desktop applications providing some additional functionality to regular Swing framework:
+
+  * Support for modules and addons
+  * Set of typical dialogs
+  * Messaging / Dynamic context state updates
+  * Contribution / Rule based registration management
 
 Homepage: https://exbin.org  
 

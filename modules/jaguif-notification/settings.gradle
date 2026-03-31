@@ -1,0 +1,10 @@
+rootProject.name = 'jaguif-notification'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-notification-api'
+    include ':modules:jaguif-operation-api'
+    include ':modules:jaguif-utils'
+}
+
+apply from: '../jaguif-modules-settings.gradle'

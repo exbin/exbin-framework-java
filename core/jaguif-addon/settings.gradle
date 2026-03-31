@@ -1,0 +1,8 @@
+rootProject.name = 'jaguif-addon'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':core:jaguif-basic'
+}
+
+apply from: '../jaguif-core-settings.gradle'

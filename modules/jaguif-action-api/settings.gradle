@@ -1,0 +1,9 @@
+rootProject.name = 'jaguif-action-api'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-utils'
+    include ':modules:jaguif-context-api'
+}
+
+apply from: '../jaguif-modules-settings.gradle'

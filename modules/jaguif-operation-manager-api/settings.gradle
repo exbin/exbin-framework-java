@@ -1,0 +1,12 @@
+rootProject.name = 'jaguif-operation-manager-api'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-contribution-api'
+    include ':modules:jaguif-context-api'
+    include ':modules:jaguif-action-api'
+    include ':modules:jaguif-menu-popup-api'
+    include ':modules:jaguif-utils'
+}
+
+apply from: '../jaguif-modules-settings.gradle'

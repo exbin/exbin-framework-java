@@ -1,0 +1,6 @@
+rootProject.name = 'jaguif'
+
+if (rootProject.path == ':') {
+}
+
+apply from: '../jaguif-core-settings.gradle'

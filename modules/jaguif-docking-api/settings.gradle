@@ -1,0 +1,14 @@
+rootProject.name = 'jaguif-docking-api'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-contribution-api'
+    include ':modules:jaguif-context-api'
+    include ':modules:jaguif-document-api'
+    include ':modules:jaguif-options-api'
+    include ':modules:jaguif-options-settings-api'
+    include ':modules:jaguif-language-api'
+    include ':modules:jaguif-utils'
+}
+
+apply from: '../jaguif-modules-settings.gradle'

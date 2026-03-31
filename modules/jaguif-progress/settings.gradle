@@ -1,0 +1,10 @@
+rootProject.name = 'jaguif-progress'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-progress-api'
+    include ':modules:jaguif-operation-api'
+    include ':modules:jaguif-utils'
+}
+
+apply from: '../jaguif-modules-settings.gradle'

@@ -1,0 +1,27 @@
+rootProject.name = 'jaguif-document-recent'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-context-api'
+    include ':modules:jaguif-contribution-api'
+    include ':modules:jaguif-action-api'
+    include ':modules:jaguif-help-api'
+    include ':modules:jaguif-menu-api'
+    include ':modules:jaguif-toolbar-api'
+    include ':modules:jaguif-component-api'
+    include ':modules:jaguif-file-api'
+    include ':modules:jaguif-frame-api'
+    include ':modules:jaguif-language-api'
+    include ':modules:jaguif-operation-api'
+    include ':modules:jaguif-operation-undo-api'
+    include ':modules:jaguif-document-api'
+    include ':modules:jaguif-text-font'
+    include ':modules:jaguif-text-encoding'
+    include ':modules:jaguif-options-settings-api'
+    include ':modules:jaguif-options-api'
+    include ':modules:jaguif-ui-api'
+    include ':modules:jaguif-utils'
+    include ':modules:jaguif-window-api'
+}
+
+apply from: '../jaguif-modules-settings.gradle'

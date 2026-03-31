@@ -1,0 +1,22 @@
+rootProject.name = 'jaguif-sidebar'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-sidebar-api'
+    include ':modules:jaguif-contribution-api'
+    include ':modules:jaguif-contribution'
+    include ':modules:jaguif-context-api'
+    include ':modules:jaguif-action-api'
+    include ':modules:jaguif-menu-api'
+    include ':modules:jaguif-sidebar-api'
+    include ':modules:jaguif-help-api'
+    include ':modules:jaguif-docking-api'
+    include ':modules:jaguif-document-api'
+    include ':modules:jaguif-frame-api'
+    include ':modules:jaguif-language-api'
+    include ':modules:jaguif-options-api'
+    include ':modules:jaguif-utils'
+    include ':modules:jaguif-window-api'
+}
+
+apply from: '../jaguif-modules-settings.gradle'

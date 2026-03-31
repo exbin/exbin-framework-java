@@ -1,5 +1,5 @@
-ExBin Framework Libraries
-=========================
+Java GUI Framework for ExBin
+============================
 
 Framework provides various modules for swing desktop applications support.
 

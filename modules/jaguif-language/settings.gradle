@@ -1,0 +1,8 @@
+rootProject.name = 'jaguif-language'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-language-api'
+}
+
+apply from: '../jaguif-modules-settings.gradle'

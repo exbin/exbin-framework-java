@@ -1,0 +1,11 @@
+rootProject.name = 'jaguif-options-settings-api'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif'
+    include ':modules:jaguif-contribution-api'
+    include ':modules:jaguif-context-api'
+    include ':modules:jaguif-options-api'
+    include ':modules:jaguif-utils'
+}
+
+apply from: '../jaguif-modules-settings.gradle'
