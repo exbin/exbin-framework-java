@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.search.api.SearchModuleApi</api>
+  <api>org.exbin.jaguif.search.api.SearchModuleApi</api>
   <name>Search API Module</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>

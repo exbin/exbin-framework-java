@@ -1,7 +1,7 @@
 rootProject.name = 'jaguif-about'
 
 if (rootProject.path == ':') {
-    include ':core:jaguif'
+    include ':core:jaguif-core'
     include ':modules:jaguif-contribution-api'
     include ':modules:jaguif-context-api'
     include ':modules:jaguif-about-api'

@@ -1,0 +1,78 @@
+/*
+ * Copyright (C) ExBin Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.jaguif.text.font.settings;
+
+import java.awt.Font;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.App;
+import org.exbin.jaguif.text.font.gui.TextFontPanel;
+import org.exbin.jaguif.text.font.settings.gui.TextFontSettingsPanel;
+import org.exbin.jaguif.window.api.WindowHandler;
+import org.exbin.jaguif.window.api.WindowModuleApi;
+import org.exbin.jaguif.window.api.gui.DefaultControlPanel;
+import org.exbin.jaguif.window.api.controller.DefaultControlController;
+import org.exbin.jaguif.options.api.OptionsModuleApi;
+import org.exbin.jaguif.options.settings.api.SettingsComponent;
+import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
+
+/**
+ * Text font settings component.
+ *
+ * @author ExBin Project (https://exbin.org)
+ */
+@ParametersAreNonnullByDefault
+public class TextFontSettingsComponent implements SettingsComponentProvider {
+
+    public static final String COMPONENT_ID = "textFont";
+
+    @Nonnull
+    @Override
+    public SettingsComponent createComponent() {
+        TextFontSettingsPanel panel = new TextFontSettingsPanel();
+        panel.setController(new TextFontSettingsPanel.Controller() {
+            @Override
+            public Font changeFont(Font currentFont) {
+                final Font[] result = new Font[1];
+                WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+                final TextFontPanel fontPanel = new TextFontPanel();
+                fontPanel.setStoredFont(currentFont);
+                DefaultControlPanel controlPanel = new DefaultControlPanel();
+                final WindowHandler dialog = windowModule.createDialog(fontPanel, controlPanel);
+                windowModule.addHeaderPanel(dialog.getWindow(), fontPanel.getClass(), fontPanel.getResourceBundle());
+                windowModule.setWindowTitle(dialog, fontPanel.getResourceBundle());
+                controlPanel.setController((DefaultControlController.ControlActionType actionType) -> {
+                    if (actionType != DefaultControlController.ControlActionType.CANCEL) {
+                        if (actionType == DefaultControlController.ControlActionType.OK) {
+                            OptionsModuleApi preferencesModule = App.getModule(OptionsModuleApi.class);
+                            TextFontOptions textFontParameters = new TextFontOptions(preferencesModule.getAppOptions());
+                            textFontParameters.setUseDefaultFont(true);
+                            textFontParameters.setFont(fontPanel.getStoredFont());
+                        }
+                        result[0] = fontPanel.getStoredFont();
+                    }
+
+                    dialog.close();
+                    dialog.dispose();
+                });
+                dialog.showCentered(panel);
+
+                return result[0];
+            }
+        });
+        return panel;
+    }
+}

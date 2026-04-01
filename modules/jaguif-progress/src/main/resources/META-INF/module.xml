@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.progress.ProgressModule</api>
+  <api>org.exbin.jaguif.progress.ProgressModule</api>
   <name>Progress Support Module</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module to provide support for operations with progress state</description>
   <dependency>
-    <module id="org.exbin.framework.progress.api.ProgressModuleApi" />
-    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+    <module id="org.exbin.jaguif.progress.api.ProgressModuleApi" />
+    <module id="org.exbin.jaguif.action.api.ActionModuleApi" />
   </dependency>
 </module>

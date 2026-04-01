@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.sidebar.api.SideBarModuleApi</api>
+  <api>org.exbin.jaguif.sidebar.api.SideBarModuleApi</api>
   <name>Side Bar Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Support for side bar</description>
   <dependency>
-    <module id="org.exbin.framework.contribution.api.ContributionModuleApi" />
+    <module id="org.exbin.jaguif.contribution.api.ContributionModuleApi" />
   </dependency>
 </module>

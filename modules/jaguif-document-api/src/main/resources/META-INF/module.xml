@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.document.api.DocumentModuleApi</api>
+  <api>org.exbin.jaguif.document.api.DocumentModuleApi</api>
   <name>Document Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>

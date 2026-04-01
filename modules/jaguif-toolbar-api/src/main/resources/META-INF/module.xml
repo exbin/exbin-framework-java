@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.toolbar.api.ToolBarModuleApi</api>
+  <api>org.exbin.jaguif.toolbar.api.ToolBarModuleApi</api>
   <name>Tool Bar Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Support for toolbar handling</description>
   <dependency>
-    <module id="org.exbin.framework.contribution.api.ContributionModuleApi" />
+    <module id="org.exbin.jaguif.contribution.api.ContributionModuleApi" />
   </dependency>
 </module>

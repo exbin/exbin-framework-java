@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.contribution.ContributionModule</id>
+  <id>org.exbin.jaguif.contribution.ContributionModule</id>
   <name>Contribution Support</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Support for contributions</description>
   <dependency>
-    <module id="org.exbin.framework.window.api.WindowModuleApi" />
-    <module id="org.exbin.framework.frame.api.FrameModuleApi" />
-    <module id="org.exbin.framework.utils.UtilsModule" />
-    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+    <module id="org.exbin.jaguif.window.api.WindowModuleApi" />
+    <module id="org.exbin.jaguif.frame.api.FrameModuleApi" />
+    <module id="org.exbin.jaguif.utils.UtilsModule" />
+    <module id="org.exbin.jaguif.language.api.LanguageModuleApi" />
   </dependency>
 </module>

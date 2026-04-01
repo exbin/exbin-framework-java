@@ -1,0 +1,88 @@
+/*
+ * Copyright (C) ExBin Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.jaguif.window.api.gui;
+
+import java.util.Optional;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JButton;
+import org.exbin.jaguif.utils.UiUtils;
+import org.exbin.jaguif.window.api.controller.CloseControlController;
+
+/**
+ * Basic close control panel.
+ *
+ * @author ExBin Project (https://exbin.org)
+ */
+@ParametersAreNonnullByDefault
+public class CloseControlPanel extends FooterControlPanel implements CloseControlController.CloseControlComponent {
+
+    private CloseControlController controller;
+    private javax.swing.JButton closeButton;
+
+    public CloseControlPanel() {
+        super();
+        init();
+    }
+
+    public CloseControlPanel(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+        init();
+    }
+
+    private void init() {
+        closeButton = new javax.swing.JButton();
+
+        closeButton.setText(resourceBundle.getString("closeButton.text"));
+        closeButton.addActionListener((java.awt.event.ActionEvent evt) -> {
+            if (controller != null) {
+                controller.controlActionPerformed();
+            }
+        });
+        addButton(closeButton, ButtonPosition.LAST_RIGHT);
+    }
+
+    public void setController(CloseControlController controller) {
+        this.controller = controller;
+    }
+
+    @Override
+    public void performCloseClick() {
+        UiUtils.doButtonClick(closeButton);
+    }
+
+    @Override
+    public void invokeOkEvent() {
+        performCloseClick();
+    }
+
+    @Override
+    public void invokeCancelEvent() {
+        performCloseClick();
+    }
+
+    @Nonnull
+    @Override
+    public Optional<JButton> getDefaultButton() {
+        return Optional.of(closeButton);
+    }
+
+    @Override
+    public void setCloseActionEnabled(boolean enablement) {
+        closeButton.setEnabled(enablement);
+    }
+}

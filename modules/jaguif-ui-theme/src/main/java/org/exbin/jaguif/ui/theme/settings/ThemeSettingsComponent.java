@@ -1,0 +1,240 @@
+/*
+ * Copyright (C) ExBin Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.jaguif.ui.theme.settings;
+
+import java.awt.Dialog;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.UIManager;
+import org.exbin.jaguif.App;
+import org.exbin.jaguif.frame.api.FrameModuleApi;
+import org.exbin.jaguif.language.api.IconSetProvider;
+import org.exbin.jaguif.language.api.LanguageModuleApi;
+import org.exbin.jaguif.ui.theme.GuiFontAntialiasing;
+import org.exbin.jaguif.ui.theme.GuiMacOsAppearance;
+import org.exbin.jaguif.ui.theme.GuiRenderingMethod;
+import org.exbin.jaguif.ui.theme.GuiScaling;
+import org.exbin.jaguif.ui.theme.api.ConfigurableLafProvider;
+import org.exbin.jaguif.ui.theme.api.LafProvider;
+import org.exbin.jaguif.ui.theme.api.UiThemeModuleApi;
+import org.exbin.jaguif.ui.theme.settings.gui.ThemeSettingsPanel;
+import org.exbin.jaguif.utils.DesktopUtils;
+import org.exbin.jaguif.window.api.WindowHandler;
+import org.exbin.jaguif.window.api.WindowModuleApi;
+import org.exbin.jaguif.window.api.gui.DefaultControlPanel;
+import org.exbin.jaguif.options.settings.api.SettingsComponent;
+import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
+import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
+import org.exbin.jaguif.ui.theme.UiThemeModule;
+
+/**
+ * UI theme settings component.
+ *
+ * @author ExBin Project (https://exbin.org)
+ */
+@ParametersAreNonnullByDefault
+public class ThemeSettingsComponent implements SettingsComponentProvider {
+
+    public static final String COMPONENT_ID = "theme";
+
+    private Map<String, SettingsComponent> themeOptionsComponents = new HashMap<>();
+
+    private boolean valuesInitialized = false;
+    private List<String> themes;
+    private List<String> themeNames;
+    private Map<String, ConfigurableLafProvider> themeOptions;
+    private List<String> iconSets;
+    private List<String> iconSetNames;
+    private List<String> renderingMethodKeys;
+    private List<String> renderingMethodNames;
+    private List<String> fontAntialiasingKeys;
+    private List<String> fontAntialiasingNames;
+    private List<String> guiScalingKeys;
+    private List<String> guiScalingNames;
+    private List<String> guiMacOsAppearanceKeys;
+    private List<String> guiMacOsAppearanceNames;
+
+    public void initValues() {
+        UiThemeModule themeModule = (UiThemeModule) App.getModule(UiThemeModuleApi.class);
+        ResourceBundle resourceBundle = themeModule.getResourceBundle();
+
+        themes = new ArrayList<>();
+        themes.add("");
+        boolean extraCrossPlatformLAF = !"javax.swing.plaf.metal.MetalLookAndFeel".equals(UIManager.getCrossPlatformLookAndFeelClassName());
+        if (extraCrossPlatformLAF) {
+            themes.add(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        themes.add("javax.swing.plaf.metal.MetalLookAndFeel");
+        themes.add("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        themeNames = new ArrayList<>();
+        themeNames.add(resourceBundle.getString("theme.defaultTheme"));
+        if (extraCrossPlatformLAF) {
+            themeNames.add(resourceBundle.getString("theme.crossPlatformTheme"));
+        }
+        themeNames.add("Metal");
+        themeNames.add("Motif");
+        UIManager.LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
+        for (UIManager.LookAndFeelInfo lookAndFeelInfo : infos) {
+            if (!themes.contains(lookAndFeelInfo.getClassName())) {
+                themes.add(lookAndFeelInfo.getClassName());
+                themeNames.add(lookAndFeelInfo.getName());
+            }
+        }
+        themeOptions = new HashMap<>();
+        List<LafProvider> lafProviders = App.getModule(UiThemeModuleApi.class).getLafProviders();
+        for (LafProvider lafProvider : lafProviders) {
+            if (lafProvider instanceof ConfigurableLafProvider) {
+                themeOptions.put(lafProvider.getLafId(), (ConfigurableLafProvider) lafProvider);
+            }
+        }
+
+        iconSets = new ArrayList<>();
+        iconSets.add("");
+        iconSetNames = new ArrayList<>();
+        iconSetNames.add(resourceBundle.getString("iconset.defaultTheme"));
+        List<IconSetProvider> providers = App.getModule(LanguageModuleApi.class).getIconSets();
+        for (IconSetProvider provider : providers) {
+            iconSets.add(provider.getId());
+            iconSetNames.add(provider.getName());
+        }
+
+        renderingMethodKeys = new ArrayList<>();
+        renderingMethodNames = new ArrayList<>();
+        DesktopUtils.OsType desktopOs = DesktopUtils.detectBasicOs();
+        for (GuiRenderingMethod renderingMethod : GuiRenderingMethod.getAvailableMethods()) {
+            renderingMethodKeys.add(renderingMethod.getPropertyValue());
+            if (renderingMethod == GuiRenderingMethod.DEFAULT) {
+                renderingMethodNames.add(resourceBundle.getString("renderingMethod.default"));
+            } else {
+                if (renderingMethod == GuiRenderingMethod.SOFTWARE && desktopOs == DesktopUtils.OsType.WINDOWS) {
+                    renderingMethodNames.add(resourceBundle.getString("renderingMethod.software.windows"));
+                } else {
+                    String propertyValue = renderingMethod.getPropertyValue();
+                    renderingMethodNames.add(resourceBundle.getString("renderingMethod." + propertyValue));
+                }
+            }
+        }
+
+        fontAntialiasingKeys = new ArrayList<>();
+        fontAntialiasingNames = new ArrayList<>();
+        for (GuiFontAntialiasing fontAntialiasing : GuiFontAntialiasing.getAvailable()) {
+            fontAntialiasingKeys.add(fontAntialiasing.getPropertyValue());
+            if (fontAntialiasing == GuiFontAntialiasing.DEFAULT) {
+                fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing.default"));
+            } else {
+                String propertyValue = fontAntialiasing.getPropertyValue();
+                fontAntialiasingNames.add(resourceBundle.getString("fontAntialiasing." + propertyValue));
+            }
+        }
+
+        guiScalingKeys = new ArrayList<>();
+        guiScalingNames = new ArrayList<>();
+        for (GuiScaling guiScaling : GuiScaling.getAvailable()) {
+            guiScalingKeys.add(guiScaling.getPropertyValue());
+            if (guiScaling == GuiScaling.DEFAULT) {
+                guiScalingNames.add(resourceBundle.getString("guiScaling.default"));
+            } else {
+                String propertyValue = guiScaling.getPropertyValue();
+                guiScalingNames.add(resourceBundle.getString("guiScaling." + propertyValue));
+            }
+        }
+
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
+            List<GuiMacOsAppearance> guiMacOsAppearances = GuiMacOsAppearance.getAvailable();
+            guiMacOsAppearanceKeys = new ArrayList<>();
+            guiMacOsAppearanceNames = new ArrayList<>();
+            for (GuiMacOsAppearance macOsAppearance : guiMacOsAppearances) {
+                guiMacOsAppearanceKeys.add(macOsAppearance.getPropertyValue());
+                if (macOsAppearance == GuiMacOsAppearance.DEFAULT) {
+                    guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances.default"));
+                } else {
+                    String propertyValue = macOsAppearance.getPropertyValue();
+                    guiMacOsAppearanceNames.add(resourceBundle.getString("macOsAppearances." + propertyValue));
+                }
+            }
+        }
+    }
+
+    @Nonnull
+    @Override
+    public SettingsComponent createComponent() {
+        if (!valuesInitialized) {
+            valuesInitialized = true;
+            initValues();
+        }
+
+        ThemeSettingsPanel themeOptionsPanel = new ThemeSettingsPanel();
+        themeOptionsPanel.setThemes(themes, themeNames, themeOptions);
+        themeOptionsPanel.setIconSets(iconSets, iconSetNames);
+        themeOptionsPanel.setRenderingModes(renderingMethodKeys, renderingMethodNames);
+        themeOptionsPanel.setFontAntialiasings(fontAntialiasingKeys, fontAntialiasingNames);
+        themeOptionsPanel.setGuiScalings(guiScalingKeys, guiScalingNames);
+        if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
+            themeOptionsPanel.setMacOsAppearances(guiMacOsAppearanceKeys, guiMacOsAppearanceNames);
+        }
+        themeOptionsPanel.setController(new ThemeSettingsPanel.Controller() {
+            @Override
+            public void configureTheme(ConfigurableLafProvider lafProvider, SettingsOptionsProvider settingsOptionsProvider) {
+                SettingsComponent settingsComponent = themeOptionsComponents.get(lafProvider.getLafId());
+                if (settingsComponent == null) {
+                    SettingsComponentProvider settingsComponentProvider = lafProvider.getSettingsComponentProvider();
+                    settingsComponent = settingsComponentProvider.createComponent();
+                    settingsComponent.loadFromOptions(settingsOptionsProvider);
+                }
+                final SettingsComponent finalSettingsComponent = settingsComponent;
+
+                DefaultControlPanel controlPanel = new DefaultControlPanel();
+                WindowModuleApi windowModule = App.getModule(WindowModuleApi.class);
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+
+                final WindowHandler dialog = windowModule.createDialog(frameModule.getFrame(), Dialog.ModalityType.APPLICATION_MODAL, (JComponent) settingsComponent, controlPanel);
+                UiThemeModule themeModule = (UiThemeModule) App.getModule(UiThemeModuleApi.class);
+                ResourceBundle resourceBundle = themeModule.getResourceBundle();
+                ((JDialog) dialog.getWindow()).setTitle(resourceBundle.getString("theme.optionsWindow.title"));
+                controlPanel.setController((actionType) -> {
+                    switch (actionType) {
+                        case OK: {
+                            themeOptionsComponents.put(lafProvider.getLafId(), finalSettingsComponent);
+                            break;
+                        }
+                        case CANCEL: {
+                            // ignore
+                            break;
+                        }
+                    }
+                    dialog.close();
+                });
+
+                dialog.showCentered(frameModule.getFrame());
+            }
+
+            @Override
+            public void saveModifiedThemes(SettingsOptionsProvider settingsOptionsProvider) {
+                for (SettingsComponent component : themeOptionsComponents.values()) {
+                    component.saveToOptions(settingsOptionsProvider);
+                }
+            }
+        });
+        return themeOptionsPanel;
+    }
+}

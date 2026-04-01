@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.file.api.FileModuleApi</api>
+  <api>org.exbin.jaguif.file.api.FileModuleApi</api>
   <name>File Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module to support file operations</description>
   <dependency>
-    <module id="org.exbin.framework.action.api.ActionModuleApi" />
+    <module id="org.exbin.jaguif.action.api.ActionModuleApi" />
   </dependency>
 </module>

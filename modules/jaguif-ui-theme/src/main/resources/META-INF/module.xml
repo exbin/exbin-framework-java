@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.ui.theme.UiThemeModule</id>
+  <id>org.exbin.jaguif.ui.theme.UiThemeModule</id>
   <name>User interface theme</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module for user interface themes</description>
   <dependency>
-    <module id="org.exbin.framework.ui.theme.api.UiThemeModuleApi" />
-    <module id="org.exbin.framework.ui.api.UiModuleApi" />
-    <module id="org.exbin.framework.action.api.ActionModuleApi" />
-    <module id="org.exbin.framework.options.api.OptionsModuleApi" />
-    <module id="org.exbin.framework.options.settings.api.OptionsSettingsModuleApi" />
-    <module id="org.exbin.framework.frame.api.FrameModuleApi" />
-    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
-    <module id="org.exbin.framework.utils.UtilsModule" />
+    <module id="org.exbin.jaguif.ui.theme.api.UiThemeModuleApi" />
+    <module id="org.exbin.jaguif.ui.api.UiModuleApi" />
+    <module id="org.exbin.jaguif.action.api.ActionModuleApi" />
+    <module id="org.exbin.jaguif.options.api.OptionsModuleApi" />
+    <module id="org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi" />
+    <module id="org.exbin.jaguif.frame.api.FrameModuleApi" />
+    <module id="org.exbin.jaguif.language.api.LanguageModuleApi" />
+    <module id="org.exbin.jaguif.utils.UtilsModule" />
   </dependency>
 </module>

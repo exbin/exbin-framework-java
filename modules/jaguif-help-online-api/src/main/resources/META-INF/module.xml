@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.help.online.api.HelpOnlineModuleApi</api>
+  <api>org.exbin.jaguif.help.online.api.HelpOnlineModuleApi</api>
   <name>Online Help API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>API for help targeting help provided as online website</description>
   <dependency>
-    <module id="org.exbin.framework.action.api.ActionModuleApi" />
-    <module id="org.exbin.framework.help.api.HelpModuleApi" />
+    <module id="org.exbin.jaguif.action.api.ActionModuleApi" />
+    <module id="org.exbin.jaguif.help.api.HelpModuleApi" />
   </dependency>
 </module>

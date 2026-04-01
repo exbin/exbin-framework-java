@@ -2,7 +2,7 @@ rootProject.name = 'jaguif'
 
 include ":deps"
 
-include ":core:jaguif"
+include ":core:jaguif-core"
 include ":core:jaguif-basic"
 include ":core:jaguif-addon"
 include ":modules:jaguif-context"

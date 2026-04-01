@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <module>
-  <id>org.exbin.framework.sidebar.SideBarModule</id>
+  <id>org.exbin.jaguif.sidebar.SideBarModule</id>
   <name>Side Bar Support</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Support for side bar</description>
   <dependency>
-    <module id="org.exbin.framework.window.api.WindowModuleApi" />
-    <module id="org.exbin.framework.frame.api.FrameModuleApi" />
-    <module id="org.exbin.framework.utils.UtilsModule" />
-    <module id="org.exbin.framework.contribution.api.ContributionModuleApi" />
-    <module id="org.exbin.framework.language.api.LanguageModuleApi" />
+    <module id="org.exbin.jaguif.window.api.WindowModuleApi" />
+    <module id="org.exbin.jaguif.frame.api.FrameModuleApi" />
+    <module id="org.exbin.jaguif.utils.UtilsModule" />
+    <module id="org.exbin.jaguif.contribution.api.ContributionModuleApi" />
+    <module id="org.exbin.jaguif.language.api.LanguageModuleApi" />
   </dependency>
 </module>

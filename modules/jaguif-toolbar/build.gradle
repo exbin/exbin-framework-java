@@ -25,7 +25,7 @@ repositories {
 dependencies {
     api moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-action-api')
     api moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-toolbar-api')
-    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'core', 'jaguif')
+    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'core', 'jaguif-core')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-action')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-window-api')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-frame-api')

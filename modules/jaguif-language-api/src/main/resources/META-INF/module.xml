@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.language.api.LanguageModuleApi</api>
+  <api>org.exbin.jaguif.language.api.LanguageModuleApi</api>
   <name>Language support</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>

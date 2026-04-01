@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.action.api.ActionModuleApi</api>
+  <api>org.exbin.jaguif.action.api.ActionModuleApi</api>
   <name>Action Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>

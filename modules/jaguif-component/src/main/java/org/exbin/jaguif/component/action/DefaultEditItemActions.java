@@ -1,0 +1,77 @@
+/*
+ * Copyright (C) ExBin Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.jaguif.component.action;
+
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.App;
+import org.exbin.jaguif.component.ComponentModule;
+import org.exbin.jaguif.component.api.action.EditItemActions;
+import org.exbin.jaguif.component.api.toolbar.SideToolBar;
+import org.exbin.jaguif.language.api.LanguageModuleApi;
+
+/**
+ * Item edit default action set.
+ *
+ * @author ExBin Project (https://exbin.org)
+ */
+@ParametersAreNonnullByDefault
+public class DefaultEditItemActions implements EditItemActions {
+
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ComponentModule.class);
+
+    protected final EditItemMode mode;
+
+    public DefaultEditItemActions() {
+        this(EditItemMode.NORMAL);
+    }
+
+    public DefaultEditItemActions(EditItemMode mode) {
+        this.mode = mode;
+    }
+
+    @Nonnull
+    @Override
+    public AddItemAction createAddItemAction() {
+        AddItemAction addItemAction = new AddItemAction(mode);
+        addItemAction.setup(resourceBundle);
+        return addItemAction;
+    }
+
+    @Nonnull
+    @Override
+    public EditItemAction createEditItemAction() {
+        EditItemAction editItemAction = new EditItemAction(mode);
+        editItemAction.setup(resourceBundle);
+        return editItemAction;
+    }
+
+    @Nonnull
+    @Override
+    public DeleteItemAction createDeleteItemAction() {
+        DeleteItemAction deleteItemAction = new DeleteItemAction();
+        deleteItemAction.setup(resourceBundle);
+        return deleteItemAction;
+    }
+
+    @Override
+    public void registerActions(SideToolBar sideToolBar) {
+        sideToolBar.addAction(createAddItemAction());
+        sideToolBar.addAction(createEditItemAction());
+        sideToolBar.addAction(createDeleteItemAction());
+    }
+}

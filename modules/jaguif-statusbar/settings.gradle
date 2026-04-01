@@ -1,7 +1,7 @@
 rootProject.name = 'jaguif-statusbar'
 
 if (rootProject.path == ':') {
-    include ':core:jaguif'
+    include ':core:jaguif-core'
     include ':modules:jaguif-statusbar-api'
     include ':modules:jaguif-context-api'
     include ':modules:jaguif-contribution-api'

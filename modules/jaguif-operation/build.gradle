@@ -24,12 +24,11 @@ repositories {
 
 dependencies {
     api moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-operation-api')
-    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'core', 'jaguif')
+    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'core', 'jaguif-core')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-utils')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-action-api')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-window-api')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-utils')
-    implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'modules', 'binary_data')
     compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     testImplementation group : 'junit', name: 'junit', version: '4.13.2'
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.options.settings.api.OptionsSettingsModuleApi</api>
+  <api>org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi</api>
   <name>Options Settings Module</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
   <description>Module to provide support for application settings</description>
   <dependency>
-    <module id="org.exbin.framework.options.api.OptionsModuleApi" />
-    <module id="org.exbin.framework.context.api.ContextModuleApi" />
-    <module id="org.exbin.framework.utils.UtilsModule" />
+    <module id="org.exbin.jaguif.options.api.OptionsModuleApi" />
+    <module id="org.exbin.jaguif.context.api.ContextModuleApi" />
+    <module id="org.exbin.jaguif.utils.UtilsModule" />
   </dependency>
 </module>

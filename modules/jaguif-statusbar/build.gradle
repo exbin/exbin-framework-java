@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'core', 'jaguif')
+    implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'core', 'jaguif-core')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-statusbar-api')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-context-api')
     implementation moduleDep('Jaguif', 'org.exbin.jaguif', 'modules', 'jaguif-contribution-api')

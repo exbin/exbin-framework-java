@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.framework.addon.update.api.AddonUpdateModuleApi</api>
+  <api>org.exbin.jaguif.addon.update.api.AddonUpdateModuleApi</api>
   <name>Addon Update Support API</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
