@@ -7,7 +7,7 @@ def libraryUrl = 'https://jaguif.exbin.org'
 
 ext.depsThis = 'Jaguif'
 
-ext.depsExbinFrameworkJava = [
+ext.depsJaguif = [
     githubProfile: githubProfile,
     githubRepo   : repositoryName,
     version      : version

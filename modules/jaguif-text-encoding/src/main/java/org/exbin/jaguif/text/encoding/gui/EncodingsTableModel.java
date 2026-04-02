@@ -65,7 +65,7 @@ public class EncodingsTableModel extends AbstractTableModel {
             encodings.put(charset.name().toLowerCase(), record);
         });
 
-        try (InputStream stream = this.getClass().getResourceAsStream("/org/exbin/framework/text/encoding/resources/encodingsMap.txt")) {
+        try (InputStream stream = this.getClass().getResourceAsStream("/org/exbin/jaguif/text/encoding/resources/encodingsMap.txt")) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             String encoding;
             do {

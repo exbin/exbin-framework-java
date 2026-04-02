@@ -116,7 +116,7 @@ public class CheckForUpdatePanel extends javax.swing.JPanel implements Hyperlink
         statusPanel.setMaximumSize(new java.awt.Dimension(32767, 60));
         statusPanel.setMinimumSize(new java.awt.Dimension(100, 60));
 
-        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/framework/addon/update/resources/icons/open_icon_library/icons/png/48x48/apps/internet-web-browser-7.png"))); // NOI18N
+        statusIconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/jaguif/addon/update/resources/icons/open_icon_library/icons/png/48x48/apps/internet-web-browser-7.png"))); // NOI18N
 
         statusTextLabel.setText(resourceBundle.getString("statusTextLabel.text")); // NOI18N
 
