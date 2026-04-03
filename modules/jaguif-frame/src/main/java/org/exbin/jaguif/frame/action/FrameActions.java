@@ -84,11 +84,11 @@ public class FrameActions {
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
+                registrar.registerChangeListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerStateChangeListener(ContextFrame.class, (instance, message) -> {
-                    if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
+                registrar.registerStateUpdateListener(ContextFrame.class, (instance, message) -> {
+                    if (ContextFrame.UpdateType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });
@@ -126,11 +126,11 @@ public class FrameActions {
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
+                registrar.registerChangeListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerStateChangeListener(ContextFrame.class, (instance, message) -> {
-                    if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
+                registrar.registerStateUpdateListener(ContextFrame.class, (instance, message) -> {
+                    if (ContextFrame.UpdateType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });
@@ -168,11 +168,11 @@ public class FrameActions {
             putValue(Action.SELECTED_KEY, true);
             putValue(ActionConsts.ACTION_TYPE, ActionType.CHECK);
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-                registrar.registerUpdateListener(ContextFrame.class, (instance) -> {
+                registrar.registerChangeListener(ContextFrame.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerStateChangeListener(ContextFrame.class, (instance, message) -> {
-                    if (ContextFrame.ChangeType.BARS_LAYOUT_CHANGE.equals(message)) {
+                registrar.registerStateUpdateListener(ContextFrame.class, (instance, message) -> {
+                    if (ContextFrame.UpdateType.BARS_LAYOUT_CHANGE.equals(message)) {
                         updateByContext(instance);
                     }
                 });

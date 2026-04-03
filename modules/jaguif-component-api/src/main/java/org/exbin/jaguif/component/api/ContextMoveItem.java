@@ -15,7 +15,7 @@
  */
 package org.exbin.jaguif.component.api;
 
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface item movement action set.
@@ -58,7 +58,7 @@ public interface ContextMoveItem {
      */
     boolean isEditable();
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         MOVE_STATE
     }
 }

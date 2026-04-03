@@ -27,10 +27,10 @@ import org.exbin.jaguif.action.api.ActionContextChange;
 import org.exbin.jaguif.action.api.ActionManagement;
 import org.exbin.jaguif.context.api.ActiveContextChangeListener;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
-import org.exbin.jaguif.context.api.StateChangeType;
 import org.exbin.jaguif.context.api.ContextChangeListener;
-import org.exbin.jaguif.context.api.ContextStateChangeListener;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
+import org.exbin.jaguif.context.api.StateUpdateType;
+import org.exbin.jaguif.context.api.ContextStateUpdateListener;
 
 /**
  * Default action manager.
@@ -43,19 +43,19 @@ public class ActionManager implements ActionManagement {
     protected final ActiveContextManagement contextManager;
     protected final Map<String, ActionRecord> actions = new HashMap<>();
     protected final Map<Class<?>, List<ContextChangeListener<?>>> actionContextChangeListeners = new HashMap<>();
-    protected final Map<Class<?>, List<ContextStateChangeListener<?>>> actionContextStateChangeListeners = new HashMap<>();
+    protected final Map<Class<?>, List<ContextStateUpdateListener<?>>> actionContextStateUpdateListeners = new HashMap<>();
 
     public ActionManager(ActiveContextManagement contextManager) {
         this.contextManager = contextManager;
         contextManager.addChangeListener(new ActiveContextChangeListener() {
             @Override
-            public <T> void activeStateChanged(Class<T> stateClass, T activeState) {
+            public <T> void notifyStateChanged(Class<T> stateClass, T activeState) {
                 ActionManager.this.activeStateChanged(stateClass, activeState);
             }
 
             @Override
-            public <T> void notifyStateChange(Class<T> stateClass, T activeState, StateChangeType stateChangeType) {
-                ActionManager.this.notifyStateChange(stateClass, activeState, stateChangeType);
+            public <T> void notifyStateUpdated(Class<T> stateClass, T activeState, StateUpdateType stateUpdateType) {
+                ActionManager.this.notifyStateUpdate(stateClass, activeState, stateUpdateType);
             }
         });
     }
@@ -104,15 +104,15 @@ public class ActionManager implements ActionManagement {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> void notifyStateChange(Class<T> stateClass, @Nullable T contextInstance, StateChangeType changeType) {
+    public <T> void notifyStateUpdate(Class<T> stateClass, @Nullable T contextInstance, StateUpdateType updateType) {
         // TODO: Convert to thread
-        List<ContextStateChangeListener<?>> contextListeners = actionContextStateChangeListeners.get(stateClass);
-        if (contextListeners == null) {
+        List<ContextStateUpdateListener<?>> updateListeners = actionContextStateUpdateListeners.get(stateClass);
+        if (updateListeners == null) {
             return;
         }
 
-        for (ContextStateChangeListener contextListener : contextListeners) {
-            contextListener.notifyStateChange(contextInstance, changeType);
+        for (ContextStateUpdateListener contextListener : updateListeners) {
+            contextListener.notifyStateUpdated(contextInstance, updateType);
         }
     }
 
@@ -165,7 +165,7 @@ public class ActionManager implements ActionManagement {
         }
 
         @Override
-        public <T> void registerListener(Class<T> contextClass, ContextChangeListener<T> listener) {
+        public <T> void registerChangeListener(Class<T> contextClass, ContextChangeListener<T> listener) {
             actionRecord.contextChangeListeners.put(contextClass, listener);
 
             List<ContextChangeListener<?>> contextChangeListeners = actionContextChangeListeners.get(contextClass);
@@ -178,22 +178,16 @@ public class ActionManager implements ActionManagement {
         }
 
         @Override
-        public <T> void registerUpdateListener(Class<T> contextClass, ContextChangeListener<T> listener) {
-            // TODO Drop?
-            registerListener(contextClass, listener);
-        }
+        public <T> void registerStateUpdateListener(Class<T> contextClass, ContextStateUpdateListener<T> listener) {
+            actionRecord.contextStateUpdateListeners.put(contextClass, listener);
 
-        @Override
-        public <T> void registerStateChangeListener(Class<T> contextClass, ContextStateChangeListener<T> listener) {
-            actionRecord.contextStateChangeListeners.put(contextClass, listener);
-
-            List<ContextStateChangeListener<?>> contextStateChangeListener = actionContextStateChangeListeners.get(contextClass);
-            if (contextStateChangeListener == null) {
-                contextStateChangeListener = new ArrayList<>();
-                actionContextStateChangeListeners.put(contextClass, contextStateChangeListener);
+            List<ContextStateUpdateListener<?>> contextStateUpdateListener = actionContextStateUpdateListeners.get(contextClass);
+            if (contextStateUpdateListener == null) {
+                contextStateUpdateListener = new ArrayList<>();
+                actionContextStateUpdateListeners.put(contextClass, contextStateUpdateListener);
             }
 
-            contextStateChangeListener.add(listener);
+            contextStateUpdateListener.add(listener);
         }
     }
 
@@ -201,7 +195,7 @@ public class ActionManager implements ActionManagement {
 
         List<Action> actionInstances = new ArrayList<>();
         Map<Class<?>, ContextChangeListener<?>> contextChangeListeners = new HashMap<>();
-        Map<Class<?>, ContextStateChangeListener<?>> contextStateChangeListeners = new HashMap<>();
+        Map<Class<?>, ContextStateUpdateListener<?>> contextStateUpdateListeners = new HashMap<>();
     }
 
     /*

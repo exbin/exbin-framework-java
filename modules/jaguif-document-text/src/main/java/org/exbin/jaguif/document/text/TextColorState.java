@@ -18,7 +18,7 @@ package org.exbin.jaguif.document.text;
 import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Text color panel API.
@@ -51,7 +51,7 @@ public interface TextColorState {
      */
     void setCurrentTextColors(Color[] colors);
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         TEXT_COLOR
     }
 }

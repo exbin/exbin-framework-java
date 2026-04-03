@@ -58,7 +58,7 @@ public class AddonManagerAction extends AbstractAction {
         setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+            registrar.registerChangeListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                 dialogParentComponent = instance;
                 setEnabled(instance != null);
             });

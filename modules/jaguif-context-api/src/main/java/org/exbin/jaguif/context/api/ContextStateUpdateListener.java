@@ -15,10 +15,22 @@
  */
 package org.exbin.jaguif.context.api;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
- * Interface for context state change type.
+ * Listener for context state update.
  *
  * @author ExBin Project (https://exbin.org)
+ * @param <T> instance type
  */
-public interface StateChangeType {
+@ParametersAreNonnullByDefault
+public interface ContextStateUpdateListener<T> {
+
+    /**
+     * Notifies state changed in the active context.
+     *
+     * @param instance class instance
+     * @param updateType update type
+     */
+    void notifyStateUpdated(T instance, StateUpdateType updateType);
 }

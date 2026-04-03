@@ -26,31 +26,21 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface ContextChangeRegistration {
 
     /**
-     * Registers listener to call once when menu is created for component or
-     * empty when no such component is active.
+     * Registers listener to call when active state of the specific context
+     * class is changed.
      *
      * @param <T> monitored class type
      * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerListener(Class<T> contextClass, ContextChangeListener<T> listener);
+    <T> void registerChangeListener(Class<T> contextClass, ContextChangeListener<T> listener);
 
     /**
-     * Registers listener to call each time when component is activated or empty
-     * when deactivated.
+     * Registers listener to updates of the active context state.
      *
      * @param <T> monitored class type
      * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerUpdateListener(Class<T> contextClass, ContextChangeListener<T> listener);
-
-    /**
-     * Registers listener to change of the context state.
-     *
-     * @param <T> monitored class type
-     * @param contextClass context class
-     * @param listener listener
-     */
-    <T> void registerStateChangeListener(Class<T> contextClass, ContextStateChangeListener<T> listener);
+    <T> void registerStateUpdateListener(Class<T> contextClass, ContextStateUpdateListener<T> listener);
 }

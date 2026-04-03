@@ -32,8 +32,8 @@ import org.exbin.jaguif.window.api.gui.DefaultControlPanel;
 import org.exbin.jaguif.window.api.controller.DefaultControlController;
 import org.exbin.jaguif.text.encoding.ContextEncoding;
 import org.exbin.jaguif.text.encoding.CharsetEncodingState;
-import org.exbin.jaguif.context.api.StateChangeType;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Text encoding action.
@@ -57,11 +57,11 @@ public class TextEncodingAction extends AbstractAction {
         setEnabled(false);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
+            registrar.registerChangeListener(ContextEncoding.class, (instance) -> {
                 updateByContext(instance);
             });
-            registrar.registerStateChangeListener(ContextEncoding.class, (ContextEncoding instance, StateChangeType changeType) -> {
-                if (CharsetEncodingState.ChangeType.ENCODING.equals(changeType)) {
+            registrar.registerStateUpdateListener(ContextEncoding.class, (ContextEncoding instance, StateUpdateType updateType) -> {
+                if (CharsetEncodingState.UpdateType.ENCODING.equals(updateType)) {
                     updateByContext(instance);
                 }
             });

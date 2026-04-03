@@ -17,7 +17,7 @@ package org.exbin.jaguif.text.encoding;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Charset encoding state interface.
@@ -42,7 +42,7 @@ public interface CharsetEncodingState extends ContextEncoding {
      */
     void setEncoding(String encodingName);
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         ENCODING
     }
 }

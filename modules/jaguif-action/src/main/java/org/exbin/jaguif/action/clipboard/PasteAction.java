@@ -62,14 +62,14 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
+        registrar.registerChangeListener(ContextComponent.class, (instance) -> {
             updateByContext(instance);
         });
-        registrar.registerUpdateListener(ClipboardFlavorState.class, instance -> {
+        registrar.registerChangeListener(ClipboardFlavorState.class, instance -> {
             updateByContext(instance);
         });
-        registrar.registerStateChangeListener(ContextComponent.class, (instance, changeType) -> {
-            if (ClipboardController.ChangeType.CONTENT_STATE.equals(changeType)) {
+        registrar.registerStateUpdateListener(ContextComponent.class, (instance, updateType) -> {
+            if (ClipboardController.UpdateType.CONTENT_STATE.equals(updateType)) {
                 updateByContext(instance);
             }
         });

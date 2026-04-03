@@ -517,7 +517,7 @@ public class BasicModuleProvider implements ModuleProvider {
     }
 
     /**
-     * Gets list of modules.
+     * Returns list of modules.
      *
      * @return list of modules
      */

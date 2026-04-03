@@ -15,7 +15,7 @@
  */
 package org.exbin.jaguif.action.api;
 
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for active document deletion controller.
@@ -36,7 +36,7 @@ public interface DeletionController {
      */
     boolean canDelete();
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         CONTENT_STATE
     }
 }

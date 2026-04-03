@@ -56,7 +56,7 @@ public class EditFindAction extends AbstractAction implements ActionContextChang
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
+        registrar.registerChangeListener(ContextSearch.class, (instance) -> {
             findSearchState = instance instanceof FindSearchState ? (FindSearchState) instance : null;
             setEnabled(findSearchState != null);
         });

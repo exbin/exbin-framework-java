@@ -43,7 +43,7 @@ public class MoveUpAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(ContextMoveItem.class, (ContextMoveItem instance) -> {
+            registrar.registerChangeListener(ContextMoveItem.class, (ContextMoveItem instance) -> {
                 actionsHandler = instance;
                 setEnabled(actionsHandler.isEditable() && actionsHandler.isSelection());
             });

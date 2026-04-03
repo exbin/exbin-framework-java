@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.options.settings.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.Immutable;
 import org.exbin.jaguif.contribution.api.SubSequenceContributionRule;
@@ -28,11 +29,34 @@ import org.exbin.jaguif.contribution.api.SubSequenceContributionRule;
 @Immutable
 public class SettingsPageContributionRule extends SubSequenceContributionRule {
 
+    // TODO Replace with proper settings panel construction later
+    private final Parameter parameter;
+
     public SettingsPageContributionRule(String pageId) {
         super(pageId);
+        parameter = Parameter.DEFAULT;
+    }
+
+    public SettingsPageContributionRule(String pageId, Parameter parameter) {
+        super(pageId);
+        this.parameter = parameter;
     }
 
     public SettingsPageContributionRule(SettingsPageContribution pageContribution) {
         this(pageContribution.getContributionId());
+    }
+
+    public SettingsPageContributionRule(SettingsPageContribution pageContribution, Parameter parameter) {
+        this(pageContribution.getContributionId(), parameter);
+    }
+
+    @Nonnull
+    public Parameter getParameter() {
+        return parameter;
+    }
+
+    public enum Parameter {
+        DEFAULT,
+        EXPAND_VERTICALLY
     }
 }

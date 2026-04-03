@@ -15,14 +15,11 @@
  */
 package org.exbin.jaguif;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Plugin module interface.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public interface PluginModule extends Module {
 
     /**

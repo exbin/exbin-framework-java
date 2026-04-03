@@ -16,7 +16,7 @@
 package org.exbin.jaguif.component.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for edit item context.
@@ -62,7 +62,7 @@ public interface ContextEditItem {
      */
     boolean canDeleteItem();
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         EDIT_STATE
     }
 }

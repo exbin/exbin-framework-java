@@ -67,7 +67,7 @@ public class ManageEncodingsAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
+                registrar.registerChangeListener(ContextEncoding.class, (instance) -> {
                     charsetEncodingState = instance instanceof CharsetListEncodingState ? (CharsetListEncodingState) instance : null;
                     setEnabled(charsetEncodingState != null);
                 });

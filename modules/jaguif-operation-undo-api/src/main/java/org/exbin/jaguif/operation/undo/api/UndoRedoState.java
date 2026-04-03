@@ -15,7 +15,7 @@
  */
 package org.exbin.jaguif.operation.undo.api;
 
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for undo state.
@@ -38,7 +38,7 @@ public interface UndoRedoState extends ContextUndoRedo {
      */
     boolean canRedo();
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         UNDO_REDO_STATE
     }
 }

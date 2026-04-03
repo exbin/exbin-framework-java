@@ -74,6 +74,6 @@ public class ActionManagerModule implements org.exbin.jaguif.Module {
         settingsManagement.registerPage(pageContribution);
 
         SettingsComponentContribution settingsContribution = settingsManagement.registerComponent(KeyMapSettingsComponent.COMPONENT_ID, new KeyMapSettingsComponent());
-        settingsManagement.registerSettingsRule(settingsContribution, new SettingsPageContributionRule(pageContribution));
+        settingsManagement.registerSettingsRule(settingsContribution, new SettingsPageContributionRule(pageContribution, SettingsPageContributionRule.Parameter.EXPAND_VERTICALLY));
     }
 }

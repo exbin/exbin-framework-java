@@ -37,11 +37,11 @@ public interface ActiveContextProvider {
     <T> T getActiveState(Class<T> stateClass);
 
     /**
-     * Notifies change for the current active state.
+     * Notifies update for the current active state.
      *
      * @param <T> state type
      * @param stateClass state class
-     * @param changeType change type
+     * @param updateType update type
      */
-    <T> void notifyStateChange(Class<T> stateClass, StateChangeType changeType);
+    <T> void updateActiveState(Class<T> stateClass, StateUpdateType updateType);
 }

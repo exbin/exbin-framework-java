@@ -55,7 +55,7 @@ public class PropertiesAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(ContextDocument.class, (instance) -> {
+                registrar.registerChangeListener(ContextDocument.class, (instance) -> {
                     textDocument = instance instanceof TextDocument ? (TextDocument) instance : null;
                     setEnabled(textDocument != null);
                 });

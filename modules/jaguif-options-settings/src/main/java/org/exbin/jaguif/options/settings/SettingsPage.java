@@ -27,7 +27,6 @@ import javax.swing.GroupLayout;
 import javax.swing.JPanel;
 import org.exbin.jaguif.options.settings.api.SettingsComponent;
 import org.exbin.jaguif.options.settings.api.SettingsModifiedListener;
-import org.exbin.jaguif.options.settings.api.VerticallyExpandable;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
 
@@ -99,7 +98,8 @@ public class SettingsPage {
         SettingsComponent settingsComponent = components.get(components.size() - 1);
         panel.add((Component) settingsComponent);
         horizontalGroup.addComponent((Component) settingsComponent);
-        if (last && settingsComponent instanceof VerticallyExpandable) {
+        // TODO  && settingsComponent instanceof VerticallyExpandable
+        if (last) {
             verticalGroup.addComponent((Component) settingsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
         } else {
             verticalGroup.addComponent((Component) settingsComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);

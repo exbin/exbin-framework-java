@@ -56,7 +56,7 @@ public class AboutAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+            registrar.registerChangeListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                 dialogParentComponent = instance;
                 setEnabled(dialogParentComponent != null);
             });

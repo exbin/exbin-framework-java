@@ -18,9 +18,9 @@ package org.exbin.jaguif.docking.api;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.StateChangeType;
 import org.exbin.jaguif.document.api.Document;
 import org.exbin.jaguif.utils.ComponentProvider;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for document docking.
@@ -65,7 +65,7 @@ public interface DocumentDocking extends ComponentProvider {
      */
     boolean releaseDocument(Document document);
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         DOCUMENT_LIST
     }
 }

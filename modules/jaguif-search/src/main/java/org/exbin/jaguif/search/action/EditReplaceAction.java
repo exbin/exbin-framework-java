@@ -56,7 +56,7 @@ public class EditReplaceAction extends AbstractAction implements ActionContextCh
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
+        registrar.registerChangeListener(ContextSearch.class, (instance) -> {
             replaceSearchState = instance instanceof ReplaceSearchState ? (ReplaceSearchState) instance : null;
             setEnabled(replaceSearchState != null);
         });

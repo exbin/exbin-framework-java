@@ -15,7 +15,7 @@
  */
 package org.exbin.jaguif.action.api.clipboard;
 
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for document clipboard actions controller.
@@ -55,7 +55,7 @@ public interface ClipboardController {
      */
     boolean canPaste();
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         CONTENT_STATE
     }
 }

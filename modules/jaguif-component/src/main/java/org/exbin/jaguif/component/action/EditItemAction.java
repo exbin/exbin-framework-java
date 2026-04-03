@@ -51,7 +51,7 @@ public class EditItemAction extends AbstractAction {
             putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         }
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(ContextEditItem.class, (ContextEditItem instance) -> {
+            registrar.registerChangeListener(ContextEditItem.class, (ContextEditItem instance) -> {
                 actionsHandler = instance;
                 setEnabled(actionsHandler.canEditItem());
             });

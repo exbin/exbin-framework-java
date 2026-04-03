@@ -65,11 +65,11 @@ public class RedoAction extends AbstractAction implements ActionContextChange {
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextUndoRedo.class, (instance) -> {
+        registrar.registerChangeListener(ContextUndoRedo.class, (instance) -> {
             updateByContext(instance);
         });
-        registrar.registerStateChangeListener(ContextUndoRedo.class, (instance, changeType) -> {
-            if (UndoRedoState.ChangeType.UNDO_REDO_STATE.equals(changeType)) {
+        registrar.registerStateUpdateListener(ContextUndoRedo.class, (instance, updateType) -> {
+            if (UndoRedoState.UpdateType.UNDO_REDO_STATE.equals(updateType)) {
                 updateByContext(instance);
             }
         });

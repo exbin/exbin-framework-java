@@ -93,13 +93,13 @@ public class EncodingsManager {
         toolsEncodingAction.putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(ContextEncoding.class, (instance) -> {
+                registrar.registerChangeListener(ContextEncoding.class, (instance) -> {
                     listEncodingState = instance instanceof CharsetListEncodingState ? (CharsetListEncodingState) instance : null;
                     encodingState = instance instanceof CharsetEncodingState ? (CharsetEncodingState) instance : null;
                     rebuildEncodings();
                 });
-                registrar.registerStateChangeListener(ContextEncoding.class, (instance, changeType) -> {
-                    if (CharsetListEncodingState.ChangeType.ENCODING_LIST.equals(changeType) || CharsetEncodingState.ChangeType.ENCODING.equals(changeType)) {
+                registrar.registerStateUpdateListener(ContextEncoding.class, (instance, updateType) -> {
+                    if (CharsetListEncodingState.UpdateType.ENCODING_LIST.equals(updateType) || CharsetEncodingState.UpdateType.ENCODING.equals(updateType)) {
                         rebuildEncodings();
                     }
                 });

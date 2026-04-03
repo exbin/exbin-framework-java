@@ -91,7 +91,7 @@ public class TextEncodingModule implements Module {
         settingsManagement.registerPage(pageContribution);
         TextEncodingSettingsComponent settingsComponent = new TextEncodingSettingsComponent();
         SettingsComponentContribution settingsComponentContribution = settingsManagement.registerComponent(TextEncodingSettingsComponent.COMPONENT_ID, settingsComponent);
-        settingsManagement.registerSettingsRule(settingsComponentContribution, new SettingsPageContributionRule(pageContribution));
+        settingsManagement.registerSettingsRule(settingsComponentContribution, new SettingsPageContributionRule(pageContribution, SettingsPageContributionRule.Parameter.EXPAND_VERTICALLY));
     }
 
     @Nonnull

@@ -15,7 +15,7 @@
  */
 package org.exbin.jaguif.frame.api;
 
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for context activable frame.
@@ -24,7 +24,7 @@ import org.exbin.jaguif.context.api.StateChangeType;
  */
 public interface ContextFrame {
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         BARS_LAYOUT_CHANGE
     }
 }

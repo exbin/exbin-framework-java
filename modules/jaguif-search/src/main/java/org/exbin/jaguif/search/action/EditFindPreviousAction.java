@@ -54,11 +54,11 @@ public class EditFindPreviousAction extends AbstractAction implements ActionCont
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextSearch.class, (instance) -> {
+        registrar.registerChangeListener(ContextSearch.class, (instance) -> {
             updateByContext(instance);
         });
-        registrar.registerStateChangeListener(ContextSearch.class, (instance, changeType) -> {
-            if (FindSearchState.ChangeType.FIND_AVAILABILITY.equals(changeType)) {
+        registrar.registerStateUpdateListener(ContextSearch.class, (instance, updateType) -> {
+            if (FindSearchState.UpdateType.FIND_AVAILABILITY.equals(updateType)) {
                 updateByContext(instance);
             }
         });

@@ -18,7 +18,7 @@ package org.exbin.jaguif.text.font;
 import java.awt.Font;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Text font state interface.
@@ -51,7 +51,7 @@ public interface TextFontState extends ContextFont {
      */
     void setCurrentFont(Font font);
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         FONT
     }
 }

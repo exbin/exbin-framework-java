@@ -49,11 +49,11 @@ public class SaveAllFileAction extends AbstractAction {
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {
-                registrar.registerUpdateListener(ContextDocking.class, (instance) -> {
+                registrar.registerChangeListener(ContextDocking.class, (instance) -> {
                     updateByContext(instance);
                 });
-                registrar.registerStateChangeListener(ContextDocking.class, (instance, changeType) -> {
-                    if (DefaultMultiDocking.ChangeType.DOCUMENT_LIST.equals(changeType)) {
+                registrar.registerStateUpdateListener(ContextDocking.class, (instance, updateType) -> {
+                    if (DefaultMultiDocking.UpdateType.DOCUMENT_LIST.equals(updateType)) {
                         updateByContext(instance);
                     }
                 });

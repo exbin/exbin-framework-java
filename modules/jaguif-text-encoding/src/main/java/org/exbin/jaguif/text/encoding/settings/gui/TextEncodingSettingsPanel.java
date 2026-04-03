@@ -28,7 +28,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.options.settings.api.SettingsComponent;
 import org.exbin.jaguif.options.settings.api.SettingsModifiedListener;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
-import org.exbin.jaguif.options.settings.api.VerticallyExpandable;
 import org.exbin.jaguif.options.settings.api.SettingsPanelUpdater;
 import org.exbin.jaguif.text.encoding.settings.TextEncodingInference;
 import org.exbin.jaguif.text.encoding.settings.TextEncodingsInference;
@@ -39,7 +38,7 @@ import org.exbin.jaguif.text.encoding.settings.TextEncodingsInference;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class TextEncodingSettingsPanel extends javax.swing.JPanel implements SettingsComponent, VerticallyExpandable {
+public class TextEncodingSettingsPanel extends javax.swing.JPanel implements SettingsComponent {
 
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(TextEncodingSettingsPanel.class);
 

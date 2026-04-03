@@ -15,7 +15,7 @@
  */
 package org.exbin.jaguif.search.api;
 
-import org.exbin.jaguif.context.api.StateChangeType;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for find search state.
@@ -53,7 +53,7 @@ public interface FindSearchState {
      */
     boolean isFindPreviousAvailable();
 
-    public enum ChangeType implements StateChangeType {
+    public enum UpdateType implements StateUpdateType {
         FIND_AVAILABILITY
     }
 }

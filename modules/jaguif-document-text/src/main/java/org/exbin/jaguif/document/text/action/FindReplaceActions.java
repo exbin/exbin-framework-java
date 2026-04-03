@@ -123,11 +123,11 @@ public class FindReplaceActions {
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
                 @Override
                 public void register(ContextChangeRegistration registrar) {
-                    registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
+                    registrar.registerChangeListener(ContextComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
                         setEnabled(textPanel != null && dialogParentComponent != null);
                     });
-                    registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                    registrar.registerChangeListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                         dialogParentComponent = instance;
                         setEnabled(textPanel != null && dialogParentComponent != null);
                     });
@@ -159,11 +159,11 @@ public class FindReplaceActions {
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
                 @Override
                 public void register(ContextChangeRegistration registrar) {
-                    registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
+                    registrar.registerChangeListener(ContextComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
                         setEnabled(textPanel != null && dialogParentComponent != null);
                     });
-                    registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                    registrar.registerChangeListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                         dialogParentComponent = instance;
                         setEnabled(textPanel != null && dialogParentComponent != null);
                     });
@@ -196,11 +196,11 @@ public class FindReplaceActions {
             putValue(ActionConsts.ACTION_CONTEXT_CHANGE, new ActionContextChange() {
                 @Override
                 public void register(ContextChangeRegistration registrar) {
-                    registrar.registerUpdateListener(ContextComponent.class, (instance) -> {
+                    registrar.registerChangeListener(ContextComponent.class, (instance) -> {
                         textPanel = instance instanceof EditorTextPanelComponent ? ((EditorTextPanelComponent) instance).getTextPanel() : null;
                         setEnabled(textPanel != null && dialogParentComponent != null);
                     });
-                    registrar.registerUpdateListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
+                    registrar.registerChangeListener(DialogParentComponent.class, (DialogParentComponent instance) -> {
                         dialogParentComponent = instance;
                         setEnabled(textPanel != null && dialogParentComponent != null);
                     });

@@ -43,7 +43,7 @@ public class DeleteItemAction extends AbstractAction {
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, (ActionContextChange) (ContextChangeRegistration registrar) -> {
-            registrar.registerUpdateListener(ContextEditItem.class, (ContextEditItem instance) -> {
+            registrar.registerChangeListener(ContextEditItem.class, (ContextEditItem instance) -> {
                 actionsHandler = instance;
                 setEnabled(actionsHandler.canDeleteItem());
             });

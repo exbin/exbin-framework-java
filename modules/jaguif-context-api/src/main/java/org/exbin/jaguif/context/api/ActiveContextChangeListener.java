@@ -27,21 +27,21 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface ActiveContextChangeListener {
 
     /**
-     * Active state changed.
+     * Sends active state changed notification.
      *
      * @param <T> state type
      * @param stateClass state class
      * @param activeState active state
      */
-    <T> void activeStateChanged(Class<T> stateClass, @Nullable T activeState);
+    <T> void notifyStateChanged(Class<T> stateClass, @Nullable T activeState);
 
     /**
-     * Sends active state change notification.
+     * Sends active state specific update notification.
      *
      * @param <T> state type
      * @param stateClass state class
      * @param activeState active state
-     * @param changeType change type
+     * @param updateType update type
      */
-    <T> void notifyStateChange(Class<T> stateClass, T activeState, StateChangeType changeType);
+    <T> void notifyStateUpdated(Class<T> stateClass, T activeState, StateUpdateType updateType);
 }

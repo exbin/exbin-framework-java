@@ -61,11 +61,11 @@ public class SelectAllAction extends AbstractAction implements ActionContextChan
 
     @Override
     public void register(ContextChangeRegistration registrar) {
-        registrar.registerUpdateListener(ContextComponent.class, instance -> {
+        registrar.registerChangeListener(ContextComponent.class, instance -> {
             updateByContext(instance);
         });
-        registrar.registerStateChangeListener(ContextComponent.class, (instance, changeType) -> {
-            if (SelectionController.ChangeType.CONTENT_STATE.equals(changeType)) {
+        registrar.registerStateUpdateListener(ContextComponent.class, (instance, updateType) -> {
+            if (SelectionController.UpdateType.CONTENT_STATE.equals(updateType)) {
                 updateByContext(instance);
             }
         });
