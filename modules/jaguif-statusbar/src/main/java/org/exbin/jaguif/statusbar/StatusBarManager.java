@@ -1,0 +1,76 @@
+/*
+ * Copyright (C) ExBin Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.jaguif.statusbar;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.contribution.ContributionDefinition;
+import org.exbin.jaguif.contribution.ContributionManager;
+import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
+import org.exbin.jaguif.contribution.api.SequenceContributionRule;
+import org.exbin.jaguif.contribution.ContributionSequenceBuilder;
+import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.statusbar.api.ComponentStatusBarContribution;
+import org.exbin.jaguif.statusbar.api.StatusBar;
+import org.exbin.jaguif.statusbar.api.StatusBarManagement;
+
+/**
+ * Default status bar manager.
+ *
+ * @author ExBin Project (https://exbin.org)
+ */
+@ParametersAreNonnullByDefault
+public class StatusBarManager extends ContributionManager implements StatusBarManagement {
+
+    protected final ContributionSequenceBuilder builder = new ContributionSequenceBuilder();
+
+    public StatusBarManager() {
+    }
+
+    @Override
+    public void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration) {
+        ContributionDefinition contributionDef = definitions.get(statusBarId);
+        builder.buildSequence(new StatusBarSequenceOutput(targetStatusBar, actionContextRegistration), contributionDef);
+        actionContextRegistration.finish();
+    }
+
+    @Override
+    public void registerStatusBar(String statusBarId, String moduleId) {
+        registerDefinition(statusBarId, moduleId);
+    }
+
+    @Override
+    public void registerStatusBarContribution(String statusBarId, String moduleId, SequenceContribution contribution) {
+        ContributionDefinition definition = definitions.get(statusBarId);
+        if (definition == null) {
+            throw new IllegalStateException("Definition with Id " + statusBarId + " doesn't exist");
+        }
+
+        definition.addContribution(contribution);
+    }
+
+    @Nonnull
+    @Override
+    public GroupSequenceContribution registerStatusBarGroup(String statusBarId, String moduleId, String groupId) {
+        return registerContributionGroup(statusBarId, moduleId, groupId);
+    }
+
+    @Override
+    public void registerStatusBarRule(SequenceContribution contribution, SequenceContributionRule rule) {
+        registerContributionRule(contribution, rule);
+    }
+}

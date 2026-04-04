@@ -19,7 +19,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JToolBar;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
@@ -77,7 +76,7 @@ public interface StatusBarModuleApi extends Module {
      * @param statusBarId status bar id
      * @param actionContextRegistration action context registration
      */
-    void buildStatusBar(JToolBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration);
+    void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Returns list of action managed by status bar managers.
@@ -86,9 +85,4 @@ public interface StatusBarModuleApi extends Module {
      */
     @Nonnull
     List<Action> getStatusBarManagedActions();
-
-    /**
-     * Returns status bar into main frame.
-     */
-    void registerFrameStatusBar();
 }

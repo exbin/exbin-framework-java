@@ -13,20 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.statusbar.api;
+package org.exbin.jaguif.statusbar.gui;
 
-import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import org.exbin.jaguif.statusbar.api.StatusBar;
 
 /**
- * Status bar item contribution.
+ * Status bar component.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ComponentStatusBarContribution extends ItemSequenceContribution {
+public class DefaultStatusBar extends JPanel implements StatusBar {
+    
+    protected final List<JComponent> statusBarComponents = new ArrayList<>();
 
-    @Nonnull
-    StatusBarComponent createComponent();
+    @Override
+    public void addItem(JComponent component) {
+        statusBarComponents.add(component);
+    }
+
+    @Override
+    public void addSeparator() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getItemsCount() {
+        return statusBarComponents.size();
+    }
 }

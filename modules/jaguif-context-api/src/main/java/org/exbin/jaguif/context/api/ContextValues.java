@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.statusbar.api;
+package org.exbin.jaguif.context.api;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 
 /**
- * Status bar item contribution.
+ * Interface for context related class providing property values.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ComponentStatusBarContribution extends ItemSequenceContribution {
+public interface ContextValues {
 
-    @Nonnull
-    StatusBarComponent createComponent();
+    /**
+     * Gets one of this object's properties using the associated key.
+     *
+     * @param key identifier
+     * @return property value
+     */
+    @Nullable
+    Object getValue(String key);
 }

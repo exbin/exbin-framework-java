@@ -16,10 +16,14 @@
 package org.exbin.jaguif.statusbar;
 
 import java.util.List;
+import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JToolBar;
+import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.language.api.LanguageModuleApi;
+import org.exbin.jaguif.statusbar.api.StatusBar;
 import org.exbin.jaguif.statusbar.api.StatusBarDefinitionManagement;
 import org.exbin.jaguif.statusbar.api.StatusBarManagement;
 import org.exbin.jaguif.statusbar.api.StatusBarModuleApi;
@@ -32,14 +36,34 @@ import org.exbin.jaguif.statusbar.api.StatusBarModuleApi;
 @ParametersAreNonnullByDefault
 public class StatusBarModule implements StatusBarModuleApi {
 
-    @Override
-    public StatusBarDefinitionManagement getMainStatusBarManager(String moduleId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public static final String MAIN_STATUS_BAR_ID = "mainStatusBar";
+
+    private StatusBarDefinitionManager mainStatusBarManager = null;
+    private ResourceBundle resourceBundle;
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        if (resourceBundle == null) {
+            resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(StatusBarModule.class);
+        }
+
+        return resourceBundle;
     }
 
+    @Nonnull
+    @Override
+    public StatusBarDefinitionManagement getMainStatusBarManager(String moduleId) {
+        if (mainStatusBarManager == null) {
+            mainStatusBarManager = new StatusBarDefinitionManager(createStatusBarManager(), MAIN_STATUS_BAR_ID, MODULE_ID);
+        }
+
+        return mainStatusBarManager;
+    }
+
+    @Nonnull
     @Override
     public StatusBarDefinitionManagement getStatusBarManager(String statusBarId, String moduleId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new StatusBarDefinitionManager((StatusBarManagement) StatusBarModule.this.getMainStatusBarManager(moduleId), statusBarId, moduleId);
     }
 
     @Override
@@ -47,24 +71,20 @@ public class StatusBarModule implements StatusBarModuleApi {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Nonnull
     @Override
     public StatusBarManagement createStatusBarManager() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new StatusBarManager();
     }
 
     @Override
-    public void buildStatusBar(JToolBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration) {
+        // TODO StatusBarModule.this.getMainStatusBarManager(MODULE_ID).buildStatusBar(targetStatusBar, statusBarId, actionContextRegistration);
     }
 
+    @Nonnull
     @Override
     public List<Action> getStatusBarManagedActions() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
-
-    @Override
-    public void registerFrameStatusBar() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

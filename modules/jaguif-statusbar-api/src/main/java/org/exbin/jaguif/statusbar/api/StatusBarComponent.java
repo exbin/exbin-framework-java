@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.jaguif.context.api.ContextValues;
 
 /**
  * Interface for status bar component.
@@ -26,7 +27,7 @@ import javax.swing.JComponent;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface StatusBarComponent {
+public interface StatusBarComponent extends ContextValues {
 
     /**
      * Identifier value.
@@ -53,16 +54,7 @@ public interface StatusBarComponent {
      * @return component instance
      */
     @Nonnull
-    JComponent createComponent();
-
-    /**
-     * Gets one of this object's properties using the associated key.
-     *
-     * @param key identifier
-     * @return property value
-     */
-    @Nullable
-    Object getValue(String key);
+    JComponent getComponent();
 
     /**
      * Sets one of this object's properties using the associated key.

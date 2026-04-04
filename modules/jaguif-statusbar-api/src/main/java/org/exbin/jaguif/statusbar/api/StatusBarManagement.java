@@ -17,8 +17,6 @@ package org.exbin.jaguif.statusbar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
-import javax.swing.JToolBar;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
@@ -39,7 +37,7 @@ public interface StatusBarManagement {
      * @param statusBarId status bar definition id
      * @param actionContextRegistration action context registration
      */
-    void buildStatusBar(JToolBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration);
+    void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration);
 
     /**
      * Registers status bar.
@@ -54,11 +52,9 @@ public interface StatusBarManagement {
      *
      * @param statusBarId status bar id
      * @param pluginId plugin id
-     * @param action item action
-     * @return item contribution
+     * @param contribution status bar contribution
      */
-    @Nonnull
-    ComponentStatusBarContribution registerStatusBarItem(String statusBarId, String pluginId, Action action);
+    void registerStatusBarContribution(String statusBarId, String pluginId, SequenceContribution contribution);
 
     /**
      * Registers status bar group.

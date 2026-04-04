@@ -17,7 +17,6 @@ package org.exbin.jaguif.statusbar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
@@ -31,13 +30,11 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 public interface StatusBarDefinitionManagement {
 
     /**
-     * Registers item as a child item for given status bar.
+     * Registers contribution to the given status bar.
      *
-     * @param action action
-     * @return status bar contribution
+     * @param contribution status bar contribution
      */
-    @Nonnull
-    ComponentStatusBarContribution registerStatusBarItem(Action action);
+    void registerStatusBarContribution(SequenceContribution contribution);
 
     /**
      * Registers group as a child item for given status bar.
@@ -51,8 +48,8 @@ public interface StatusBarDefinitionManagement {
     /**
      * Registers status bar contribution rule.
      *
-     * @param statusBarContribution status bar contribution
+     * @param contribution status bar contribution
      * @param rule status bar contribution rule
      */
-    void registerStatusBarRule(SequenceContribution statusBarContribution, SequenceContributionRule rule);
+    void registerStatusBarRule(SequenceContribution contribution, SequenceContributionRule rule);
 }

@@ -15,18 +15,33 @@
  */
 package org.exbin.jaguif.statusbar.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
+import javax.swing.JComponent;
 
 /**
- * Status bar item contribution.
+ * Interface for status bar.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ComponentStatusBarContribution extends ItemSequenceContribution {
+public interface StatusBar {
 
-    @Nonnull
-    StatusBarComponent createComponent();
+    /**
+     * Adds component to status bar.
+     *
+     * @param component component
+     */
+    void addItem(JComponent component);
+
+    /**
+     * Adds separator to status bar.
+     */
+    void addSeparator();
+
+    /**
+     * Returns count of assigned components.
+     *
+     * @return count of components
+     */
+    int getItemsCount();
 }
