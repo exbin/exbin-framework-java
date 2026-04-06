@@ -52,7 +52,7 @@ public class StatusBarModule implements StatusBarModuleApi {
 
     @Nonnull
     @Override
-    public StatusBarDefinitionManagement getMainStatusBarManager(String moduleId) {
+    public StatusBarDefinitionManagement getMainStatusBarManager() {
         if (mainStatusBarManager == null) {
             mainStatusBarManager = new StatusBarDefinitionManager(createStatusBarManager(), MAIN_STATUS_BAR_ID, MODULE_ID);
         }
@@ -63,7 +63,7 @@ public class StatusBarModule implements StatusBarModuleApi {
     @Nonnull
     @Override
     public StatusBarDefinitionManagement getStatusBarManager(String statusBarId, String moduleId) {
-        return new StatusBarDefinitionManager((StatusBarManagement) StatusBarModule.this.getMainStatusBarManager(moduleId), statusBarId, moduleId);
+        return new StatusBarDefinitionManager((StatusBarManagement) StatusBarModule.this.getMainStatusBarManager(), statusBarId, moduleId);
     }
 
     @Override

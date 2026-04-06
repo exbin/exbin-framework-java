@@ -20,6 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
+import org.exbin.jaguif.statusbar.api.StatusBar;
 import org.exbin.jaguif.statusbar.api.StatusBarDefinitionManagement;
 import org.exbin.jaguif.statusbar.api.StatusBarManagement;
 
@@ -55,5 +56,11 @@ public class StatusBarDefinitionManager implements StatusBarDefinitionManagement
     @Override
     public void registerStatusBarRule(SequenceContribution statusBarContribution, SequenceContributionRule rule) {
         statusBarManager.registerStatusBarRule(statusBarContribution, rule);
+    }
+
+    @Nonnull
+    @Override
+    public StatusBar createStatusBar(String statusBarId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

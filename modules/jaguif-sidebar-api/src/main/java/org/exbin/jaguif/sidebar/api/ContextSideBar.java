@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.document.api;
+package org.exbin.jaguif.sidebar.api;
 
 /**
- * Interface for context active document.
+ * Interface for context active side bar.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface ContextDocument {
-
+public interface ContextSideBar {
 }

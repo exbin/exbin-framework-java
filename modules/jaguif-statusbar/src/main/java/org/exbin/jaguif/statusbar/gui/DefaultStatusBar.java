@@ -17,8 +17,11 @@ package org.exbin.jaguif.statusbar.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.GroupLayout;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.exbin.jaguif.statusbar.api.StatusBar;
 
@@ -28,9 +31,36 @@ import org.exbin.jaguif.statusbar.api.StatusBar;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DefaultStatusBar extends JPanel implements StatusBar {
-    
+public class DefaultStatusBar implements StatusBar {
+
     protected final List<JComponent> statusBarComponents = new ArrayList<>();
+    protected JComponent statusBarComponent;
+
+    @Nonnull
+    @Override
+    public JComponent getComponent() {
+        if (statusBarComponent == null) {
+            statusBarComponent = new JPanel();
+
+            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(statusBarComponent);
+            statusBarComponent.setLayout(layout);
+            GroupLayout.SequentialGroup horizontalGroup = layout.createSequentialGroup();
+            horizontalGroup.addContainerGap(0, Short.MAX_VALUE);
+            GroupLayout.ParallelGroup verticalGroup = layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
+            for (JComponent component : statusBarComponents) {
+                if (component instanceof JLabel) {
+                    component.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+                }
+                // horizontalGroup.addGap(0,0,0);
+                horizontalGroup.addComponent(component, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
+                verticalGroup.addComponent(component, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+            }
+            layout.setHorizontalGroup(horizontalGroup);
+            layout.setVerticalGroup(verticalGroup);
+        }
+
+        return statusBarComponent;
+    }
 
     @Override
     public void addItem(JComponent component) {

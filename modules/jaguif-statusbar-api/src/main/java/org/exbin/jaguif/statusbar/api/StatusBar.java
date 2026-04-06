@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.statusbar.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 
@@ -24,7 +25,15 @@ import javax.swing.JComponent;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface StatusBar {
+public interface StatusBar extends ContextStatusBar {
+
+    /**
+     * Returns status bar component.
+     *
+     * @return status bar component
+     */
+    @Nonnull
+    JComponent getComponent();
 
     /**
      * Adds component to status bar.

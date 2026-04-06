@@ -141,12 +141,17 @@ public class UiThemeModule implements UiThemeModuleApi {
                 }
 
                 String macOsAppearance = themeOptions.getMacOsAppearance();
+                String parameter = null;
                 if ("light".equals(macOsAppearance)) {
-                    System.setProperty("apple.awt.application.appearance", "NSAppearanceNameAqua");
+                    parameter = "NSAppearanceNameAqua";
                 } else if ("dark".equals(macOsAppearance)) {
-                    System.setProperty("apple.awt.application.appearance", "NSAppearanceNameDarkAqua");
+                    parameter = "NSAppearanceNameDarkAqua";
                 } else if ("system".equals(macOsAppearance)) {
-                    System.setProperty("apple.awt.application.appearance", "system");
+                    parameter = "system";
+                }
+
+                if (parameter != null) {
+                    System.setProperty("apple.awt.application.appearance", parameter);
                 }
             }
 

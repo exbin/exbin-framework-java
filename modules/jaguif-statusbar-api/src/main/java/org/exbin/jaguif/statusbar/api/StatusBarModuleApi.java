@@ -37,11 +37,10 @@ public interface StatusBarModuleApi extends Module {
     /**
      * Returns main status bar management interface.
      *
-     * @param moduleId module id
      * @return status bar management interface
      */
     @Nonnull
-    StatusBarDefinitionManagement getMainStatusBarManager(String moduleId);
+    StatusBarDefinitionManagement getMainStatusBarManager();
 
     /**
      * Returns status bar management interface.
