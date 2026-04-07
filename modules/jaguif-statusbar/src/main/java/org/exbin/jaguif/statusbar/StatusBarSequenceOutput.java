@@ -21,7 +21,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.statusbar.api.ComponentStatusBarContribution;
 import org.exbin.jaguif.statusbar.api.StatusBar;
 import org.exbin.jaguif.statusbar.api.StatusBarComponent;
@@ -35,24 +35,25 @@ import org.exbin.jaguif.statusbar.api.StatusBarComponent;
 public class StatusBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final StatusBar statusBar;
-    protected final ActionContextRegistration actionContextRegistration;
+    protected final ContextRegistration contextRegistration;
 
-    public StatusBarSequenceOutput(StatusBar statusBar, ActionContextRegistration actionContextRegistration) {
+    public StatusBarSequenceOutput(StatusBar statusBar, ContextRegistration contextRegistration) {
         this.statusBar = statusBar;
-        this.actionContextRegistration = actionContextRegistration;
+        this.contextRegistration = contextRegistration;
     }
 
     @Override
     public boolean initItem(ItemSequenceContribution itemContribution) {
-        StatusBarComponent statusBarComponent = ((ComponentStatusBarContribution) itemContribution).createComponent();
+        // StatusBarComponent statusBarComponent = ((ComponentStatusBarContribution) itemContribution).createComponent();
         // TODO ((ComponentStatusBarContribution) itemContribution).setComponent(StatusBarSequenceOutput.createStatusBarComponent(statusBarComponent));
         return true;
     }
 
     @Override
     public void add(ItemSequenceContribution itemContribution) {
-        // TODO statusBar.add(((ComponentStatusBarContribution) itemContribution).getComponent());
-        StatusBarSequenceOutput.finishStatusBarItem(((ComponentStatusBarContribution) itemContribution).createComponent(), actionContextRegistration);
+        StatusBarComponent statusBarComponent = ((ComponentStatusBarContribution) itemContribution).createComponent();
+        statusBar.addItem(statusBarComponent.getComponent());
+        StatusBarSequenceOutput.finishStatusBarItem(statusBarComponent, contextRegistration);
     }
 
     @Override
@@ -81,11 +82,11 @@ public class StatusBarSequenceOutput implements ContributionSequenceOutput {
         return new JLabel("TEST");
     }
 
-    protected static void finishStatusBarItem(StatusBarComponent statusBarComponent, ActionContextRegistration actionContextRegistration) {
+    protected static void finishStatusBarItem(StatusBarComponent statusBarComponent, ContextRegistration contextRegistration) {
         if (statusBarComponent == null) {
             return;
         }
 
-        // TODO actionContextRegistration.registerActionContext(statusBarComponent);
+        // TODO contextRegistration.registerActionContext(statusBarComponent);
     }
 }

@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Interface for status bar management.
@@ -35,9 +35,9 @@ public interface StatusBarManagement {
      *
      * @param targetStatusBar output status bar
      * @param statusBarId status bar definition id
-     * @param actionContextRegistration action context registration
+     * @param contextRegistration context registration
      */
-    void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration);
+    void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ContextRegistration contextRegistration);
 
     /**
      * Registers status bar.

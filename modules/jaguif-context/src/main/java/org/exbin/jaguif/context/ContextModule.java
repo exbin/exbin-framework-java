@@ -22,6 +22,7 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.context.api.ContextModuleApi;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
+import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Implementation of context module.
@@ -69,6 +70,12 @@ public class ContextModule implements ContextModuleApi {
     @Override
     public ActiveContextManagement createContextManager() {
         return new ActiveContextManager();
+    }
+
+    @Nonnull
+    @Override
+    public ContextRegistration createContextRegistrator() {
+        return new ContextRegistrar(getMainContextManager());
     }
 
     @Nonnull

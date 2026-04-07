@@ -23,8 +23,7 @@ import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.contribution.ContributionSequenceBuilder;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
-import org.exbin.jaguif.statusbar.api.ComponentStatusBarContribution;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.statusbar.api.StatusBar;
 import org.exbin.jaguif.statusbar.api.StatusBarManagement;
 
@@ -42,10 +41,10 @@ public class StatusBarManager extends ContributionManager implements StatusBarMa
     }
 
     @Override
-    public void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration) {
+    public void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ContextRegistration contextRegistration) {
         ContributionDefinition contributionDef = definitions.get(statusBarId);
-        builder.buildSequence(new StatusBarSequenceOutput(targetStatusBar, actionContextRegistration), contributionDef);
-        actionContextRegistration.finish();
+        builder.buildSequence(new StatusBarSequenceOutput(targetStatusBar, contextRegistration), contributionDef);
+        contextRegistration.finish();
     }
 
     @Override

@@ -21,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Support for status bar.
@@ -73,9 +73,19 @@ public interface StatusBarModuleApi extends Module {
      *
      * @param targetStatusBar target status bar
      * @param statusBarId status bar id
-     * @param actionContextRegistration action context registration
+     * @param contextRegistration context registration
      */
-    void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ActionContextRegistration actionContextRegistration);
+    void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ContextRegistration contextRegistration);
+
+    /**
+     * Creates new status bar using given identification.
+     *
+     * @param statusBarId status bar id
+     * @param contextRegistration context registration
+     * @return status bar
+     */
+    @Nonnull
+    StatusBar createStatusBar(String statusBarId, ContextRegistration contextRegistration);
 
     /**
      * Returns list of action managed by status bar managers.

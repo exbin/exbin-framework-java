@@ -52,13 +52,4 @@ public interface StatusBarDefinitionManagement {
      * @param rule status bar contribution rule
      */
     void registerStatusBarRule(SequenceContribution contribution, SequenceContributionRule rule);
-
-    /**
-     * Creates status bar for given id.
-     *
-     * @param statusBarId status bar id
-     * @return status bar
-     */
-    @Nonnull
-    StatusBar createStatusBar(String statusBarId);
 }

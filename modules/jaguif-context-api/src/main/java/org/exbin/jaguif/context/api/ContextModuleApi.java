@@ -47,6 +47,14 @@ public interface ContextModuleApi extends Module {
     ActiveContextManagement createContextManager();
 
     /**
+     * Creates new context registrator.
+     *
+     * @return context registrator
+     */
+    @Nonnull
+    ContextRegistration createContextRegistrator();
+
+    /**
      * Creates new child context manager for given parent context manager.
      *
      * @param parentContextManager parent context manager

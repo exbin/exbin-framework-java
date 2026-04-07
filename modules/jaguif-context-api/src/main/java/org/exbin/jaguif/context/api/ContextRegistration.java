@@ -13,16 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.action.api;
+package org.exbin.jaguif.context.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.ContextChange;
 
 /**
- * Listener for action update when menu is activated for component.
+ * Context registration.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface ActionContextChange extends ContextChange {
+public interface ContextRegistration {
+
+    /**
+     * Registers item context.
+     *
+     * @param contextValues context values
+     */
+    void registerItemContext(ContextValues contextValues);
+
+    /**
+     * Finish registration process.
+     */
+    void finish();
 }
