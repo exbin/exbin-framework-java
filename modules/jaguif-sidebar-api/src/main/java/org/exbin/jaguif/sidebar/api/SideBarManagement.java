@@ -64,11 +64,9 @@ public interface SideBarManagement {
      *
      * @param sideBarId side bar id
      * @param moduleId module id
-     * @param component side bar component
-     * @return item contribution
+     * @param contribution side bar contribution
      */
-    @Nonnull
-    ComponentSideBarContribution registerSideBarComponent(String sideBarId, String moduleId, SideBarComponent component);
+    void registerSideBarContribution(String sideBarId, String moduleId, SequenceContribution contribution);
 
     /**
      * Registers side bar group.

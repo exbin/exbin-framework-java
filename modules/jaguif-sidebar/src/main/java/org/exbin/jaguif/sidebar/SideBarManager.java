@@ -78,17 +78,14 @@ public class SideBarManager extends ContributionManager implements SideBarManage
         return sideBarContribution;
     }
 
-    @Nonnull
     @Override
-    public ComponentSideBarContribution registerSideBarComponent(String sideBarId, String moduleId, SideBarComponent component) {
+    public void registerSideBarContribution(String sideBarId, String moduleId, SequenceContribution contribution) {
         ContributionDefinition definition = definitions.get(sideBarId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + sideBarId + " doesn't exist");
         }
 
-        ComponentSideBarContribution sideBarContribution = new ComponentSideBarContribution(component);
-        definition.addContribution(sideBarContribution);
-        return sideBarContribution;
+        definition.addContribution(contribution);
     }
 
     @Nonnull

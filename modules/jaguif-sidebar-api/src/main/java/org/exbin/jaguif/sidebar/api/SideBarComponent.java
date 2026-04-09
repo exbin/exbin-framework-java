@@ -67,7 +67,7 @@ public interface SideBarComponent extends ContextValues {
      * @return component instance
      */
     @Nonnull
-    JComponent createComponent();
+    JComponent getComponent();
 
     /**
      * Sets one of this object's properties using the associated key.

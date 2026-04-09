@@ -77,7 +77,7 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
             sideBar.getToolBar().add(((ActionSideBarContribution) itemContribution).getComponent());
             SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextRegistration);
         } else if (itemContribution instanceof ComponentSideBarContribution) {
-            SideBarComponent sideBarComponent = ((ComponentSideBarContribution) itemContribution).getComponent();
+            SideBarComponent sideBarComponent = ((ComponentSideBarContribution) itemContribution).createComponent();
             Action buttonAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {

@@ -27,6 +27,11 @@ import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 @ParametersAreNonnullByDefault
 public interface ComponentStatusBarContribution extends ItemSequenceContribution {
 
+    /**
+     * Creates status bar component.
+     *
+     * @return status bar component
+     */
     @Nonnull
     StatusBarComponent createComponent();
 }

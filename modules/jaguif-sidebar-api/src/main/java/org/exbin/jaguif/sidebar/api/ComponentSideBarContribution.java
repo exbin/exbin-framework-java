@@ -25,22 +25,13 @@ import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ComponentSideBarContribution implements ItemSequenceContribution {
+public interface ComponentSideBarContribution extends ItemSequenceContribution {
 
-    protected final SideBarComponent component;
-
-    public ComponentSideBarContribution(SideBarComponent component) {
-        this.component = component;
-    }
-
+    /**
+     * Creates side bar component.
+     *
+     * @return side bar component
+     */
     @Nonnull
-    @Override
-    public String getContributionId() {
-        return (String) component.getValue(SideBarComponent.KEY_ID);
-    }
-
-    @Nonnull
-    public SideBarComponent getComponent() {
-        return component;
-    }
+    SideBarComponent createComponent();
 }

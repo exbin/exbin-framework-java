@@ -42,11 +42,9 @@ public interface SideBarDefinitionManagement {
     /**
      * Registers item as a child item for given side bar.
      *
-     * @param sideBarComponent side bar component
-     * @return sidebar contribution
+     * @param contribution side bar contribution
      */
-    @Nonnull
-    ComponentSideBarContribution registerSideBarComponent(SideBarComponent sideBarComponent);
+    void registerSideBarContribution(SequenceContribution contribution);
 
     /**
      * Registers group as a child item for given side bar.

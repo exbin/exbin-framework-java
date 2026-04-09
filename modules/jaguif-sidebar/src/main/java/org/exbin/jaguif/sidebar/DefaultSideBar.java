@@ -69,7 +69,7 @@ public class DefaultSideBar implements SideBar {
                 docking.setSidePanelVisible(true);
             }
             activeComponentId = componentId;
-            setActiveComponent(component.createComponent());
+            setActiveComponent(component.getComponent());
         }
     }
 

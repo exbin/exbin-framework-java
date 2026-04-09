@@ -118,13 +118,11 @@ public class SideBarModule implements SideBarModuleApi {
         return new SideBarDefinitionManager(SideBarModule.this.getMainSideBarManager(), sideBarId, moduleId);
     }
 
-    @Nonnull
     @Override
     public void registerDockingSideBar(SidePanelDocking docking) {
         registerDockingSideBar(getMainSideBarManager().createSideToolBar(docking), docking);
     }
 
-    @Nonnull
     @Override
     public void registerDockingSideBar(SideBar sideBar, SidePanelDocking docking) {
         JToolBar toolBar = sideBar.getToolBar();

@@ -22,8 +22,6 @@ import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.sidebar.api.ActionSideBarContribution;
-import org.exbin.jaguif.sidebar.api.ComponentSideBarContribution;
-import org.exbin.jaguif.sidebar.api.SideBarComponent;
 import org.exbin.jaguif.sidebar.api.SideBarDefinitionManagement;
 
 /**
@@ -50,10 +48,9 @@ public class SideBarDefinitionManager implements SideBarDefinitionManagement {
         return sideBarManager.registerSideBarAction(sideBarId, moduleId, action);
     }
 
-    @Nonnull
     @Override
-    public ComponentSideBarContribution registerSideBarComponent(SideBarComponent sideBarComponent) {
-        return sideBarManager.registerSideBarComponent(sideBarId, moduleId, sideBarComponent);
+    public void registerSideBarContribution(SequenceContribution contribution) {
+        sideBarManager.registerSideBarContribution(sideBarId, moduleId, contribution);
     }
 
     @Nonnull
