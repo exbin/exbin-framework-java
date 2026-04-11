@@ -52,6 +52,11 @@ import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
+import org.exbin.jaguif.document.text.contribution.EditSelectionContribution;
+import org.exbin.jaguif.document.text.contribution.GoToLineContribution;
+import org.exbin.jaguif.document.text.contribution.PropertiesContribution;
+import org.exbin.jaguif.document.text.contribution.TextColorContribution;
+import org.exbin.jaguif.document.text.contribution.WordWrappingContribution;
 import org.exbin.jaguif.document.text.settings.TextAppearanceOptions;
 import org.exbin.jaguif.document.text.settings.TextAppearanceSettingsApplier;
 import org.exbin.jaguif.document.text.settings.TextAppearanceSettingsComponent;
@@ -66,6 +71,7 @@ import org.exbin.jaguif.options.settings.api.ApplySettingsContribution;
 import org.exbin.jaguif.options.settings.api.SettingsComponentContribution;
 import org.exbin.jaguif.options.settings.api.SettingsPageContribution;
 import org.exbin.jaguif.options.settings.api.SettingsPageContributionRule;
+import org.exbin.jaguif.text.font.contribution.TextFontContribution;
 import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 
 /**
@@ -177,21 +183,24 @@ public class DocumentTextModule implements Module {
         createWordWrappingAction();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createWordWrappingAction());
+        SequenceContribution contribution = new WordWrappingContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerGoToLine() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createGoToLineAction());
+        SequenceContribution contribution = new GoToLineContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerEditSelection() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createEditSelectionAction());
+        SequenceContribution contribution = new EditSelectionContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(MenuModuleApi.CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
 
@@ -217,7 +226,7 @@ public class DocumentTextModule implements Module {
         contribution = mgmt.registerMenuGroup(TEXT_POPUP_TOOLS_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
-
+/*
         contribution = mgmt.registerMenuItem(clipboardActions.createCutAction());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_EDIT_GROUP_ID));
         contribution = mgmt.registerMenuItem(clipboardActions.createCopyAction());
@@ -237,7 +246,7 @@ public class DocumentTextModule implements Module {
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditReplaceAction());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_FIND_GROUP_ID));
         contribution = mgmt.registerMenuItem(createGoToLineAction());
-        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_FIND_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TEXT_POPUP_FIND_GROUP_ID)); */
     }
 
     public TextStatusPanel getTextStatusPanel() {
@@ -265,7 +274,7 @@ public class DocumentTextModule implements Module {
     private TextColorAction createTextColorAction() {
         ensureSetup();
         TextColorAction textColorAction = new TextColorAction();
-        textColorAction.setup(resourceBundle);
+        textColorAction.init(resourceBundle);
         return textColorAction;
     }
 
@@ -299,7 +308,7 @@ public class DocumentTextModule implements Module {
     private WordWrappingAction createWordWrappingAction() {
         ensureSetup();
         WordWrappingAction wordWrappingAction = new WordWrappingAction();
-        wordWrappingAction.setup(resourceBundle);
+        wordWrappingAction.init(resourceBundle);
         return wordWrappingAction;
     }
 
@@ -307,7 +316,7 @@ public class DocumentTextModule implements Module {
     private GoToLineAction createGoToLineAction() {
         ensureSetup();
         GoToLineAction goToLineAction = new GoToLineAction();
-        goToLineAction.setup(resourceBundle);
+        goToLineAction.init(resourceBundle);
         return goToLineAction;
     }
 
@@ -315,7 +324,7 @@ public class DocumentTextModule implements Module {
     private EditSelectionAction createEditSelectionAction() {
         ensureSetup();
         EditSelectionAction editSelectionAction = new EditSelectionAction();
-        editSelectionAction.setup(resourceBundle);
+        editSelectionAction.init(resourceBundle);
         return editSelectionAction;
     }
 
@@ -323,7 +332,7 @@ public class DocumentTextModule implements Module {
     private PropertiesAction createPropertiesAction() {
         ensureSetup();
         PropertiesAction propertiesAction = new PropertiesAction();
-        propertiesAction.setup(resourceBundle);
+        propertiesAction.init(resourceBundle);
         return propertiesAction;
     }
 
@@ -336,7 +345,7 @@ public class DocumentTextModule implements Module {
     }
 
     public void registerEditFindMenuActions() {
-        getFindReplaceActions();
+        /* getFindReplaceActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(EDIT_FIND_MENU_GROUP_ID);
@@ -347,7 +356,7 @@ public class DocumentTextModule implements Module {
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditFindAgainAction());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(EDIT_FIND_MENU_GROUP_ID));
         contribution = mgmt.registerMenuItem(findReplaceActions.createEditReplaceAction());
-        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(EDIT_FIND_MENU_GROUP_ID));
+        mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(EDIT_FIND_MENU_GROUP_ID)); */
     }
 
     public void registerEditFindToolBarActions() {
@@ -357,31 +366,35 @@ public class DocumentTextModule implements Module {
         SequenceContribution contribution = mgmt.registerToolBarGroup(EDIT_FIND_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE));
         mgmt.registerToolBarRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerToolBarItem(findReplaceActions.createEditFindAction());
+        contribution = null; // TODO findReplaceActions.createEditFindAction();
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(EDIT_FIND_TOOL_BAR_GROUP_ID));
     }
 
     public void registerToolsOptionsMenuActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createTextFontAction());
+        SequenceContribution contribution = new TextFontContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(createTextColorAction());
+        contribution = new TextColorContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
     }
 
     public void registerPropertiesMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createPropertiesAction());
+        SequenceContribution contribution = new PropertiesContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
     }
 
     public void registerPrintMenu() {
-        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        /* MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(createPrintAction());
-        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
+        mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM)); */
     }
 
     @Nonnull

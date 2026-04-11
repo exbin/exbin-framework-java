@@ -46,7 +46,7 @@ import org.exbin.jaguif.document.text.EditorTextPanelComponent;
 @ParametersAreNonnullByDefault
 public class TextColorAction extends AbstractAction {
 
-    public static final String ACTION_ID = "toolsSetColorAction";
+    public static final String ACTION_ID = "textSetColor";
 
     private EditorTextPanelComponent textComponent;
     private DialogParentComponent dialogParentComponent;
@@ -54,7 +54,7 @@ public class TextColorAction extends AbstractAction {
     public TextColorAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

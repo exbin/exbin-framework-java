@@ -23,6 +23,7 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.ApplicationBundleKeys;
 import org.exbin.jaguif.addon.manager.action.AddonManagerAction;
 import org.exbin.jaguif.addon.manager.api.AddonManagerModuleApi;
+import org.exbin.jaguif.addon.manager.contribution.AddonManagerContribution;
 import org.exbin.jaguif.addon.manager.settings.AddonManagerOptions;
 import org.exbin.jaguif.addon.manager.settings.AddonManagerSettingsComponent;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
@@ -62,7 +63,8 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     public void registerAddonManagerMenuItem() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.TOOLS_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createAddonManagerAction());
+        SequenceContribution contribution = new AddonManagerContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE_LAST));
     }
 

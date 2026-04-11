@@ -28,6 +28,7 @@ import org.exbin.jaguif.operation.manager.action.UndoManagerAction;
 import org.exbin.jaguif.operation.manager.api.OperationManagerModuleApi;
 import org.exbin.jaguif.operation.undo.api.OperationUndoModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
+import org.exbin.jaguif.operation.manager.contribution.UndoManagerContribution;
 
 /**
  * Implementation of operation manager module.
@@ -50,7 +51,8 @@ public class OperationManagerModule implements OperationManagerModuleApi {
     public void registerOperationManagerInMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(OperationManagerModuleApi.MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createUndoManagerAction());
+        SequenceContribution contribution = new UndoManagerContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
     }
 

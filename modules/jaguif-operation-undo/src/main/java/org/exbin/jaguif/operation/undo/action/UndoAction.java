@@ -40,15 +40,12 @@ public class UndoAction extends AbstractAction implements ActionContextChange {
 
     public static final String EDIT_UNDO_ACTION_ID = "editUndoAction";
 
-    private ResourceBundle resourceBundle;
-    private UndoRedoState undoRedo = null;
+    protected UndoRedoState undoRedo = null;
 
     public UndoAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, EDIT_UNDO_ACTION_ID);
         setEnabled(false);

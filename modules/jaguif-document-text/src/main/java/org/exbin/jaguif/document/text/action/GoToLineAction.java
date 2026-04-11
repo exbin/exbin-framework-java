@@ -43,14 +43,14 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class GoToLineAction extends AbstractAction {
 
-    public static final String ACTION_ID = "goToLineAction";
+    public static final String ACTION_ID = "goToLine";
 
     private EditorTextPanelComponent textPanelComponent;
 
     public GoToLineAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

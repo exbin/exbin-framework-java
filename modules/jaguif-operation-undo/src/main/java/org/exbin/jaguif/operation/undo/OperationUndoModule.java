@@ -32,6 +32,8 @@ import org.exbin.jaguif.operation.undo.action.RedoAction;
 import org.exbin.jaguif.operation.undo.action.UndoAction;
 import org.exbin.jaguif.toolbar.api.ToolBarModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
+import org.exbin.jaguif.operation.undo.contribution.RedoContribution;
+import org.exbin.jaguif.operation.undo.contribution.UndoContribution;
 import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 
 /**
@@ -42,7 +44,6 @@ import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 @ParametersAreNonnullByDefault
 public class OperationUndoModule implements OperationUndoModuleApi {
 
-    private UndoActions defaultUndoActions = null;
     private java.util.ResourceBundle resourceBundle = null;
 
     public OperationUndoModule() {
@@ -62,29 +63,31 @@ public class OperationUndoModule implements OperationUndoModuleApi {
 
     @Override
     public void registerMainMenu() {
-        getDefaultUndoActions();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.EDIT_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(OperationUndoModuleApi.UNDO_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.BELOW));
-        contribution = mgmt.registerMenuItem(defaultUndoActions.createUndoAction());
+        contribution = new UndoContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(defaultUndoActions.createRedoAction());
+        contribution = new RedoContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(OperationUndoModuleApi.UNDO_MENU_GROUP_ID));
     }
 
     @Override
     public void registerMainToolBar() {
-        getDefaultUndoActions();
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
         ToolBarDefinitionManagement mgmt = toolBarModule.getMainToolBarManager(MODULE_ID);
         SequenceContribution contribution = mgmt.registerToolBarGroup(OperationUndoModuleApi.UNDO_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         mgmt.registerToolBarRule(contribution, new SeparationSequenceContributionRule(SeparationSequenceContributionRule.SeparationMode.AROUND));
-        contribution = mgmt.registerToolBarItem(defaultUndoActions.createUndoAction());
+        contribution = new UndoContribution();
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(OperationUndoModuleApi.UNDO_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(defaultUndoActions.createRedoAction());
+        contribution = new RedoContribution();
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(OperationUndoModuleApi.UNDO_TOOL_BAR_GROUP_ID));
     }
 
@@ -107,25 +110,12 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     }
 
     @Nonnull
-    public UndoActions getDefaultUndoActions() {
-        if (defaultUndoActions == null) {
-            defaultUndoActions = createUndoActions();
-        }
-
-        return defaultUndoActions;
-    }
-
-    @Nonnull
     public UndoAction createUndoAction() {
-        UndoAction undoAction = new UndoAction();
-        undoAction.setup(getResourceBundle());
-        return undoAction;
+        return new UndoAction();
     }
 
     @Nonnull
     public RedoAction createRedoAction() {
-        RedoAction redoAction = new RedoAction();
-        redoAction.setup(getResourceBundle());
-        return redoAction;
+        return new RedoAction();
     }
 }

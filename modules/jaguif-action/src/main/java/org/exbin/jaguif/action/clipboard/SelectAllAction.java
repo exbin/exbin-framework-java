@@ -38,7 +38,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class SelectAllAction extends AbstractAction implements ActionContextChange {
 
-    public static final String ACTION_ID = "selectAllAction";
+    public static final String ACTION_ID = "selectAll";
 
     protected SelectionController selectionSupport;
 

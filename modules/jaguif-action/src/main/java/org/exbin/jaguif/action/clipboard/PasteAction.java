@@ -39,7 +39,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class PasteAction extends AbstractAction implements ActionContextChange {
 
-    public static final String ACTION_ID = "pasteAction";
+    public static final String ACTION_ID = "paste";
 
     protected ClipboardController clipboardSupport;
 

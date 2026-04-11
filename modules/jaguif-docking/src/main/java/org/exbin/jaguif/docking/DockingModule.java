@@ -30,6 +30,11 @@ import org.exbin.jaguif.docking.action.SaveAsFileAction;
 import org.exbin.jaguif.docking.action.SaveFileAction;
 import org.exbin.jaguif.docking.api.DockingModuleApi;
 import org.exbin.jaguif.docking.api.DocumentDocking;
+import org.exbin.jaguif.docking.contribution.CloseFileContribution;
+import org.exbin.jaguif.docking.contribution.NewFileContribution;
+import org.exbin.jaguif.docking.contribution.OpenFileContribution;
+import org.exbin.jaguif.docking.contribution.SaveAsFileContribution;
+import org.exbin.jaguif.docking.contribution.SaveFileContribution;
 import org.exbin.jaguif.document.api.DocumentModuleApi;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
@@ -76,15 +81,20 @@ public class DockingModule implements DockingModuleApi {
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(DocumentModuleApi.FILE_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(createNewFileAction());
+        contribution = new NewFileContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(createOpenFileAction());
+        contribution = new OpenFileContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(createSaveFileAction());
+        contribution = new SaveFileContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(createSaveAsFileAction());
+        contribution = new SaveAsFileContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(createCloseFileAction());
+        contribution = new CloseFileContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
     }
 
@@ -94,11 +104,14 @@ public class DockingModule implements DockingModuleApi {
         ToolBarDefinitionManagement mgmt = toolBarModule.getMainToolBarManager(MODULE_ID);
         SequenceContribution contribution = mgmt.registerToolBarGroup(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerToolBarItem(createNewFileAction());
+        contribution = new NewFileContribution();
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(createOpenFileAction());
+        contribution = new OpenFileContribution();
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(createSaveFileAction());
+        contribution = new SaveFileContribution();
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_TOOL_BAR_GROUP_ID));
     }
     
@@ -149,7 +162,7 @@ public class DockingModule implements DockingModuleApi {
     public CloseFileAction createCloseFileAction() {
         CloseFileAction closeFileAction = new CloseFileAction();
         ensureSetup();
-        closeFileAction.setup(resourceBundle);
+        closeFileAction.init(resourceBundle);
         return closeFileAction;
     }
 }

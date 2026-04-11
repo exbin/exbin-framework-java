@@ -22,6 +22,7 @@ import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.help.local.action.HelpLocalAction;
+import org.exbin.jaguif.help.local.contribution.HelpLocalContribution;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 
@@ -41,14 +42,15 @@ public class HelpLocalModule {
     @Nonnull
     public HelpLocalAction createHelpLocalAction() {
         HelpLocalAction helpAction = new HelpLocalAction();
-        helpAction.setup();
+        helpAction.init();
         return helpAction;
     }
 
     public void registerMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createHelpLocalAction());
+        SequenceContribution contribution = new HelpLocalContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
     }
 }

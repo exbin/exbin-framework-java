@@ -30,6 +30,7 @@ import org.exbin.jaguif.help.api.HelpLink;
 import org.exbin.jaguif.help.api.HelpModuleApi;
 import org.exbin.jaguif.help.online.action.OnlineHelpAction;
 import org.exbin.jaguif.help.online.api.HelpOnlineModuleApi;
+import org.exbin.jaguif.help.online.contribution.OnlineHelpContribution;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.utils.DesktopUtils;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
@@ -59,7 +60,8 @@ public class HelpOnlineModule implements HelpOnlineModuleApi {
     public void registerOnlineHelpMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createOnlineHelpAction());
+        SequenceContribution contribution = new OnlineHelpContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
     }
 

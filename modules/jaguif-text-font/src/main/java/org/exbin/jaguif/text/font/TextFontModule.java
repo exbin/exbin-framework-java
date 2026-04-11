@@ -85,7 +85,7 @@ public class TextFontModule implements Module {
     public TextFontAction createTextFontAction() {
         ensureSetup();
         TextFontAction textFontAction = new TextFontAction();
-        textFontAction.setup(resourceBundle);
+        textFontAction.init(resourceBundle);
         return textFontAction;
     }
 }

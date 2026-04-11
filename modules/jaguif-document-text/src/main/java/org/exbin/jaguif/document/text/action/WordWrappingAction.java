@@ -38,14 +38,14 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class WordWrappingAction extends AbstractAction {
 
-    public static final String ACTION_ID = "viewWordWrappingAction";
+    public static final String ACTION_ID = "viewWordWrapping";
 
     private TextPanel textPanel;
 
     public WordWrappingAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

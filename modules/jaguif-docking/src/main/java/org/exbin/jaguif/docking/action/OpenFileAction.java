@@ -41,7 +41,7 @@ import org.exbin.jaguif.document.api.DocumentModuleApi;
 @ParametersAreNonnullByDefault
 public class OpenFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "openFileAction";
+    public static final String ACTION_ID = "openFile";
 
     protected DocumentDocking documentDocking;
 

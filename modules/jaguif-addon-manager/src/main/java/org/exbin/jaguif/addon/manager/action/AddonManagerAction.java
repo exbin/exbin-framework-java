@@ -42,7 +42,7 @@ import org.exbin.jaguif.help.api.HelpLink;
 @ParametersAreNonnullByDefault
 public class AddonManagerAction extends AbstractAction {
 
-    public static final String ACTION_ID = "addonManagerAction";
+    public static final String ACTION_ID = "addonManager";
     public static final String HELP_ID = "addon-manager";
 
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerAction.class);

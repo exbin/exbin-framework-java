@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.menu;
 
+import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -43,6 +44,7 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
     protected final JMenuBar menuBar;
     protected final ActionContextRegistration actionContextRegistration;
     protected final Map<String, ButtonGroup> buttonGroups;
+    protected final Map<SequenceContribution, JMenuItem> menuItems = new HashMap<>();
 
     public MenuBarSequenceOutput(JMenuBar menuBar, ActionContextRegistration actionContextRegistration, Map<String, ButtonGroup> buttonGroups) {
         this.menuBar = menuBar;
@@ -62,9 +64,9 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
         }
 
         if (contribution instanceof ActionMenuContribution) {
-            Action action = ((ActionMenuContribution) contribution).getAction();
+            Action action = ((ActionMenuContribution) contribution).createAction();
             JMenuItem menuItem = MenuSequenceOutput.createMenuItem(action, buttonGroups);
-            ((ActionMenuContribution) contribution).setMenuItem(menuItem);
+            menuItems.put(contribution, menuItem);
         }
 
         return true;
@@ -84,7 +86,7 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
             return;
         }
 
-        JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
+        JMenuItem menuItem = menuItems.get(contribution);
         menuBar.add(menuItem);
         MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
     }

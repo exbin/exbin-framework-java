@@ -60,15 +60,13 @@ public interface ToolBarManagement {
     void registerToolBar(String toolBarId, String pluginId);
 
     /**
-     * Registers tool bar item contribution.
+     * Registers tool bar contribution.
      *
      * @param toolBarId tool bar id
      * @param moduleId module id
-     * @param action item action
-     * @return item contribution
+     * @param contribution tool bar contribution
      */
-    @Nonnull
-    ActionToolBarContribution registerToolBarItem(String toolBarId, String moduleId, Action action);
+    void registerToolBarContribution(String toolBarId, String moduleId, SequenceContribution contribution);
 
     /**
      * Registers tool bar group.

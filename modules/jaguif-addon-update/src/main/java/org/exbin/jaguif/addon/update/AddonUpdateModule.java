@@ -33,6 +33,7 @@ import org.exbin.jaguif.addon.update.settings.CheckForUpdateSettingsComponent;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.ApplicationBundleKeys;
+import org.exbin.jaguif.addon.update.contribution.CheckForUpdateContribution;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi;
@@ -92,7 +93,8 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     public void registerDefaultMenuItem() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(getCheckUpdateAction());
+        SequenceContribution contribution = new CheckForUpdateContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE_LAST));
     }
 

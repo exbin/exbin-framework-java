@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.menu;
 
+import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,6 +49,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
     protected final ActionContextRegistration actionContextRegistration;
     protected final Map<String, ButtonGroup> buttonGroups;
     protected final boolean isPopup;
+    protected final Map<SequenceContribution, JMenuItem> menuItems = new HashMap<>();
 
     public MenuSequenceOutput(JMenu menu, ActionContextRegistration actionContextRegistration, Map<String, ButtonGroup> buttonGroups, boolean isPopup) {
         this.menu = menu;
@@ -91,7 +93,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
         JMenuItem menuItem;
         if (contribution instanceof ActionMenuContribution) {
             menuItem = null;
-            action = ((ActionMenuContribution) contribution).getAction();
+            action = ((ActionMenuContribution) contribution).createAction();
         } else if (contribution instanceof DirectMenuContribution) {
             menuItem = ((DirectMenuContribution) contribution).getMenuItem();
             action = menuItem.getAction();
@@ -109,7 +111,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
 
         if (contribution instanceof ActionMenuContribution) {
             menuItem = MenuSequenceOutput.createMenuItem(action, buttonGroups);
-            ((ActionMenuContribution) contribution).setMenuItem(menuItem);
+            menuItems.put(contribution, menuItem);
         }
 
         if (isPopup && action != null) {
@@ -137,7 +139,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
         }
 
         if (contribution instanceof ActionMenuContribution) {
-            JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
+            JMenuItem menuItem = menuItems.get(contribution);
             menu.add(menuItem);
             MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
             return;

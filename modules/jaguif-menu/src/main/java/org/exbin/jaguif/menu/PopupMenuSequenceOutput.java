@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.menu;
 
+import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -45,6 +46,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
     protected final JPopupMenu menu;
     protected final ActionContextRegistration actionContextRegistration;
     protected final Map<String, ButtonGroup> buttonGroups;
+    protected final Map<SequenceContribution, JMenuItem> menuItems = new HashMap<>();
 
     public PopupMenuSequenceOutput(JPopupMenu menu, ActionContextRegistration actionContextRegistration, Map<String, ButtonGroup> buttonGroups) {
         this.menu = menu;
@@ -84,7 +86,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
         JMenuItem menuItem;
         if (contribution instanceof ActionMenuContribution) {
             menuItem = null;
-            action = ((ActionMenuContribution) contribution).getAction();
+            action = ((ActionMenuContribution) contribution).createAction();
         } else {
             menuItem = ((DirectMenuContribution) contribution).getMenuItem();
             action = menuItem.getAction();
@@ -100,7 +102,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
 
         if (contribution instanceof ActionMenuContribution) {
             menuItem = MenuSequenceOutput.createMenuItem(action, buttonGroups);
-            ((ActionMenuContribution) contribution).setMenuItem(menuItem);
+            menuItems.put(contribution, menuItem);
         }
 
         if (action != null) {
@@ -127,7 +129,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
             return;
         }
 
-        JMenuItem menuItem = ((ActionMenuContribution) contribution).getMenuItem();
+        JMenuItem menuItem = menuItems.get(contribution);
         menu.add(menuItem);
         MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
     }

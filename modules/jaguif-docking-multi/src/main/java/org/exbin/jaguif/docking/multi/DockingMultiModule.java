@@ -30,7 +30,10 @@ import org.exbin.jaguif.docking.api.DockingModuleApi;
 import org.exbin.jaguif.docking.multi.action.CloseAllFilesAction;
 import org.exbin.jaguif.docking.multi.action.CloseOtherFilesAction;
 import org.exbin.jaguif.docking.api.DocumentDocking;
+import org.exbin.jaguif.docking.contribution.CloseFileContribution;
 import org.exbin.jaguif.docking.multi.api.DockingMultiModuleApi;
+import org.exbin.jaguif.docking.multi.contribution.CloseAllFilesContribution;
+import org.exbin.jaguif.docking.multi.contribution.CloseOtherFilesContribution;
 import org.exbin.jaguif.document.api.Document;
 import org.exbin.jaguif.document.api.DocumentModuleApi;
 import org.exbin.jaguif.document.api.DocumentSource;
@@ -126,7 +129,7 @@ public class DockingMultiModule implements DockingMultiModuleApi {
     public CloseAllFilesAction createCloseAllFilesAction() {
         CloseAllFilesAction closeAllFilesAction = new CloseAllFilesAction();
         ensureSetup();
-        closeAllFilesAction.setup(resourceBundle);
+        closeAllFilesAction.init(resourceBundle);
         return closeAllFilesAction;
     }
 
@@ -135,7 +138,7 @@ public class DockingMultiModule implements DockingMultiModuleApi {
     public CloseOtherFilesAction createCloseOtherFilesAction() {
         CloseOtherFilesAction closeOtherFilesAction = new CloseOtherFilesAction();
         ensureSetup();
-        closeOtherFilesAction.setup(resourceBundle);
+        closeOtherFilesAction.init(resourceBundle);
         return closeOtherFilesAction;
     }
 
@@ -145,11 +148,14 @@ public class DockingMultiModule implements DockingMultiModuleApi {
         DockingModuleApi dockingModule = App.getModule(DockingModuleApi.class);
         menuModule.registerMenu(FILE_CONTEXT_MENU_ID, MODULE_ID);
         MenuDefinitionManagement mgmt = menuModule.getMenuManager(FILE_CONTEXT_MENU_ID, MODULE_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(dockingModule.createCloseFileAction());
+        SequenceContribution contribution = new CloseFileContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(createCloseAllFilesAction());
+        contribution = new CloseAllFilesContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(createCloseOtherFilesAction());
+        contribution = new CloseOtherFilesContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
     }
 }

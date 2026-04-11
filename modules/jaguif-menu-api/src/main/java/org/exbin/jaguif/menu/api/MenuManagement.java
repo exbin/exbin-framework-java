@@ -15,7 +15,6 @@
  */
 package org.exbin.jaguif.menu.api;
 
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -87,15 +86,13 @@ public interface MenuManagement {
     void unregisterMenu(String menuId);
 
     /**
-     * Registers menu item contribution.
+     * Registers menu contribution.
      *
      * @param menuId menu id
      * @param moduleId module id
-     * @param action action
-     * @return item contribution
+     * @param contribution menu contribution
      */
-    @Nonnull
-    ActionMenuContribution registerMenuItem(String menuId, String moduleId, Action action);
+    void registerMenuContribution(String menuId, String moduleId, SequenceContribution contribution);
 
     /**
      * Registers sub menu contribution.
@@ -150,12 +147,4 @@ public interface MenuManagement {
      * @param rule menu contribution rule
      */
     void registerMenuRule(SequenceContribution contribution, SequenceContributionRule rule);
-
-    /**
-     * Returns list of managed actions.
-     *
-     * @return list of actions
-     */
-    @Nonnull
-    List<Action> getAllManagedActions();
 }

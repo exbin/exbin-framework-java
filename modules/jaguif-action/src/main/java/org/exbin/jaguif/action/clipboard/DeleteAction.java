@@ -37,7 +37,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class DeleteAction extends AbstractAction implements ActionContextChange {
 
-    public static final String ACTION_ID = "deleteAction";
+    public static final String ACTION_ID = "delete";
 
     protected DeletionController deletionSupport;
 

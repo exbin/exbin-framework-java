@@ -39,7 +39,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class CutAction extends AbstractAction implements ActionContextChange {
 
-    public static final String ACTION_ID = "cutAction";
+    public static final String ACTION_ID = "cut";
 
     protected ClipboardController clipboardSupport;
 

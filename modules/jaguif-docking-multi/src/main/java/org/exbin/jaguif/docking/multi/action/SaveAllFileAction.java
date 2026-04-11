@@ -28,21 +28,21 @@ import org.exbin.jaguif.docking.multi.DefaultMultiDocking;
 import org.exbin.jaguif.docking.api.ContextDocking;
 
 /**
- * Save all file action.
+ * Save all files action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SaveAllFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileSaveAllAction";
+    public static final String ACTION_ID = "fileSaveAll";
 
     protected DefaultMultiDocking multiDocking;
 
     public SaveAllFileAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

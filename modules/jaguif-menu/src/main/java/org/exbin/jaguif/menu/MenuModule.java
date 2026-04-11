@@ -136,7 +136,7 @@ public class MenuModule implements MenuModuleApi {
     public List<Action> getMenuManagedActions() {
         List<Action> actions = new ArrayList<>();
         MenuModule.this.getMenuManager();
-        actions.addAll(menuManager.getAllManagedActions());
+        // actions.addAll(menuManager.getAllManagedActions());
 
         return actions;
     }

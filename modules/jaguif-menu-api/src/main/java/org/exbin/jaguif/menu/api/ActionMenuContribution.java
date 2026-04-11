@@ -15,46 +15,13 @@
  */
 package org.exbin.jaguif.menu.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
-import javax.swing.JMenuItem;
-import org.exbin.jaguif.action.api.ActionConsts;
-import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
- * Record for action as menu item contribution.
+ * Action menu item contribution.
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
-public class ActionMenuContribution implements ItemSequenceContribution {
+public interface ActionMenuContribution extends ActionSequenceContribution {
 
-    protected final Action action;
-    protected JMenuItem menuItem;
-
-    public ActionMenuContribution(Action action) {
-        this.action = action;
-    }
-
-    @Nonnull
-    @Override
-    public String getContributionId() {
-        return (String) action.getValue(ActionConsts.ACTION_ID);
-    }
-
-    @Nonnull
-    public Action getAction() {
-        return action;
-    }
-
-    @Nullable
-    public JMenuItem getMenuItem() {
-        return menuItem;
-    }
-
-    public void setMenuItem(JMenuItem menuItem) {
-        this.menuItem = menuItem;
-    }
 }

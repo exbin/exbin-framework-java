@@ -63,17 +63,14 @@ public class ToolBarManager extends ContributionManager implements ToolBarManage
         registerDefinition(toolBarId, moduleId);
     }
 
-    @Nonnull
     @Override
-    public ActionToolBarContribution registerToolBarItem(String toolBarId, String moduleId, Action action) {
+    public void registerToolBarContribution(String toolBarId, String moduleId, SequenceContribution contribution) {
         ContributionDefinition definition = definitions.get(toolBarId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + toolBarId + " doesn't exist");
         }
 
-        ActionToolBarContribution toolBarContribution = new ActionToolBarContribution(action);
-        definition.addContribution(toolBarContribution);
-        return toolBarContribution;
+        definition.addContribution(contribution);
     }
 
     @Nonnull

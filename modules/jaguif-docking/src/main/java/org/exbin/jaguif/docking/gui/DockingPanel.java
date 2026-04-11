@@ -28,7 +28,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class DockingPanel extends javax.swing.JPanel {
 
-    protected Controller controller;
     protected Component sideToolBar = null;
     protected Component sideComponent = null;
     protected Component contentComponent = null;
@@ -41,10 +40,6 @@ public class DockingPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
     public void setContentComponent(@Nullable Component contentComponent) {
@@ -135,9 +130,4 @@ public class DockingPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables
-
-    @ParametersAreNonnullByDefault
-    public interface Controller {
-
-    }
 }

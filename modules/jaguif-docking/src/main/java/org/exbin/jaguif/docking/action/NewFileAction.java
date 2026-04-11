@@ -37,7 +37,7 @@ import org.exbin.jaguif.docking.api.DocumentDocking;
 @ParametersAreNonnullByDefault
 public class NewFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "newFileAction";
+    public static final String ACTION_ID = "newFile";
 
     protected DocumentDocking documentDocking;
 

@@ -17,11 +17,9 @@ package org.exbin.jaguif.toolbar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
-import org.exbin.jaguif.toolbar.api.ActionToolBarContribution;
 import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 
 /**
@@ -42,10 +40,9 @@ public class ToolBarDefinitionManager implements ToolBarDefinitionManagement {
         this.moduleId = moduleId;
     }
 
-    @Nonnull
     @Override
-    public ActionToolBarContribution registerToolBarItem(Action action) {
-        return toolBarManager.registerToolBarItem(toolBarId, moduleId, action);
+    public void registerToolBarContribution(SequenceContribution contribution) {
+        toolBarManager.registerToolBarContribution(toolBarId, moduleId, contribution);
     }
 
     @Nonnull

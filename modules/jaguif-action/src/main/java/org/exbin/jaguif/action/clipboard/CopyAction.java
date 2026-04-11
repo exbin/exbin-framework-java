@@ -38,7 +38,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class CopyAction extends AbstractAction implements ActionContextChange {
 
-    public static final String ACTION_ID = "copyAction";
+    public static final String ACTION_ID = "copy";
 
     protected ClipboardController clipboardSupport;
 

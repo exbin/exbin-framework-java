@@ -31,6 +31,13 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 public interface MenuDefinitionManagement {
 
     /**
+     * Registers menu contribution for given menu.
+     *
+     * @param contribution menu contribution
+     */
+    void registerMenuContribution(SequenceContribution contribution);
+
+    /**
      * Registers menu as a child item for given menu.
      *
      * @param menuProvider menu provider
@@ -38,15 +45,6 @@ public interface MenuDefinitionManagement {
      */
     @Nonnull
     DirectMenuContribution registerMenuItem(MenuItemProvider menuProvider);
-
-    /**
-     * Registers menu item as a child item for given menu.
-     *
-     * @param action action
-     * @return menu contribution
-     */
-    @Nonnull
-    ActionMenuContribution registerMenuItem(Action action);
 
     /**
      * Registers menu item as a child item for given menu.

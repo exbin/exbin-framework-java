@@ -37,14 +37,14 @@ import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
- * Help action.
+ * Local help action.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class HelpLocalAction extends AbstractAction {
 
-    public static final String ACTION_ID = "helpAction";
+    public static final String ACTION_ID = "help";
     public static final String HELP_SET_FILE = "help/help.hs";
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(HelpLocalAction.class);
@@ -56,7 +56,7 @@ public class HelpLocalAction extends AbstractAction {
     public HelpLocalAction() {
     }
 
-    public void setup() {
+    public void init() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(ActionConsts.ACTION_DIALOG_MODE, true);

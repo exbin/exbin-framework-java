@@ -38,7 +38,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class PrintAction extends AbstractAction {
 
-    public static final String ACTION_ID = "printAction";
+    public static final String ACTION_ID = "print";
 
     private EditorTextPanelComponent textPanelComponent;
 

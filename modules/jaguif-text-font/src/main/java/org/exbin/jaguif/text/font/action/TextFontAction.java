@@ -46,7 +46,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class TextFontAction extends AbstractAction {
 
-    public static final String ACTION_ID = "textFontAction";
+    public static final String ACTION_ID = "textFont";
     public static final String HELP_ID = "choose-font";
 
     private TextFontState textFontSupported;
@@ -55,7 +55,7 @@ public class TextFontAction extends AbstractAction {
     public TextFontAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

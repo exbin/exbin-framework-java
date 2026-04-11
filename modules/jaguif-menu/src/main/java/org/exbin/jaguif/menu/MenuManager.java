@@ -16,9 +16,7 @@
 package org.exbin.jaguif.menu;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -28,7 +26,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
-import org.exbin.jaguif.menu.api.ActionMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
 import org.exbin.jaguif.contribution.ContributionDefinition;
 import org.exbin.jaguif.contribution.TreeContributionManager;
@@ -109,18 +106,15 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
         registerDefinition(menuId, moduleId);
     }
 
-    @Nonnull
     @Override
-    public ActionMenuContribution registerMenuItem(String menuId, String moduleId, Action action) {
+    public void registerMenuContribution(String menuId, String moduleId, SequenceContribution contribution) {
         ContributionDefinition definition = definitions.get(menuId);
         if (definition == null) {
             definition = new ContributionDefinition();
             definitions.put(menuId, definition);
         }
 
-        ActionMenuContribution menuContribution = new ActionMenuContribution(action);
-        definition.addContribution(menuContribution);
-        return menuContribution;
+        definition.addContribution(contribution);
     }
 
     @Nonnull
@@ -171,19 +165,5 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
     @Override
     public void registerMenuRule(SequenceContribution contribution, SequenceContributionRule rule) {
         registerContributionRule(contribution, rule);
-    }
-
-    @Nonnull
-    @Override
-    public List<Action> getAllManagedActions() {
-        List<Action> actions = new ArrayList<>();
-        for (ContributionDefinition definition : definitions.values()) {
-            for (SequenceContribution contribution : definition.getContributions()) {
-                if (contribution instanceof ActionMenuContribution) {
-                    actions.add(((ActionMenuContribution) contribution).getAction());
-                }
-            }
-        }
-        return actions;
     }
 }

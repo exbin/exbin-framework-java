@@ -44,7 +44,7 @@ import org.exbin.jaguif.document.api.EditableDocument;
 @ParametersAreNonnullByDefault
 public class SaveAsFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "saveAsFileAction";
+    public static final String ACTION_ID = "saveAsFile";
 
     protected DocumentDocking documentDocking;
     protected Document document;

@@ -17,7 +17,6 @@ package org.exbin.jaguif.toolbar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
@@ -31,13 +30,11 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 public interface ToolBarDefinitionManagement {
 
     /**
-     * Registers item as a child item for given tool bar.
+     * Registers tool bar contribution.
      *
-     * @param action action
-     * @return toolbar contribution
+     * @param contribution toolbar contribution
      */
-    @Nonnull
-    ActionToolBarContribution registerToolBarItem(Action action);
+    void registerToolBarContribution(SequenceContribution contribution);
 
     /**
      * Registers group as a child item for given tool bar.

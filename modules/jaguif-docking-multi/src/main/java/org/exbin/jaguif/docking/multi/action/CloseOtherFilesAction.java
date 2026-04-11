@@ -37,7 +37,7 @@ import org.exbin.jaguif.document.api.Document;
 @ParametersAreNonnullByDefault
 public class CloseOtherFilesAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileCloseOtherAction";
+    public static final String ACTION_ID = "fileCloseOther";
 
     private DefaultMultiDocking multiDocking;
     private Document document;
@@ -45,7 +45,7 @@ public class CloseOtherFilesAction extends AbstractAction {
     public CloseOtherFilesAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

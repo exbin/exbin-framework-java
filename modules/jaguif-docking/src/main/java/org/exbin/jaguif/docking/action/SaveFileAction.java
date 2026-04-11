@@ -44,7 +44,7 @@ import org.exbin.jaguif.document.api.MemoryDocumentSource;
 @ParametersAreNonnullByDefault
 public class SaveFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "saveFileAction";
+    public static final String ACTION_ID = "saveFile";
 
     protected DocumentDocking documentDocking;
     protected Document document;

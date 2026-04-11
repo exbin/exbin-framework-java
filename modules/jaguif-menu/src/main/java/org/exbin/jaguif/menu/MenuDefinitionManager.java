@@ -23,7 +23,6 @@ import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SubSequenceContributionRule;
-import org.exbin.jaguif.menu.api.ActionMenuContribution;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.MenuItemProvider;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
@@ -54,20 +53,18 @@ public class MenuDefinitionManager implements MenuDefinitionManagement {
         this.currentSubMenuId = currentSubMenuId;
     }
 
-    @Nonnull
     @Override
-    public DirectMenuContribution registerMenuItem(MenuItemProvider menuItemProvider) {
-        DirectMenuContribution contribution = menuManager.registerMenuItem(menuId, moduleId, menuItemProvider);
+    public void registerMenuContribution(SequenceContribution contribution) {
+        menuManager.registerMenuContribution(menuId, moduleId, contribution);
         if (currentSubMenuId != null) {
             menuManager.registerMenuRule(contribution, new SubSequenceContributionRule(currentSubMenuId));
         }
-        return contribution;
     }
 
     @Nonnull
     @Override
-    public ActionMenuContribution registerMenuItem(Action action) {
-        ActionMenuContribution contribution = menuManager.registerMenuItem(menuId, moduleId, action);
+    public DirectMenuContribution registerMenuItem(MenuItemProvider menuItemProvider) {
+        DirectMenuContribution contribution = menuManager.registerMenuItem(menuId, moduleId, menuItemProvider);
         if (currentSubMenuId != null) {
             menuManager.registerMenuRule(contribution, new SubSequenceContributionRule(currentSubMenuId));
         }

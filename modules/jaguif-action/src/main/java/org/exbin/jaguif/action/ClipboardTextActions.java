@@ -39,11 +39,11 @@ import org.exbin.jaguif.utils.ActionUtils;
 @ParametersAreNonnullByDefault
 public class ClipboardTextActions implements ClipboardActionsApi {
 
-    public static final String EDIT_SELECT_ALL_ACTION_ID = "editSelectAllAction";
-    public static final String EDIT_DELETE_ACTION_ID = "editDeleteAction";
-    public static final String EDIT_PASTE_ACTION_ID = "editPasteAction";
-    public static final String EDIT_COPY_ACTION_ID = "editCopyAction";
-    public static final String EDIT_CUT_ACTION_ID = "editCutAction";
+    public static final String EDIT_SELECT_ALL_ACTION_ID = "editSelectAll";
+    public static final String EDIT_DELETE_ACTION_ID = "editDelete";
+    public static final String EDIT_PASTE_ACTION_ID = "editPaste";
+    public static final String EDIT_COPY_ACTION_ID = "editCopy";
+    public static final String EDIT_CUT_ACTION_ID = "editCut";
 
     public static final String DELETE_ACTION = "delete";
     public static final String SELECT_ALL_ACTION = "selectAll";

@@ -35,14 +35,14 @@ import org.exbin.jaguif.docking.api.ContextDocking;
 @ParametersAreNonnullByDefault
 public class CloseAllFilesAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileCloseAllAction";
+    public static final String ACTION_ID = "fileCloseAll";
 
     protected DefaultMultiDocking multiDocking;
 
     public CloseAllFilesAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

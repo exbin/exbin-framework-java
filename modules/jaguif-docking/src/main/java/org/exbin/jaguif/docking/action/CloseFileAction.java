@@ -39,7 +39,7 @@ import org.exbin.jaguif.document.api.Document;
 @ParametersAreNonnullByDefault
 public class CloseFileAction extends AbstractAction {
 
-    public static final String ACTION_ID = "fileCloseAction";
+    public static final String ACTION_ID = "fileClose";
 
     protected DocumentDocking docking;
     protected Document document;
@@ -47,7 +47,7 @@ public class CloseFileAction extends AbstractAction {
     public CloseFileAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

@@ -40,15 +40,12 @@ public class RedoAction extends AbstractAction implements ActionContextChange {
 
     public static final String EDIT_REDO_ACTION_ID = "editRedoAction";
 
-    private ResourceBundle resourceBundle;
-    private UndoRedoState undoRedo = null;
+    protected UndoRedoState undoRedo = null;
 
     public RedoAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, EDIT_REDO_ACTION_ID);
         setEnabled(false);

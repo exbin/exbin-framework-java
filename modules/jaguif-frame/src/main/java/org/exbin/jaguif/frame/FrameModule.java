@@ -61,6 +61,10 @@ import org.exbin.jaguif.options.api.PrefixOptionsStorage;
 import org.exbin.jaguif.window.settings.WindowPositionOptions;
 import org.exbin.jaguif.frame.api.ComponentFrame;
 import org.exbin.jaguif.context.api.ContextActivable;
+import org.exbin.jaguif.frame.contribution.ExitContribution;
+import org.exbin.jaguif.frame.contribution.ViewStatusBarContribution;
+import org.exbin.jaguif.frame.contribution.ViewToolBarCaptionsContribution;
+import org.exbin.jaguif.frame.contribution.ViewToolBarContribution;
 import org.exbin.jaguif.utils.ComponentProvider;
 import org.exbin.jaguif.utils.WindowClosingListener;
 
@@ -222,7 +226,8 @@ public class FrameModule implements FrameModuleApi {
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(exitActionRegistered ? SeparationSequenceContributionRule.SeparationMode.NONE : SeparationSequenceContributionRule.SeparationMode.ABOVE));
         if (!exitActionRegistered) {
-            contribution = mgmt.registerMenuItem(getExitAction());
+            contribution = new ExitContribution();
+            mgmt.registerMenuContribution(contribution);
             mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(appClosingActionsGroup));
         }
     }
@@ -333,9 +338,11 @@ public class FrameModule implements FrameModuleApi {
         getFrameActions();
         createViewBarsMenuGroup();
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(frameActions.createViewToolBarAction());
+        SequenceContribution contribution = new ViewToolBarContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(VIEW_BARS_GROUP_ID));
-        contribution = mgmt.registerMenuItem(frameActions.createViewToolBarCaptionsAction());
+        contribution = new ViewToolBarCaptionsContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(VIEW_BARS_GROUP_ID));
     }
 
@@ -345,7 +352,8 @@ public class FrameModule implements FrameModuleApi {
         getFrameActions();
         createViewBarsMenuGroup();
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.VIEW_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(frameActions.createViewStatusBarAction());
+        SequenceContribution contribution = new ViewStatusBarContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(VIEW_BARS_GROUP_ID));
     }
 

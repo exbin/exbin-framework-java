@@ -22,6 +22,7 @@ import javax.swing.JComponent;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.about.action.AboutAction;
 import org.exbin.jaguif.about.api.AboutModuleApi;
+import org.exbin.jaguif.about.contribution.AboutContribution;
 import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SeparationSequenceContributionRule;
@@ -82,7 +83,8 @@ public class AboutModule implements AboutModuleApi {
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(aboutActionRegistered ? SeparationSequenceContributionRule.SeparationMode.NONE : SeparationSequenceContributionRule.SeparationMode.ABOVE));
         if (!aboutActionRegistered) {
-            contribution = mgmt.registerMenuItem(createAboutAction());
+            contribution = new AboutContribution();
+            mgmt.registerMenuContribution(contribution);
             mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(HELP_ABOUT_MENU_GROUP_ID));
         }
     }
