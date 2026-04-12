@@ -15,13 +15,9 @@
  */
 package org.exbin.jaguif.toolbar;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import javax.swing.JToolBar;
-import org.exbin.jaguif.toolbar.api.ActionToolBarContribution;
 import org.exbin.jaguif.contribution.ContributionDefinition;
 import org.exbin.jaguif.contribution.ContributionManager;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
@@ -82,19 +78,5 @@ public class ToolBarManager extends ContributionManager implements ToolBarManage
     @Override
     public void registerToolBarRule(SequenceContribution contribution, SequenceContributionRule rule) {
         registerContributionRule(contribution, rule);
-    }
-
-    @Nonnull
-    @Override
-    public List<Action> getAllManagedActions() {
-        List<Action> actions = new ArrayList<>();
-        for (ContributionDefinition definition : definitions.values()) {
-            for (SequenceContribution contribution : definition.getContributions()) {
-                if (contribution instanceof ActionToolBarContribution) {
-                    actions.add(((ActionToolBarContribution) contribution).getAction());
-                }
-            }
-        }
-        return actions;
     }
 }

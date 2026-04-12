@@ -15,6 +15,8 @@
  */
 package org.exbin.jaguif.toolbar;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -24,6 +26,8 @@ import org.exbin.jaguif.toolbar.api.ActionToolBarContribution;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
+import org.exbin.jaguif.toolbar.api.ToolBarComponent;
 
 /**
  * Icon toolbar sequence output.
@@ -35,6 +39,7 @@ public class IconToolBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final JToolBar toolBar;
     protected final ActionContextRegistration actionContextRegistration;
+    protected final Map<SequenceContribution, ToolBarComponent> toolBarItems = new HashMap<>();
 
     public IconToolBarSequenceOutput(JToolBar menuBar, ActionContextRegistration actionContextRegistration) {
         this.toolBar = menuBar;
@@ -43,19 +48,19 @@ public class IconToolBarSequenceOutput implements ContributionSequenceOutput {
 
     @Override
     public boolean initItem(ItemSequenceContribution itemContribution) {
-        Action action = ((ActionToolBarContribution) itemContribution).getAction();
-        ((ActionToolBarContribution) itemContribution).setComponent(ToolBarSequenceOutput.createToolBarComponent(action));
+        Action action = ((ActionToolBarContribution) itemContribution).createAction();
+        toolBarItems.put(itemContribution, new DefaultToolBarComponent(ToolBarSequenceOutput.createToolBarComponent(action), action));
         return true;
     }
 
     @Override
     public void add(ItemSequenceContribution itemContribution) {
-        JComponent component = ((ActionToolBarContribution) itemContribution).getComponent();
+        ToolBarComponent component = toolBarItems.get(itemContribution);
         if (component instanceof AbstractButton) {
             ((AbstractButton) component).setText("");
         }
-        toolBar.add(component);
-        ToolBarSequenceOutput.finishToolBarAction(((ActionToolBarContribution) itemContribution).getAction(), actionContextRegistration);
+        toolBar.add(component.getComponent());
+        ToolBarSequenceOutput.finishToolBarAction(component.getAction(), actionContextRegistration);
     }
 
     @Override

@@ -56,7 +56,8 @@ public class KeyMapSettingsComponent implements SettingsComponentProvider {
             KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
             records.add(new KeyMapRecord(name, icon, type, keyStroke));
         }
-
+/*
+        // TODO
         ToolBarModuleApi toolbarModule = App.getModule(ToolBarModuleApi.class);
         actions = toolbarModule.getToolBarManagedActions();
         for (Action action : actions) {
@@ -65,7 +66,7 @@ public class KeyMapSettingsComponent implements SettingsComponentProvider {
             String type = resourceBundle.getString("actionType.toolBar");
             KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
             records.add(new KeyMapRecord(name, icon, type, keyStroke));
-        }
+        } */
         panel.setRecords(records);
         return panel;
     }

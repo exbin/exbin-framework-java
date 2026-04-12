@@ -48,7 +48,7 @@ public class DefaultEditItemActions implements EditItemActions {
     @Override
     public AddItemAction createAddItemAction() {
         AddItemAction addItemAction = new AddItemAction(mode);
-        addItemAction.setup(resourceBundle);
+        addItemAction.init(resourceBundle);
         return addItemAction;
     }
 
@@ -56,7 +56,7 @@ public class DefaultEditItemActions implements EditItemActions {
     @Override
     public EditItemAction createEditItemAction() {
         EditItemAction editItemAction = new EditItemAction(mode);
-        editItemAction.setup(resourceBundle);
+        editItemAction.init(resourceBundle);
         return editItemAction;
     }
 
@@ -64,7 +64,7 @@ public class DefaultEditItemActions implements EditItemActions {
     @Override
     public DeleteItemAction createDeleteItemAction() {
         DeleteItemAction deleteItemAction = new DeleteItemAction();
-        deleteItemAction.setup(resourceBundle);
+        deleteItemAction.init(resourceBundle);
         return deleteItemAction;
     }
 

@@ -27,6 +27,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.text.DefaultEditorKit;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionConsts;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
@@ -42,6 +43,7 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 import org.exbin.jaguif.menu.api.MenuManagement;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Implementation of menu module.
@@ -203,15 +205,80 @@ public class MenuModule implements MenuModuleApi {
         SequenceContribution contribution = mgmt.registerMenuGroup(CLIPBOARD_ACTIONS_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(separationMode));
-        contribution = mgmt.registerMenuItem(actions.createCutAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return actions.createCutAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "cut";
+            }
+        };
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(actions.createCopyAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return actions.createCopyAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "copy";
+            }
+        };
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(actions.createPasteAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return actions.createPasteAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "paste";
+            }
+        };
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(actions.createDeleteAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return actions.createDeleteAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "delete";
+            }
+        };
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(actions.createSelectAllAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return actions.createSelectAllAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "selectAll";
+            }
+        };
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }
 

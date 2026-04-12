@@ -37,10 +37,10 @@ import org.exbin.jaguif.search.api.ReplaceSearchState;
 @ParametersAreNonnullByDefault
 public class EditReplaceAction extends AbstractAction implements ActionContextChange {
 
-    public static final String ACTION_ID = "searchReplaceAction";
+    public static final String ACTION_ID = "searchReplace";
     protected ReplaceSearchState replaceSearchState;
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

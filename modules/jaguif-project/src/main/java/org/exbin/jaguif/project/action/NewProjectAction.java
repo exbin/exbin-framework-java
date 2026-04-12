@@ -31,7 +31,6 @@ import org.exbin.jaguif.project.api.ProjectModuleApi;
 import org.exbin.jaguif.project.gui.NewProjectPanel;
 import org.exbin.jaguif.project.model.ProjectTreeModel;
 import org.exbin.jaguif.utils.ActionUtils;
-import org.exbin.jaguif.utils.WindowUtils;
 import org.exbin.jaguif.window.api.WindowHandler;
 import org.exbin.jaguif.window.api.gui.DefaultControlPanel;
 import org.exbin.jaguif.window.api.controller.DefaultControlController;
@@ -44,14 +43,14 @@ import org.exbin.jaguif.window.api.controller.DefaultControlController;
 @ParametersAreNonnullByDefault
 public class NewProjectAction extends AbstractAction {
 
-    public static final String ACTION_ID = "newProjectAction";
+    public static final String ACTION_ID = "newProject";
 
     private ResourceBundle resourceBundle;
 
     public NewProjectAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);

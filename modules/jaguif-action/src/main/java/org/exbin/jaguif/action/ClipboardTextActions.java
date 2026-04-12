@@ -54,7 +54,7 @@ public class ClipboardTextActions implements ClipboardActionsApi {
     public ClipboardTextActions() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         initializeTextActions();

@@ -38,14 +38,14 @@ import org.exbin.jaguif.docking.api.DocumentDocking;
 @ParametersAreNonnullByDefault
 public class SaveProjectAction extends AbstractAction {
 
-    public static final String ACTION_ID = "saveProjectAction";
+    public static final String ACTION_ID = "saveProject";
 
     protected DocumentDocking documentDocking;
 
     public SaveProjectAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, ActionUtils.getMetaMask() | InputEvent.SHIFT_DOWN_MASK));

@@ -53,7 +53,7 @@ public class FindReplaceActions {
     public FindReplaceActions() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 
@@ -86,28 +86,28 @@ public class FindReplaceActions {
     @Nonnull
     public EditFindAction createEditFindAction() {
         EditFindAction editFindAction = new EditFindAction();
-        editFindAction.setup(resourceBundle);
+        editFindAction.init(resourceBundle);
         return editFindAction;
     }
 
     @Nonnull
     public EditFindAgainAction createEditFindAgainAction() {
         EditFindAgainAction editFindAgainAction = new EditFindAgainAction();
-        editFindAgainAction.setup(resourceBundle);
+        editFindAgainAction.init(resourceBundle);
         return editFindAgainAction;
     }
 
     @Nonnull
     public EditReplaceAction createEditReplaceAction() {
         EditReplaceAction editReplaceAction = new EditReplaceAction();
-        editReplaceAction.setup(resourceBundle);
+        editReplaceAction.init(resourceBundle);
         return editReplaceAction;
     }
 
     @ParametersAreNonnullByDefault
     public class EditFindAction extends AbstractAction {
 
-        public static final String ACTION_ID = "editFindAction";
+        public static final String ACTION_ID = "editFind";
 
         private DialogParentComponent dialogParentComponent;
         private TextPanel textPanel;
@@ -115,7 +115,7 @@ public class FindReplaceActions {
         public EditFindAction() {
         }
 
-        public void setup(ResourceBundle resourceBundle) {
+        public void init(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, ActionUtils.getMetaMask()));
@@ -144,7 +144,7 @@ public class FindReplaceActions {
     @ParametersAreNonnullByDefault
     public class EditFindAgainAction extends AbstractAction {
 
-        public static final String ACTION_ID = "editFindAgainAction";
+        public static final String ACTION_ID = "editFindAgain";
 
         private DialogParentComponent dialogParentComponent;
         private TextPanel textPanel;
@@ -152,7 +152,7 @@ public class FindReplaceActions {
         public EditFindAgainAction() {
         }
 
-        public void setup(ResourceBundle resourceBundle) {
+        public void init(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
@@ -180,7 +180,7 @@ public class FindReplaceActions {
     @ParametersAreNonnullByDefault
     public class EditReplaceAction extends AbstractAction {
 
-        public static final String ACTION_ID = "editReplaceAction";
+        public static final String ACTION_ID = "editReplace";
 
         private DialogParentComponent dialogParentComponent;
         private TextPanel textPanel;
@@ -188,7 +188,7 @@ public class FindReplaceActions {
         public EditReplaceAction() {
         }
 
-        public void setup(ResourceBundle resourceBundle) {
+        public void init(ResourceBundle resourceBundle) {
             ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
             actionModule.initAction(this, resourceBundle, ACTION_ID);
             putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, ActionUtils.getMetaMask()));

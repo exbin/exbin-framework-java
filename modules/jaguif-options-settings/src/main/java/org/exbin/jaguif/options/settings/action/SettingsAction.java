@@ -54,7 +54,7 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 @ParametersAreNonnullByDefault
 public class SettingsAction extends AbstractAction {
 
-    public static final String ACTION_ID = "settingsAction";
+    public static final String ACTION_ID = "settings";
 
     private ResourceBundle resourceBundle;
     private SettingsPagesProvider settingsPagesProvider;
@@ -63,7 +63,7 @@ public class SettingsAction extends AbstractAction {
     public SettingsAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle, SettingsPagesProvider settingsPagesProvider) {
+    public void init(ResourceBundle resourceBundle, SettingsPagesProvider settingsPagesProvider) {
         this.resourceBundle = resourceBundle;
         this.settingsPagesProvider = settingsPagesProvider;
 

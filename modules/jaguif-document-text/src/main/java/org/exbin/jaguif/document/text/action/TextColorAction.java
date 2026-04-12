@@ -46,7 +46,7 @@ import org.exbin.jaguif.document.text.EditorTextPanelComponent;
 @ParametersAreNonnullByDefault
 public class TextColorAction extends AbstractAction {
 
-    public static final String ACTION_ID = "textSetColor";
+    public static final String ACTION_ID = "textColor";
 
     private EditorTextPanelComponent textComponent;
     private DialogParentComponent dialogParentComponent;

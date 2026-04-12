@@ -41,7 +41,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class AboutAction extends AbstractAction {
 
-    public static final String ACTION_ID = "aboutAction";
+    public static final String ACTION_ID = "about";
 
     private final java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AboutAction.class);
     private JComponent sideComponent = null;

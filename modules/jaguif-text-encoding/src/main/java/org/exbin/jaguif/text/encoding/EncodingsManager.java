@@ -81,7 +81,7 @@ public class EncodingsManager {
 
         encodingButtonGroup.add(utfEncodingRadioButtonMenuItem);
         manageEncodingsAction = new ManageEncodingsAction();
-        manageEncodingsAction.setup(resourceBundle);
+        manageEncodingsAction.init(resourceBundle);
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         toolsEncodingMenu = UiUtils.createMenu();

@@ -46,7 +46,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class EditSelectionAction extends AbstractAction {
 
-    public static final String ACTION_ID = "editSelectionAction";
+    public static final String ACTION_ID = "editSelection";
 
     private JTextComponent component;
 

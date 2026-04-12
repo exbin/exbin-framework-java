@@ -51,15 +51,15 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class ManageEncodingsAction extends AbstractAction {
 
-    public static final String ACTION_ID = "manageEncodingsAction"; //NOI18N
-    public static final String HELP_ID = "encoding"; //NOI18N
+    public static final String ACTION_ID = "manageEncodings";
+    public static final String HELP_ID = "encoding";
 
     private CharsetListEncodingState charsetEncodingState;
 
     public ManageEncodingsAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

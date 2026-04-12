@@ -48,11 +48,11 @@ public interface ProjectModuleApi extends Module {
     void registerMenuFileHandlingActions();
 
     @Nonnull
-    AbstractAction getNewProjectAction();
+    AbstractAction createNewProjectAction();
 
     @Nonnull
-    AbstractAction getOpenProjectAction();
+    AbstractAction createOpenProjectAction();
 
     @Nonnull
-    AbstractAction getSaveProjectAction();
+    AbstractAction createSaveProjectAction();
 }

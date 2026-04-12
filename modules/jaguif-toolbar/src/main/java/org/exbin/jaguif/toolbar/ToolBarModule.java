@@ -15,8 +15,6 @@
  */
 package org.exbin.jaguif.toolbar;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,6 +32,7 @@ import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Implementation of tool bar module.
@@ -65,16 +64,6 @@ public class ToolBarModule implements ToolBarModuleApi {
         if (resourceBundle == null) {
             getResourceBundle();
         }
-    }
-
-    @Nonnull
-    @Override
-    public List<Action> getToolBarManagedActions() {
-        List<Action> actions = new ArrayList<>();
-        ToolBarModule.this.getToolBarManager();
-        actions.addAll(toolBarManager.getAllManagedActions());
-
-        return actions;
     }
 
     @Nonnull
@@ -121,13 +110,65 @@ public class ToolBarModule implements ToolBarModuleApi {
         ToolBarDefinitionManagement mgmt = getMainToolBarManager(MODULE_ID);
         SequenceContribution contribution = mgmt.registerToolBarGroup(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionMode.TOP));
-        contribution = mgmt.registerToolBarItem(clipboardActions.createCutAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return clipboardActions.createCutAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "cut";
+            }
+        };
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(clipboardActions.createCopyAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return clipboardActions.createCopyAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "copy";
+            }
+        };
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(clipboardActions.createPasteAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return clipboardActions.createPasteAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "paste";
+            }
+        };
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
-        contribution = mgmt.registerToolBarItem(clipboardActions.createDeleteAction());
+        contribution = new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return clipboardActions.createDeleteAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return "delete";
+            }
+        };
+        mgmt.registerToolBarContribution(contribution);
         mgmt.registerToolBarRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID));
     }
 }

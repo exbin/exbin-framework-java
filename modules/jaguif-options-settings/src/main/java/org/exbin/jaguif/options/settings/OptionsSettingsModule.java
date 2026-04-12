@@ -39,6 +39,7 @@ import org.exbin.jaguif.options.settings.api.OptionsSettingsManagement;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsOverrides;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
+import org.exbin.jaguif.options.settings.contribution.SettingsContribution;
 
 /**
  * Implementation of framework options settings module.
@@ -91,7 +92,7 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
         ensureSetup();
         SettingsAction optionsAction = new SettingsAction();
         getMainSettingsManager();
-        optionsAction.setup(resourceBundle, (SettingsPageReceiver optionsPageReceiver) -> {
+        optionsAction.init(resourceBundle, (SettingsPageReceiver optionsPageReceiver) -> {
             getMainSettingsManager().passSettingsPages(optionsPageReceiver);
         });
 
@@ -115,13 +116,12 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
     @Override
     public void registerMenuAction() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        SettingsAction optionsAction = createSettingsAction();
 
         boolean optionsActionRegistered = false;
         if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             FlatDesktop.setPreferencesHandler(() -> {
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                optionsAction.openSettingsDialog(frameModule.getFrame());
+                createSettingsAction().openSettingsDialog(frameModule.getFrame());
             });
             /* // TODO: Replace after migration to Java 9+
             Desktop desktop = Desktop.getDesktop();
@@ -136,7 +136,8 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM_LAST));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(optionsActionRegistered ? SeparationSequenceContributionRule.SeparationMode.NONE : SeparationSequenceContributionRule.SeparationMode.AROUND));
         if (!optionsActionRegistered) {
-            contribution = mgmt.registerMenuItem(optionsAction);
+            contribution = new SettingsContribution();
+            mgmt.registerMenuContribution(contribution);
             mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(TOOLS_OPTIONS_MENU_GROUP_ID));
         }
     }

@@ -36,6 +36,9 @@ import org.exbin.jaguif.project.api.ProjectType;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
+import org.exbin.jaguif.project.contribution.NewProjectContribution;
+import org.exbin.jaguif.project.contribution.OpenProjectContribution;
+import org.exbin.jaguif.project.contribution.SaveProjectContribution;
 
 /**
  * Implementation of framework project module.
@@ -49,10 +52,6 @@ public class ProjectModule implements ProjectModuleApi {
 
     private static final List<ProjectCategory> projectCategories = new ArrayList<>();
     private static final List<ProjectType> projectTypes = new ArrayList<>();
-
-    private NewProjectAction newProjectAction;
-    private OpenProjectAction openProjectAction;
-    private SaveProjectAction saveProjectAction;
 
     public ProjectModule() {
     }
@@ -110,44 +109,41 @@ public class ProjectModule implements ProjectModuleApi {
         MenuDefinitionManagement mgmt = menuModule.getMenuManager(PROJECT_SUBMENU_ID, FrameModuleApi.MODULE_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(PROJECT_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
-        contribution = mgmt.registerMenuItem(getNewProjectAction());
+        contribution = new NewProjectContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(PROJECT_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(getOpenProjectAction());
+        contribution = new OpenProjectContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(PROJECT_MENU_GROUP_ID));
-        contribution = mgmt.registerMenuItem(getSaveProjectAction());
+        contribution = new SaveProjectContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(PROJECT_MENU_GROUP_ID));
     }
 
     @Nonnull
     @Override
-    public NewProjectAction getNewProjectAction() {
-        if (newProjectAction == null) {
-            ensureSetup();
-            newProjectAction = new NewProjectAction();
-            newProjectAction.setup(resourceBundle);
-        }
+    public NewProjectAction createNewProjectAction() {
+        ensureSetup();
+        NewProjectAction newProjectAction = new NewProjectAction();
+        newProjectAction.init(resourceBundle);
         return newProjectAction;
     }
 
     @Nonnull
     @Override
-    public OpenProjectAction getOpenProjectAction() {
-        if (openProjectAction == null) {
-            ensureSetup();
-            openProjectAction = new OpenProjectAction();
-            openProjectAction.setup(resourceBundle);
-        }
+    public OpenProjectAction createOpenProjectAction() {
+        ensureSetup();
+        OpenProjectAction openProjectAction = new OpenProjectAction();
+        openProjectAction.init(resourceBundle);
         return openProjectAction;
     }
 
     @Nonnull
     @Override
-    public SaveProjectAction getSaveProjectAction() {
-        if (saveProjectAction == null) {
-            ensureSetup();
-            saveProjectAction = new SaveProjectAction();
-            saveProjectAction.setup(resourceBundle);
-        }
+    public SaveProjectAction createSaveProjectAction() {
+        ensureSetup();
+        SaveProjectAction saveProjectAction = new SaveProjectAction();
+        saveProjectAction.init(resourceBundle);
         return saveProjectAction;
     }
 

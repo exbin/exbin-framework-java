@@ -39,7 +39,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     public ClipboardActions() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 
@@ -47,7 +47,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     @Override
     public Action createCutAction() {
         CutAction cutAction = new CutAction();
-        cutAction.setup(resourceBundle);
+        cutAction.init(resourceBundle);
         return cutAction;
     }
 
@@ -55,7 +55,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     @Override
     public Action createCopyAction() {
         CopyAction copyAction = new CopyAction();
-        copyAction.setup(resourceBundle);
+        copyAction.init(resourceBundle);
         return copyAction;
     }
 
@@ -63,7 +63,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     @Override
     public Action createPasteAction() {
         PasteAction pasteAction = new PasteAction();
-        pasteAction.setup(resourceBundle);
+        pasteAction.init(resourceBundle);
         return pasteAction;
     }
 
@@ -71,7 +71,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     @Override
     public Action createDeleteAction() {
         DeleteAction deleteAction = new DeleteAction();
-        deleteAction.setup(resourceBundle);
+        deleteAction.init(resourceBundle);
         return deleteAction;
     }
 
@@ -79,7 +79,7 @@ public class ClipboardActions implements ClipboardActionsApi {
     @Override
     public Action createSelectAllAction() {
         SelectAllAction selectAllAction = new SelectAllAction();
-        selectAllAction.setup(resourceBundle);
+        selectAllAction.init(resourceBundle);
         return selectAllAction;
     }
 }

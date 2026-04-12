@@ -34,7 +34,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class EditItemAction extends AbstractAction {
 
-    public static final String ACTION_ID = "editItemAction";
+    public static final String ACTION_ID = "editItem";
 
     protected final EditItemMode mode;
     protected ContextEditItem actionsHandler;
@@ -43,7 +43,7 @@ public class EditItemAction extends AbstractAction {
         this.mode = mode;
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

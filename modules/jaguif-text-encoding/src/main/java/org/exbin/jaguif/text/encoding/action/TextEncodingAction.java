@@ -43,7 +43,7 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 @ParametersAreNonnullByDefault
 public class TextEncodingAction extends AbstractAction {
 
-    public static final String ACTION_ID = "textEncodingAction";
+    public static final String ACTION_ID = "textEncoding";
 
     private CharsetEncodingState textEncodingState;
     private Component component;
@@ -51,7 +51,7 @@ public class TextEncodingAction extends AbstractAction {
     public TextEncodingAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

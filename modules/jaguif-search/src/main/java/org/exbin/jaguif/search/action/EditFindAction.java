@@ -37,10 +37,10 @@ import org.exbin.jaguif.search.api.FindSearchState;
 @ParametersAreNonnullByDefault
 public class EditFindAction extends AbstractAction implements ActionContextChange {
 
-    public static final String ACTION_ID = "searchFindAction";
+    public static final String ACTION_ID = "searchFind";
     protected FindSearchState findSearchState;
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

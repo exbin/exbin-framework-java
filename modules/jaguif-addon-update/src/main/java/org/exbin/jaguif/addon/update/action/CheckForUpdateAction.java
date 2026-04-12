@@ -48,7 +48,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class CheckForUpdateAction extends AbstractAction {
 
-    public static final String ACTION_ID = "checkUpdateAction";
+    public static final String ACTION_ID = "checkForUpdate";
 
     private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(CheckForUpdateAction.class);
 

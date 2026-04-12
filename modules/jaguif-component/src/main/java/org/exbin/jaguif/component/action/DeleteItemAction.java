@@ -34,11 +34,11 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class DeleteItemAction extends AbstractAction {
 
-    public static final String ACTION_ID = "deleteItemAction";
+    public static final String ACTION_ID = "deleteItem";
 
     private ContextEditItem actionsHandler;
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

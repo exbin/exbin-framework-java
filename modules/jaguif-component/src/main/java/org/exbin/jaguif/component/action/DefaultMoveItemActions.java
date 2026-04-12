@@ -41,7 +41,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
     @Override
     public MoveUpAction createMoveUpAction() {
         MoveUpAction moveUpAction = new MoveUpAction();
-        moveUpAction.setup(resourceBundle);
+        moveUpAction.init(resourceBundle);
         return moveUpAction;
     }
 
@@ -49,7 +49,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
     @Override
     public MoveDownAction createMoveDownAction() {
         MoveDownAction moveDownAction = new MoveDownAction();
-        moveDownAction.setup(resourceBundle);
+        moveDownAction.init(resourceBundle);
         return moveDownAction;
     }
 
@@ -57,7 +57,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
     @Override
     public MoveTopAction createMoveTopAction() {
         MoveTopAction moveTopAction = new MoveTopAction();
-        moveTopAction.setup(resourceBundle);
+        moveTopAction.init(resourceBundle);
         return moveTopAction;
     }
 
@@ -65,7 +65,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
     @Override
     public MoveBottomAction createMoveBottomAction() {
         MoveBottomAction moveBottomAction = new MoveBottomAction();
-        moveBottomAction.setup(resourceBundle);
+        moveBottomAction.init(resourceBundle);
         return moveBottomAction;
     }
 

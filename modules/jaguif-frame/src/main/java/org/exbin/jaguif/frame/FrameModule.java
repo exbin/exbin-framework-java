@@ -320,7 +320,7 @@ public class FrameModule implements FrameModuleApi {
         if (frameActions == null) {
             frameActions = new FrameActions();
             ensureSetup();
-            frameActions.setup(resourceBundle);
+            frameActions.init(resourceBundle);
         }
 
         return frameActions;

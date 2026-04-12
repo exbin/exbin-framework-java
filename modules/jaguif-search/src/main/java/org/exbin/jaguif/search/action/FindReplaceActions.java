@@ -33,35 +33,35 @@ public class FindReplaceActions {
     public FindReplaceActions() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 
     @Nonnull
     public Action createEditFindAction() {
         EditFindAction editFindAction = new EditFindAction();
-        editFindAction.setup(resourceBundle);
+        editFindAction.init(resourceBundle);
         return editFindAction;
     }
 
     @Nonnull
     public Action createEditFindNextAction() {
         EditFindNextAction editFindNextAction = new EditFindNextAction();
-        editFindNextAction.setup(resourceBundle);
+        editFindNextAction.init(resourceBundle);
         return editFindNextAction;
     }
 
     @Nonnull
     public Action createEditFindPreviousAction() {
         EditFindPreviousAction editFindPreviousAction = new EditFindPreviousAction();
-        editFindPreviousAction.setup(resourceBundle);
+        editFindPreviousAction.init(resourceBundle);
         return editFindPreviousAction;
     }
 
     @Nonnull
     public Action createEditReplaceAction() {
         EditReplaceAction editReplaceAction = new EditReplaceAction();
-        editReplaceAction.setup(resourceBundle);
+        editReplaceAction.init(resourceBundle);
         return editReplaceAction;
     }
 }

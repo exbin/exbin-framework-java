@@ -34,11 +34,11 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class MoveUpAction extends AbstractAction {
 
-    public static final String ACTION_ID = "moveItemUpAction";
+    public static final String ACTION_ID = "moveItemUp";
 
     protected ContextMoveItem actionsHandler;
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);

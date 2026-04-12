@@ -258,7 +258,7 @@ public class DocumentTextModule implements Module {
         if (findReplaceActions == null) {
             ensureSetup();
             findReplaceActions = new FindReplaceActions();
-            findReplaceActions.setup(resourceBundle);
+            findReplaceActions.init(resourceBundle);
         }
 
         return findReplaceActions;
@@ -340,7 +340,7 @@ public class DocumentTextModule implements Module {
     private PrintAction createPrintAction() {
         ensureSetup();
         PrintAction printAction = new PrintAction();
-        printAction.setup(resourceBundle);
+        printAction.init(resourceBundle);
         return printAction;
     }
 

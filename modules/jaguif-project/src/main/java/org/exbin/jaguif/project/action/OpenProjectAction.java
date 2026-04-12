@@ -34,14 +34,14 @@ import org.exbin.jaguif.utils.ActionUtils;
 @ParametersAreNonnullByDefault
 public class OpenProjectAction extends AbstractAction {
 
-    public static final String ACTION_ID = "openProjectAction";
+    public static final String ACTION_ID = "openProject";
 
     private ResourceBundle resourceBundle;
 
     public OpenProjectAction() {
     }
 
-    public void setup(ResourceBundle resourceBundle) {
+    public void init(ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);

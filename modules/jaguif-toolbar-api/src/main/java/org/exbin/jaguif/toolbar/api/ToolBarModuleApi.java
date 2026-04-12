@@ -15,10 +15,8 @@
  */
 package org.exbin.jaguif.toolbar.api;
 
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import javax.swing.JToolBar;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
@@ -84,12 +82,4 @@ public interface ToolBarModuleApi extends Module {
      * Registers tool bar clipboard actions.
      */
     void registerToolBarClipboardActions();
-
-    /**
-     * Returns list of action managed by toolbar managers.
-     *
-     * @return list of actions
-     */
-    @Nonnull
-    List<Action> getToolBarManagedActions();
 }
