@@ -19,8 +19,8 @@ import javax.annotation.Nonnull;
 import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
-import org.exbin.jaguif.frame.FrameModule;
-import org.exbin.jaguif.frame.action.ViewStatusBarAction;
+import org.exbin.jaguif.frame.action.ViewToolBarCaptionsAction;
+import org.exbin.jaguif.frame.api.FrameModuleApi;
 
 /**
  * View tool bar captions contribution.
@@ -34,8 +34,8 @@ public class ViewToolBarCaptionsContribution implements ActionSequenceContributi
     @Nonnull
     @Override
     public Action createAction() {
-        ViewStatusBarAction action = new ViewStatusBarAction();
-        FrameModule frameModule = App.getModule(FrameModule.class);
+        ViewToolBarCaptionsAction action = new ViewToolBarCaptionsAction();
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         action.init(frameModule.getResourceBundle());
         return action;
     }

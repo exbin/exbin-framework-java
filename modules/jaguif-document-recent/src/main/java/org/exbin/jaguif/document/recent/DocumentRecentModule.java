@@ -85,7 +85,7 @@ public class DocumentRecentModule implements Module {
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
         SequenceContribution contribution = mgmt.registerMenuItem(() -> recentFilesActions.createOpenRecentMenu());
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(DocumentModuleApi.FILE_MENU_GROUP_ID));
-        mgmt.registerMenuRule(contribution, new RelativeSequenceContributionRule(RelativeSequenceContributionRule.NextToMode.AFTER, "openFileAction")); // OpenFileAction.ACTION_ID
+        mgmt.registerMenuRule(contribution, new RelativeSequenceContributionRule(RelativeSequenceContributionRule.NextToMode.AFTER, "openFile")); // OpenFileAction.ACTION_ID
     }
 
     @Nonnull

@@ -28,12 +28,12 @@ import org.exbin.jaguif.action.api.ActionConsts;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SubSequenceContribution;
 import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
-import org.exbin.jaguif.menu.api.ActionMenuContribution;
 import org.exbin.jaguif.menu.api.ActionMenuCreation;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
 import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Popup menu sequence output.
@@ -84,9 +84,9 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
 
         Action action;
         JMenuItem menuItem;
-        if (contribution instanceof ActionMenuContribution) {
+        if (contribution instanceof ActionSequenceContribution) {
             menuItem = null;
-            action = ((ActionMenuContribution) contribution).createAction();
+            action = ((ActionSequenceContribution) contribution).createAction();
         } else {
             menuItem = ((DirectMenuContribution) contribution).getMenuItem();
             action = menuItem.getAction();
@@ -100,7 +100,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
             }
         }
 
-        if (contribution instanceof ActionMenuContribution) {
+        if (contribution instanceof ActionSequenceContribution) {
             menuItem = MenuSequenceOutput.createMenuItem(action, buttonGroups);
             menuItems.put(contribution, menuItem);
         }

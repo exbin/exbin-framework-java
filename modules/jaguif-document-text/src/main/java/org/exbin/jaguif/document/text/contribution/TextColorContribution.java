@@ -29,7 +29,7 @@ import org.exbin.jaguif.document.text.action.TextColorAction;
  */
 public class TextColorContribution implements ActionSequenceContribution {
 
-    public static final String CONTRIBUTION_ID = "textSetColor";
+    public static final String CONTRIBUTION_ID = "textColor";
 
     @Nonnull
     @Override

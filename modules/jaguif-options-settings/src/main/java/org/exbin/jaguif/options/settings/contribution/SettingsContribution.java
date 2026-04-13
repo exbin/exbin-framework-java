@@ -19,8 +19,7 @@ import javax.annotation.Nonnull;
 import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
-import org.exbin.jaguif.options.settings.OptionsSettingsModule;
-import org.exbin.jaguif.options.settings.action.SettingsAction;
+import org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi;
 
 /**
  * Options settings contribution.
@@ -34,8 +33,8 @@ public class SettingsContribution implements ActionSequenceContribution {
     @Nonnull
     @Override
     public Action createAction() {
-        OptionsSettingsModule optionsSettingsModule = App.getModule(OptionsSettingsModule.class);
-        SettingsAction action = optionsSettingsModule.createSettingsAction();
+        OptionsSettingsModuleApi optionsSettingsModule = App.getModule(OptionsSettingsModuleApi.class);
+        Action action = optionsSettingsModule.createSettingsAction();
         return action;
     }
 

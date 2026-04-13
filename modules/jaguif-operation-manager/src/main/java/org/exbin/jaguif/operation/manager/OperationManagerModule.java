@@ -62,7 +62,7 @@ public class OperationManagerModule implements OperationManagerModuleApi {
         UndoManagerAction undoManagerAction = new UndoManagerAction();
         undoManagerAction.putValue(ActionConsts.ACTION_DIALOG_MODE, true);
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(undoManagerAction, undoManagerAction.getResourceBundle(), UndoManagerAction.EDIT_UNDO_MANAGER_ACTION_ID);
+        actionModule.initAction(undoManagerAction, undoManagerAction.getResourceBundle(), UndoManagerAction.ACTION_ID);
         undoManagerAction.putValue(ActionConsts.ACTION_CONTEXT_CHANGE, undoManagerAction);
         return undoManagerAction;
     }

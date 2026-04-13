@@ -30,12 +30,12 @@ import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SubSequenceContribution;
 import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
-import org.exbin.jaguif.menu.api.ActionMenuContribution;
 import org.exbin.jaguif.menu.api.ActionMenuCreation;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
 import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Menu sequence output.
@@ -91,9 +91,9 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
 
         Action action;
         JMenuItem menuItem;
-        if (contribution instanceof ActionMenuContribution) {
+        if (contribution instanceof ActionSequenceContribution) {
             menuItem = null;
-            action = ((ActionMenuContribution) contribution).createAction();
+            action = ((ActionSequenceContribution) contribution).createAction();
         } else if (contribution instanceof DirectMenuContribution) {
             menuItem = ((DirectMenuContribution) contribution).getMenuItem();
             action = menuItem.getAction();
@@ -109,7 +109,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
             }
         }
 
-        if (contribution instanceof ActionMenuContribution) {
+        if (contribution instanceof ActionSequenceContribution) {
             menuItem = MenuSequenceOutput.createMenuItem(action, buttonGroups);
             menuItems.put(contribution, menuItem);
         }
@@ -138,7 +138,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
             return;
         }
 
-        if (contribution instanceof ActionMenuContribution) {
+        if (contribution instanceof ActionSequenceContribution) {
             JMenuItem menuItem = menuItems.get(contribution);
             menu.add(menuItem);
             MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);

@@ -93,6 +93,7 @@ public class FrameModule implements FrameModuleApi {
     }
 
     @Nonnull
+    @Override
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(FrameModule.class);
@@ -166,7 +167,7 @@ public class FrameModule implements FrameModuleApi {
 
     @Nonnull
     @Override
-    public Action getExitAction() {
+    public Action createExitAction() {
         Action exitAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -178,7 +179,7 @@ public class FrameModule implements FrameModuleApi {
             }
         };
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(exitAction, resourceBundle, "exitAction");
+        actionModule.initAction(exitAction, resourceBundle, "exit");
         exitAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.KeyEvent.ALT_DOWN_MASK));
 
         return exitAction;

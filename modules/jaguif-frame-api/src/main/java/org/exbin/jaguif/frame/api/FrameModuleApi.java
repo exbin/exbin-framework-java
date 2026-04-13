@@ -18,6 +18,7 @@ package org.exbin.jaguif.frame.api;
 import java.awt.Frame;
 import java.awt.Image;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -44,6 +45,14 @@ public interface FrameModuleApi extends Module {
     public static final String BUSY_STATUS_BAR_ID = "busy";
 
     public static final String OPTIONS_KEY_FRAME_RECTANGLE = "frameRectangle";
+
+    /**
+     * Returns resource bundle.
+     *
+     * @return resource bundle
+     */
+    @Nonnull
+    ResourceBundle getResourceBundle();
 
     /**
      * Returns frame handler.
@@ -76,12 +85,12 @@ public interface FrameModuleApi extends Module {
     Frame getFrame();
 
     /**
-     * Returns exit action.
+     * Creates exit action.
      *
      * @return exit action
      */
     @Nonnull
-    Action getExitAction();
+    Action createExitAction();
 
     /**
      * Registers exit action in default menu location.

@@ -73,15 +73,15 @@ public class DefaultPopupMenu {
     public static final String DELETE_ACTION = "delete";
     public static final String SELECT_ALL_ACTION = "selectAll";
 
-    public static final String POPUP_COPY_ACTION_ID = "popupCopyAction";
-    public static final String POPUP_COPY_TEXT_ACTION_ID = "popupCopyTextAction";
-    public static final String POPUP_COPY_LINK_ACTION_ID = "popupCopyLinkAction";
-    public static final String POPUP_COPY_IMAGE_ACTION_ID = "popupCopyImageAction";
-    public static final String POPUP_CUT_ACTION_ID = "popupCutAction";
-    public static final String POPUP_PASTE_ACTION_ID = "popupPasteAction";
-    public static final String POPUP_DELETE_ACTION_ID = "popupDeleteAction";
-    public static final String POPUP_SELECT_ALL_ACTION_ID = "popupSelectAllAction";
-    public static final String POPUP_OPEN_LINK_ACTION_ID = "popupOpenLinkAction";
+    public static final String POPUP_COPY_ACTION_ID = "popupCopy";
+    public static final String POPUP_COPY_TEXT_ACTION_ID = "popupCopyText";
+    public static final String POPUP_COPY_LINK_ACTION_ID = "popupCopyLink";
+    public static final String POPUP_COPY_IMAGE_ACTION_ID = "popupCopyImage";
+    public static final String POPUP_CUT_ACTION_ID = "popupCut";
+    public static final String POPUP_PASTE_ACTION_ID = "popupPaste";
+    public static final String POPUP_DELETE_ACTION_ID = "popupDelete";
+    public static final String POPUP_SELECT_ALL_ACTION_ID = "popupSelectAll";
+    public static final String POPUP_OPEN_LINK_ACTION_ID = "popupOpenLink";
     public static final String POPUP_COPY_TEXT_ACTION_NAME = "copy-text";
     public static final String POPUP_COPY_LINK_ACTION_NAME = "copy-link";
     public static final String POPUP_COPY_IMAGE_ACTION_NAME = "copy-image";
@@ -416,19 +416,19 @@ public class DefaultPopupMenu {
     public void inheritClipboardActionsIcons() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         if (defaultCutAction.getValue(Action.SMALL_ICON) == null) {
-            defaultCutAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("cutAction"));
+            defaultCutAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("cut"));
         }
         if (defaultCopyAction.getValue(Action.SMALL_ICON) == null) {
-            defaultCopyAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("copyAction"));
+            defaultCopyAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("copy"));
         }
         if (defaultPasteAction.getValue(Action.SMALL_ICON) == null) {
-            defaultPasteAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("pasteAction"));
+            defaultPasteAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("paste"));
         }
         if (defaultDeleteAction.getValue(Action.SMALL_ICON) == null) {
-            defaultDeleteAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("deleteAction"));
+            defaultDeleteAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("delete"));
         }
         if (defaultSelectAllAction.getValue(Action.SMALL_ICON) == null) {
-            defaultSelectAllAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("selectAllAction"));
+            defaultSelectAllAction.putValue(Action.SMALL_ICON, actionModule.getClipboardActionIcon("selectAll"));
         }
     }
 

@@ -19,8 +19,8 @@ import javax.annotation.Nonnull;
 import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
-import org.exbin.jaguif.operation.undo.OperationUndoModule;
 import org.exbin.jaguif.operation.undo.action.RedoAction;
+import org.exbin.jaguif.operation.undo.api.OperationUndoModuleApi;
 
 /**
  * Redo contribution.
@@ -35,7 +35,7 @@ public class RedoContribution implements ActionSequenceContribution {
     @Override
     public Action createAction() {
         RedoAction action = new RedoAction();
-        OperationUndoModule operationUndoModule = App.getModule(OperationUndoModule.class);
+        OperationUndoModuleApi operationUndoModule = App.getModule(OperationUndoModuleApi.class);
         action.init(operationUndoModule.getResourceBundle());
         return action;
     }

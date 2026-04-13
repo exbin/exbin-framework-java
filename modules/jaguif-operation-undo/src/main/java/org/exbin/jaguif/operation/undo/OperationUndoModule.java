@@ -50,6 +50,7 @@ public class OperationUndoModule implements OperationUndoModuleApi {
     }
 
     @Nonnull
+    @Override
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OperationUndoModule.class);

@@ -42,7 +42,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 @ParametersAreNonnullByDefault
 public class UndoManagerAction extends AbstractAction implements ActionContextChange {
 
-    public static final String EDIT_UNDO_MANAGER_ACTION_ID = "editUndoManager";
+    public static final String ACTION_ID = "editUndoManager";
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(OperationManagerModule.class);
 

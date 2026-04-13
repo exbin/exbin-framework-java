@@ -118,15 +118,16 @@ public class ActionModule implements ActionModuleApi {
 
     @Override
     public void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId) {
-        action.putValue(Action.NAME, bundle.getString(actionId + ActionConsts.ACTION_NAME_POSTFIX));
-        action.putValue(ActionConsts.ACTION_ID, actionId);
+        String resourceKeyPrefix = actionId + "Action";
+        action.putValue(Action.NAME, bundle.getString(resourceKeyPrefix + ActionConsts.ACTION_NAME_POSTFIX));
+        action.putValue(ActionConsts.ACTION_ID, resourceKeyPrefix);
 
         // TODO keystroke from string with meta mask translation
-        if (bundle.containsKey(actionId + ActionConsts.ACTION_SHORT_DESCRIPTION_POSTFIX)) {
-            action.putValue(Action.SHORT_DESCRIPTION, bundle.getString(actionId + ActionConsts.ACTION_SHORT_DESCRIPTION_POSTFIX));
+        if (bundle.containsKey(resourceKeyPrefix + ActionConsts.ACTION_SHORT_DESCRIPTION_POSTFIX)) {
+            action.putValue(Action.SHORT_DESCRIPTION, bundle.getString(resourceKeyPrefix + ActionConsts.ACTION_SHORT_DESCRIPTION_POSTFIX));
         }
-        if (bundle.containsKey(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX)) {
-            String key = bundle.getString(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX);
+        if (bundle.containsKey(resourceKeyPrefix + ActionConsts.ACTION_SMALL_ICON_POSTFIX)) {
+            String key = bundle.getString(resourceKeyPrefix + ActionConsts.ACTION_SMALL_ICON_POSTFIX);
             URL resourceUrl = resourceClass.getResource(key);
             if (resourceUrl != null) {
                 try {
@@ -138,8 +139,8 @@ public class ActionModule implements ActionModuleApi {
                 Logger.getLogger(ActionModule.class.getName()).log(Level.SEVERE, "Invalid action icon for key: {0}", key);
             }
         }
-        if (bundle.containsKey(actionId + ActionConsts.ACTION_SMALL_LARGE_POSTFIX)) {
-            String key = bundle.getString(actionId + ActionConsts.ACTION_SMALL_LARGE_POSTFIX);
+        if (bundle.containsKey(resourceKeyPrefix + ActionConsts.ACTION_SMALL_LARGE_POSTFIX)) {
+            String key = bundle.getString(resourceKeyPrefix + ActionConsts.ACTION_SMALL_LARGE_POSTFIX);
             URL resourceUrl = resourceClass.getResource(key);
             if (resourceUrl != null) {
                 try {
@@ -217,7 +218,7 @@ public class ActionModule implements ActionModuleApi {
     @Override
     public ImageIcon getClipboardActionIcon(String actionId) {
         try {
-            return new javax.swing.ImageIcon(getClass().getResource(getResourceBundle().getString(actionId + ActionConsts.ACTION_SMALL_ICON_POSTFIX)));
+            return new javax.swing.ImageIcon(getClass().getResource(getResourceBundle().getString(actionId + "Action" + ActionConsts.ACTION_SMALL_ICON_POSTFIX)));
         } catch (Exception ex) {
             throw new IllegalArgumentException("Icon loading failed for " + actionId, ex);
         }

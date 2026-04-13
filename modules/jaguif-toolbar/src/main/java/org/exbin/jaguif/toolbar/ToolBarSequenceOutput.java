@@ -31,11 +31,11 @@ import javax.swing.JToolBar;
 import org.exbin.auxiliary.dropdownbutton.DropDownButton;
 import org.exbin.auxiliary.dropdownbutton.DropDownButtonVariant;
 import org.exbin.jaguif.action.api.ActionConsts;
-import org.exbin.jaguif.toolbar.api.ActionToolBarContribution;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 import org.exbin.jaguif.action.api.ActionType;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.toolbar.api.ToolBarComponent;
 
@@ -58,7 +58,7 @@ public class ToolBarSequenceOutput implements ContributionSequenceOutput {
 
     @Override
     public boolean initItem(ItemSequenceContribution itemContribution) {
-        Action action = ((ActionToolBarContribution) itemContribution).createAction();
+        Action action = ((ActionSequenceContribution) itemContribution).createAction();
         toolBarItems.put(itemContribution, new DefaultToolBarComponent(ToolBarSequenceOutput.createToolBarComponent(action), action));
         return true;
     }

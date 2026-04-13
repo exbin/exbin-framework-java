@@ -38,7 +38,7 @@ import org.exbin.jaguif.operation.undo.api.ContextUndoRedo;
 @ParametersAreNonnullByDefault
 public class UndoAction extends AbstractAction implements ActionContextChange {
 
-    public static final String EDIT_UNDO_ACTION_ID = "editUndoAction";
+    public static final String ACTION_ID = "editUndo";
 
     protected UndoRedoState undoRedo = null;
 
@@ -47,7 +47,7 @@ public class UndoAction extends AbstractAction implements ActionContextChange {
 
     public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        actionModule.initAction(this, resourceBundle, EDIT_UNDO_ACTION_ID);
+        actionModule.initAction(this, resourceBundle, ACTION_ID);
         setEnabled(false);
         putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, ActionUtils.getMetaMask()));
         putValue(ActionConsts.ACTION_CONTEXT_CHANGE, this);

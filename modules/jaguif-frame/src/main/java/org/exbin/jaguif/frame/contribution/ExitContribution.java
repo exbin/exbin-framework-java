@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
-import org.exbin.jaguif.frame.FrameModule;
+import org.exbin.jaguif.frame.api.FrameModuleApi;
 
 /**
  * Exit application contribution.
@@ -33,8 +33,8 @@ public class ExitContribution implements ActionSequenceContribution {
     @Nonnull
     @Override
     public Action createAction() {
-        FrameModule frameModule = App.getModule(FrameModule.class);
-        return frameModule.getExitAction();
+        FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
+        return frameModule.createExitAction();
     }
 
     @Nonnull

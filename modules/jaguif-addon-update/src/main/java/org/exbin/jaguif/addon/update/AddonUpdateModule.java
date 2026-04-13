@@ -77,7 +77,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
 
     @Nonnull
     @Override
-    public Action getCheckUpdateAction() {
+    public CheckForUpdateAction getCheckUpdateAction() {
         if (checkUpdateAction == null) {
             checkUpdateAction = new CheckForUpdateAction();
             checkUpdateAction.setCheckForUpdateService(getCheckForUpdateService());
@@ -174,6 +174,6 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
 
     @Override
     public void checkOnStart(Frame frame) {
-        checkUpdateAction.checkOnStart(frame);
+        getCheckUpdateAction().checkOnStart(frame);
     }
 }

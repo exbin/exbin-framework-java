@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.operation.undo.api;
 
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.Module;
@@ -31,6 +32,14 @@ public interface OperationUndoModuleApi extends Module {
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(OperationUndoModuleApi.class);
     public static final String UNDO_MENU_GROUP_ID = MODULE_ID + ".undoMenuGroup";
     public static final String UNDO_TOOL_BAR_GROUP_ID = MODULE_ID + ".undoToolBarGroup";
+
+    /**
+     * Returns resource bundle.
+     *
+     * @return resource bundle
+     */
+    @Nonnull
+    ResourceBundle getResourceBundle();
 
     /**
      * Registers undo/redo operations to main frame menu.
