@@ -36,8 +36,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Undo manager action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UndoManagerAction extends AbstractAction implements ActionContextChange {

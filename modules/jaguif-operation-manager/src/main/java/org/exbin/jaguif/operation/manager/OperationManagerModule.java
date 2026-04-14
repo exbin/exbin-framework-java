@@ -32,8 +32,6 @@ import org.exbin.jaguif.operation.manager.contribution.UndoManagerContribution;
 
 /**
  * Implementation of operation manager module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OperationManagerModule implements OperationManagerModuleApi {

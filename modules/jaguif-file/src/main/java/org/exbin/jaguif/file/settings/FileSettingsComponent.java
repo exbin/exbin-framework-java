@@ -29,8 +29,6 @@ import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
 
 /**
  * File settings component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FileSettingsComponent implements SettingsComponentProvider {

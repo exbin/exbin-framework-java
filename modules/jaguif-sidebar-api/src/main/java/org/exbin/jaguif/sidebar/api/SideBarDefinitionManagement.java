@@ -24,8 +24,6 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 
 /**
  * Interface for registered side bars definition management.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface SideBarDefinitionManagement {

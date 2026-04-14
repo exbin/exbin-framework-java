@@ -33,8 +33,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Paste from clipboard action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class PasteAction extends AbstractAction implements ActionContextChange {

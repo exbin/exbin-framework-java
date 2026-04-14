@@ -27,8 +27,6 @@ import org.exbin.jaguif.addon.catalog.service.AddonCatalogServiceException;
 
 /**
  * Addon legacy service implementation using fixed files.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonFallbackServiceImpl implements AddonCatalogService {

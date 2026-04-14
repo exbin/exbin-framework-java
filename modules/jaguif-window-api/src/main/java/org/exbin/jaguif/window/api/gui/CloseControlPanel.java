@@ -25,8 +25,6 @@ import org.exbin.jaguif.window.api.controller.CloseControlController;
 
 /**
  * Basic close control panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CloseControlPanel extends FooterControlPanel implements CloseControlController.CloseControlComponent {

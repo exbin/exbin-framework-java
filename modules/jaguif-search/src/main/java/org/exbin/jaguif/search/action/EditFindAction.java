@@ -31,8 +31,6 @@ import org.exbin.jaguif.search.api.FindSearchState;
 
 /**
  * Search find action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EditFindAction extends AbstractAction implements ActionContextChange {

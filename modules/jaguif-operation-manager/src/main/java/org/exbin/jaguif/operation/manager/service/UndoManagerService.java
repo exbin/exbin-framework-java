@@ -21,8 +21,6 @@ import org.exbin.jaguif.operation.api.Command;
 
 /**
  * Interface for undo manager service.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface UndoManagerService {

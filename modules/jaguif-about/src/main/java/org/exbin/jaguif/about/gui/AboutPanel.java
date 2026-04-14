@@ -40,8 +40,6 @@ import org.exbin.jaguif.utils.UiUtils;
 
 /**
  * Basic about panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AboutPanel extends javax.swing.JPanel {

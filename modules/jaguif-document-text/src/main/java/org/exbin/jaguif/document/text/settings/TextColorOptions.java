@@ -23,8 +23,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Text color options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextColorOptions implements SettingsOptions {

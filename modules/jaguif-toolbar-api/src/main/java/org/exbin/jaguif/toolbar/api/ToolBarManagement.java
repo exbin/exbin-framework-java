@@ -25,8 +25,6 @@ import org.exbin.jaguif.action.api.ActionContextRegistration;
 
 /**
  * Interface for tool bar management.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ToolBarManagement {

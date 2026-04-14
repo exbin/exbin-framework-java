@@ -35,8 +35,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * About application action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AboutAction extends AbstractAction {

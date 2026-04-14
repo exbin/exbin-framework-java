@@ -31,8 +31,6 @@ import org.exbin.jaguif.language.api.IconSetProvider;
  * <p>
  * Resource bundle which looks for language resources first and main resources
  * as fallback.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class LanguageResourceBundle extends ResourceBundle {

@@ -41,8 +41,6 @@ import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
 
 /**
  * Tree contribution sequence builder.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TreeContributionSequenceBuilder {

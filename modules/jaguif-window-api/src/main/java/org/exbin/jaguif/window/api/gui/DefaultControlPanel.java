@@ -25,8 +25,6 @@ import org.exbin.jaguif.window.api.controller.DefaultControlController;
 
 /**
  * Basic default control panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultControlPanel extends FooterControlPanel implements DefaultControlController.DefaultControlComponent {

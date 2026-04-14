@@ -32,8 +32,6 @@ import org.exbin.jaguif.text.font.settings.TextFontInference;
 
 /**
  * Text font settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

@@ -23,8 +23,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Options for recently opened files.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class RecentFilesOptions implements SettingsOptions {

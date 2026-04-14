@@ -31,8 +31,6 @@ import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
 
 /**
  * Text font settings component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontSettingsComponent implements SettingsComponentProvider {

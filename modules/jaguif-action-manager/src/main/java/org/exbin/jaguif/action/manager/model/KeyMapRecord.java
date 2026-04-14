@@ -23,8 +23,6 @@ import javax.swing.KeyStroke;
 
 /**
  * Key map record.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class KeyMapRecord {

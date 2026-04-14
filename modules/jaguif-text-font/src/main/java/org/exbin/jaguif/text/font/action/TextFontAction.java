@@ -40,8 +40,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Text font action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontAction extends AbstractAction {

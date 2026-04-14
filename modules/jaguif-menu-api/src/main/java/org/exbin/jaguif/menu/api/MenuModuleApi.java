@@ -34,8 +34,6 @@ import org.exbin.jaguif.action.api.ActionContextRegistration;
 
 /**
  * Interface for menu support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface MenuModuleApi extends Module {

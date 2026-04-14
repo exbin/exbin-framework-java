@@ -28,8 +28,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Clipboard utility methods
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ClipboardUtils {

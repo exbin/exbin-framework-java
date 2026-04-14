@@ -25,8 +25,6 @@ import org.junit.Test;
 
 /**
  * Test for FindTextPanel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class FindTextPanelTest {
 

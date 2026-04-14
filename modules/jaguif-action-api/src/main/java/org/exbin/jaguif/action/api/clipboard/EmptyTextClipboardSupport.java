@@ -20,8 +20,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Empty implementation for clipboard handler for visual component / context
  * menu.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EmptyTextClipboardSupport implements TextClipboardController {

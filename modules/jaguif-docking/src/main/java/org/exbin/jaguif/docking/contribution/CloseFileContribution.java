@@ -24,8 +24,6 @@ import org.exbin.jaguif.docking.action.CloseFileAction;
 
 /**
  * Close file contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class CloseFileContribution implements ActionSequenceContribution {
 

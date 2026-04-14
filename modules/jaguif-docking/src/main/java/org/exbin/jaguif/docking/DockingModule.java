@@ -44,8 +44,6 @@ import org.exbin.jaguif.toolbar.api.ToolBarModuleApi;
 
 /**
  * Interface for docking module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DockingModule implements DockingModuleApi {

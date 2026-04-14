@@ -65,8 +65,6 @@ import org.exbin.jaguif.utils.WindowClosingListener;
 
 /**
  * Default implementation of the document docking supporting multiple documents.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, WindowClosingListener {

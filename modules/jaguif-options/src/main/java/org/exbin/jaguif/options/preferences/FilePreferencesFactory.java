@@ -24,8 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * File preferences class.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FilePreferencesFactory implements PreferencesFactory {

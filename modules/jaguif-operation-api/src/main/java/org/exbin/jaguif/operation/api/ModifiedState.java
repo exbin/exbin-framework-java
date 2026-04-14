@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.api;
 
 /**
  * Modified document state.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ModifiedState {
 

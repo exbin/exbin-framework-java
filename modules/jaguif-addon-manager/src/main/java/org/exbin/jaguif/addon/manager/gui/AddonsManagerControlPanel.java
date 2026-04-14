@@ -38,8 +38,6 @@ import org.exbin.jaguif.window.api.controller.CloseControlController;
 
 /**
  * Control panel for addons manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonsManagerControlPanel extends javax.swing.JPanel implements CloseControlController.CloseControlComponent {

@@ -31,8 +31,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Addons operation file downloads panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonOperationDownloadPanel extends javax.swing.JPanel {

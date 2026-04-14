@@ -23,8 +23,6 @@ import org.exbin.jaguif.frame.api.FrameModuleApi;
 
 /**
  * Exit application contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class ExitContribution implements ActionSequenceContribution {
 

@@ -23,8 +23,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for framework operation manager module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface OperationManagerModuleApi extends Module {

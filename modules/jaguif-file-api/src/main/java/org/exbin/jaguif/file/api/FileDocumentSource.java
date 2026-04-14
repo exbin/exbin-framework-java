@@ -25,8 +25,6 @@ import org.exbin.jaguif.document.api.DocumentSource;
 
 /**
  * File document source.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

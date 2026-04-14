@@ -26,8 +26,6 @@ import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Implementation of context module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ContextModule implements ContextModuleApi {

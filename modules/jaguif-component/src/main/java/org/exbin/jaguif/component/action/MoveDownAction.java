@@ -28,8 +28,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Move down action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MoveDownAction extends AbstractAction {

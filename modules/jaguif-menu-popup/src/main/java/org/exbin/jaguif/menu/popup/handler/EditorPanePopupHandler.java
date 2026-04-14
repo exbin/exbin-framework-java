@@ -56,8 +56,6 @@ import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 
 /**
  * Popup handler for JEditorPane.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EditorPanePopupHandler implements TextClipboardController, LinkActionsHandler, PositionLinkActionsHandler, ImageActionsHandler, PositionImageActionsHandler {

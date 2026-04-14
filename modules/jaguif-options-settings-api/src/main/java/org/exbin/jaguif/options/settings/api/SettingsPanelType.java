@@ -17,8 +17,6 @@ package org.exbin.jaguif.options.settings.api;
 
 /**
  * Enumeration of supported settings panel types.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum SettingsPanelType {
     LIST, TREE

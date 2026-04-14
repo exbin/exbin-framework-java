@@ -38,8 +38,6 @@ import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 
 /**
  * Implementation of undo/redo support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OperationUndoModule implements OperationUndoModuleApi {

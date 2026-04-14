@@ -21,8 +21,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Addon manager with support for packs.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonManagerPacksModule implements Module {

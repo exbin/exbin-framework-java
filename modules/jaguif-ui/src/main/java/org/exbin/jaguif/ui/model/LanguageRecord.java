@@ -24,8 +24,6 @@ import javax.swing.ImageIcon;
 
 /**
  * Language record.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class LanguageRecord {

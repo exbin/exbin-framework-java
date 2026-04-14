@@ -21,8 +21,6 @@ import org.exbin.jaguif.context.api.ActiveContextProvider;
 
 /**
  * Text color context inference options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextColorContextInference implements TextColorInference {

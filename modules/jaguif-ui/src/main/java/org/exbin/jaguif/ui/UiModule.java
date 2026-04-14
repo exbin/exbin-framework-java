@@ -32,8 +32,6 @@ import org.exbin.jaguif.ui.settings.LanguageSettingsComponent;
 
 /**
  * Module for user interface handling.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UiModule implements UiModuleApi {

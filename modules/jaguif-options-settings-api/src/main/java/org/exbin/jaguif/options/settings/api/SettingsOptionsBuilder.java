@@ -21,8 +21,6 @@ import org.exbin.jaguif.options.api.OptionsStorage;
 
 /**
  * Interface for settings options builder.
- *
- * @author ExBin Project (https://exbin.org)
  * @param <T> settins options
  */
 @ParametersAreNonnullByDefault

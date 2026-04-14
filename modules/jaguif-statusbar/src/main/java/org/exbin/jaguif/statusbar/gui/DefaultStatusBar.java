@@ -27,8 +27,6 @@ import org.exbin.jaguif.statusbar.api.StatusBar;
 
 /**
  * Status bar component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultStatusBar implements StatusBar {

@@ -33,8 +33,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Cut to clipboard action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CutAction extends AbstractAction implements ActionContextChange {

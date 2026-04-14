@@ -23,8 +23,6 @@ import org.junit.Test;
 
 /**
  * Test for InputListPanel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class InputListPanelTest {
 

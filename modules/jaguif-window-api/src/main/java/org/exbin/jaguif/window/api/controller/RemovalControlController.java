@@ -20,8 +20,6 @@ import org.exbin.jaguif.utils.OkCancelControlComponent;
 
 /**
  * Controller for control panel with support for remove action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface RemovalControlController {

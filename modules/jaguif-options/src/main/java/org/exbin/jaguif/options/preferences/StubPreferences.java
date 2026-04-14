@@ -26,8 +26,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Stub preferences class.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class StubPreferences extends PreferencesWrapper {
 

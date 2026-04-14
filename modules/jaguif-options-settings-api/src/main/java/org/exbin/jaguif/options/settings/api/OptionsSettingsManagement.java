@@ -26,8 +26,6 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 
 /**
  * Interface for management of options settings.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface OptionsSettingsManagement {

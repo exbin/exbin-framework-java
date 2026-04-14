@@ -34,8 +34,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Data inspector options panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FileSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

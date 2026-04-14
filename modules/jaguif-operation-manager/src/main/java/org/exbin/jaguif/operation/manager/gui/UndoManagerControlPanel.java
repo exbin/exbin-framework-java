@@ -26,8 +26,6 @@ import org.exbin.jaguif.operation.manager.controller.UndoManagerControlControlle
 
 /**
  * Undo management control panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UndoManagerControlPanel extends javax.swing.JPanel implements UndoManagerControlController.UndoManagerControlComponent {

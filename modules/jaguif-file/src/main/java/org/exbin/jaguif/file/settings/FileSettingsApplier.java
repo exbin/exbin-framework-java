@@ -26,8 +26,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * File settings applier.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FileSettingsApplier implements SettingsApplier {

@@ -24,8 +24,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for framework component module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ComponentModuleApi extends Module {

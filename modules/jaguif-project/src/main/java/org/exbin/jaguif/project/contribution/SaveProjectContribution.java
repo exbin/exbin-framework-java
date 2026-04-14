@@ -24,8 +24,6 @@ import org.exbin.jaguif.project.action.SaveProjectAction;
 
 /**
  * Save project contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class SaveProjectContribution implements ActionSequenceContribution {
 

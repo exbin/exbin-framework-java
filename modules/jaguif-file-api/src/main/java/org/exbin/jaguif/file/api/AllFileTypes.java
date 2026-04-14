@@ -23,8 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * File types with just all files filter.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AllFileTypes implements FileTypes {

@@ -23,8 +23,6 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 
 /**
  * Interface for tool bar definition management.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ToolBarDefinitionManagement {

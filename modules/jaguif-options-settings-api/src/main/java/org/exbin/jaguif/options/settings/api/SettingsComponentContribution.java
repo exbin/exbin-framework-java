@@ -22,8 +22,6 @@ import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 
 /**
  * Settings component contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

@@ -26,8 +26,6 @@ import org.exbin.jaguif.docking.api.SidePanelDocking;
 
 /**
  * Interface for side bar support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface SideBarModuleApi extends Module {

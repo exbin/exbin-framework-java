@@ -30,8 +30,6 @@ import org.exbin.jaguif.addon.manager.operation.CatalogSearchOperation;
 
 /**
  * Addons manager page.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonsCatalogPage implements AddonManagerPage {

@@ -21,8 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Basic frame actions.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FrameActions {

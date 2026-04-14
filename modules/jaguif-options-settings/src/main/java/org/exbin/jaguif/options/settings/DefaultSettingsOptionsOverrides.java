@@ -27,8 +27,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Default settings options settingsOverrides.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultSettingsOptionsOverrides implements SettingsOptionsOverrides {

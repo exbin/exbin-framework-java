@@ -24,8 +24,6 @@ import org.exbin.jaguif.contribution.api.ContributionModuleApi;
 
 /**
  * Implementation of contribution module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ContributionModule implements ContributionModuleApi {

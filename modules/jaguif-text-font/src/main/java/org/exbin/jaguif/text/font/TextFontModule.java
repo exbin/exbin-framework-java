@@ -35,8 +35,6 @@ import org.exbin.jaguif.text.font.settings.TextFontSettingsApplier;
 
 /**
  * Text font module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontModule implements Module {

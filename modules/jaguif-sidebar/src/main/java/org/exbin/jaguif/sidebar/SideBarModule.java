@@ -35,8 +35,6 @@ import org.exbin.jaguif.utils.UiUtils;
 
 /**
  * Implementation of side bar module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SideBarModule implements SideBarModuleApi {

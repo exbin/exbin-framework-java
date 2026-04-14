@@ -37,8 +37,6 @@ import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 
 /**
  * Implementation of the online help support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class HelpOnlineModule implements HelpOnlineModuleApi {

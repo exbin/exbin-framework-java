@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Provider for action context registration.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ActionContextRegistrationProvider {
 

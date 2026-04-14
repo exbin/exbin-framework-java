@@ -36,8 +36,6 @@ import org.exbin.jaguif.basic.DynamicClassLoader;
 
 /**
  * Addon supporting framework application.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonApplication extends BasicApplication {

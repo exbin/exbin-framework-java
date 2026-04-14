@@ -31,8 +31,6 @@ import org.exbin.jaguif.context.api.ContextValues;
 
 /**
  * Context registration.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ContextRegistrar implements ContextRegistration, ContextChangeRegistration {

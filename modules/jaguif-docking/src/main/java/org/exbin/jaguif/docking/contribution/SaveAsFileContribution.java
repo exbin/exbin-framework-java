@@ -24,8 +24,6 @@ import org.exbin.jaguif.docking.action.SaveAsFileAction;
 
 /**
  * Save as file contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class SaveAsFileContribution implements ActionSequenceContribution {
 

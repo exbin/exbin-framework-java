@@ -21,8 +21,6 @@ import javax.swing.JFileChooser;
 
 /**
  * Interface for file types management.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface FileTypeManagement {

@@ -17,8 +17,6 @@ package org.exbin.jaguif;
 
 /**
  * Plugin module interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface PluginModule extends Module {
 

@@ -20,8 +20,6 @@ import org.exbin.jaguif.utils.OkCancelControlComponent;
 
 /**
  * Controller for options control panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface OptionsControlController {

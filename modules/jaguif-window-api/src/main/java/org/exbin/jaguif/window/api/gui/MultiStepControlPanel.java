@@ -25,8 +25,6 @@ import org.exbin.jaguif.window.api.controller.MultiStepControlController;
 
 /**
  * Multi-step control panel for options dialogs.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MultiStepControlPanel extends FooterControlPanel implements MultiStepControlController.MultiStepControlComponent {

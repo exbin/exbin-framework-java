@@ -26,8 +26,6 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 
 /**
  * Contribution manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ContributionManager {

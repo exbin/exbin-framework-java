@@ -21,8 +21,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Support module api for notifications.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface NotificationModuleApi extends Module {

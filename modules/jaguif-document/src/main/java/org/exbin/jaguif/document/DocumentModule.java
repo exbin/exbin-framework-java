@@ -31,8 +31,6 @@ import org.exbin.jaguif.options.settings.api.SettingsPageContribution;
 
 /**
  * Implementation of the document module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DocumentModule implements DocumentModuleApi {

@@ -19,8 +19,6 @@ import org.exbin.jaguif.utils.OkCancelControlComponent;
 
 /**
  * Controller for close control panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface CloseControlController {
 

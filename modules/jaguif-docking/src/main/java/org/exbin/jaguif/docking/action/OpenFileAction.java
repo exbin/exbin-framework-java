@@ -35,8 +35,6 @@ import org.exbin.jaguif.document.api.DocumentModuleApi;
 
 /**
  * Open file action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OpenFileAction extends AbstractAction {

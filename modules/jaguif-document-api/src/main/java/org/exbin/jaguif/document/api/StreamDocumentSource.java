@@ -21,8 +21,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Interface for stream access document source.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface StreamDocumentSource extends DocumentSource {
 

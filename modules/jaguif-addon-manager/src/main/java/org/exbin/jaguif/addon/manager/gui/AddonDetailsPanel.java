@@ -41,8 +41,6 @@ import org.exbin.jaguif.utils.DesktopUtils;
 
 /**
  * Addon details panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonDetailsPanel extends javax.swing.JPanel {

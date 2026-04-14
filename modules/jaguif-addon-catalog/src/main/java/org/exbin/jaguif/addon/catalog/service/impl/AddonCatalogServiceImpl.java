@@ -53,8 +53,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Addon catalog service implementation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonCatalogServiceImpl implements AddonCatalogService {

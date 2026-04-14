@@ -37,8 +37,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Text encoding action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingAction extends AbstractAction {

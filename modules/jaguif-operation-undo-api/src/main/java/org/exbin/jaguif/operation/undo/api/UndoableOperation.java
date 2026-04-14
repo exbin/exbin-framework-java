@@ -20,8 +20,6 @@ import org.exbin.jaguif.operation.api.Operation;
 
 /**
  * Undoable operation interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface UndoableOperation extends Operation {
 

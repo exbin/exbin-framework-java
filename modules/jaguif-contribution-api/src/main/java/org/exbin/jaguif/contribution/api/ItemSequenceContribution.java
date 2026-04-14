@@ -20,8 +20,6 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * Sequence item contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @Immutable
 public interface ItemSequenceContribution extends SequenceContribution {

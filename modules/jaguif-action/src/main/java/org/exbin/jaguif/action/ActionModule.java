@@ -44,8 +44,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Implementation of action module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ActionModule implements ActionModuleApi {

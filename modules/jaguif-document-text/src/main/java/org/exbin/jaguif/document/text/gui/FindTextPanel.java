@@ -23,8 +23,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Find text panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FindTextPanel extends javax.swing.JPanel {

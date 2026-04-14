@@ -21,8 +21,6 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * Link to help page.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

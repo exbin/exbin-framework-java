@@ -21,8 +21,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Support for operations with progress state
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ProgressModuleApi extends Module {

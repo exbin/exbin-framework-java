@@ -23,8 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Addon repository record.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class RepositoryRecord {

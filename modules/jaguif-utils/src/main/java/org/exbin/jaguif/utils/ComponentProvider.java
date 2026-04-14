@@ -20,8 +20,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Interface for component provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ComponentProvider {
 

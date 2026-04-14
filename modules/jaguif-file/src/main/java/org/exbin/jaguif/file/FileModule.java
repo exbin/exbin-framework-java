@@ -55,8 +55,6 @@ import org.exbin.jaguif.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Framework file module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FileModule implements FileModuleApi {

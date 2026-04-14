@@ -17,8 +17,6 @@ package org.exbin.jaguif.statusbar.api;
 
 /**
  * Interface for context active status bar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextStatusBar {
 }

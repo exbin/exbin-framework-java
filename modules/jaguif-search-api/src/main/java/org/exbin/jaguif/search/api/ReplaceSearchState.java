@@ -17,8 +17,6 @@ package org.exbin.jaguif.search.api;
 
 /**
  * Interface for replace search state.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ReplaceSearchState {
     

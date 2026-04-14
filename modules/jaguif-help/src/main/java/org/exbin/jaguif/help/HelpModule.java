@@ -34,8 +34,6 @@ import org.exbin.jaguif.window.api.gui.FooterControlPanel;
 
 /**
  * Framework help module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class HelpModule implements HelpModuleApi {

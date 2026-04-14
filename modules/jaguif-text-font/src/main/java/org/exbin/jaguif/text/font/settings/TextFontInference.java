@@ -22,8 +22,6 @@ import org.exbin.jaguif.options.settings.api.InferenceOptions;
 
 /**
  * Text font options inference.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface TextFontInference extends InferenceOptions {
 

@@ -25,8 +25,6 @@ import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 
 /**
  * Panel with edit toolbar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ToolBarEditorPanel extends javax.swing.JPanel {

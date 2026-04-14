@@ -32,8 +32,6 @@ import org.exbin.jaguif.utils.DesktopUtils;
 
 /**
  * Addons operation license approval panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonOperationLicensePanel extends javax.swing.JPanel {

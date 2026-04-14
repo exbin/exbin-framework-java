@@ -20,8 +20,6 @@ import org.exbin.jaguif.context.api.ActiveContextProvider;
 
 /**
  * Interface for settings applier.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface SettingsApplier {

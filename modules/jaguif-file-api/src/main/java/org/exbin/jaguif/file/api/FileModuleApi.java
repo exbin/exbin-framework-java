@@ -27,8 +27,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for file support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface FileModuleApi extends Module {

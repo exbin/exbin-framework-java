@@ -26,8 +26,6 @@ import org.exbin.jaguif.help.api.HelpLink;
 
 /**
  * Interface for framework online help support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface HelpOnlineModuleApi extends Module {

@@ -36,8 +36,6 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  * Table model for encoding / character sets.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EncodingsTableModel extends AbstractTableModel {

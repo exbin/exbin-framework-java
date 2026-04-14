@@ -21,8 +21,6 @@ import javax.swing.Action;
 
 /**
  * Interface for undo action set.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface UndoActions {

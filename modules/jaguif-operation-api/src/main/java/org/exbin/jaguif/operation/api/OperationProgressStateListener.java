@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.api;
 
 /**
  * Operation capable of reporting progress.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface OperationProgressStateListener {
 

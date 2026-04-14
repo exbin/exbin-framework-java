@@ -25,8 +25,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Dynamic class loader.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DynamicClassLoader extends URLClassLoader {

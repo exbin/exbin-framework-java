@@ -20,8 +20,6 @@ import javax.swing.Action;
 
 /**
  * Interface for clipboard editing actions.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ClipboardActionsApi {
 

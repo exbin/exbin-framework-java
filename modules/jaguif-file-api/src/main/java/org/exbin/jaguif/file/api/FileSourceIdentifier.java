@@ -23,8 +23,6 @@ import org.exbin.jaguif.document.api.SourceIdentifier;
 
 /**
  * File source identifier.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

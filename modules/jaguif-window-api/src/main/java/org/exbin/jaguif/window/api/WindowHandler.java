@@ -23,8 +23,6 @@ import javax.annotation.Nullable;
 
 /**
  * Wrapper for window with extra controls.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface WindowHandler {
 

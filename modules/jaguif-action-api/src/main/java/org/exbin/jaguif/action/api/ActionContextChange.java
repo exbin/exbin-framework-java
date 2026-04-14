@@ -20,8 +20,6 @@ import org.exbin.jaguif.context.api.ContextChange;
 
 /**
  * Listener for action update when menu is activated for component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ActionContextChange extends ContextChange {

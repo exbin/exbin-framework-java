@@ -30,8 +30,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Keymap settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class KeyMapSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

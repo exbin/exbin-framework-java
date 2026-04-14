@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Operation activity detail.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface TextActivityDetail extends ActivityDetail {
 

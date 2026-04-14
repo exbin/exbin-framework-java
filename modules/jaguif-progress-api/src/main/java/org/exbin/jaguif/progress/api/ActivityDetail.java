@@ -17,8 +17,6 @@ package org.exbin.jaguif.progress.api;
 
 /**
  * Operation activity detail.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ActivityDetail {
 

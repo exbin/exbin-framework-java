@@ -30,8 +30,6 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
  * Print module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class PrintModule implements Module {

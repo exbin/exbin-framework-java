@@ -24,8 +24,6 @@ import org.exbin.jaguif.text.encoding.CharsetListEncodingState;
 
 /**
  * Text encoding settings applier.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingListSettingsApplier implements SettingsApplier {

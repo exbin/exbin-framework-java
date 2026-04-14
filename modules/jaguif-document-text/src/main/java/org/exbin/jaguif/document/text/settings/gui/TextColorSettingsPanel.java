@@ -29,8 +29,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Text color settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextColorSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

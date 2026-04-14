@@ -24,8 +24,6 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * Open file result.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

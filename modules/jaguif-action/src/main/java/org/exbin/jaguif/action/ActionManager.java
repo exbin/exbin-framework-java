@@ -34,8 +34,6 @@ import org.exbin.jaguif.context.api.ContextStateUpdateListener;
 
 /**
  * Default action manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ActionManager implements ActionManagement {

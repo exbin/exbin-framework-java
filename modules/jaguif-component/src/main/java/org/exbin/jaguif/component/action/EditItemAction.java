@@ -28,8 +28,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Edit item action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EditItemAction extends AbstractAction {

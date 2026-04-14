@@ -17,8 +17,6 @@ package org.exbin.jaguif.text.font;
 
 /**
  * Context font interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextFont {
 

@@ -20,8 +20,6 @@ import org.exbin.jaguif.component.api.ContextEditItem;
 /**
  * Empty implementation for clipboard handler for visual component / context
  * menu.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class EmptyContextEditItem implements ContextEditItem {
 

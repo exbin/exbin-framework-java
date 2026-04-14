@@ -19,8 +19,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Listener for context state update.
- *
- * @author ExBin Project (https://exbin.org)
  * @param <T> instance type
  */
 @ParametersAreNonnullByDefault

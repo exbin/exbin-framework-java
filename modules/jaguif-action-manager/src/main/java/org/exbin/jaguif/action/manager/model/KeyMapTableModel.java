@@ -27,8 +27,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Key map table model.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class KeyMapTableModel extends AbstractTableModel {

@@ -34,8 +34,6 @@ import org.exbin.jaguif.file.api.UsedDirectoryApi;
 
 /**
  * AWT file dialogs provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AwtFileDialogsProvider implements FileDialogsProvider {

@@ -21,8 +21,6 @@ import org.exbin.jaguif.addon.manager.api.ItemRecord;
 
 /**
  * Addon operation record.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonOperation {

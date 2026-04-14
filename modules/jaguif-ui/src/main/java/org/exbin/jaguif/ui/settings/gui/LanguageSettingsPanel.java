@@ -37,8 +37,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Language settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class LanguageSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

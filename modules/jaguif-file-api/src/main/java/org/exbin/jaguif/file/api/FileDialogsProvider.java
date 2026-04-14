@@ -23,8 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * File dialogs provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface FileDialogsProvider {

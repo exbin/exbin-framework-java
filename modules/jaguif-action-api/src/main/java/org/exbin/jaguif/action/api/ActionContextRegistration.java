@@ -20,8 +20,6 @@ import javax.swing.Action;
 
 /**
  * Manager for action context registration.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ActionContextRegistration {

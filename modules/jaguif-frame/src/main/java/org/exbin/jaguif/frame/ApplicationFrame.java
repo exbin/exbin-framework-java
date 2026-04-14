@@ -49,8 +49,6 @@ import org.exbin.jaguif.frame.api.ComponentFrame;
 
 /**
  * Basic appplication frame.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ApplicationFrame extends javax.swing.JFrame implements ComponentFrame, WindowHeaderPanel.WindowHeaderDecorationProvider {

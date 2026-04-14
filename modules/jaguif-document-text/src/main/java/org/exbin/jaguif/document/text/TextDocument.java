@@ -48,8 +48,6 @@ import org.exbin.jaguif.text.font.TextFontState;
 
 /**
  * Text document.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextDocument implements NamedDocument, ContextDocument, ComponentDocument, FileDocument, EditableDocument {

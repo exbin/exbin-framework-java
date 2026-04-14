@@ -20,8 +20,6 @@ import org.exbin.jaguif.context.api.ActiveContextManagement;
 
 /**
  * Settings applier listener.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ApplySettingsListener {

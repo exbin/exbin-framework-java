@@ -38,8 +38,6 @@ import org.exbin.jaguif.text.encoding.settings.TextEncodingSettingsApplier;
 
 /**
  * Text encoding module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingModule implements Module {

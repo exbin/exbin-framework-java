@@ -25,8 +25,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Addon manager options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonManagerOptions implements SettingsOptions {

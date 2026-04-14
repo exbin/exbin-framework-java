@@ -32,8 +32,6 @@ import org.exbin.jaguif.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Addon manager module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonCatalogModule implements Module {

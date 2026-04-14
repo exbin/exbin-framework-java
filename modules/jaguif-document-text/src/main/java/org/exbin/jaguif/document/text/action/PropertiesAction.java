@@ -34,8 +34,6 @@ import org.exbin.jaguif.document.api.ContextDocument;
 
 /**
  * Text document properties action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class PropertiesAction extends AbstractAction {

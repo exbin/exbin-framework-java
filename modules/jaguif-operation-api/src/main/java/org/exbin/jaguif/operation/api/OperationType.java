@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.api;
 
 /**
  * Operation type interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface OperationType {
 }

@@ -34,8 +34,6 @@ import org.exbin.jaguif.document.text.settings.TextColorInference;
 
 /**
  * Text color selection panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextColorPanel extends javax.swing.JPanel implements SettingsComponent {

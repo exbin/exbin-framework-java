@@ -21,8 +21,6 @@ import org.exbin.jaguif.Module;
 
 /**
  * Implementation of framework utilities module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UtilsModule implements Module {

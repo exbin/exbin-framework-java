@@ -24,8 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Enumeration of Mac OS appearance modes.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public enum GuiMacOsAppearance {

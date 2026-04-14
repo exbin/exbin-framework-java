@@ -19,8 +19,6 @@ import org.exbin.jaguif.utils.ComponentProvider;
 
 /**
  * Interface for document with single view component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ComponentDocument extends Document, ComponentProvider {
 }

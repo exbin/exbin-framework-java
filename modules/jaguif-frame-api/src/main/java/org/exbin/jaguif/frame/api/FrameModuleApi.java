@@ -30,8 +30,6 @@ import org.exbin.jaguif.utils.WindowClosingListener;
 
 /**
  * Interface for framework frame module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface FrameModuleApi extends Module {

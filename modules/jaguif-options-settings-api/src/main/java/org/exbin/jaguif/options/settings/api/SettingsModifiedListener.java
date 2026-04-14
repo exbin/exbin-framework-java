@@ -17,8 +17,6 @@ package org.exbin.jaguif.options.settings.api;
 
 /**
  * Interface for options panel modification listener.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface SettingsModifiedListener {
 

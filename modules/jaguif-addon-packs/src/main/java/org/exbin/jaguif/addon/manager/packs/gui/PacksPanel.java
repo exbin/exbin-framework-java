@@ -26,8 +26,6 @@ import org.exbin.jaguif.addon.manager.service.AddonCatalogService;
 
 /**
  * Panel for list of packs / addon suites.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class PacksPanel extends javax.swing.JPanel {

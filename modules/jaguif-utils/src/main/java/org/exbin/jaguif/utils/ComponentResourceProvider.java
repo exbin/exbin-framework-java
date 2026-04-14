@@ -20,8 +20,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Interface for components exposing their resource bundle.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ComponentResourceProvider {
 

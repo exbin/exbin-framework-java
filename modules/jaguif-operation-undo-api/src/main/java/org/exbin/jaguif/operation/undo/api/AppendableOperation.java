@@ -20,8 +20,6 @@ import org.exbin.jaguif.operation.api.Operation;
 
 /**
  * Interface for appendable operation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface AppendableOperation {

@@ -37,8 +37,6 @@ import org.exbin.jaguif.addon.manager.ApplicationModulesUsage;
 
 /**
  * Addon operation service.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonOperationService {

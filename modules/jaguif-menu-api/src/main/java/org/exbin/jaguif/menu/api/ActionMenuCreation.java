@@ -20,8 +20,6 @@ import javax.swing.JMenuItem;
 
 /**
  * Listener for action update when menu is created.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ActionMenuCreation {

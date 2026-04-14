@@ -31,8 +31,6 @@ import org.exbin.jaguif.file.api.UsedDirectoryApi;
 
 /**
  * Swing file dialogs provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SwingFileDialogsProvider implements FileDialogsProvider {

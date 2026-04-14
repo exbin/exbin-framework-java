@@ -39,8 +39,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * UI theme options panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ThemeSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

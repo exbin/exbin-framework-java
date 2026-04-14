@@ -22,8 +22,6 @@ import org.exbin.jaguif.options.api.OptionsStorage;
 
 /**
  * Look&amp;feel provider with options component provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface LafOptionsComponentProvider {

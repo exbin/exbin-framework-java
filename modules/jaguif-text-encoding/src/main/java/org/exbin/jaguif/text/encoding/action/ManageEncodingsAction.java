@@ -45,8 +45,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Manage encodings action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ManageEncodingsAction extends AbstractAction {

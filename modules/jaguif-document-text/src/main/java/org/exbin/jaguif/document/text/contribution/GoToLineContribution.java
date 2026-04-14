@@ -24,8 +24,6 @@ import org.exbin.jaguif.document.text.action.GoToLineAction;
 
 /**
  * Close file contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class GoToLineContribution implements ActionSequenceContribution {
 

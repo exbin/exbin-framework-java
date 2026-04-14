@@ -27,8 +27,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Addon manager settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonCatalogSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

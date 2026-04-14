@@ -23,8 +23,6 @@ import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
 
 /**
  * Frame appearance settings component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FrameAppearanceSettingsComponent implements SettingsComponentProvider {

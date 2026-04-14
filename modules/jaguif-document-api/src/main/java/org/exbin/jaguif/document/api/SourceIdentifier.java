@@ -17,8 +17,6 @@ package org.exbin.jaguif.document.api;
 
 /**
  * Interface for source identifier.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface SourceIdentifier {
 

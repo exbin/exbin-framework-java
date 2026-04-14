@@ -19,8 +19,6 @@ import javax.annotation.Nullable;
 
 /**
  * Link to help page.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface HelpOpeningHandler {
 

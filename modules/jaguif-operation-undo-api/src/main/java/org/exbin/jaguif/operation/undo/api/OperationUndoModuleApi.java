@@ -23,8 +23,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for framework undo/redo module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface OperationUndoModuleApi extends Module {

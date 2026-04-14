@@ -24,8 +24,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface of the about application module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface AboutModuleApi extends Module {

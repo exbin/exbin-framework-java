@@ -43,8 +43,6 @@ import org.exbin.jaguif.ui.theme.settings.ThemeSettingsApplier;
 
 /**
  * Module user interface handling.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UiThemeModule implements UiThemeModuleApi {

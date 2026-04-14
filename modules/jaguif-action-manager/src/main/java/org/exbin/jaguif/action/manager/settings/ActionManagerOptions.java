@@ -21,8 +21,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Action manager settings options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ActionManagerOptions implements SettingsOptions {

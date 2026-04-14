@@ -31,8 +31,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for framework window module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface WindowModuleApi extends Module {

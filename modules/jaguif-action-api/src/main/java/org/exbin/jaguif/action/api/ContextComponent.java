@@ -17,8 +17,6 @@ package org.exbin.jaguif.action.api;
 
 /**
  * Interface for context activable component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextComponent {
 

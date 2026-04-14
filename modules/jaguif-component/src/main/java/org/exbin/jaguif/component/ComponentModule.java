@@ -27,8 +27,6 @@ import org.exbin.jaguif.component.api.ContextMoveItem;
 
 /**
  * Implementation of framework component module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ComponentModule implements ComponentModuleApi {

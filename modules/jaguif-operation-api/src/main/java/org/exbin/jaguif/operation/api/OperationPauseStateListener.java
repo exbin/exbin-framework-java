@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.api;
 
 /**
  * Operation capable reporting pausing.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface OperationPauseStateListener {
 

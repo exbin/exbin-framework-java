@@ -37,8 +37,6 @@ import org.exbin.jaguif.window.api.controller.DefaultControlController;
 
 /**
  * New project action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class NewProjectAction extends AbstractAction {

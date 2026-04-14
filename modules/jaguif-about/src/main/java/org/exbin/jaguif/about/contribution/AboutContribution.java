@@ -22,8 +22,6 @@ import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Close file contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class AboutContribution implements ActionSequenceContribution {
 

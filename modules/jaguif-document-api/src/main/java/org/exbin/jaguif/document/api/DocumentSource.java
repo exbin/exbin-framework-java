@@ -17,8 +17,6 @@ package org.exbin.jaguif.document.api;
 
 /**
  * Interface for document source.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface DocumentSource {
 

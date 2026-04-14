@@ -26,8 +26,6 @@ import org.exbin.jaguif.utils.ObjectUtils;
 
 /**
  * Tree contribution manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TreeContributionManager {

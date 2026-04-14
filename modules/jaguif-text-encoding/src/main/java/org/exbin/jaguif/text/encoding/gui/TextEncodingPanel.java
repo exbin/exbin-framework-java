@@ -28,8 +28,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Encoding selection panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingPanel extends javax.swing.JPanel {

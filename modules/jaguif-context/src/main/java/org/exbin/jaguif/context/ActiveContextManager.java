@@ -29,8 +29,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Default active context manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ActiveContextManager implements ActiveContextManagement {

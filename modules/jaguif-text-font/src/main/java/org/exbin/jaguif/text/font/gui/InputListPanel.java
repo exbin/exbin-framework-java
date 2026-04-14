@@ -25,8 +25,6 @@ import javax.swing.event.ListSelectionEvent;
 
 /**
  * Item list with text input.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class InputListPanel extends javax.swing.JPanel {

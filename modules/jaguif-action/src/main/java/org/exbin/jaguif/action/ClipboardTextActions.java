@@ -33,8 +33,6 @@ import org.exbin.jaguif.utils.ActionUtils;
 
 /**
  * Clipboard text actions.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ClipboardTextActions implements ClipboardActionsApi {

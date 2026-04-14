@@ -17,8 +17,6 @@ package org.exbin.jaguif.file.api;
 
 /**
  * Interface for file dialogs context.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextFileDialogs {
 

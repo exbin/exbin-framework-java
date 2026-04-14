@@ -24,8 +24,6 @@ import org.exbin.jaguif.file.api.UsedDirectoryApi;
 
 /**
  * File used directory.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultLastUsedDirectory implements UsedDirectoryApi {

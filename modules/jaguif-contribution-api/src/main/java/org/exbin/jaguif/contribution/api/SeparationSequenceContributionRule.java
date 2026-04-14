@@ -21,8 +21,6 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * Sequence contribution rule for items separation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

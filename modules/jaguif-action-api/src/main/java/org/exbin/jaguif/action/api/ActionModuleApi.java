@@ -32,8 +32,6 @@ import org.exbin.jaguif.context.api.ActiveContextManagement;
 
 /**
  * Interface for action support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ActionModuleApi extends Module {

@@ -20,8 +20,6 @@ import org.exbin.jaguif.ui.theme.api.ConfigurableLafProvider;
 
 /**
  * Theme configuration action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ThemeConfigurationAction {

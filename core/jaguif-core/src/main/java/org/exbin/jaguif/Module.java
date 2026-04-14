@@ -17,8 +17,6 @@ package org.exbin.jaguif;
 
 /**
  * Module interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface Module {
 

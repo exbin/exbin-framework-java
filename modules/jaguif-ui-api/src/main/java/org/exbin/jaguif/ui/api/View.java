@@ -21,8 +21,6 @@ import javax.swing.JComponent;
 
 /**
  * Interface for view.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface View {

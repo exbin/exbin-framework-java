@@ -17,8 +17,6 @@ package org.exbin.jaguif.search.api;
 
 /**
  * Interface for context activable search.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextSearch {
 }

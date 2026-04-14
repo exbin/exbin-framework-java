@@ -48,8 +48,6 @@ import javax.swing.text.JTextComponent;
 
 /**
  * Utility static methods usable for windows and dialogs.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class WindowUtils {

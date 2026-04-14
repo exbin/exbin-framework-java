@@ -26,8 +26,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Text editor encodings options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingOptions implements SettingsOptions {

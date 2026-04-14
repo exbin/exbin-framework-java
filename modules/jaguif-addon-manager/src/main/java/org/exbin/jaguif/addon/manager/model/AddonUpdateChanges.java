@@ -32,8 +32,6 @@ import org.exbin.jaguif.App;
 
 /**
  * Addon update changes.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonUpdateChanges {

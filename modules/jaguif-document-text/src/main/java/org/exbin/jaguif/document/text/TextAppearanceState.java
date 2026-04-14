@@ -17,8 +17,6 @@ package org.exbin.jaguif.document.text;
 
 /**
  * Word wrapping options interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface TextAppearanceState {
 

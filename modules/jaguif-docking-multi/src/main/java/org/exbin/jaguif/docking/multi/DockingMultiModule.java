@@ -47,8 +47,6 @@ import org.exbin.jaguif.window.api.WindowModuleApi;
 
 /**
  * Interface for docking module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DockingMultiModule implements DockingMultiModuleApi {

@@ -35,8 +35,6 @@ import org.exbin.jaguif.document.syntax.gui.SyntaxTextPanel;
 
 /**
  * Text panel component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SyntaxTextPanelComponent implements ContextComponent, TextClipboardController, CharsetEncodingState, TextFontState { // TextAppearanceState, TextColorState, 

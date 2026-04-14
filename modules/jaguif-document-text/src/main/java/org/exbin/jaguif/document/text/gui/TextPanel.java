@@ -50,8 +50,6 @@ import org.exbin.jaguif.action.api.clipboard.ClipboardStateListener;
 
 /**
  * Text editor panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextPanel extends javax.swing.JPanel {

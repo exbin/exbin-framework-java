@@ -22,8 +22,6 @@ import javax.swing.ImageIcon;
 
 /**
  * Language provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface LanguageProvider {
 

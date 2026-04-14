@@ -26,8 +26,6 @@ import javax.swing.text.JTextComponent;
 
 /**
  * Some simple static methods usable for actions, menus and toolbars.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ActionUtils {

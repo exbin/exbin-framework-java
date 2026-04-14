@@ -24,8 +24,6 @@ import org.exbin.jaguif.frame.api.FrameModuleApi;
 
 /**
  * View tool bar captions contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class ViewToolBarCaptionsContribution implements ActionSequenceContribution {
 

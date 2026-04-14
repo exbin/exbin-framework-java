@@ -51,8 +51,6 @@ import org.exbin.jaguif.options.api.OptionsModuleApi;
 
 /**
  * Addon modifications operation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonModificationsOperation {

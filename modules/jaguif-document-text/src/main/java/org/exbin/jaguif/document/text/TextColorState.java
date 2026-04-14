@@ -22,8 +22,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Text color panel API.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface TextColorState {

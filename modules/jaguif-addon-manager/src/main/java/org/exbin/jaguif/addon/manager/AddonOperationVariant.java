@@ -17,8 +17,6 @@ package org.exbin.jaguif.addon.manager;
 
 /**
  * Addon operation variant.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum AddonOperationVariant {
     INSTALL,

@@ -23,8 +23,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Panel for addon installation / update operation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonOperationSuccessPanel extends javax.swing.JPanel {

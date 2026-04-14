@@ -22,8 +22,6 @@ import javax.swing.AbstractListModel;
 
 /**
  * Addons list model.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonsListModel extends AbstractListModel<ItemRecord> {

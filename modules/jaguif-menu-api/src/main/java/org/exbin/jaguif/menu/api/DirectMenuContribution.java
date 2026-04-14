@@ -24,8 +24,6 @@ import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 
 /**
  * Record for direct menu item contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DirectMenuContribution implements ItemSequenceContribution {

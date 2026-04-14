@@ -23,8 +23,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * List of authors panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AboutAuthorsPanel extends javax.swing.JPanel {

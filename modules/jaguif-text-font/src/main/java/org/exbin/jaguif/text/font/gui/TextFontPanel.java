@@ -31,8 +31,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Font selection panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontPanel extends javax.swing.JPanel {

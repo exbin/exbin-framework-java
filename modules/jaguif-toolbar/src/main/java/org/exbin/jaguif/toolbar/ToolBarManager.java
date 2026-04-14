@@ -29,8 +29,6 @@ import org.exbin.jaguif.action.api.ActionContextRegistration;
 
 /**
  * Default toolbar manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ToolBarManager extends ContributionManager implements ToolBarManagement {

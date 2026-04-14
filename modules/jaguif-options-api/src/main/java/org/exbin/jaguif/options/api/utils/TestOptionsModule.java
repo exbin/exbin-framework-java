@@ -23,8 +23,6 @@ import org.exbin.jaguif.options.api.OptionsModuleApi;
 
 /**
  * Test implementation of preferences module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TestOptionsModule implements OptionsModuleApi {

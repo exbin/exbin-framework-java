@@ -42,8 +42,6 @@ import org.exbin.jaguif.project.contribution.SaveProjectContribution;
 
 /**
  * Implementation of framework project module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ProjectModule implements ProjectModuleApi {

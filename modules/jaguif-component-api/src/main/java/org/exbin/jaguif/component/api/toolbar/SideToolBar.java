@@ -21,8 +21,6 @@ import org.exbin.jaguif.component.api.action.ActionsProvider;
 
 /**
  * Interface for side tool bar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface SideToolBar {

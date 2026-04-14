@@ -30,8 +30,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Addons list with details panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonsPanel extends javax.swing.JPanel {

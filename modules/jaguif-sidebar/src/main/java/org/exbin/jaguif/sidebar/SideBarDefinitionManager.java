@@ -26,8 +26,6 @@ import org.exbin.jaguif.sidebar.api.SideBarDefinitionManagement;
 
 /**
  * Default side bar definition manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SideBarDefinitionManager implements SideBarDefinitionManagement {

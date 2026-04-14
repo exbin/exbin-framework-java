@@ -24,8 +24,6 @@ import org.exbin.jaguif.operation.api.ModifiedState;
 
 /**
  * Undoable command sequence.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface UndoRedo extends UndoRedoController, ModifiedState {

@@ -26,8 +26,6 @@ import org.exbin.jaguif.file.api.FileHandler;
 
 /**
  * Editor dockable.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EditorCDockable extends DefaultMultipleCDockable {

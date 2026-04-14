@@ -22,8 +22,6 @@ import org.exbin.jaguif.options.api.OptionsStorage;
 
 /**
  * Empty options storage.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EmptyOptionsStorage implements OptionsStorage {

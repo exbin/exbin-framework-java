@@ -26,8 +26,6 @@ import org.exbin.jaguif.operation.undo.api.UndoRedo;
 
 /**
  * Undo management panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UndoManagerPanel extends javax.swing.JPanel {

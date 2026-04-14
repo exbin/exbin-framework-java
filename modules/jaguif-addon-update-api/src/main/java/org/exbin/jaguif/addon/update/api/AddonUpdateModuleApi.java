@@ -26,8 +26,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface of the addon update checking module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface AddonUpdateModuleApi extends Module {

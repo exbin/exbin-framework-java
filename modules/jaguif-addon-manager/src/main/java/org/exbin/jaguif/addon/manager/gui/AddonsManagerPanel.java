@@ -32,8 +32,6 @@ import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
 
 /**
  * Addons manager panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonsManagerPanel extends javax.swing.JPanel {

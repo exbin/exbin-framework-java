@@ -43,8 +43,6 @@ import org.exbin.jaguif.options.settings.contribution.SettingsContribution;
 
 /**
  * Implementation of framework options settings module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OptionsSettingsModule implements OptionsSettingsModuleApi {

@@ -30,8 +30,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Online help action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OnlineHelpAction extends AbstractAction {

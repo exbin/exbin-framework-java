@@ -31,8 +31,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Delete in document action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DeleteAction extends AbstractAction implements ActionContextChange {

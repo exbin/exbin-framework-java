@@ -24,8 +24,6 @@ import org.exbin.jaguif.operation.api.Command;
 
 /**
  * Empty implementation of undo handling.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EmptyUndoRedo implements UndoRedo {

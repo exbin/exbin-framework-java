@@ -33,8 +33,6 @@ import org.exbin.jaguif.document.api.Document;
 
 /**
  * Close file action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CloseFileAction extends AbstractAction {

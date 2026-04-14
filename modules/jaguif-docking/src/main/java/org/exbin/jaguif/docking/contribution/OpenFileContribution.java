@@ -24,8 +24,6 @@ import org.exbin.jaguif.docking.action.OpenFileAction;
 
 /**
  * Open file contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class OpenFileContribution implements ActionSequenceContribution {
 

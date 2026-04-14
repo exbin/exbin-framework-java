@@ -22,8 +22,6 @@ import org.exbin.jaguif.operation.manager.action.UndoManagerAction;
 
 /**
  * Undo manager contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class UndoManagerContribution implements ActionSequenceContribution {
 

@@ -22,8 +22,6 @@ import org.exbin.jaguif.help.online.action.OnlineHelpAction;
 
 /**
  * Online help contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class OnlineHelpContribution implements ActionSequenceContribution {
 

@@ -20,8 +20,6 @@ import javax.swing.Action;
 
 /**
  * Interface for item movement action set.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface MoveItemActions extends ActionsProvider {
 

@@ -21,8 +21,6 @@ import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 
 /**
  * Status bar item contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ComponentStatusBarContribution extends ItemSequenceContribution {

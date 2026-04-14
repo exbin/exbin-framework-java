@@ -42,8 +42,6 @@ import org.exbin.jaguif.options.settings.SettingsPageReceiver;
 
 /**
  * Panel for application options settings.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SettingsTreePanel extends javax.swing.JPanel implements SettingsPageReceiver, LazyComponentsIssuable {

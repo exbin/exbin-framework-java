@@ -20,8 +20,6 @@ import javax.swing.JMenuItem;
 
 /**
  * Menu item provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface MenuItemProvider {
 

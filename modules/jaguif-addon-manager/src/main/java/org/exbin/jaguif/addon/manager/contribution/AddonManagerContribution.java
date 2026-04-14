@@ -23,8 +23,6 @@ import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Addon manager contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonManagerContribution implements ActionSequenceContribution {

@@ -25,8 +25,6 @@ import org.exbin.jaguif.statusbar.api.StatusBarManagement;
 
 /**
  * Default status bar definition manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class StatusBarDefinitionManager implements StatusBarDefinitionManagement {

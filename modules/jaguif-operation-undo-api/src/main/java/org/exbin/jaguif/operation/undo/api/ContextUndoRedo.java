@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.undo.api;
 
 /**
  * Context undo redo.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextUndoRedo {
 

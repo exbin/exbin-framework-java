@@ -57,8 +57,6 @@ import org.xml.sax.SAXParseException;
 
 /**
  * File preferences class.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FilePreferences extends AbstractPreferences {

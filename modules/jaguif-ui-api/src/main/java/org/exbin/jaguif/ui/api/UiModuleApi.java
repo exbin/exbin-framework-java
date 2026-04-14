@@ -21,8 +21,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for framework UI module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface UiModuleApi extends Module {

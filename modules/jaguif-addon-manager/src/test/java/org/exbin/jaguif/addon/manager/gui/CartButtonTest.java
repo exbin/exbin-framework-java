@@ -25,8 +25,6 @@ import org.junit.Test;
 
 /**
  * Test for CartButton.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class CartButtonTest {
 

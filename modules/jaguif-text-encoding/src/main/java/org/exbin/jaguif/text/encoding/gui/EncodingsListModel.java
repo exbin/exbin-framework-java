@@ -25,8 +25,6 @@ import javax.swing.AbstractListModel;
 
 /**
  * List model for encoding / character sets.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EncodingsListModel extends AbstractListModel<String> {

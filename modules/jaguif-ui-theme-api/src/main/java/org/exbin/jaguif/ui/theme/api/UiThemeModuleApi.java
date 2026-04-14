@@ -23,8 +23,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for framework UI theme module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface UiThemeModuleApi extends Module {

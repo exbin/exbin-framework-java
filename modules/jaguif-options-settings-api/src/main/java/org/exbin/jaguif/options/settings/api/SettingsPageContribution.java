@@ -24,8 +24,6 @@ import org.exbin.jaguif.contribution.api.SubSequenceContribution;
 
 /**
  * Settings page contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

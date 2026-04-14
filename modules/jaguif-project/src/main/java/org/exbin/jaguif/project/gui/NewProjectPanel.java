@@ -24,8 +24,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * New project panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class NewProjectPanel extends javax.swing.JPanel {

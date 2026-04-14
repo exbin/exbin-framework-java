@@ -34,8 +34,6 @@ import org.exbin.jaguif.operation.api.TitledOperation;
 
 /**
  * Operation to search in catalog.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CatalogSearchOperation implements Runnable, CancellableOperation, ProgressOperation, TitledOperation {

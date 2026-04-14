@@ -24,8 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Addon record.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonRecord extends ItemRecord {

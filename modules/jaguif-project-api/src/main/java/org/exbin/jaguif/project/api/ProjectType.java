@@ -22,8 +22,6 @@ import javax.swing.JComponent;
 
 /**
  * Project type interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ProjectType {

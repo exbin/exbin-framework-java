@@ -30,8 +30,6 @@ import org.exbin.jaguif.options.settings.api.SettingsPageContribution;
 
 /**
  * Settings sequence output.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SettingsSequenceOutput implements TreeContributionSequenceOutput {

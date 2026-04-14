@@ -31,8 +31,6 @@ import org.exbin.jaguif.search.api.ReplaceSearchState;
 
 /**
  * Search find action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EditReplaceAction extends AbstractAction implements ActionContextChange {

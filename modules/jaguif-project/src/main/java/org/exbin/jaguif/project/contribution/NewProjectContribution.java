@@ -24,8 +24,6 @@ import org.exbin.jaguif.project.action.NewProjectAction;
 
 /**
  * New project contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class NewProjectContribution implements ActionSequenceContribution {
 

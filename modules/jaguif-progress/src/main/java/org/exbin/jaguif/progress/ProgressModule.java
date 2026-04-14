@@ -20,8 +20,6 @@ import org.exbin.jaguif.progress.api.ProgressModuleApi;
 
 /**
  * Support for operations with progress state module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ProgressModule implements ProgressModuleApi {

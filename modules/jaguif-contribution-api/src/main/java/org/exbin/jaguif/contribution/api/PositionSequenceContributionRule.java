@@ -21,8 +21,6 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * Sequence contribution rule for item position.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

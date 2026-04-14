@@ -28,8 +28,6 @@ import org.exbin.jaguif.sidebar.api.SideBarComponent;
 
 /**
  * Default docking sidebar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultSideBar implements SideBar {

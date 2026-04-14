@@ -19,8 +19,6 @@ import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Action toolbar item contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ActionToolBarContribution extends ActionSequenceContribution {
 

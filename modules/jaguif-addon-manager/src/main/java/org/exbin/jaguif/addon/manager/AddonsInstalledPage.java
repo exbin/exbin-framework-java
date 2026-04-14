@@ -27,8 +27,6 @@ import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
 
 /**
  * Installed manager page.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonsInstalledPage implements AddonManagerPage {

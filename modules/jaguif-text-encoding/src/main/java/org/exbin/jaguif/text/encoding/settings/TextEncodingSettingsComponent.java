@@ -30,8 +30,6 @@ import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
 
 /**
  * Text encoding options settings component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingSettingsComponent implements SettingsComponentProvider {

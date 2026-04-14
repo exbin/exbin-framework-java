@@ -29,8 +29,6 @@ import org.exbin.jaguif.operation.manager.service.UndoManagerService;
 
 /**
  * Undo manager service implementation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UndoManagerServiceImpl implements UndoManagerService {

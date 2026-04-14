@@ -49,8 +49,6 @@ import org.exbin.jaguif.window.api.gui.WindowHeaderPanel;
 
 /**
  * Module window handling.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class WindowModule implements WindowModuleApi {

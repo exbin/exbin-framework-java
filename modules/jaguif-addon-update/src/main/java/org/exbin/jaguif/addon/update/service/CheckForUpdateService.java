@@ -23,8 +23,6 @@ import org.exbin.jaguif.addon.update.api.VersionNumbers;
 
 /**
  * Check for update service.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface CheckForUpdateService {

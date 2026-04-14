@@ -19,8 +19,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface item movement action set.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextMoveItem {
 

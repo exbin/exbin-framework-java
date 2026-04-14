@@ -27,8 +27,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Component for list of packs / addon suites.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonItemComponent extends javax.swing.JPanel {

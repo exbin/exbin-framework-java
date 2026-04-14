@@ -40,8 +40,6 @@ import org.exbin.jaguif.action.api.ActionContextRegistration;
 
 /**
  * Default menus manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MenuManager extends TreeContributionManager implements MenuManagement {

@@ -35,8 +35,6 @@ import org.exbin.jaguif.action.api.ActionContextRegistration;
 
 /**
  * Menu bar sequence output.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {

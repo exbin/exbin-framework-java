@@ -19,8 +19,6 @@ import org.exbin.jaguif.operation.api.OperationModuleApi;
 
 /**
  * Implementation of operation support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class OperationModule implements OperationModuleApi {
 

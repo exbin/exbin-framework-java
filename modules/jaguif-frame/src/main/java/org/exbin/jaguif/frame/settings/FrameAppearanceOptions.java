@@ -21,8 +21,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Frame appearance options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FrameAppearanceOptions implements SettingsOptions {

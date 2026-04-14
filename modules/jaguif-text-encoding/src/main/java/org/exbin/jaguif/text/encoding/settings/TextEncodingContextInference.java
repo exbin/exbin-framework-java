@@ -24,8 +24,6 @@ import org.exbin.jaguif.text.encoding.ContextEncoding;
 
 /**
  * Text editor encodings context inference.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingContextInference implements TextEncodingInference {

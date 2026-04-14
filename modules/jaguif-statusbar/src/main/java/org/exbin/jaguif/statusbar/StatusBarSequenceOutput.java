@@ -28,8 +28,6 @@ import org.exbin.jaguif.statusbar.api.StatusBarComponent;
 
 /**
  * Status bar sequence output.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class StatusBarSequenceOutput implements ContributionSequenceOutput {

@@ -32,8 +32,6 @@ import org.exbin.jaguif.operation.undo.api.ContextUndoRedo;
 
 /**
  * Redo action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class RedoAction extends AbstractAction implements ActionContextChange {

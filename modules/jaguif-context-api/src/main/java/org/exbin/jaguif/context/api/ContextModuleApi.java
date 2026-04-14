@@ -22,8 +22,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for context support module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ContextModuleApi extends Module {

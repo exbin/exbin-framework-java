@@ -24,8 +24,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for document docking.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface DocumentDocking extends ComponentProvider {

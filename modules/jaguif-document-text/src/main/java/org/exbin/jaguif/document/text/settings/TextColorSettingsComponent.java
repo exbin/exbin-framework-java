@@ -23,8 +23,6 @@ import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
 
 /**
  * Text color settings component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextColorSettingsComponent implements SettingsComponentProvider {

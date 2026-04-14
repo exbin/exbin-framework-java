@@ -28,8 +28,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Component for list of cart operations.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonCartComponent extends javax.swing.JPanel {

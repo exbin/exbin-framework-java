@@ -20,8 +20,6 @@ import org.exbin.jaguif.utils.OkCancelControlComponent;
 
 /**
  * Controller for undo manager control panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface UndoManagerControlController {

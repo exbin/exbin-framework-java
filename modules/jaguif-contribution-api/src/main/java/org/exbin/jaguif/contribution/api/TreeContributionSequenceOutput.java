@@ -21,8 +21,6 @@ import org.exbin.jaguif.Module;
 
 /**
  * Interface for tree contribution sequence output.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface TreeContributionSequenceOutput extends Module {

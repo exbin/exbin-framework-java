@@ -17,8 +17,6 @@ package org.exbin.jaguif.options.settings.api;
 
 /**
  * Interface for inference options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface InferenceOptions {
 

@@ -23,8 +23,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * UI language options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class LanguageOptions implements SettingsOptions {

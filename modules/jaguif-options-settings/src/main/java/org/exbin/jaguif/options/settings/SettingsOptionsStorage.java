@@ -32,8 +32,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Options settings memory storage.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SettingsOptionsStorage implements SettingsOptionsProvider {

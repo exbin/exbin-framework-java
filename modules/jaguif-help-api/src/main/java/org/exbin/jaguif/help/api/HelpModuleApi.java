@@ -26,8 +26,6 @@ import org.exbin.jaguif.window.api.gui.FooterControlPanel;
 
 /**
  * Interface for help module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface HelpModuleApi extends Module {

@@ -19,8 +19,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for document clipboard actions controller.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ClipboardController {
 

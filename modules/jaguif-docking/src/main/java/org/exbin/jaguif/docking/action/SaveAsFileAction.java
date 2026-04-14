@@ -38,8 +38,6 @@ import org.exbin.jaguif.document.api.EditableDocument;
 
 /**
  * Save as file action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SaveAsFileAction extends AbstractAction {

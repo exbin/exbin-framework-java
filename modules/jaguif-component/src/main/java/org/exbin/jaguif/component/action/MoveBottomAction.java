@@ -28,8 +28,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Move bottom action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MoveBottomAction extends AbstractAction {

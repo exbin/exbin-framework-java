@@ -38,8 +38,6 @@ import org.exbin.jaguif.document.api.MemoryDocumentSource;
 
 /**
  * Save file action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SaveFileAction extends AbstractAction {

@@ -33,8 +33,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Panel for addons cart operations panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonsCartPanel extends javax.swing.JPanel {

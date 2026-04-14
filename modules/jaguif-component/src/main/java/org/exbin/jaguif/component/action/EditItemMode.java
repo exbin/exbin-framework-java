@@ -17,8 +17,6 @@ package org.exbin.jaguif.component.action;
 
 /**
  * Item edit mode.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum EditItemMode {
     NORMAL, DIALOG

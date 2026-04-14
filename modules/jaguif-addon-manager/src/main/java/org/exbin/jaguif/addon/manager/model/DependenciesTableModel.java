@@ -27,8 +27,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Addon dependency record.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DependenciesTableModel extends AbstractTableModel {

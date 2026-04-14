@@ -20,8 +20,6 @@ import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
 
 /**
  * Look&amp;feel provider with support for additional settings.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ConfigurableLafProvider extends LafProvider {
 

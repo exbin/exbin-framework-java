@@ -25,8 +25,6 @@ import org.junit.Test;
 
 /**
  * Test for TextPropertiesPanel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class TextPropertiesPanelTest {
 

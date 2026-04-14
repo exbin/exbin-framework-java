@@ -24,8 +24,6 @@ import org.exbin.jaguif.document.text.action.EditSelectionAction;
 
 /**
  * Close file contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class EditSelectionContribution implements ActionSequenceContribution {
 

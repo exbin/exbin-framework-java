@@ -30,8 +30,6 @@ import org.exbin.jaguif.utils.UiUtils;
 
 /**
  * Simple header panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class WindowHeaderPanel extends javax.swing.JPanel {

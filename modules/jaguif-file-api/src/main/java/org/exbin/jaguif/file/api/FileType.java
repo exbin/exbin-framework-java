@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Interface for file types.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface FileType {
 

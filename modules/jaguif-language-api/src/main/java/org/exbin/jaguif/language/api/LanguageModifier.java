@@ -20,8 +20,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Language modifier.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface LanguageModifier {
 

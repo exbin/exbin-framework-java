@@ -19,8 +19,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for context activable frame.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextFrame {
 

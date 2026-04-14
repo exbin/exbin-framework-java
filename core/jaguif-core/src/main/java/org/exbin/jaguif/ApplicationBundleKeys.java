@@ -17,8 +17,6 @@ package org.exbin.jaguif;
 
 /**
  * Application bundle keys.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class ApplicationBundleKeys {
 

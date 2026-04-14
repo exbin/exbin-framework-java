@@ -21,8 +21,6 @@ import org.exbin.jaguif.options.settings.api.InferenceOptions;
 
 /**
  * Text color inference options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface TextColorInference extends InferenceOptions {
 

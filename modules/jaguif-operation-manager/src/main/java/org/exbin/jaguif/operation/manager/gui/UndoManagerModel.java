@@ -26,8 +26,6 @@ import org.exbin.jaguif.operation.undo.api.UndoRedo;
 
 /**
  * List model for undo manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UndoManagerModel extends AbstractListModel<String> {

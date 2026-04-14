@@ -24,8 +24,6 @@ import org.exbin.jaguif.text.font.action.TextFontAction;
 
 /**
  * Text font contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class TextFontContribution implements ActionSequenceContribution {
 

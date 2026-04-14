@@ -23,8 +23,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for docking module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface DockingModuleApi extends Module {

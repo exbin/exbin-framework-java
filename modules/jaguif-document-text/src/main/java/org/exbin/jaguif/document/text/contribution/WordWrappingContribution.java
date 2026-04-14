@@ -24,8 +24,6 @@ import org.exbin.jaguif.document.text.action.WordWrappingAction;
 
 /**
  * Word wrapping contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class WordWrappingContribution implements ActionSequenceContribution {
 

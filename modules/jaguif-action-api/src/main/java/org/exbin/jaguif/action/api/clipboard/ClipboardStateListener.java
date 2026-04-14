@@ -17,8 +17,6 @@ package org.exbin.jaguif.action.api.clipboard;
 
 /**
  * Clipboard state listener.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ClipboardStateListener {
 

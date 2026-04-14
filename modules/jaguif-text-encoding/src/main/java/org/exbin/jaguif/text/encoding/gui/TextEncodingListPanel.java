@@ -33,8 +33,6 @@ import org.exbin.jaguif.context.api.ActiveContextProvider;
 
 /**
  * Text encoding selection panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingListPanel extends javax.swing.JPanel implements SettingsComponent {

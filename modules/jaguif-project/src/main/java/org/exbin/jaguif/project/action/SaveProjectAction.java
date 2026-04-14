@@ -32,8 +32,6 @@ import org.exbin.jaguif.docking.api.DocumentDocking;
 
 /**
  * Save project action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SaveProjectAction extends AbstractAction {

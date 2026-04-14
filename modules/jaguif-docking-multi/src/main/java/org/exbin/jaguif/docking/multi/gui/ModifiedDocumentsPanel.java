@@ -29,8 +29,6 @@ import org.exbin.jaguif.utils.WindowUtils;
 
 /**
  * Modified documents panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ModifiedDocumentsPanel extends javax.swing.JPanel {

@@ -25,8 +25,6 @@ import org.exbin.jaguif.window.api.controller.RemovalControlController;
 
 /**
  * Basic control panel with support for removal.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class RemovalControlPanel extends FooterControlPanel implements RemovalControlController.RemovalControlComponent {

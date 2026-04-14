@@ -23,8 +23,6 @@ import org.exbin.jaguif.utils.WindowClosingListener;
 
 /**
  * Frame exit handler.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FrameClosingHandler {

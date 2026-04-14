@@ -25,8 +25,6 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
  * Interface for framework project module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ProjectModuleApi extends Module {

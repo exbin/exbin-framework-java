@@ -39,8 +39,6 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 
 /**
  * Contribution sequence builder.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ContributionSequenceBuilder {

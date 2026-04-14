@@ -29,8 +29,6 @@ import org.exbin.jaguif.options.preferences.FilePreferences;
 
 /**
  * Implementation of options module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OptionsModule implements OptionsModuleApi {

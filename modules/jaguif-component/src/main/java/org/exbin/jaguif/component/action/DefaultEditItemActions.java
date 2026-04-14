@@ -26,8 +26,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Item edit default action set.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultEditItemActions implements EditItemActions {

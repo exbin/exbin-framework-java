@@ -20,8 +20,6 @@ import javax.swing.Action;
 
 /**
  * Interface for item edit action set.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface EditItemActions extends ActionsProvider {
 

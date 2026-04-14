@@ -35,8 +35,6 @@ import org.exbin.jaguif.ApplicationBundleKeys;
 
 /**
  * Basic framework application.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BasicApplication {

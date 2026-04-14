@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Operation capable reporting progress.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ActivityDetailOperation {
 

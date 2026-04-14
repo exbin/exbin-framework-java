@@ -25,8 +25,6 @@ import org.exbin.jaguif.options.api.OptionsStorage;
 
 /**
  * Memory options storage.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MemoryOptionsStorage implements OptionsStorage {

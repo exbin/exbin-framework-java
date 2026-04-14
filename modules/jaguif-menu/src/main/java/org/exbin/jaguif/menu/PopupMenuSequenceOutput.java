@@ -37,8 +37,6 @@ import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Popup menu sequence output.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {

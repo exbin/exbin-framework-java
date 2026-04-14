@@ -34,8 +34,6 @@ import org.exbin.jaguif.utils.DesktopUtils;
  * <p>
  * See MacOS Metal framework:
  * <a href="https://openjdk.org/projects/lanai/">Project Lanai</a>
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public enum GuiRenderingMethod {

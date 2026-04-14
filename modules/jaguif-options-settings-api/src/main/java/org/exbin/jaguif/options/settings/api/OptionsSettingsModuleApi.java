@@ -25,8 +25,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for framework options settings module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface OptionsSettingsModuleApi extends Module {

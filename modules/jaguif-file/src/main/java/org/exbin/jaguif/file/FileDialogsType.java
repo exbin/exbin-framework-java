@@ -17,8 +17,6 @@ package org.exbin.jaguif.file;
 
 /**
  * File dialogs type.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum FileDialogsType {
     SWING, AWT

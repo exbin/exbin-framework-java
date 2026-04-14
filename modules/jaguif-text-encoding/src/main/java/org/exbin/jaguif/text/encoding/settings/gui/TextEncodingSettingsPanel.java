@@ -34,8 +34,6 @@ import org.exbin.jaguif.text.encoding.settings.TextEncodingsInference;
 
 /**
  * Text encoding settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextEncodingSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

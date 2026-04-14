@@ -26,8 +26,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Test implementation of language module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TestLanguageModule implements LanguageModuleApi {

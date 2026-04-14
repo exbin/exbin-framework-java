@@ -19,8 +19,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for find search state.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface FindSearchState {
 

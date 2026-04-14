@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Operation providing title.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface TitledOperation {
 

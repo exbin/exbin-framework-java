@@ -21,8 +21,6 @@ import org.exbin.jaguif.document.api.MemoryDocumentSource;
 
 /**
  * Default memory document source.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultMemoryDocumentSource implements MemoryDocumentSource {

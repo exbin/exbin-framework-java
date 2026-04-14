@@ -24,8 +24,6 @@ import org.exbin.jaguif.frame.api.FrameModuleApi;
 
 /**
  * View status bar contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class ViewStatusBarContribution implements ActionSequenceContribution {
 

@@ -24,8 +24,6 @@ import org.exbin.jaguif.frame.api.ContextFrame;
 
 /**
  * Frame appearance settings applier.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FrameAppearanceSettingsApplier implements SettingsApplier {

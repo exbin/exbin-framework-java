@@ -40,8 +40,6 @@ import org.exbin.jaguif.document.text.EditorTextPanelComponent;
 
 /**
  * Text color action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextColorAction extends AbstractAction {

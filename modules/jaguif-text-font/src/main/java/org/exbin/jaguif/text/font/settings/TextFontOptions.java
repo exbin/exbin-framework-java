@@ -28,8 +28,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Text font options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontOptions implements SettingsOptions {

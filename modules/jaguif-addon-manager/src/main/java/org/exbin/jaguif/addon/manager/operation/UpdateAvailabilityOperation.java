@@ -29,8 +29,6 @@ import org.exbin.jaguif.operation.api.CancellableOperation;
 
 /**
  * Update availability operation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class UpdateAvailabilityOperation implements Runnable, CancellableOperation {

@@ -23,8 +23,6 @@ import org.exbin.jaguif.action.manager.model.KeyMapTableModel;
 
 /**
  * Keymap table panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class KeyMapTablePanel extends javax.swing.JPanel {

@@ -24,8 +24,6 @@ import org.exbin.jaguif.document.api.Document;
 
 /**
  * Interface for editor view handling.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface MultiDocking extends ContextDocking, DocumentDocking {

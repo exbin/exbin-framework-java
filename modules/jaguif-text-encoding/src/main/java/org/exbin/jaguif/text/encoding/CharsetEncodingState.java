@@ -21,8 +21,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Charset encoding state interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface CharsetEncodingState extends ContextEncoding {

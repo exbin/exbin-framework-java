@@ -27,8 +27,6 @@ import org.exbin.jaguif.text.encoding.EncodingsManager;
 
 /**
  * Text editor encodings options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultEncodingComboBoxModel implements ComboBoxModel<String> {

@@ -25,8 +25,6 @@ import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 
 /**
  * Action side bar item contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ActionSideBarContribution implements ItemSequenceContribution {

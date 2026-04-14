@@ -50,8 +50,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Basic module provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BasicModuleProvider implements ModuleProvider {

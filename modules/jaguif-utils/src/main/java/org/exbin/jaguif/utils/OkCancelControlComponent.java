@@ -21,8 +21,6 @@ import javax.swing.JButton;
 
 /**
  * Simple interface for ok and cancel event invocation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface OkCancelControlComponent {
 

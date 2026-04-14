@@ -28,8 +28,6 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  * Document syntax module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DocumentSyntaxModule implements Module {

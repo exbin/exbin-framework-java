@@ -21,8 +21,6 @@ import javax.swing.JComponent;
 
 /**
  * Action toolbar component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ToolBarComponent {
 

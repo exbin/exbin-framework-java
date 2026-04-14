@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Command interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface Command {
 

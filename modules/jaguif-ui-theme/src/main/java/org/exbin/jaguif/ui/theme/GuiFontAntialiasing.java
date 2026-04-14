@@ -28,8 +28,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @see
  * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/2d/flags.html">JavaSE
  * 8 2D Technology</a>
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public enum GuiFontAntialiasing {

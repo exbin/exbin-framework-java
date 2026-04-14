@@ -36,8 +36,6 @@ import org.exbin.jaguif.help.api.HelpLink;
 
 /**
  * Addon manager action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonManagerAction extends AbstractAction {

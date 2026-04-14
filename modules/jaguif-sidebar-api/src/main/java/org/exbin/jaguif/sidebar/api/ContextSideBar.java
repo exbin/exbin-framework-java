@@ -17,8 +17,6 @@ package org.exbin.jaguif.sidebar.api;
 
 /**
  * Interface for context active side bar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextSideBar {
 }

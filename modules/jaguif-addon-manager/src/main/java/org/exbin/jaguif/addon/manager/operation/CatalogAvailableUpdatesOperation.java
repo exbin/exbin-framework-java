@@ -25,8 +25,6 @@ import org.exbin.jaguif.operation.api.TitledOperation;
 
 /**
  * Operation to get available updates from catalog.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CatalogAvailableUpdatesOperation implements Runnable, CancellableOperation, TitledOperation {

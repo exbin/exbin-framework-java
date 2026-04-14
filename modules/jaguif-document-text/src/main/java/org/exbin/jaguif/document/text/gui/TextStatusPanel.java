@@ -24,8 +24,6 @@ import org.exbin.jaguif.text.encoding.CharsetEncodingState;
 
 /**
  * Text editor status panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextStatusPanel extends javax.swing.JPanel implements TextPositionStatusApi, CharsetEncodingState {

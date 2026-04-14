@@ -42,8 +42,6 @@ import org.exbin.jaguif.sidebar.api.SideBar;
 
 /**
  * Default sidebar manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SideBarManager extends ContributionManager implements SideBarManagement {

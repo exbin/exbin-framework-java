@@ -38,8 +38,6 @@ import org.exbin.jaguif.frame.api.FrameModuleApi;
 
 /**
  * File document provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FileDocumentProvider implements DocumentProvider {

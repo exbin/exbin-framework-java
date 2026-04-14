@@ -24,8 +24,6 @@ import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 
 /**
  * Default toolbar definition manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ToolBarDefinitionManager implements ToolBarDefinitionManagement {

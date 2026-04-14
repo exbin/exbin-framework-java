@@ -30,8 +30,6 @@ import org.exbin.jaguif.operation.api.ProgressOperation;
 
 /**
  * Download operation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DownloadOperation implements Runnable, CancellableOperation, ProgressOperation {

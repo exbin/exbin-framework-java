@@ -41,8 +41,6 @@ import org.exbin.jaguif.utils.UiUtils;
 
 /**
  * Recent files actions.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class RecentFilesActions {

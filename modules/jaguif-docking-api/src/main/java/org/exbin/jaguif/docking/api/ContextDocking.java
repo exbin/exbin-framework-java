@@ -17,8 +17,6 @@ package org.exbin.jaguif.docking.api;
 
 /**
  * Interface for docking context.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextDocking {
 

@@ -24,8 +24,6 @@ import org.exbin.jaguif.docking.multi.action.CloseOtherFilesAction;
 
 /**
  * Close other files contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class CloseOtherFilesContribution implements ActionSequenceContribution {
 

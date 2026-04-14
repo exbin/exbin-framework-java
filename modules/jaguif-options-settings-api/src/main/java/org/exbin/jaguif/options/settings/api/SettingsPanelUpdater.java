@@ -23,8 +23,6 @@ import javax.swing.JTextArea;
 
 /**
  * Updater for settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SettingsPanelUpdater {

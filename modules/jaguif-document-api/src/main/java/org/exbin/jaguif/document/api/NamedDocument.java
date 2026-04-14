@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Interface for named document.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface NamedDocument extends Document {
 

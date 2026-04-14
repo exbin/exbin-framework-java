@@ -28,8 +28,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Frame appearance settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FrameAppearanceSettingsPanel extends javax.swing.JPanel implements SettingsComponent, ComponentResourceProvider {

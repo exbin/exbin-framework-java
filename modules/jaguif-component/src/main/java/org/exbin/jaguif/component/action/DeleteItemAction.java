@@ -28,8 +28,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Delete item action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DeleteItemAction extends AbstractAction {

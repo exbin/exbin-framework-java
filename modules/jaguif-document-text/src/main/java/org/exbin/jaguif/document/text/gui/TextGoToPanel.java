@@ -29,8 +29,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Go to line panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextGoToPanel extends javax.swing.JPanel {

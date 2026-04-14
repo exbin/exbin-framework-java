@@ -23,8 +23,6 @@ import org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi;
 
 /**
  * Options settings contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class SettingsContribution implements ActionSequenceContribution {
 

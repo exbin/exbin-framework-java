@@ -35,8 +35,6 @@ import org.exbin.jaguif.utils.VersionUtils;
 
 /**
  * Available module updates.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AvailableModuleUpdates {

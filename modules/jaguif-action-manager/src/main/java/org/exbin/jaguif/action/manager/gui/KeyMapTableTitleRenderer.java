@@ -25,8 +25,6 @@ import org.exbin.jaguif.action.manager.model.KeyMapRecord;
 
 /**
  * Keymap table renderer.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class KeyMapTableTitleRenderer extends DefaultTableCellRenderer {

@@ -34,8 +34,6 @@ import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 
 /**
  * Implementation of framework about module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AboutModule implements AboutModuleApi {

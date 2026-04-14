@@ -27,8 +27,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Application update settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ApplicationUpdateSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

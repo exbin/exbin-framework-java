@@ -33,8 +33,6 @@ import org.exbin.jaguif.toolbar.api.ToolBarModuleApi;
 
 /**
  * Action manager settings component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class KeyMapSettingsComponent implements SettingsComponentProvider {

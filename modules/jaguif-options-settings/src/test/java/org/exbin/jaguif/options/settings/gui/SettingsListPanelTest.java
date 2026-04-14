@@ -24,8 +24,6 @@ import org.junit.Test;
 
 /**
  * Test for SettingsListPanel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class SettingsListPanelTest {
 

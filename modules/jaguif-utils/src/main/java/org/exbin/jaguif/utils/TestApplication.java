@@ -31,8 +31,6 @@ import org.exbin.jaguif.ModuleProvider;
 
 /**
  * Some simple static methods usable for testing windows and dialogs.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TestApplication {

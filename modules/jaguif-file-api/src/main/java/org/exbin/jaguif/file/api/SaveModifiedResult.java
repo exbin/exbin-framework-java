@@ -17,8 +17,6 @@ package org.exbin.jaguif.file.api;
 
 /**
  * Enumeration for save modified dialog results.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum SaveModifiedResult {
     SAVE,

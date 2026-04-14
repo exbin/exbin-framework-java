@@ -44,8 +44,6 @@ import org.exbin.jaguif.sidebar.api.SideBarComponent;
 
 /**
  * Sidebar toolbar sequence output.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SideToolBarSequenceOutput implements ContributionSequenceOutput {

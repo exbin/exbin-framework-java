@@ -45,8 +45,6 @@ import org.exbin.jaguif.docking.api.DockingModuleApi;
 
 /**
  * Implementation of docking module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DockingLayoutModule implements DockingModuleApi {

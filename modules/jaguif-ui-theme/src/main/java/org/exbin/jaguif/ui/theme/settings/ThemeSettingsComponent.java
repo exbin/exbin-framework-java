@@ -49,8 +49,6 @@ import org.exbin.jaguif.ui.theme.UiThemeModule;
 
 /**
  * UI theme settings component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ThemeSettingsComponent implements SettingsComponentProvider {

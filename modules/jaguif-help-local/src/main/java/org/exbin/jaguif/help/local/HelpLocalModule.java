@@ -28,8 +28,6 @@ import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 
 /**
  * Local help module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class HelpLocalModule {

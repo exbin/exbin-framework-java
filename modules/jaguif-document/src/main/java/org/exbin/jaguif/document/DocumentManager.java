@@ -33,8 +33,6 @@ import org.exbin.jaguif.document.api.MemoryDocumentSource;
 
 /**
  * Document manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DocumentManager implements DocumentManagement {

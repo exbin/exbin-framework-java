@@ -21,8 +21,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Check for update on start options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CheckForUpdateOptions implements SettingsOptions {

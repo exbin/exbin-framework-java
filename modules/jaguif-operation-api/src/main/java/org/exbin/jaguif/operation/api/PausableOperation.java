@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.api;
 
 /**
  * Pausable operation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface PausableOperation {
 

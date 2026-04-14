@@ -25,8 +25,6 @@ import org.junit.Test;
 
 /**
  * Test for KeyMapTablePanel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class KeyMapTablePanelTest {
 

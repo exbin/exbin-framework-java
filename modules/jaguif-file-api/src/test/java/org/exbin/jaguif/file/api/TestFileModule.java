@@ -26,8 +26,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Test implementation of file module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TestFileModule implements FileModuleApi {

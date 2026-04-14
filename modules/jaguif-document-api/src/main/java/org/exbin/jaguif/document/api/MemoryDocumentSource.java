@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Interface for document source.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface MemoryDocumentSource extends DocumentSource {
 

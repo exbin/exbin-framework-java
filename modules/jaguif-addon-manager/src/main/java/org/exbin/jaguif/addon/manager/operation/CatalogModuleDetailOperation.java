@@ -29,8 +29,6 @@ import org.exbin.jaguif.operation.api.TitledOperation;
 
 /**
  * Operation to receive details about module from catalog.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CatalogModuleDetailOperation implements Runnable, CancellableOperation, ProgressOperation, TitledOperation {

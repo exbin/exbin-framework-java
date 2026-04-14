@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.undo.api;
 
 /**
  * Interface for undo controller.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface UndoRedoController extends UndoRedoState {
 

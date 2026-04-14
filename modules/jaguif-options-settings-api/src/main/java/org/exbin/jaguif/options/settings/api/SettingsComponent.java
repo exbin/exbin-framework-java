@@ -20,8 +20,6 @@ import org.exbin.jaguif.utils.ComponentResourceProvider;
 
 /**
  * Interface for basic options settings component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface SettingsComponent extends ComponentResourceProvider {

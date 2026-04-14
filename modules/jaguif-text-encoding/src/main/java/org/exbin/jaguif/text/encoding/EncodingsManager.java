@@ -42,8 +42,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Encodings manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EncodingsManager {

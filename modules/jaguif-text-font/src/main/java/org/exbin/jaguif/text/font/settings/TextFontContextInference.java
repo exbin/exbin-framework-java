@@ -25,8 +25,6 @@ import org.exbin.jaguif.text.font.TextFontState;
 
 /**
  * Text editor font context inference.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontContextInference implements TextFontInference {

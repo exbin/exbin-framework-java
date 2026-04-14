@@ -19,8 +19,6 @@ import bibliothek.gui.dock.common.MultipleCDockableFactory;
 
 /**
  * Editor dockable.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class EditorFactory implements MultipleCDockableFactory<EditorCDockable, EditorCDockableLayout> {
 

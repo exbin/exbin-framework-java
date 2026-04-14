@@ -21,8 +21,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Text appearance options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextAppearanceOptions implements SettingsOptions {

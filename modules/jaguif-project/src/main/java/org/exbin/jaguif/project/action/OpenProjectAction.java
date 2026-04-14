@@ -28,8 +28,6 @@ import org.exbin.jaguif.utils.ActionUtils;
 
 /**
  * Open project action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OpenProjectAction extends AbstractAction {

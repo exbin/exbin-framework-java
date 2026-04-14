@@ -40,8 +40,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Edit selection action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EditSelectionAction extends AbstractAction {

@@ -20,8 +20,6 @@ import org.exbin.jaguif.notification.api.NotificationModuleApi;
 
 /**
  * Support for notifications module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class NotificationModule implements NotificationModuleApi {

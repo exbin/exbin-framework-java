@@ -17,8 +17,6 @@ package org.exbin.jaguif.contribution.api;
 
 /**
  * Interface for sequence contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface SequenceContribution {
 }

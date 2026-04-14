@@ -20,8 +20,6 @@ import javax.swing.Action;
 
 /**
  * Sequence action item contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ActionSequenceContribution extends ItemSequenceContribution {
 

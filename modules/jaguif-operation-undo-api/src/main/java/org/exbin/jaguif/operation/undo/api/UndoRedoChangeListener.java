@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.undo.api;
 
 /**
  * Undo change listener.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface UndoRedoChangeListener {
 

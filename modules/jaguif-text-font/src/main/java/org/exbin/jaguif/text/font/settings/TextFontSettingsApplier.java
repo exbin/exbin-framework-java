@@ -24,8 +24,6 @@ import org.exbin.jaguif.text.font.TextFontState;
 
 /**
  * Text font settings applier.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextFontSettingsApplier implements SettingsApplier {

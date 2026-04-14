@@ -24,8 +24,6 @@ import org.junit.Test;
 
 /**
  * Test for FileSettingsPanel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class FileSettingsPanelTest {
 

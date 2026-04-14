@@ -22,8 +22,6 @@ import javax.swing.JToolBar;
 
 /**
  * Interface for sidebar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface SideBar {

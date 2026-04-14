@@ -62,8 +62,6 @@ import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 
 /**
  * Utilities for default menu generation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultPopupMenu {

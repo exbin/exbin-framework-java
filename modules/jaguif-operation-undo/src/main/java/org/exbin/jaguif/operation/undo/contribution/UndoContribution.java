@@ -24,8 +24,6 @@ import org.exbin.jaguif.operation.undo.api.OperationUndoModuleApi;
 
 /**
  * Undo contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class UndoContribution implements ActionSequenceContribution {
 

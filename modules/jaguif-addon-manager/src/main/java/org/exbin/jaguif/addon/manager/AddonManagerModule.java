@@ -38,8 +38,6 @@ import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 
 /**
  * Addon manager module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonManagerModule implements AddonManagerModuleApi {

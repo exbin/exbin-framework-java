@@ -30,8 +30,6 @@ import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 
 /**
  * Default menu definition manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MenuDefinitionManager implements MenuDefinitionManagement {

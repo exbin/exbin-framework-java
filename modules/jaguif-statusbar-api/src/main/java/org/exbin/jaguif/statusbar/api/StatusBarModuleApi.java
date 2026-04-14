@@ -25,8 +25,6 @@ import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Support for status bar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface StatusBarModuleApi extends Module {

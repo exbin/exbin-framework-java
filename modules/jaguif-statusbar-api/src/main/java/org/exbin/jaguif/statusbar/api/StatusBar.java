@@ -21,8 +21,6 @@ import javax.swing.JComponent;
 
 /**
  * Interface for status bar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface StatusBar extends ContextStatusBar {

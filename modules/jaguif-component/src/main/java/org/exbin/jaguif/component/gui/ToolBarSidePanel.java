@@ -25,8 +25,6 @@ import javax.swing.JToolBar;
 
 /**
  * Panel with side toolbar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar {

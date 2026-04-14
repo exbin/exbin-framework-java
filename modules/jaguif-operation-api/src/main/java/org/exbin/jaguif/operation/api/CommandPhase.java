@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.api;
 
 /**
  * Enumeration of command execution phases.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum CommandPhase {
 

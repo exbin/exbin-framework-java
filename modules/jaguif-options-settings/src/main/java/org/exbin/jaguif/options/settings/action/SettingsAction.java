@@ -48,8 +48,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * Options settings action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SettingsAction extends AbstractAction {

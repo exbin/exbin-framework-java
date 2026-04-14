@@ -50,8 +50,6 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  * Text document.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SyntaxTextDocument implements ContextDocument, ComponentDocument, FileDocument, EditableDocument {

@@ -20,8 +20,6 @@ import org.exbin.jaguif.Module;
 
 /**
  * Interface for contribution sequence output.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ContributionSequenceOutput extends Module {

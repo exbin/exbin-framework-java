@@ -24,8 +24,6 @@ import java.io.IOException;
 
 /**
  * Editor dockable.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class EditorCDockableLayout implements MultipleCDockableLayout {
 

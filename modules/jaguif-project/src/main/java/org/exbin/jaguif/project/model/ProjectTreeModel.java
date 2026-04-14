@@ -24,8 +24,6 @@ import org.exbin.jaguif.project.api.ProjectCategory;
 
 /**
  * Tree model for projects.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ProjectTreeModel implements TreeModel {

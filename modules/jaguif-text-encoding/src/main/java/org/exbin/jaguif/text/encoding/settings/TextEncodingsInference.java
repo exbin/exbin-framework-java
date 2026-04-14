@@ -22,8 +22,6 @@ import org.exbin.jaguif.options.settings.api.InferenceOptions;
 
 /**
  * Text editor encodings inference options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface TextEncodingsInference extends InferenceOptions {
 

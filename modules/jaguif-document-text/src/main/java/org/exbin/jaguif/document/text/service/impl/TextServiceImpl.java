@@ -23,8 +23,6 @@ import org.exbin.jaguif.document.text.service.TextSearchService;
 
 /**
  * Default implemention of text search service.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextServiceImpl implements TextSearchService {

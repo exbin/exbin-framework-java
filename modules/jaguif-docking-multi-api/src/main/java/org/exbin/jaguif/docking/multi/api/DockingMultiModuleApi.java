@@ -24,8 +24,6 @@ import org.exbin.jaguif.docking.api.DocumentDocking;
 
 /**
  * Interface for docking module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface DockingMultiModuleApi extends Module {

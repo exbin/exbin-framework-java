@@ -20,8 +20,6 @@ import javax.swing.Action;
 
 /**
  * Action management.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ActionManagement {

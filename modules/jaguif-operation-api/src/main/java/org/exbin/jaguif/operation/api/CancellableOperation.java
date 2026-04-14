@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.api;
 
 /**
  * Cancellable operation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface CancellableOperation {
 

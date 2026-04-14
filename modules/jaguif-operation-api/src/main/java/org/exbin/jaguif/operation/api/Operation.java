@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Operation interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface Operation {
 

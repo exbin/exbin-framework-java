@@ -31,8 +31,6 @@ import org.exbin.jaguif.document.api.Document;
 
 /**
  * Close other files action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CloseOtherFilesAction extends AbstractAction {

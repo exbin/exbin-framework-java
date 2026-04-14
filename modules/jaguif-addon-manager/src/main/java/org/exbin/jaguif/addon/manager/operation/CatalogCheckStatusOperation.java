@@ -30,8 +30,6 @@ import org.exbin.jaguif.operation.api.TitledOperation;
 
 /**
  * Operation to check status of catalog.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CatalogCheckStatusOperation implements Runnable, CancellableOperation, TitledOperation {

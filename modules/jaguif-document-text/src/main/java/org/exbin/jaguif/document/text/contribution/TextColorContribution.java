@@ -24,8 +24,6 @@ import org.exbin.jaguif.document.text.action.TextColorAction;
 
 /**
  * Text color contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class TextColorContribution implements ActionSequenceContribution {
 

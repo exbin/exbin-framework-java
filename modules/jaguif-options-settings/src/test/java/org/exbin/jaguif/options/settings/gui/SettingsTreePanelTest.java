@@ -24,8 +24,6 @@ import org.junit.Test;
 
 /**
  * Test for SettingsTreePanel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class SettingsTreePanelTest {
 

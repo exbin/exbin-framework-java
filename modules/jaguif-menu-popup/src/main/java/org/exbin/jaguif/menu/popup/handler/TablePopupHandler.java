@@ -25,8 +25,6 @@ import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 
 /**
  * Popup handler for table.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TablePopupHandler implements TextClipboardController {

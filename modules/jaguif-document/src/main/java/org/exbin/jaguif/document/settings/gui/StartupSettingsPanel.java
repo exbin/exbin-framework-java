@@ -28,8 +28,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 
 /**
  * Document startup settings panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class StartupSettingsPanel extends javax.swing.JPanel implements SettingsComponent {

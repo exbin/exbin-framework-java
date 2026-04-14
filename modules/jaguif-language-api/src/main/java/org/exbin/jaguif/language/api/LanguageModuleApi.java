@@ -25,8 +25,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Interface for framework language module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface LanguageModuleApi extends Module {

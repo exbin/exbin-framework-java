@@ -17,8 +17,6 @@ package org.exbin.jaguif.operation.api;
 
 /**
  * Command type interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface CommandType {
 }

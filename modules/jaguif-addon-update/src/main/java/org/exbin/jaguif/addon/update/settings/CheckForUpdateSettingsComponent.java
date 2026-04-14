@@ -22,8 +22,6 @@ import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
 
 /**
  * Check for update on start settings page.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CheckForUpdateSettingsComponent implements SettingsComponentProvider {

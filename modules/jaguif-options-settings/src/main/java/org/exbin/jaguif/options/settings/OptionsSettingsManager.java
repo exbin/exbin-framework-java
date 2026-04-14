@@ -49,8 +49,6 @@ import org.exbin.jaguif.utils.ObjectUtils;
 
 /**
  * Options settings manager.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OptionsSettingsManager extends TreeContributionSequenceBuilder implements OptionsSettingsManagement {

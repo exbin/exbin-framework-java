@@ -22,8 +22,6 @@ import org.exbin.jaguif.document.api.ComponentDocument;
 
 /**
  * Multi document panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MultiDocumentPanel extends javax.swing.JPanel {

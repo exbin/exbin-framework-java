@@ -25,8 +25,6 @@ import org.exbin.jaguif.search.api.SearchModuleApi;
 
 /**
  * Implementation of framework search module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SearchModule implements SearchModuleApi {

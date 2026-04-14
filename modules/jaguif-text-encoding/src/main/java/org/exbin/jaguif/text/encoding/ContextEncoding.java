@@ -17,8 +17,6 @@ package org.exbin.jaguif.text.encoding;
 
 /**
  * Context encoding interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ContextEncoding {
 

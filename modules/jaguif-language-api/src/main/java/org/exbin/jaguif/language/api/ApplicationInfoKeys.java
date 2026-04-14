@@ -17,8 +17,6 @@ package org.exbin.jaguif.language.api;
 
 /**
  * Application information language keys.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class ApplicationInfoKeys {
 

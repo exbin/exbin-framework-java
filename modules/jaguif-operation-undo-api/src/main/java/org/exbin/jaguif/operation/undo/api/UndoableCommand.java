@@ -19,8 +19,6 @@ import org.exbin.jaguif.operation.api.Command;
 
 /**
  * Undoable command.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface UndoableCommand extends Command {
 

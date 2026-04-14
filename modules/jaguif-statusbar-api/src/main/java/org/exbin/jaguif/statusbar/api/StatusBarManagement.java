@@ -24,8 +24,6 @@ import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Interface for status bar management.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface StatusBarManagement {

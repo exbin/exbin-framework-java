@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Look&amp;feel provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface LafProvider {
 

@@ -22,8 +22,6 @@ import org.exbin.jaguif.help.local.action.HelpLocalAction;
 
 /**
  * Local help contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class HelpLocalContribution implements ActionSequenceContribution {
 

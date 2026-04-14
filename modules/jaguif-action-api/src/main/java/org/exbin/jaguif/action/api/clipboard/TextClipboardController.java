@@ -22,8 +22,6 @@ import org.exbin.jaguif.action.api.SelectionController;
 /**
  * Interface for clipboard handler for visual component or document usable for
  * context menu.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface TextClipboardController extends ClipboardController, SelectionController, DeletionController {

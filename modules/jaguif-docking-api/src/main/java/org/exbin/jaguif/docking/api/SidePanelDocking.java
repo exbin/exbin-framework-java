@@ -22,8 +22,6 @@ import org.exbin.jaguif.context.api.ContextActivable;
 
 /**
  * Interface for side panel docking.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface SidePanelDocking extends ContextActivable {

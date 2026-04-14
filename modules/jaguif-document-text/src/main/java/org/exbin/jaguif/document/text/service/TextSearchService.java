@@ -24,8 +24,6 @@ import javax.swing.JTextArea;
 
 /**
  * Text search service.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface TextSearchService {

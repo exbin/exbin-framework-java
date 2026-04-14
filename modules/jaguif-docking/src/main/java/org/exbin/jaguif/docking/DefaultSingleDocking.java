@@ -41,8 +41,6 @@ import org.exbin.jaguif.utils.WindowClosingListener;
 /**
  * Default implementation of the document docking supporting single document
  * only.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, DocumentDocking, WindowClosingListener {

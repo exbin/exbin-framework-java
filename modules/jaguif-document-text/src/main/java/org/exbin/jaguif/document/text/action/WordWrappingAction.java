@@ -32,8 +32,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Word wrapping action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class WordWrappingAction extends AbstractAction {

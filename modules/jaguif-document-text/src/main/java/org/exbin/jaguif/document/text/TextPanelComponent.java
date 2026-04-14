@@ -20,8 +20,6 @@ import org.exbin.jaguif.document.text.gui.TextPanel;
 
 /**
  * Text panel component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface TextPanelComponent {
 

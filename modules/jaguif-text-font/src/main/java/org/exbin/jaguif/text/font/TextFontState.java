@@ -22,8 +22,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Text font state interface.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface TextFontState extends ContextFont {

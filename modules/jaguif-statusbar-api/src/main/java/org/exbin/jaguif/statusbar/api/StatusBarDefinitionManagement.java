@@ -23,8 +23,6 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 
 /**
  * Interface for registered status bars definition management.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface StatusBarDefinitionManagement {

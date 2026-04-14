@@ -32,8 +32,6 @@ import org.exbin.jaguif.addon.update.service.CheckForUpdateService.CheckForUpdat
 
 /**
  * Check for update service implementation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CheckForUpdateServiceImpl implements CheckForUpdateService {

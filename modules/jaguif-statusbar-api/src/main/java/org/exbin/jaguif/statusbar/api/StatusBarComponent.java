@@ -23,8 +23,6 @@ import org.exbin.jaguif.context.api.ContextValues;
 
 /**
  * Interface for status bar component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface StatusBarComponent extends ContextValues {

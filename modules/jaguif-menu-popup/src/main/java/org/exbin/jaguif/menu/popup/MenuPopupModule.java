@@ -35,8 +35,6 @@ import org.exbin.jaguif.utils.UiUtils;
 
 /**
  * Implementation of framework popup module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MenuPopupModule implements MenuPopupModuleApi {

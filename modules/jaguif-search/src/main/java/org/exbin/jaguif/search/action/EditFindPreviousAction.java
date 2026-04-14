@@ -30,8 +30,6 @@ import org.exbin.jaguif.search.api.FindSearchState;
 
 /**
  * Search find previous action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EditFindPreviousAction extends AbstractAction implements ActionContextChange {

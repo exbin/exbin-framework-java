@@ -41,8 +41,6 @@ import org.exbin.jaguif.toolbar.api.ToolBarComponent;
 
 /**
  * Toolbar sequence output.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ToolBarSequenceOutput implements ContributionSequenceOutput {

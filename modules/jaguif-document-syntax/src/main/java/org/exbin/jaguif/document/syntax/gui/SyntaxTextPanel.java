@@ -48,8 +48,6 @@ import org.exbin.jaguif.document.syntax.TextPanelCompoundUndoManager;
 
 /**
  * Text editor panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SyntaxTextPanel extends javax.swing.JPanel {

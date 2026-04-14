@@ -20,8 +20,6 @@ import org.exbin.jaguif.component.api.toolbar.SideToolBar;
 
 /**
  * Interface for actions provider.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ActionsProvider {

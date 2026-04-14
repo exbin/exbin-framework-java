@@ -22,8 +22,6 @@ import org.exbin.jaguif.ModuleUtils;
 
 /**
  * Addon manager fallback module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonFallbackModule implements Module {

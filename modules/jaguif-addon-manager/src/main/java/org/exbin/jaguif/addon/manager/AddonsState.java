@@ -32,8 +32,6 @@ import org.exbin.jaguif.basic.ModuleRecord;
 
 /**
  * Addons target state including queued changes.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class AddonsState {

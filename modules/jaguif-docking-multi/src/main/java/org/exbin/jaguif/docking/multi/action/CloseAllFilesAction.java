@@ -29,8 +29,6 @@ import org.exbin.jaguif.docking.api.ContextDocking;
 
 /**
  * Close all files action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CloseAllFilesAction extends AbstractAction {

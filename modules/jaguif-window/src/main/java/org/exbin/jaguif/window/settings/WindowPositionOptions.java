@@ -23,8 +23,6 @@ import org.exbin.jaguif.utils.WindowPosition;
 
 /**
  * Window position options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class WindowPositionOptions implements SettingsOptions {

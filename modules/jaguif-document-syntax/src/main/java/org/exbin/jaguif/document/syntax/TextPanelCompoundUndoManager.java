@@ -29,8 +29,6 @@ import org.exbin.jaguif.operation.undo.api.UndoRedoChangeListener;
 
 /**
  * Undo Manager with compound operations.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TextPanelCompoundUndoManager extends AbstractUndoableEdit implements UndoableEditListener {

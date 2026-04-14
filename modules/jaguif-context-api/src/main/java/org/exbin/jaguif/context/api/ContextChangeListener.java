@@ -19,8 +19,6 @@ import javax.annotation.Nullable;
 
 /**
  * Listener for active state changes.
- *
- * @author ExBin Project (https://exbin.org)
  * @param <T> instance type
  */
 public interface ContextChangeListener<T> {

@@ -42,8 +42,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 
 /**
  * Check for update action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CheckForUpdateAction extends AbstractAction {

@@ -25,8 +25,6 @@ import org.exbin.jaguif.context.api.ActiveContextManagement;
 
 /**
  * Interface for component frame.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ComponentFrame extends ContextFrame {

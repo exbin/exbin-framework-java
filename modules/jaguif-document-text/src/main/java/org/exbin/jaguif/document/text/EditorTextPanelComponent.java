@@ -35,8 +35,6 @@ import org.exbin.jaguif.text.font.TextFontState;
 
 /**
  * Text panel component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class EditorTextPanelComponent implements ContextComponent, TextPanelComponent, TextClipboardController, CharsetEncodingState, TextAppearanceState, TextColorState, TextFontState {

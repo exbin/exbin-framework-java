@@ -20,8 +20,6 @@ import org.exbin.jaguif.operation.api.Command;
 
 /**
  * Interface for appendable command.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface AppendableCommand {

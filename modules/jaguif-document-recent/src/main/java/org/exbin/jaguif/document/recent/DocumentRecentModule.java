@@ -42,8 +42,6 @@ import org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi;
 
 /**
  * Recent documents module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DocumentRecentModule implements Module {

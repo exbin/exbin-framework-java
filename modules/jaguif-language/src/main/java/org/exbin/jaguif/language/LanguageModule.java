@@ -33,8 +33,6 @@ import org.exbin.jaguif.language.api.LanguageProvider;
 
 /**
  * Language module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class LanguageModule implements LanguageModuleApi {

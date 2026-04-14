@@ -26,8 +26,6 @@ import org.exbin.jaguif.action.api.ActionContextRegistrationProvider;
 
 /**
  * Interface for framework popup module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface MenuPopupModuleApi extends Module {

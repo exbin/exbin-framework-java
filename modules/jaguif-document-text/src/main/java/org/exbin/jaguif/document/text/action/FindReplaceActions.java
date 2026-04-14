@@ -42,8 +42,6 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
  * Find/replace actions.
  * <p>
  * TODO: Drop in favor of exbin-framework-search
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FindReplaceActions {

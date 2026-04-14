@@ -38,8 +38,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Local help action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class HelpLocalAction extends AbstractAction {

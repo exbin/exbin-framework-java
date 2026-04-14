@@ -20,8 +20,6 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Interface for edit item context.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ContextEditItem {

@@ -31,8 +31,6 @@ import org.exbin.jaguif.docking.api.DocumentDocking;
 
 /**
  * New file action.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class NewFileAction extends AbstractAction {

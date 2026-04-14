@@ -31,8 +31,6 @@ import org.exbin.jaguif.statusbar.gui.DefaultStatusBar;
 
 /**
  * Support for status bar module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class StatusBarModule implements StatusBarModuleApi {

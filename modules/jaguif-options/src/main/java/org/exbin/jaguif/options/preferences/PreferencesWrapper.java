@@ -26,8 +26,6 @@ import org.exbin.jaguif.options.api.OptionsStorage;
 
 /**
  * Wrapper for preferences.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class PreferencesWrapper implements OptionsStorage {

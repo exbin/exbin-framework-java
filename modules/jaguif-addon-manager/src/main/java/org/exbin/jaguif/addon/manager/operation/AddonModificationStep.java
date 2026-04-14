@@ -17,8 +17,6 @@ package org.exbin.jaguif.addon.manager.operation;
 
 /**
  * Addon modification step.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum AddonModificationStep {
 

@@ -24,8 +24,6 @@ import org.exbin.jaguif.contribution.api.SubSequenceContribution;
 
 /**
  * Record of sub/child menu contribution.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SubMenuContribution implements SubSequenceContribution {

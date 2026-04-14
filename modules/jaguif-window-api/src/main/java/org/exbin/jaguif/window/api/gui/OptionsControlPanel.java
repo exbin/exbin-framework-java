@@ -25,8 +25,6 @@ import org.exbin.jaguif.window.api.controller.OptionsControlController;
 
 /**
  * Default control panel for options dialogs.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class OptionsControlPanel extends FooterControlPanel implements OptionsControlController.OptionsControlComponent {

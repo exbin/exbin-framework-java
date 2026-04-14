@@ -23,8 +23,6 @@ import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
  * File settings options.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FileOptions implements SettingsOptions {

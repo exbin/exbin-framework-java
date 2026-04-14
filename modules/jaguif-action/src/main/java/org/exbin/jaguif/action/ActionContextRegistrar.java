@@ -24,8 +24,6 @@ import org.exbin.jaguif.action.api.ActionManagement;
 
 /**
  * Default action context registrar.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ActionContextRegistrar implements ActionContextRegistration {

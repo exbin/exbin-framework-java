@@ -20,8 +20,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Interface for dialog parent component.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface DialogParentComponent {
 

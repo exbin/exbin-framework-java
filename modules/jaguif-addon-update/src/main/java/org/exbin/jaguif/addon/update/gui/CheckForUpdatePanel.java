@@ -29,8 +29,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Check for update panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class CheckForUpdatePanel extends javax.swing.JPanel implements HyperlinkListener {

@@ -31,8 +31,6 @@ import org.exbin.jaguif.options.settings.api.SettingsPageContributionRule;
 
 /**
  * Action manager module.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ActionManagerModule implements org.exbin.jaguif.Module {

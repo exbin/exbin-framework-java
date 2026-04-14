@@ -23,8 +23,6 @@ import javax.swing.ImageIcon;
 
 /**
  * Addon item record.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ItemRecord {

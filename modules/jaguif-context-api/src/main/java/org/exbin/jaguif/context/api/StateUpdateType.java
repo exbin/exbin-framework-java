@@ -17,8 +17,6 @@ package org.exbin.jaguif.context.api;
 
 /**
  * Interface for context state update type.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface StateUpdateType {
 }

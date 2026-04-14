@@ -25,8 +25,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * Keymap keytroke table renderer.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class KeyMapTableKeyStrokeRenderer extends DefaultTableCellRenderer {
