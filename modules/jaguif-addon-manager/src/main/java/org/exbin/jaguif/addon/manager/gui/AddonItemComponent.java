@@ -88,7 +88,7 @@ public class AddonItemComponent extends javax.swing.JPanel {
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-        iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/jaguif/addon/manager/resources/icons/puzzle-svgrepo-com-48x48.png"))); // NOI18N
+        iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exbin/jaguif/addon/manager/resources/icons/48px/puzzle.png"))); // NOI18N
 
         nameLabel.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         nameLabel.setText("Addon Name");

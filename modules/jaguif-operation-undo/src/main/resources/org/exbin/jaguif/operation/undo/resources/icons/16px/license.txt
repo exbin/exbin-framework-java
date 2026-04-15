@@ -1,0 +1,9 @@
+edit-redo.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+edit-undo.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain

@@ -33,11 +33,4 @@ public interface TextClipboardController extends ClipboardController, SelectionC
      * @return true if component is editable
      */
     boolean isEditable();
-
-    /**
-     * Sets listener for clipboard actions related updates.
-     *
-     * @param updateListener update listener
-     */
-    void setUpdateListener(ClipboardStateListener updateListener);
 }

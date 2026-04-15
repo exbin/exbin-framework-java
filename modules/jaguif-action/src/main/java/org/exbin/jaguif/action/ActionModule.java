@@ -36,11 +36,13 @@ import org.exbin.jaguif.action.api.ActionType;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.utils.ClipboardUtils;
 import org.exbin.jaguif.utils.UiUtils;
-import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 import org.exbin.jaguif.action.api.ActionManagement;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.action.api.ContextComponent;
+import org.exbin.jaguif.action.api.clipboard.ClipboardController;
+import org.exbin.jaguif.context.api.ActiveContextChangeListener;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
-import org.exbin.jaguif.context.api.ContextChangeRegistration;
+import org.exbin.jaguif.context.api.ActiveContextProvider;
 
 /**
  * Implementation of action module.
@@ -207,11 +209,6 @@ public class ActionModule implements ActionModuleApi {
         return menuItem;
     }
 
-    @Override
-    public void registerClipboardHandler(TextClipboardController clipboardHandler) {
-//        getClipboardActions().setClipboardActionsHandler(clipboardHandler);
-    }
-
     @Nonnull
     @Override
     public ImageIcon getClipboardActionIcon(String actionId) {
@@ -222,25 +219,17 @@ public class ActionModule implements ActionModuleApi {
         }
     }
 
-    /*
-    @Nonnull
     @Override
-    public ClipboardActionsApi createClipboardActions(TextClipboardController clipboardActionsHandler) {
-        ClipboardActions customClipboardActions = new ClipboardActions();
-        customClipboardActions.setup(resourceBundle);
-        customClipboardActions.setClipboardActionsHandler(clipboardActionsHandler);
-        return customClipboardActions;
-    }
-     */
-    /* public void registerClipboardFlavorListener(ContextChangeRegistration registrar) {
+    public void registerClipboardFlavorListener(ActiveContextChangeListener listener, ActiveContextProvider provider) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
-
-            private final ClipboardFlavorState clipboardFlavorState = new ClipboardFlavorState();
 
             @Override
             public void flavorsChanged(FlavorEvent fe) {
-                registrar.updateActionsForComponent(ClipboardFlavorState.class, clipboardFlavorState);
+                ContextComponent contextComponent = provider.getActiveState(ContextComponent.class);
+                if (contextComponent != null) {
+                    listener.notifyStateUpdated(ContextComponent.class, contextComponent, ClipboardController.UpdateType.CLIPBOARD_FLAVOR);
+                }
             }
         });
-    } */
+    }
 }

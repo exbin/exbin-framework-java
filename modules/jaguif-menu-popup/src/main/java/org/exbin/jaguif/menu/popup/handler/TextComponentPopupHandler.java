@@ -20,7 +20,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.JTextComponent;
 import org.exbin.jaguif.utils.ActionUtils;
-import org.exbin.jaguif.action.api.clipboard.ClipboardStateListener;
 import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 
 /**
@@ -88,12 +87,7 @@ public class TextComponentPopupHandler implements TextClipboardController {
     }
 
     @Override
-    public void setUpdateListener(ClipboardStateListener updateListener) {
-        // Ignore
-    }
-
-    @Override
-    public boolean canPaste() {
+    public boolean isValidForPaste() {
         return true;
     }
 

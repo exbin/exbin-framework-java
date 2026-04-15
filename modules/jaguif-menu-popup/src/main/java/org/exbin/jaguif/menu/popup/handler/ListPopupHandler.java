@@ -21,7 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JList;
 import org.exbin.jaguif.utils.ClipboardUtils;
-import org.exbin.jaguif.action.api.clipboard.ClipboardStateListener;
 import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 
 /**
@@ -95,12 +94,7 @@ public class ListPopupHandler implements TextClipboardController {
     }
 
     @Override
-    public void setUpdateListener(ClipboardStateListener updateListener) {
-        // Ignore
-    }
-
-    @Override
-    public boolean canPaste() {
+    public boolean isValidForPaste() {
         return true;
     }
 

@@ -20,19 +20,20 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
+import org.exbin.jaguif.print.api.PrintModuleApi;
+import org.exbin.jaguif.print.contribution.PrintContribution;
 
 /**
  * Print module.
  */
 @ParametersAreNonnullByDefault
-public class PrintModule implements Module {
+public class PrintModule implements PrintModuleApi {
 
     public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(PrintModule.class);
 
@@ -42,6 +43,7 @@ public class PrintModule implements Module {
     }
 
     @Nonnull
+    @Override
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
             resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(PrintModule.class);
@@ -60,7 +62,7 @@ public class PrintModule implements Module {
     public PrintAction createPrintAction() {
         ensureSetup();
         PrintAction printAction = new PrintAction();
-        printAction.setup(resourceBundle);
+        printAction.init(resourceBundle);
         return printAction;
     }
 
@@ -68,7 +70,8 @@ public class PrintModule implements Module {
         createPrintAction();
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.FILE_SUBMENU_ID);
-        SequenceContribution contribution = mgmt.registerMenuItem(createPrintAction());
+        SequenceContribution contribution = new PrintContribution();
+        mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.BOTTOM));
     }
 }

@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultEditorKit;
-import org.exbin.jaguif.action.api.clipboard.ClipboardStateListener;
 import org.exbin.jaguif.document.text.gui.TextPanel;
 import org.exbin.jaguif.utils.ClipboardUtils;
 import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
@@ -88,11 +87,6 @@ public class EditorTextPanelComponent implements ContextComponent, TextPanelComp
     }
 
     @Override
-    public void setUpdateListener(ClipboardStateListener updateListener) {
-        textPanel.setUpdateListener(updateListener);
-    }
-
-    @Override
     public boolean isEditable() {
         return textPanel.getTextArea().isEditable();
     }
@@ -103,7 +97,7 @@ public class EditorTextPanelComponent implements ContextComponent, TextPanelComp
     }
 
     @Override
-    public boolean canPaste() {
+    public boolean isValidForPaste() {
         Clipboard clipboard = ClipboardUtils.getClipboard();
         return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
     }

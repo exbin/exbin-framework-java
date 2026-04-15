@@ -1,0 +1,24 @@
+edit-copy.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+edit-cut.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+edit-delete.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+edit-paste.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+edit-select-all.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain

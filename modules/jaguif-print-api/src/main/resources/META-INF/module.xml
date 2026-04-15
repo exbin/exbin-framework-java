@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.jaguif.print.api.PrintModuleApi</api>
+  <name>Print API Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for printing</description>
+  <dependency>
+  </dependency>
+</module>

@@ -1,0 +1,24 @@
+dialog-no.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+dialog-ok-5.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+update-product.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+upgrade_misc.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+internet-web-browser-7.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various

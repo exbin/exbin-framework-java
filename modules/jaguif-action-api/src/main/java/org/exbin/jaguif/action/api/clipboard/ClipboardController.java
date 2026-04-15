@@ -46,14 +46,13 @@ public interface ClipboardController {
 
     /**
      * Returns whether it is possible to paste current content of the clipboard.
-     * <p>
-     * TODO: Replace with "clipboard contains valid content for paste"
      *
-     * @return true if can perform paste
+     * @return true if paste from clipboard is valid
      */
-    boolean canPaste();
+    boolean isValidForPaste();
 
     public enum UpdateType implements StateUpdateType {
-        CONTENT_STATE
+        CONTENT_STATE,
+        CLIPBOARD_FLAVOR
     }
 }

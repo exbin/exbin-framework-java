@@ -57,7 +57,7 @@
     <Component class="javax.swing.JLabel" name="iconLabel">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/org/exbin/jaguif/addon/manager/resources/icons/puzzle-svgrepo-com-48x48.png"/>
+          <Image iconType="3" name="/org/exbin/jaguif/addon/manager/resources/icons/48px/puzzle.png"/>
         </Property>
       </Properties>
     </Component>

@@ -32,7 +32,7 @@ import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
 @ParametersAreNonnullByDefault
 public class ClipboardActions implements ClipboardActionsApi {
 
-    private ResourceBundle resourceBundle;
+    protected ResourceBundle resourceBundle;
 
     public ClipboardActions() {
     }

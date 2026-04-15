@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.action.ClipboardFlavorState;
 import org.exbin.jaguif.action.api.ActionConsts;
 import org.exbin.jaguif.action.api.ActionContextChange;
 import org.exbin.jaguif.action.api.ActionModuleApi;
@@ -63,11 +62,8 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
         registrar.registerChangeListener(ContextComponent.class, (instance) -> {
             updateByContext(instance);
         });
-        registrar.registerChangeListener(ClipboardFlavorState.class, instance -> {
-            updateByContext(instance);
-        });
         registrar.registerStateUpdateListener(ContextComponent.class, (instance, updateType) -> {
-            if (ClipboardController.UpdateType.CONTENT_STATE.equals(updateType)) {
+            if (ClipboardController.UpdateType.CONTENT_STATE.equals(updateType) || ClipboardController.UpdateType.CLIPBOARD_FLAVOR.equals(updateType)) {
                 updateByContext(instance);
             }
         });
@@ -79,6 +75,6 @@ public class PasteAction extends AbstractAction implements ActionContextChange {
 
     public void updateByContext(Object context) {
         clipboardSupport = context instanceof ClipboardController ? (ClipboardController) context : null;
-        setEnabled(clipboardSupport != null && clipboardSupport.canPaste());
+        setEnabled(clipboardSupport != null && clipboardSupport.isValidForPaste());
     }
 }

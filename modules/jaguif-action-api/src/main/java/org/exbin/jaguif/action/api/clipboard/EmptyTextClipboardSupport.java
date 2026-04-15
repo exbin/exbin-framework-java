@@ -65,16 +65,12 @@ public class EmptyTextClipboardSupport implements TextClipboardController {
     }
 
     @Override
-    public boolean canPaste() {
+    public boolean isValidForPaste() {
         return false;
     }
 
     @Override
     public boolean canDelete() {
         return false;
-    }
-
-    @Override
-    public void setUpdateListener(ClipboardStateListener updateListener) {
     }
 }

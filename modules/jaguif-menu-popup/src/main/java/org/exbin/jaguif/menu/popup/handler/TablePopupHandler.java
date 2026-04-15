@@ -20,7 +20,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import org.exbin.jaguif.utils.ClipboardUtils;
-import org.exbin.jaguif.action.api.clipboard.ClipboardStateListener;
 import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 
 /**
@@ -116,12 +115,7 @@ public class TablePopupHandler implements TextClipboardController {
     }
 
     @Override
-    public void setUpdateListener(ClipboardStateListener updateListener) {
-        // Ignore
-    }
-
-    @Override
-    public boolean canPaste() {
+    public boolean isValidForPaste() {
         return true;
     }
 

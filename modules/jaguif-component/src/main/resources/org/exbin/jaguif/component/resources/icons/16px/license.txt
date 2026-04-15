@@ -1,0 +1,34 @@
+edit-add-2.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+edit-delete-6.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+go-bottom-3.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+go-down-4.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+go-top-3.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+go-up-4.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+pencil.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various

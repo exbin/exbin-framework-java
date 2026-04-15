@@ -87,11 +87,6 @@ public class SyntaxTextPanelComponent implements ContextComponent, TextClipboard
     }
 
     @Override
-    public void setUpdateListener(ClipboardStateListener updateListener) {
-        textPanel.setUpdateListener(updateListener);
-    }
-
-    @Override
     public boolean isEditable() {
         return textPanel.getTextArea().isEditable();
     }
@@ -102,7 +97,7 @@ public class SyntaxTextPanelComponent implements ContextComponent, TextClipboard
     }
 
     @Override
-    public boolean canPaste() {
+    public boolean isValidForPaste() {
         Clipboard clipboard = ClipboardUtils.getClipboard();
         return clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor);
     }

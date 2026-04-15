@@ -46,7 +46,6 @@ import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.document.text.service.TextSearchService;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.text.encoding.EncodingsManager;
-import org.exbin.jaguif.action.api.clipboard.ClipboardStateListener;
 
 /**
  * Text editor panel.
@@ -65,7 +64,6 @@ public class TextPanel extends javax.swing.JPanel {
     private Color[] defaultColors;
     private CharsetChangeListener charsetChangeListener = null;
     private TextStatusPanel textStatus = null;
-    private ClipboardStateListener clipboardActionsUpdateListener;
 
     public TextPanel() {
         initComponents();
@@ -103,12 +101,9 @@ public class TextPanel extends javax.swing.JPanel {
         });
 
         textArea.getDocument().addUndoableEditListener(undoManagement::undoableEditHappened);
-        textArea.addCaretListener((e) -> {
-            // TODO detect selection changes only
-            if (clipboardActionsUpdateListener != null) {
-                clipboardActionsUpdateListener.stateChanged();
-            }
-        });
+        // TODO detect selection changes only
+//        textArea.addCaretListener((e) -> {
+//        });
     }
 
     public boolean changeLineWrap() {
@@ -360,10 +355,6 @@ public class TextPanel extends javax.swing.JPanel {
         setCharsetChangeListener(() -> {
             textStatus.setEncoding(getCharset().name());
         });
-    }
-
-    public void setUpdateListener(ClipboardStateListener updateListener) {
-        clipboardActionsUpdateListener = updateListener;
     }
 
     public void addTextAreaFocusListener(FocusListener focusListener) {

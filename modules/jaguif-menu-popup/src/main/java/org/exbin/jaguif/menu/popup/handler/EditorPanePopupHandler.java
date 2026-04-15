@@ -51,7 +51,6 @@ import org.exbin.jaguif.menu.popup.PositionLinkActionsHandler;
 import org.exbin.jaguif.utils.ActionUtils;
 import org.exbin.jaguif.utils.DesktopUtils;
 import org.exbin.jaguif.utils.ClipboardUtils;
-import org.exbin.jaguif.action.api.clipboard.ClipboardStateListener;
 import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
 
 /**
@@ -116,12 +115,7 @@ public class EditorPanePopupHandler implements TextClipboardController, LinkActi
     }
 
     @Override
-    public void setUpdateListener(ClipboardStateListener updateListener) {
-        // Ignore
-    }
-
-    @Override
-    public boolean canPaste() {
+    public boolean isValidForPaste() {
         return isEditable();
     }
 

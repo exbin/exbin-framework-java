@@ -63,7 +63,6 @@ public class SyntaxTextPanel extends javax.swing.JPanel {
     private Color[] defaultColors;
     private CharsetChangeListener charsetChangeListener = null;
 //    private TextStatusPanel textStatus = null;
-    private ClipboardStateListener clipboardActionsUpdateListener;
 
     public SyntaxTextPanel() {
         initComponents();
@@ -100,13 +99,10 @@ public class SyntaxTextPanel extends javax.swing.JPanel {
             }
         });
 
-        textArea.getDocument().addUndoableEditListener(undoManagement::undoableEditHappened);
-        textArea.addCaretListener((e) -> {
-            // TODO detect selection changes only
-            if (clipboardActionsUpdateListener != null) {
-                clipboardActionsUpdateListener.stateChanged();
-            }
-        });
+        // TODO Selection listener
+//        textArea.getDocument().addUndoableEditListener(undoManagement::undoableEditHappened);
+//        textArea.addCaretListener((e) -> {
+//        });
     }
 
     public boolean changeLineWrap() {
@@ -330,10 +326,6 @@ public class SyntaxTextPanel extends javax.swing.JPanel {
             textStatus.setEncoding(getCharset().name());
         });
     } */
-
-    public void setUpdateListener(ClipboardStateListener updateListener) {
-        clipboardActionsUpdateListener = updateListener;
-    }
 
     public void addTextAreaFocusListener(FocusListener focusListener) {
         textArea.addFocusListener(focusListener);

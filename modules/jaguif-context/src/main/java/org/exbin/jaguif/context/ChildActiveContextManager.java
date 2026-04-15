@@ -49,7 +49,7 @@ public class ChildActiveContextManager implements ActiveContextManagement {
                     return;
                 }
 
-                notifyStateChanged(stateClass, activeState);
+                ChildActiveContextManager.this.notifyStateChanged(stateClass, activeState);
             }
 
             @Override
@@ -58,7 +58,7 @@ public class ChildActiveContextManager implements ActiveContextManagement {
                     return;
                 }
 
-                notifyStateUpdated(stateClass, activeState, updateType);
+                ChildActiveContextManager.this.notifyStateUpdated(stateClass, activeState, updateType);
             }
         });
     }

@@ -1,0 +1,19 @@
+document-new.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+document-open.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+document-save-as.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+document-save.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain

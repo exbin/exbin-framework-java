@@ -27,8 +27,9 @@ import javax.swing.JMenuItem;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
-import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
+import org.exbin.jaguif.context.api.ActiveContextChangeListener;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
+import org.exbin.jaguif.context.api.ActiveContextProvider;
 
 /**
  * Interface for action support module.
@@ -122,7 +123,8 @@ public interface ActionModuleApi extends Module {
     /**
      * Registers clipboard handler for main clipboard actions.
      *
-     * @param clipboardHandler clipboard handler
+     * @param listener context change listener
+     * @param provider context status provider
      */
-    void registerClipboardHandler(TextClipboardController clipboardHandler);
+    void registerClipboardFlavorListener(ActiveContextChangeListener listener, ActiveContextProvider provider);
 }

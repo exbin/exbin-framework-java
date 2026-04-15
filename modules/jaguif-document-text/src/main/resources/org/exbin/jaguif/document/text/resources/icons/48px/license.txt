@@ -1,0 +1,24 @@
+colorize-2.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+document-properties-2.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+edit-find-5.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+edit-select-all-4.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various
+
+format-indent-more-4.png
+  Open Icon Library
+  link: openiconlibrary.sourceforge.net
+  license: various

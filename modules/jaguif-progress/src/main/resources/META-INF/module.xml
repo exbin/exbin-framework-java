@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-  <api>org.exbin.jaguif.progress.ProgressModule</api>
+  <id>org.exbin.jaguif.progress.ProgressModule</id>
   <name>Progress Support Module</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>

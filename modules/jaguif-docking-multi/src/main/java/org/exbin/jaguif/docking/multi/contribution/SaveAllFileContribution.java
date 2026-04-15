@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
-import org.exbin.jaguif.docking.DockingModule;
+import org.exbin.jaguif.docking.multi.DockingMultiModule;
 import org.exbin.jaguif.docking.multi.action.SaveAllFileAction;
 
 /**
@@ -33,7 +33,7 @@ public class SaveAllFileContribution implements ActionSequenceContribution {
     @Override
     public Action createAction() {
         SaveAllFileAction action = new SaveAllFileAction();
-        DockingModule dockingModule = App.getModule(DockingModule.class);
+        DockingMultiModule dockingModule = App.getModule(DockingMultiModule.class);
         action.init(dockingModule.getResourceBundle());
         return action;
     }

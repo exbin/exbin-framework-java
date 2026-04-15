@@ -73,11 +73,12 @@ public class SyntaxTextDocument implements ContextDocument, ComponentDocument, F
         RTextScrollPane sp = new RTextScrollPane(textArea);        
 
         textPanelComponent = new SyntaxTextPanelComponent(textPanel);
-        textPanel.setUpdateListener(() -> {
-            if (contextManager != null) {
-                contextManager.changeActiveState(ContextComponent.class, textPanelComponent);
-            }
-        });
+        // TODO
+//        textPanel.setUpdateListener(() -> {
+//            if (contextManager != null) {
+//                contextManager.changeActiveState(ContextComponent.class, textPanelComponent);
+//            }
+//        });
     }
 
     public void registerUndoHandler() {

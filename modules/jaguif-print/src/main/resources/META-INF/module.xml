@@ -4,7 +4,7 @@
   <name>Print Module</name>
   <provider>ExBin Project</provider>
   <homepage>https://exbin.org</homepage>
-  <description>Module supporting printing</description>
+  <description>Printing support</description>
   <dependency>
     <module id="org.exbin.jaguif.ui.api.UiModuleApi" />
     <module id="org.exbin.jaguif.frame.api.FrameModuleApi" />

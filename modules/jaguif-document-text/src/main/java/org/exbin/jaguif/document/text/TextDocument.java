@@ -66,11 +66,6 @@ public class TextDocument implements NamedDocument, ContextDocument, ComponentDo
 
     private void init() {
         textPanelComponent = new EditorTextPanelComponent(textPanel);
-        textPanel.setUpdateListener(() -> {
-            if (contextManager != null) {
-                contextManager.changeActiveState(ContextComponent.class, textPanelComponent);
-            }
-        });
     }
 
     public void registerUndoHandler() {

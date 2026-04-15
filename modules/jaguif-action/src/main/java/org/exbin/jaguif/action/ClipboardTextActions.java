@@ -46,8 +46,8 @@ public class ClipboardTextActions implements ClipboardActionsApi {
     public static final String DELETE_ACTION = "delete";
     public static final String SELECT_ALL_ACTION = "selectAll";
 
-    private ResourceBundle resourceBundle;
-    private ActionMap actionMap;
+    protected ResourceBundle resourceBundle;
+    protected ActionMap actionMap;
 
     public ClipboardTextActions() {
     }
