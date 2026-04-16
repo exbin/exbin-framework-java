@@ -26,12 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -42,7 +37,6 @@ import javax.swing.UIManager;
 public class UiUtils {
 
     private static final int BUTTON_CLICK_TIME = 150;
-    private static MenuBuilder menuBuilder = null;
 
     private UiUtils() {
     }
@@ -153,111 +147,6 @@ public class UiUtils {
     }
 
     /**
-     * Creates new instance of menu.
-     *
-     * @return new instance of menu
-     */
-    @Nonnull
-    public static JMenu createMenu() {
-        if (menuBuilder != null) {
-            return menuBuilder.buildMenu();
-        }
-
-        return new JMenu();
-    }
-
-    /**
-     * Creates new instance of popup menu.
-     *
-     * @return new instance of popup menu
-     */
-    @Nonnull
-    public static JPopupMenu createPopupMenu() {
-        if (menuBuilder != null) {
-            return menuBuilder.buildPopupMenu();
-        }
-
-        return new JPopupMenu();
-    }
-
-    /**
-     * Creates new instance of popup menu.
-     *
-     * @param showMethod show method
-     * @return new instance of popup menu
-     */
-    @Nonnull
-    public static JPopupMenu createPopupMenu(MenuShowMethod showMethod) {
-        return new JPopupMenu() {
-            @Override
-            public void show(@Nullable Component invoker, int x, int y) {
-                showMethod.show(invoker, x, y);
-            }
-        };
-    }
-
-    /**
-     * Creates new instance of menu item.
-     *
-     * @return new instance of menu item
-     */
-    @Nonnull
-    public static JMenuItem createMenuItem() {
-        if (menuBuilder != null) {
-            return menuBuilder.buildMenuItem();
-        }
-
-        return new JMenuItem();
-    }
-
-    /**
-     * Creates new instance of check box menu item.
-     *
-     * @return new instance of check box menu item
-     */
-    @Nonnull
-    public static JCheckBoxMenuItem createCheckBoxMenuItem() {
-        if (menuBuilder != null) {
-            return menuBuilder.buildCheckBoxMenuItem();
-        }
-
-        return new JCheckBoxMenuItem();
-    }
-
-    /**
-     * Creates new instance of radio button menu item.
-     *
-     * @return new instance of radio button menu item
-     */
-    @Nonnull
-    public static JRadioButtonMenuItem createRadioButtonMenuItem() {
-        if (menuBuilder != null) {
-            return menuBuilder.buildRadioButtonMenuItem();
-        }
-
-        return new JRadioButtonMenuItem();
-    }
-
-    /**
-     * Returns current popup menu builder.
-     *
-     * @return popup menu builder
-     */
-    @Nullable
-    public static MenuBuilder getMenuBuilder() {
-        return menuBuilder;
-    }
-
-    /**
-     * Sets popup menu builder.
-     *
-     * @param menuBuilder popup menu builder
-     */
-    public static void setMenuBuilder(@Nullable MenuBuilder menuBuilder) {
-        UiUtils.menuBuilder = menuBuilder;
-    }
-
-    /**
      * Finds frame component for given component.
      *
      * @param component instantiated component
@@ -294,29 +183,6 @@ public class UiUtils {
         } catch (InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(UiUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public interface MenuShowMethod {
-
-        void show(@Nullable Component invoker, int x, int y);
-    }
-
-    public interface MenuBuilder {
-
-        @Nonnull
-        JMenu buildMenu();
-
-        @Nonnull
-        JPopupMenu buildPopupMenu();
-
-        @Nonnull
-        JMenuItem buildMenuItem();
-
-        @Nonnull
-        JCheckBoxMenuItem buildCheckBoxMenuItem();
-
-        @Nonnull
-        JRadioButtonMenuItem buildRadioButtonMenuItem();
     }
 
     public interface InstanceCreator<U> {

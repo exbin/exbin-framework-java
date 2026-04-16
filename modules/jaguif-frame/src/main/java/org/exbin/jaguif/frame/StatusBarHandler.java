@@ -18,7 +18,7 @@ package org.exbin.jaguif.frame;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 
 /**
  * Status bar handler.
@@ -28,7 +28,7 @@ public class StatusBarHandler {
 
     private final ApplicationFrame frame;
 
-    private final Map<String, JPanel> statusBars = new HashMap<>();
+    private final Map<String, JComponent> statusBars = new HashMap<>();
 
     // Map of status bar to module connections
     private final Map<String, String> statusBarModules = new HashMap<>();
@@ -37,13 +37,13 @@ public class StatusBarHandler {
         this.frame = frame;
     }
 
-    public void registerStatusBar(String moduleId, String statusBarId, JPanel panel) {
-        statusBars.put(statusBarId, panel);
+    public void registerStatusBar(String moduleId, String statusBarId, JComponent component) {
+        statusBars.put(statusBarId, component);
         statusBarModules.put(moduleId, statusBarId);
     }
 
     public void switchStatusBar(String statusBarId) {
-        JPanel panel = statusBars.get(statusBarId);
-        frame.switchStatusBar(panel);
+        JComponent component = statusBars.get(statusBarId);
+        frame.switchStatusBar(component);
     }
 }

@@ -34,11 +34,11 @@ import javax.swing.JRadioButtonMenuItem;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionConsts;
 import org.exbin.jaguif.action.api.ActionContextChange;
-import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.text.encoding.action.ManageEncodingsAction;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
-import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
+import org.exbin.jaguif.menu.api.MenuBuilder;
+import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
  * Encodings manager.
@@ -55,7 +55,7 @@ public class EncodingsManager {
     private ActionListener encodingActionListener;
     private ButtonGroup encodingButtonGroup;
     private javax.swing.JMenu toolsEncodingMenu;
-    private javax.swing.JRadioButtonMenuItem utfEncodingRadioButtonMenuItem;
+    private javax.swing.JMenuItem utfEncodingRadioButtonMenuItem;
     private ActionListener utfEncodingActionListener;
 
     private ManageEncodingsAction manageEncodingsAction;
@@ -67,10 +67,13 @@ public class EncodingsManager {
     public void init() {
         encodingButtonGroup = new ButtonGroup();
 
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuBuilder menuBuilder = menuModule.getMenuBuilder();
+        
         encodingActionListener = (ActionEvent e) -> {
             encodingState.setEncoding(((JRadioButtonMenuItem) e.getSource()).getText());
         };
-        utfEncodingRadioButtonMenuItem = UiUtils.createRadioButtonMenuItem();
+        utfEncodingRadioButtonMenuItem = menuBuilder.createRadioButtonMenuItem();
         utfEncodingRadioButtonMenuItem.setSelected(true);
         utfEncodingRadioButtonMenuItem.setText(resourceBundle.getString("defaultEncoding.text"));
         utfEncodingRadioButtonMenuItem.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{ENCODING_UTF8}));
@@ -81,8 +84,7 @@ public class EncodingsManager {
         manageEncodingsAction = new ManageEncodingsAction();
         manageEncodingsAction.init(resourceBundle);
 
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        toolsEncodingMenu = UiUtils.createMenu();
+        toolsEncodingMenu = menuBuilder.createMenu();
         Action toolsEncodingAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -105,7 +107,7 @@ public class EncodingsManager {
         });
         toolsEncodingMenu.setAction(toolsEncodingAction);
         toolsEncodingMenu.addSeparator();
-        toolsEncodingMenu.add(actionModule.actionToMenuItem(manageEncodingsAction));
+        toolsEncodingMenu.add(menuModule.actionToMenuItem(manageEncodingsAction));
         toolsEncodingMenu.setText(resourceBundle.getString("toolsEncodingMenu.text"));
         toolsEncodingMenu.setToolTipText(resourceBundle.getString("toolsEncodingMenu.shortDescription"));
         EncodingsManager.this.rebuildEncodings();
@@ -127,6 +129,8 @@ public class EncodingsManager {
             toolsEncodingMenu.remove(i);
         }
 
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuBuilder menuBuilder = menuModule.getMenuBuilder();
         List<String> encodings = listEncodingState == null ? null : listEncodingState.getEncodings();
         if (encodings == null || encodings.isEmpty()) {
             toolsEncodingMenu.add(utfEncodingRadioButtonMenuItem, 0);
@@ -135,7 +139,7 @@ public class EncodingsManager {
             int selectedEncodingIndex = encodings.indexOf(encodingState.getEncoding());
             for (int index = 0; index < encodings.size(); index++) {
                 String encoding = encodings.get(index);
-                JRadioButtonMenuItem item = UiUtils.createRadioButtonMenuItem();
+                JMenuItem item = menuBuilder.createRadioButtonMenuItem();
                 item.setText(encoding);
                 item.addActionListener(encodingActionListener);
                 item.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{encoding}));
@@ -199,13 +203,15 @@ public class EncodingsManager {
     }
 
     public void popupEncodingsMenu(MouseEvent mouseEvent) {
-        JPopupMenu popupMenu = UiUtils.createPopupMenu();
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuBuilder menuBuilder = menuModule.getMenuBuilder();
+        JPopupMenu popupMenu = menuBuilder.createPopupMenu();
 
         String selectedEncoding = encodingState != null ? encodingState.getEncoding() : "";
         List<String> encodings = listEncodingState == null ? null : listEncodingState.getEncodings();
         if (encodings == null || encodings.isEmpty()) {
             if (encodingState != null) {
-                JRadioButtonMenuItem utfEncoding = UiUtils.createRadioButtonMenuItem();
+                JMenuItem utfEncoding = menuBuilder.createRadioButtonMenuItem();
                 utfEncoding.setText(resourceBundle.getString("defaultEncoding.text"));
                 utfEncoding.setSelected(ENCODING_UTF8.equals(selectedEncoding));
                 utfEncoding.setToolTipText(MessageFormat.format(resourceBundle.getString("switchEncoding.toolTipText"), new Object[]{ENCODING_UTF8}));
@@ -216,7 +222,7 @@ public class EncodingsManager {
             int selectedEncodingIndex = encodings.indexOf(selectedEncoding);
             for (int index = 0; index < encodings.size(); index++) {
                 String encoding = encodings.get(index);
-                JRadioButtonMenuItem item = UiUtils.createRadioButtonMenuItem();
+                JMenuItem item = menuBuilder.createRadioButtonMenuItem();
                 item.setText(encoding);
                 item.setSelected(index == selectedEncodingIndex);
                 item.addActionListener(encodingActionListener);
@@ -225,9 +231,8 @@ public class EncodingsManager {
             }
         }
 
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         popupMenu.addSeparator();
-        popupMenu.add(actionModule.actionToMenuItem(manageEncodingsAction));
+        popupMenu.add(menuModule.actionToMenuItem(manageEncodingsAction));
 
         popupMenu.show((Component) mouseEvent.getSource(), mouseEvent.getX(), mouseEvent.getY());
     }

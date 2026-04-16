@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.ui.api;
+package org.exbin.jaguif.menu.api;
 
-import javax.annotation.Nonnull;
-import javax.swing.JComponent;
+import java.awt.Component;
+import javax.annotation.Nullable;
 
 /**
- * Interface for view.
+ * Menu show method.
  */
-public interface View {
+public interface MenuShowMethod {
 
     /**
-     * Returns view component.
+     * Method to show popup menu.
      *
-     * @return component
+     * @param invoker invoker
+     * @param x x coordinate
+     * @param y y coordinate
      */
-    @Nonnull
-    JComponent getComponent();
+    void show(@Nullable Component invoker, int x, int y);
 }

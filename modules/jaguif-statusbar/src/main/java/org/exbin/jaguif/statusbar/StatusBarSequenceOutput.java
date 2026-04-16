@@ -15,13 +15,13 @@
  */
 package org.exbin.jaguif.statusbar;
 
-import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.statusbar.api.ComponentStatusBarContribution;
 import org.exbin.jaguif.statusbar.api.StatusBar;
 import org.exbin.jaguif.statusbar.api.StatusBarComponent;
@@ -34,6 +34,7 @@ public class StatusBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final StatusBar statusBar;
     protected final ContextRegistration contextRegistration;
+    protected final Map<SequenceContribution, StatusBarComponent> statusBarItems = new HashMap<>();
 
     public StatusBarSequenceOutput(StatusBar statusBar, ContextRegistration contextRegistration) {
         this.statusBar = statusBar;
@@ -42,21 +43,27 @@ public class StatusBarSequenceOutput implements ContributionSequenceOutput {
 
     @Override
     public boolean initItem(ItemSequenceContribution itemContribution) {
-        // StatusBarComponent statusBarComponent = ((ComponentStatusBarContribution) itemContribution).createComponent();
-        // TODO ((ComponentStatusBarContribution) itemContribution).setComponent(StatusBarSequenceOutput.createStatusBarComponent(statusBarComponent));
+        if (itemContribution instanceof ComponentStatusBarContribution) {
+            StatusBarComponent statusBarComponent = ((ComponentStatusBarContribution) itemContribution).createComponent();
+            statusBarItems.put(itemContribution, statusBarComponent);
+        }
         return true;
     }
 
     @Override
     public void add(ItemSequenceContribution itemContribution) {
-        StatusBarComponent statusBarComponent = ((ComponentStatusBarContribution) itemContribution).createComponent();
+//        if (itemContribution instanceof ComponentStatusBarContribution) {
+//            
+//        }
+
+        StatusBarComponent statusBarComponent = statusBarItems.get(itemContribution);
         statusBar.addItem(statusBarComponent.getComponent());
         StatusBarSequenceOutput.finishStatusBarItem(statusBarComponent, contextRegistration);
     }
 
     @Override
     public void addSeparator() {
-        // TODO statusBar.addSeparator();
+        statusBar.addSeparator();
     }
 
     @Override
@@ -64,27 +71,7 @@ public class StatusBarSequenceOutput implements ContributionSequenceOutput {
         return statusBar.getItemsCount() == 0;
     }
 
-    @Nonnull
-    protected static JComponent createStatusBarComponent(StatusBarComponent statusBarComponent) {
-        JComponent statusBarItem = createDefaultStatusBarItem(statusBarComponent);
-        return statusBarItem;
-    }
-
-    @Nonnull
-    protected static JComponent createDefaultStatusBarItem(StatusBarComponent statusBarComponent) {
-        /* JButton button = new JButton(statusBarComponent);
-        button.setFocusable(false);
-        button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        button.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        return button; */
-        return new JLabel("TEST");
-    }
-
     protected static void finishStatusBarItem(StatusBarComponent statusBarComponent, ContextRegistration contextRegistration) {
-        if (statusBarComponent == null) {
-            return;
-        }
-
-        // TODO contextRegistration.registerActionContext(statusBarComponent);
+        contextRegistration.registerItemContext(statusBarComponent);
     }
 }

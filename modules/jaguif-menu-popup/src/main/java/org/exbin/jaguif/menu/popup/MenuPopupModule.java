@@ -31,7 +31,6 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.jaguif.utils.ClipboardUtils;
 import org.exbin.jaguif.utils.DesktopUtils;
-import org.exbin.jaguif.utils.UiUtils;
 
 /**
  * Implementation of framework popup module.
@@ -90,7 +89,8 @@ public class MenuPopupModule implements MenuPopupModuleApi {
     @Nonnull
     @Override
     public JPopupMenu createLinkPopupMenu(String targetURL) {
-        JPopupMenu popupMenu = UiUtils.createPopupMenu();
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        JPopupMenu popupMenu = menuModule.getMenuBuilder().createPopupMenu();
         DefaultPopupMenu.getInstance().appendLinkMenu(popupMenu, new LinkActionsHandler() {
             @Override
             public void performCopyLink() {
@@ -128,8 +128,8 @@ public class MenuPopupModule implements MenuPopupModuleApi {
                     clickedY += invoker.getParent().getY();
                 }
 
-                JPopupMenu popupMenu = UiUtils.createPopupMenu();
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+                JPopupMenu popupMenu = menuModule.getMenuBuilder().createPopupMenu();
                 menuModule.buildMenu(popupMenu, popupMenuId, actionContextRegistrar.getRegistration());
                 popupMenu.show(invoker, clickedX, clickedY);
             }

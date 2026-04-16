@@ -26,16 +26,15 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionConsts;
-import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SubSequenceContribution;
 import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.jaguif.menu.api.ActionMenuCreation;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
-import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
  * Menu sequence output.
@@ -73,7 +72,8 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
                 }
             }
 
-            JMenu subMenu = UiUtils.createMenu();
+            MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+            JMenu subMenu = menuModule.getMenuBuilder().createMenu();
             subMenu.setAction(action);
             ((SubMenuContribution) contribution).setSubMenu(subMenu);
 
@@ -169,8 +169,8 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
 
     @Nonnull
     public static JMenuItem createMenuItem(Action action, Map<String, ButtonGroup> buttonGroups) {
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        JMenuItem menuItem = actionModule.actionToMenuItem(action, buttonGroups);
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        JMenuItem menuItem = menuModule.actionToMenuItem(action, buttonGroups);
         return menuItem;
     }
 

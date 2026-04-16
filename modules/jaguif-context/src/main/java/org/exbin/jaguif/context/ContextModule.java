@@ -78,6 +78,12 @@ public class ContextModule implements ContextModuleApi {
 
     @Nonnull
     @Override
+    public ContextRegistration createContextRegistrator(ActiveContextManagement contextManager) {
+        return new ContextRegistrar(contextManager);
+    }
+
+    @Nonnull
+    @Override
     public ActiveContextManagement createChildContextManager(ActiveContextManagement parentContextManager) {
         return new ChildActiveContextManager(parentContextManager);
     }

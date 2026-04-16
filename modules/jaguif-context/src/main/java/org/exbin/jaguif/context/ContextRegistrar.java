@@ -56,12 +56,14 @@ public class ContextRegistrar implements ContextRegistration, ContextChangeRegis
         contextChange.register(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void finish() {
-        Collection<Class<?>> stateClasses = contextManagement.getStateClasses();
-        for (ContextChangeListener<?> listener : contextChangeListeners.values()) {
-            for (Class<?> stateClass : stateClasses) {
-                // TODO listener.stateChanged(contextManagement.getActiveState(stateClass));
+        for (Class<?> stateClass : contextManagement.getStateClasses()) {
+            Object instance = contextManagement.getActiveState(stateClass);
+            ContextChangeListener listener = contextChangeListeners.get(stateClass);
+            if (listener != null) {
+                listener.stateChanged(instance);
             }
         }
     }

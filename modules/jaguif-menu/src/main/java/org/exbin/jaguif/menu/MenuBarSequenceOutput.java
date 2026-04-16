@@ -24,14 +24,15 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SubSequenceContribution;
 import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.jaguif.menu.api.ActionMenuContribution;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
-import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
  * Menu bar sequence output.
@@ -55,7 +56,8 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
         if (contribution instanceof SubMenuContribution) {
             Action action = ((SubMenuContribution) contribution).getAction();
 
-            JMenu subMenu = UiUtils.createMenu();
+            MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+            JMenu subMenu = menuModule.getMenuBuilder().createMenu();
             subMenu.setAction(action);
             ((SubMenuContribution) contribution).setSubMenu(subMenu);
             return true;

@@ -27,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
@@ -54,7 +54,7 @@ import org.exbin.jaguif.frame.api.ComponentFrame;
 public class ApplicationFrame extends javax.swing.JFrame implements ComponentFrame, WindowHeaderPanel.WindowHeaderDecorationProvider {
 
     private FrameClosingHandler exitHandler;
-    private JPanel currentStatusBarPanel = null;
+    private JComponent currentStatusBarComponent = null;
     private Component mainComponent;
     private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
@@ -305,17 +305,17 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
         setVisible(true);
     }
 
-    public void switchStatusBar(@Nullable JPanel panel) {
-        if (currentStatusBarPanel != null) {
-            statusPanel.remove(currentStatusBarPanel);
+    public void switchStatusBar(@Nullable JComponent component) {
+        if (currentStatusBarComponent != null) {
+            statusPanel.remove(currentStatusBarComponent);
         }
 
-        if (panel != null) {
-            statusPanel.add(panel);
+        if (component != null) {
+            statusPanel.add(component);
         }
         statusPanel.invalidate();
 
-        currentStatusBarPanel = panel;
+        currentStatusBarComponent = component;
     }
 
     @Override

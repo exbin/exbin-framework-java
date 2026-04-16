@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.utils.ComponentProvider;
@@ -129,9 +129,9 @@ public interface FrameModuleApi extends Module {
      *
      * @param moduleId module id
      * @param statusBarId statusbar id
-     * @param panel panel
+     * @param component status bar component
      */
-    void registerStatusBar(String moduleId, String statusBarId, JPanel panel);
+    void registerStatusBar(String moduleId, String statusBarId, JComponent component);
 
     /**
      * Switches to status bar with specific ID.

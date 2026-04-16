@@ -63,7 +63,7 @@ import org.exbin.jaguif.document.text.settings.TextAppearanceSettingsComponent;
 import org.exbin.jaguif.document.text.settings.TextColorOptions;
 import org.exbin.jaguif.document.text.settings.TextColorSettingsApplier;
 import org.exbin.jaguif.document.text.settings.TextColorSettingsComponent;
-import org.exbin.jaguif.utils.UiUtils;
+import org.exbin.jaguif.menu.api.MenuBuilder;
 import org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.jaguif.options.settings.api.OptionsSettingsManagement;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
@@ -400,9 +400,10 @@ public class DocumentTextModule implements Module {
         JPopupMenu popupMenu = new JPopupMenu() {
             @Override
             public void show(Component invoker, int x, int y) {
-                JPopupMenu popupMenu = UiUtils.createPopupMenu();
-                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+                MenuBuilder menuBuilder = menuModule.getMenuBuilder();
+                JPopupMenu popupMenu = menuBuilder.createPopupMenu();
+                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
                 ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameModule.getFrameHandler().getActionManager());
                 menuModule.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, actionContextRegistrar);

@@ -57,8 +57,9 @@ import org.exbin.jaguif.menu.popup.handler.TextComponentPopupHandler;
 import org.exbin.jaguif.utils.ActionUtils;
 import org.exbin.jaguif.menu.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
-import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.action.api.clipboard.TextClipboardController;
+import org.exbin.jaguif.menu.api.MenuBuilder;
+import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
  * Utilities for default menu generation.
@@ -625,13 +626,15 @@ public class DefaultPopupMenu {
     protected void showPopupMenu(Component component, Point point, TextClipboardController handler) {
         boolean editable = handler.isEditable();
 
-        JPopupMenu popupMenu = UiUtils.createPopupMenu();
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuBuilder menuBuilder = menuModule.getMenuBuilder();
+        JPopupMenu popupMenu = menuBuilder.createPopupMenu();
         popupMenu.setName("defaultPopupMenu");
 
         boolean hasExtra = false;
         if (handler instanceof TextActionsHandler) {
             if (copyTextAction.isEnabled()) {
-                JMenuItem copyTextMenuItem = UiUtils.createMenuItem();
+                JMenuItem copyTextMenuItem = menuBuilder.createMenuItem();
                 copyTextMenuItem.setAction(copyTextAction);
                 copyTextMenuItem.setName("basicCopyTextMenuItem");
                 popupMenu.add(copyTextMenuItem);
@@ -641,7 +644,7 @@ public class DefaultPopupMenu {
 
         if (handler instanceof ImageActionsHandler) {
             if (copyImageAction.isEnabled()) {
-                JMenuItem copyImageMenuItem = UiUtils.createMenuItem();
+                JMenuItem copyImageMenuItem = menuBuilder.createMenuItem();
                 copyImageMenuItem.setAction(copyImageAction);
                 copyImageMenuItem.setName("basicCopyImageMenuItem");
                 popupMenu.add(copyImageMenuItem);
@@ -651,7 +654,7 @@ public class DefaultPopupMenu {
 
         if (handler instanceof LinkActionsHandler) {
             if (openLinkAction.isEnabled()) {
-                JMenuItem openLinkMenuItem = UiUtils.createMenuItem();
+                JMenuItem openLinkMenuItem = menuBuilder.createMenuItem();
                 openLinkMenuItem.setAction(openLinkAction);
                 openLinkMenuItem.setName("basicOpenLinkMenuItem");
                 popupMenu.add(openLinkMenuItem);
@@ -659,7 +662,7 @@ public class DefaultPopupMenu {
             }
 
             if (copyLinkAction.isEnabled()) {
-                JMenuItem copyLinkMenuItem = UiUtils.createMenuItem();
+                JMenuItem copyLinkMenuItem = menuBuilder.createMenuItem();
                 copyLinkMenuItem.setAction(copyLinkAction);
                 copyLinkMenuItem.setName("basicCopyLinkMenuItem");
                 popupMenu.add(copyLinkMenuItem);

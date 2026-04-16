@@ -129,6 +129,21 @@ public interface MenuModuleApi extends Module {
     void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextRegistration actionContextRegistration);
 
     /**
+     * Returns current popup menu builder.
+     *
+     * @return popup menu builder
+     */
+    @Nonnull
+    MenuBuilder getMenuBuilder();
+
+    /**
+     * Sets popup menu builder.
+     *
+     * @param menuBuilder popup menu builder
+     */
+    void setMenuBuilder(MenuBuilder menuBuilder);
+
+    /**
      * Returns menu module resource bundle.
      *
      * @return resource bundle

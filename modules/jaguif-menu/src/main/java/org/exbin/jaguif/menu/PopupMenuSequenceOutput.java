@@ -24,6 +24,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionConsts;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SubSequenceContribution;
@@ -31,9 +32,9 @@ import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.jaguif.menu.api.ActionMenuCreation;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
-import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
  * Popup menu sequence output.
@@ -66,7 +67,8 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
                 }
             }
 
-            JMenu subMenu = UiUtils.createMenu();
+            MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+            JMenu subMenu = menuModule.getMenuBuilder().createMenu();
             subMenu.setAction(action);
             ((SubMenuContribution) contribution).setSubMenu(subMenu);
 

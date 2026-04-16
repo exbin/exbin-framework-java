@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.frame.api.FrameModuleApi;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
@@ -305,8 +305,8 @@ public class FrameModule implements FrameModuleApi {
     }
 
     @Override
-    public void registerStatusBar(String moduleId, String statusBarId, JPanel panel) {
-        getStatusBarHandler().registerStatusBar(moduleId, statusBarId, panel);
+    public void registerStatusBar(String moduleId, String statusBarId, JComponent component) {
+        getStatusBarHandler().registerStatusBar(moduleId, statusBarId, component);
     }
 
     @Override

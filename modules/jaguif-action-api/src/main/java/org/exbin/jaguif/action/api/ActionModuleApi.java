@@ -15,15 +15,11 @@
  */
 package org.exbin.jaguif.action.api;
 
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
@@ -75,25 +71,6 @@ public interface ActionModuleApi extends Module {
      */
     @Nonnull
     ActionContextRegistration createActionContextRegistrar(ActionManagement actionManagement);
-
-    /**
-     * Converts action to menu item.
-     *
-     * @param action action
-     * @return menu item
-     */
-    @Nonnull
-    JMenuItem actionToMenuItem(Action action);
-
-    /**
-     * Converts action to menu item.
-     *
-     * @param action action
-     * @param buttonGroups button groups
-     * @return menu item
-     */
-    @Nonnull
-    JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups);
 
     /**
      * Returns clipboard/editing actions.

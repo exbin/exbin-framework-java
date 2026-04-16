@@ -27,13 +27,11 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.text.DefaultEditorKit;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionConsts;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.jaguif.action.api.ActionType;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
-import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
@@ -44,6 +42,7 @@ import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 import org.exbin.jaguif.menu.api.MenuManagement;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.menu.api.MenuBuilder;
 
 /**
  * Implementation of menu module.
@@ -52,6 +51,7 @@ import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 public class MenuModule implements MenuModuleApi {
 
     private MenuManager menuManager = null;
+    private MenuBuilder menuBuilder = null;
     private ResourceBundle resourceBundle;
 
     public MenuModule() {
@@ -70,12 +70,6 @@ public class MenuModule implements MenuModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     @Override
     public JMenuItem actionToMenuItem(Action action) {
@@ -92,15 +86,16 @@ public class MenuModule implements MenuModuleApi {
     private JMenuItem actionToMenuItemInt(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
         JMenuItem menuItem;
         ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
+        MenuBuilder builder = getMenuBuilder();
         if (actionType != null) {
             switch (actionType) {
                 case CHECK: {
-                    menuItem = UiUtils.createCheckBoxMenuItem();
+                    menuItem = builder.createCheckBoxMenuItem();
                     menuItem.setAction(action);
                     break;
                 }
                 case RADIO: {
-                    menuItem = UiUtils.createRadioButtonMenuItem();
+                    menuItem = builder.createRadioButtonMenuItem();
                     menuItem.setAction(action);
                     String radioGroup = (String) action.getValue(ActionConsts.ACTION_RADIO_GROUP);
                     if (buttonGroups != null) {
@@ -114,12 +109,12 @@ public class MenuModule implements MenuModuleApi {
                     break;
                 }
                 default: {
-                    menuItem = UiUtils.createMenuItem();
+                    menuItem = builder.createMenuItem();
                     menuItem.setAction(action);
                 }
             }
         } else {
-            menuItem = UiUtils.createMenuItem();
+            menuItem = builder.createMenuItem();
             menuItem.setAction(action);
         }
 
@@ -186,6 +181,21 @@ public class MenuModule implements MenuModuleApi {
     @Override
     public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextRegistration actionContextRegistration) {
         MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, actionContextRegistration);
+    }
+
+    @Nonnull
+    @Override
+    public MenuBuilder getMenuBuilder() {
+        if (menuBuilder == null) {
+            menuBuilder = new DefaultMenuBuilder();
+        }
+        
+        return menuBuilder;
+    }
+
+    @Override
+    public void setMenuBuilder(MenuBuilder menuBuilder) {
+        this.menuBuilder = menuBuilder;
     }
 
     @Override

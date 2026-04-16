@@ -18,24 +18,18 @@ package org.exbin.jaguif.action;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
 import java.net.URL;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionConsts;
 import org.exbin.jaguif.action.api.ActionModuleApi;
-import org.exbin.jaguif.action.api.ActionType;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.utils.ClipboardUtils;
-import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.action.api.ActionManagement;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
 import org.exbin.jaguif.action.api.ContextComponent;
@@ -152,61 +146,6 @@ public class ActionModule implements ActionModuleApi {
                 Logger.getLogger(ActionModule.class.getName()).log(Level.SEVERE, "Invalid action icon for key: {0}", key);
             }
         }
-    }
-
-    @Nonnull
-    @Override
-    public JMenuItem actionToMenuItem(Action action) {
-        return actionToMenuItem(action, null);
-    }
-
-    @Nonnull
-    @Override
-    public JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
-        return actionToMenuItemInt(action, buttonGroups);
-    }
-
-    @Nonnull
-    private JMenuItem actionToMenuItemInt(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
-        JMenuItem menuItem;
-        ActionType actionType = (ActionType) action.getValue(ActionConsts.ACTION_TYPE);
-        if (actionType != null) {
-            switch (actionType) {
-                case CHECK: {
-                    menuItem = UiUtils.createCheckBoxMenuItem();
-                    menuItem.setAction(action);
-                    break;
-                }
-                case RADIO: {
-                    menuItem = UiUtils.createRadioButtonMenuItem();
-                    menuItem.setAction(action);
-                    String radioGroup = (String) action.getValue(ActionConsts.ACTION_RADIO_GROUP);
-                    if (buttonGroups != null) {
-                        ButtonGroup buttonGroup = buttonGroups.get(radioGroup);
-                        if (buttonGroup == null) {
-                            buttonGroup = new ButtonGroup();
-                            buttonGroups.put(radioGroup, buttonGroup);
-                        }
-                        buttonGroup.add(menuItem);
-                    }
-                    break;
-                }
-                default: {
-                    menuItem = UiUtils.createMenuItem();
-                    menuItem.setAction(action);
-                }
-            }
-        } else {
-            menuItem = UiUtils.createMenuItem();
-            menuItem.setAction(action);
-        }
-
-        Object dialogMode = action.getValue(ActionConsts.ACTION_DIALOG_MODE);
-        if (dialogMode instanceof Boolean && ((Boolean) dialogMode)) {
-            LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
-            menuItem.setText(languageModule.getActionWithDialogText(menuItem.getText()));
-        }
-        return menuItem;
     }
 
     @Nonnull

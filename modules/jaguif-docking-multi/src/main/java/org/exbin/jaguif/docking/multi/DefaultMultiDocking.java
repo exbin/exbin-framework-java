@@ -60,7 +60,6 @@ import org.exbin.jaguif.file.api.FileModuleApi;
 import org.exbin.jaguif.file.api.FileSourceIdentifier;
 import org.exbin.jaguif.file.api.SaveModifiedResult;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
-import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.utils.WindowClosingListener;
 
 /**
@@ -96,7 +95,7 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
 
 //                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-                JPopupMenu fileContextPopupMenu = UiUtils.createPopupMenu();
+                JPopupMenu fileContextPopupMenu = menuModule.getMenuBuilder().createPopupMenu();
                 ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
                 ActionManagement actionManager = actionModule.createActionManager(popupContextManager);
                 ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(actionManager);

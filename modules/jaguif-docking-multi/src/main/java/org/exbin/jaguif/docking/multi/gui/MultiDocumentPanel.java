@@ -17,8 +17,9 @@ package org.exbin.jaguif.docking.multi.gui;
 
 import java.awt.Component;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.utils.UiUtils;
+import org.exbin.jaguif.App;
 import org.exbin.jaguif.document.api.ComponentDocument;
+import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
  * Multi document panel.
@@ -40,7 +41,8 @@ public class MultiDocumentPanel extends javax.swing.JPanel {
             changeActiveIndex(selectedIndex);
         });
 
-        tabbedPane.setComponentPopupMenu(UiUtils.createPopupMenu((invoker, x, y) -> {
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        tabbedPane.setComponentPopupMenu(menuModule.getMenuBuilder().createPopupMenu((invoker, x, y) -> {
             if (controller != null) {
                 int index = tabbedPane.indexAtLocation(x, y);
                 controller.showPopupMenu(index, invoker, x, y);

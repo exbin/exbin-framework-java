@@ -36,8 +36,9 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.document.recent.settings.RecentFilesOptions;
 import org.exbin.jaguif.file.api.FileType;
 import org.exbin.jaguif.frame.api.FrameModuleApi;
+import org.exbin.jaguif.menu.api.MenuBuilder;
+import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.options.api.OptionsStorage;
-import org.exbin.jaguif.utils.UiUtils;
 
 /**
  * Recent files actions.
@@ -74,7 +75,9 @@ public class RecentFilesActions {
             }
         };
         fileOpenRecentAction.putValue(Action.SHORT_DESCRIPTION, resourceBundle.getString("openRecentMenu.shortDescription"));
-        JMenu fileOpenRecentMenu = UiUtils.createMenu();
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuBuilder menuBuilder = menuModule.getMenuBuilder();
+        JMenu fileOpenRecentMenu = menuBuilder.createMenu();
         fileOpenRecentMenu.setAction(fileOpenRecentAction);
         recentFiles = new ArrayList<>();
         if (optionsStorage != null) {
@@ -117,11 +120,13 @@ public class RecentFilesActions {
     }
 
     private void rebuildRecentFilesMenu(JMenu fileOpenRecentMenu) {
+        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+        MenuBuilder menuBuilder = menuModule.getMenuBuilder();
         fileOpenRecentMenu.removeAll();
         for (int recentFileIndex = 0; recentFileIndex < recentFiles.size(); recentFileIndex++) {
             String filename = recentFiles.get(recentFileIndex).getFileName();
             File file = new File(filename);
-            JMenuItem menuItem = UiUtils.createMenuItem();
+            JMenuItem menuItem = menuBuilder.createMenuItem();
             menuItem.setText(file.getName());
             menuItem.setToolTipText(filename);
             {
