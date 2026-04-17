@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.action;
+package org.exbin.jaguif.action.clipboard;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
@@ -165,21 +165,5 @@ public class ClipboardTextActions implements ClipboardActionsApi {
         actionModule.initAction(selectAllTextAction, resourceBundle, EDIT_SELECT_ALL_ACTION_ID);
         selectAllTextAction.putValue(Action.ACCELERATOR_KEY, javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, ActionUtils.getMetaMask()));
         return selectAllTextAction;
-    }
-
-    @ParametersAreNonnullByDefault
-    public class PassingTextAction extends TextAction {
-
-        private final TextAction parentAction;
-
-        public PassingTextAction(TextAction parentAction) {
-            super((String) parentAction.getValue(Action.NAME));
-            this.parentAction = parentAction;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
-            parentAction.actionPerformed(actionEvent);
-        }
     }
 }

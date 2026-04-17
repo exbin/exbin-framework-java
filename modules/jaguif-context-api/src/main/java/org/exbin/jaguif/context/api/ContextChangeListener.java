@@ -16,17 +16,30 @@
 package org.exbin.jaguif.context.api;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Listener for active state changes.
- * @param <T> instance type
+ * Interface for context state change listener.
  */
-public interface ContextChangeListener<T> {
+@ParametersAreNonnullByDefault
+public interface ContextChangeListener {
 
     /**
-     * Notifies active state instance changed.
+     * Sends active state changed notification.
      *
-     * @param instance class instance
+     * @param <T> state type
+     * @param stateClass state class
+     * @param activeState active state
      */
-    void stateChanged(@Nullable T instance);
+    <T> void notifyStateChanged(Class<T> stateClass, @Nullable T activeState);
+
+    /**
+     * Sends active state specific update notification.
+     *
+     * @param <T> state type
+     * @param stateClass state class
+     * @param activeState active state
+     * @param updateType update type
+     */
+    <T> void notifyStateUpdated(Class<T> stateClass, T activeState, StateUpdateType updateType);
 }

@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.action.api;
+package org.exbin.jaguif.context.service;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for context activable component.
+ * Context messaging service.
  */
-public interface ContextComponent {
+@ParametersAreNonnullByDefault
+public class ContextMessagingService {
 
+    
 }

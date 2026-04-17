@@ -34,7 +34,7 @@ import org.exbin.jaguif.operation.undo.api.UndoRedoState;
 import org.exbin.jaguif.action.api.DialogParentComponent;
 import org.exbin.jaguif.operation.undo.api.UndoRedoController;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
-import org.exbin.jaguif.action.api.ContextComponent;
+import org.exbin.jaguif.context.api.ContextComponent;
 import org.exbin.jaguif.document.api.ComponentDocument;
 import org.exbin.jaguif.document.api.ContextDocument;
 import org.exbin.jaguif.document.api.DocumentSource;

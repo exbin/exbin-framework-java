@@ -31,7 +31,7 @@ public interface ContextChangeRegistration {
      * @param contextClass context class
      * @param listener listener
      */
-    <T> void registerChangeListener(Class<T> contextClass, ContextChangeListener<T> listener);
+    <T> void registerChangeListener(Class<T> contextClass, ContextStateChangeListener<T> listener);
 
     /**
      * Registers listener to updates of the active context state.

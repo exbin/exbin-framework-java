@@ -58,12 +58,12 @@ public interface ActiveContextManagement extends ActiveContextProvider {
      *
      * @param changeListener change listener
      */
-    void addChangeListener(ActiveContextChangeListener changeListener);
+    void addChangeListener(ContextChangeListener changeListener);
 
     /**
      * Removes change listener.
      *
      * @param changeListener change listener
      */
-    void removeChangeListener(ActiveContextChangeListener changeListener);
+    void removeChangeListener(ContextChangeListener changeListener);
 }

@@ -19,6 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Listener for context state update.
+ *
  * @param <T> instance type
  */
 @ParametersAreNonnullByDefault

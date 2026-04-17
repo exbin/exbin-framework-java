@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.action;
+package org.exbin.jaguif.action.clipboard;
 
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
-import org.exbin.jaguif.action.clipboard.CopyAction;
-import org.exbin.jaguif.action.clipboard.CutAction;
-import org.exbin.jaguif.action.clipboard.DeleteAction;
-import org.exbin.jaguif.action.clipboard.PasteAction;
-import org.exbin.jaguif.action.clipboard.SelectAllAction;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
 
 /**

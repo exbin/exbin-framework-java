@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.action.api;
-
-import org.exbin.jaguif.context.api.ContextChange;
+package org.exbin.jaguif.context.api;
 
 /**
- * Listener for action update when menu is activated for component.
+ * Interface for context activable component.
  */
-public interface ActionContextChange extends ContextChange {
+public interface ContextComponent {
+
 }

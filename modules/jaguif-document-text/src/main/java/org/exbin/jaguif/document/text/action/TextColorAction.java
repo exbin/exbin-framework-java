@@ -30,7 +30,7 @@ import org.exbin.jaguif.window.api.WindowModuleApi;
 import org.exbin.jaguif.window.api.gui.OptionsControlPanel;
 import org.exbin.jaguif.window.api.WindowHandler;
 import org.exbin.jaguif.action.api.ActionContextChange;
-import org.exbin.jaguif.action.api.ContextComponent;
+import org.exbin.jaguif.context.api.ContextComponent;
 import org.exbin.jaguif.action.api.DialogParentComponent;
 import org.exbin.jaguif.window.api.controller.OptionsControlController;
 import org.exbin.jaguif.options.api.OptionsModuleApi;

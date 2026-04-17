@@ -16,18 +16,17 @@
 package org.exbin.jaguif.context;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.context.api.ContextChange;
-import org.exbin.jaguif.context.api.ContextChangeListener;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
 import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.context.api.ContextStateUpdateListener;
 import org.exbin.jaguif.context.api.ContextValues;
+import org.exbin.jaguif.context.api.ContextStateChangeListener;
 
 /**
  * Context registration.
@@ -37,7 +36,7 @@ public class ContextRegistrar implements ContextRegistration, ContextChangeRegis
 
     public static final String KEY_CONTEXT_CHANGE = "ContextChange";
     protected final List<ContextValues> contextItems = new ArrayList<>();
-    protected final Map<Class<?>, ContextChangeListener<?>> contextChangeListeners = new HashMap<>();
+    protected final Map<Class<?>, ContextStateChangeListener<?>> contextChangeListeners = new HashMap<>();
     protected final Map<Class<?>, ContextStateUpdateListener<?>> contextStateUpdateListeners = new HashMap<>();
     protected ActiveContextManagement contextManagement;
 
@@ -61,7 +60,7 @@ public class ContextRegistrar implements ContextRegistration, ContextChangeRegis
     public void finish() {
         for (Class<?> stateClass : contextManagement.getStateClasses()) {
             Object instance = contextManagement.getActiveState(stateClass);
-            ContextChangeListener listener = contextChangeListeners.get(stateClass);
+            ContextStateChangeListener listener = contextChangeListeners.get(stateClass);
             if (listener != null) {
                 listener.stateChanged(instance);
             }
@@ -69,7 +68,7 @@ public class ContextRegistrar implements ContextRegistration, ContextChangeRegis
     }
 
     @Override
-    public <T> void registerChangeListener(Class<T> contextClass, ContextChangeListener<T> listener) {
+    public <T> void registerChangeListener(Class<T> contextClass, ContextStateChangeListener<T> listener) {
         contextChangeListeners.put(contextClass, listener);
     }
 

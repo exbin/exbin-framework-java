@@ -15,6 +15,8 @@
  */
 package org.exbin.jaguif.action;
 
+import org.exbin.jaguif.action.clipboard.ClipboardTextActions;
+import org.exbin.jaguif.action.clipboard.ClipboardActions;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
 import java.net.URL;
@@ -32,11 +34,11 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.utils.ClipboardUtils;
 import org.exbin.jaguif.action.api.ActionManagement;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
-import org.exbin.jaguif.action.api.ContextComponent;
+import org.exbin.jaguif.context.api.ContextComponent;
 import org.exbin.jaguif.action.api.clipboard.ClipboardController;
-import org.exbin.jaguif.context.api.ActiveContextChangeListener;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
+import org.exbin.jaguif.context.api.ContextChangeListener;
 
 /**
  * Implementation of action module.
@@ -159,7 +161,7 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public void registerClipboardFlavorListener(ActiveContextChangeListener listener, ActiveContextProvider provider) {
+    public void registerClipboardFlavorListener(ContextChangeListener listener, ActiveContextProvider provider) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
 
             @Override

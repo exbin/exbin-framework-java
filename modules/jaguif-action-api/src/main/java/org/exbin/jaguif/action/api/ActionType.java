@@ -15,12 +15,9 @@
  */
 package org.exbin.jaguif.action.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Enumeration of action types.
  */
-@ParametersAreNonnullByDefault
 public enum ActionType {
     /**
      * Single click / activation action.

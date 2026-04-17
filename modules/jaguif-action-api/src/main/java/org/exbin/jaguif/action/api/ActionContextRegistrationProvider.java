@@ -22,6 +22,11 @@ import javax.annotation.Nonnull;
  */
 public interface ActionContextRegistrationProvider {
 
+    /**
+     * Returns context registration.
+     *
+     * @return context registration
+     */
     @Nonnull
     ActionContextRegistration getRegistration();
 }

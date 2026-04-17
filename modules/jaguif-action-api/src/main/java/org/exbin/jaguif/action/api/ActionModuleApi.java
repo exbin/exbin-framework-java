@@ -23,9 +23,9 @@ import javax.swing.ImageIcon;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
-import org.exbin.jaguif.context.api.ActiveContextChangeListener;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
+import org.exbin.jaguif.context.api.ContextChangeListener;
 
 /**
  * Interface for action support module.
@@ -103,5 +103,5 @@ public interface ActionModuleApi extends Module {
      * @param listener context change listener
      * @param provider context status provider
      */
-    void registerClipboardFlavorListener(ActiveContextChangeListener listener, ActiveContextProvider provider);
+    void registerClipboardFlavorListener(ContextChangeListener listener, ActiveContextProvider provider);
 }

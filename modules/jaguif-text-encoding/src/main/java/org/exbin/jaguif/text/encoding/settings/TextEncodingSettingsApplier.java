@@ -16,7 +16,7 @@
 package org.exbin.jaguif.text.encoding.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.action.api.ContextComponent;
+import org.exbin.jaguif.context.api.ContextComponent;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.options.settings.api.SettingsApplier;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;

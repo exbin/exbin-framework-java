@@ -18,7 +18,7 @@ package org.exbin.jaguif.document.text.settings;
 import java.awt.Color;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.action.api.ContextComponent;
+import org.exbin.jaguif.context.api.ContextComponent;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.document.text.TextColorState;
 import org.exbin.jaguif.options.settings.api.SettingsApplier;

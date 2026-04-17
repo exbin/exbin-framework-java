@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.action.api;
+package org.exbin.jaguif.context.api;
 
-import org.exbin.jaguif.context.api.ContextChange;
+import javax.annotation.Nullable;
 
 /**
- * Listener for action update when menu is activated for component.
+ * Listener for active context state changes.
+ *
+ * @param <T> instance type
  */
-public interface ActionContextChange extends ContextChange {
+public interface ContextStateChangeListener<T> {
+
+    /**
+     * Notifies active state instance changed.
+     *
+     * @param instance class instance
+     */
+    void stateChanged(@Nullable T instance);
 }

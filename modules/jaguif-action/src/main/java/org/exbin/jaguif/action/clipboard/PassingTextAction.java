@@ -13,20 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.context.api;
+package org.exbin.jaguif.action.clipboard;
 
+import java.awt.event.ActionEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
+import javax.swing.text.TextAction;
 
 /**
- * Context changes registration interface.
+ * Passing text actions.
  */
 @ParametersAreNonnullByDefault
-public interface ContextChange {
+public class PassingTextAction extends TextAction {
 
-    /**
-     * Registers context change listeners via provided registrar.
-     *
-     * @param registrar context change registration
-     */
-    void register(ContextChangeRegistration registrar);
+    private final TextAction parentAction;
+
+    public PassingTextAction(TextAction parentAction) {
+        super((String) parentAction.getValue(Action.NAME));
+        this.parentAction = parentAction;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        parentAction.actionPerformed(actionEvent);
+    }
 }
