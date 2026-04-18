@@ -48,6 +48,8 @@ import org.exbin.jaguif.text.font.TextFontModule;
 import org.exbin.jaguif.text.font.action.TextFontAction;
 import org.exbin.jaguif.toolbar.api.ToolBarModuleApi;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
+import org.exbin.jaguif.context.api.ContextModuleApi;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SeparationSequenceContributionRule;
@@ -404,9 +406,9 @@ public class DocumentTextModule implements Module {
                 MenuBuilder menuBuilder = menuModule.getMenuBuilder();
                 JPopupMenu popupMenu = menuBuilder.createPopupMenu();
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameModule.getFrameHandler().getActionManager());
-                menuModule.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, actionContextRegistrar);
+                ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
+                ContextRegistration contextRegistrar = contextModule.createContextRegistrator(frameModule.getFrameHandler().getContextManager());
+                menuModule.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, contextRegistrar);
                 popupMenu.show(invoker, x, y);
             }
         };

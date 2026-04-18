@@ -16,7 +16,6 @@
 package org.exbin.jaguif.sidebar;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractAction;
@@ -35,9 +34,8 @@ import org.exbin.jaguif.sidebar.api.ActionSideBarContribution;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 import org.exbin.jaguif.action.api.ActionType;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
 import org.exbin.jaguif.context.api.ContextChange;
-import org.exbin.jaguif.context.api.ContextChangeRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.sidebar.api.ComponentSideBarContribution;
 import org.exbin.jaguif.sidebar.api.SideBar;
 import org.exbin.jaguif.sidebar.api.SideBarComponent;
@@ -49,11 +47,11 @@ import org.exbin.jaguif.sidebar.api.SideBarComponent;
 public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final SideBar sideBar;
-    protected final ActionContextRegistration actionContextRegistration;
+    protected final ContextRegistration contextRegistration;
 
-    public SideToolBarSequenceOutput(SideBar sideBar, ActionContextRegistration actionContextRegistration) {
+    public SideToolBarSequenceOutput(SideBar sideBar, ContextRegistration contextRegistration) {
         this.sideBar = sideBar;
-        this.actionContextRegistration = actionContextRegistration;
+        this.contextRegistration = contextRegistration;
     }
 
     @Override
@@ -73,7 +71,7 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
     public void add(ItemSequenceContribution itemContribution) {
         if (itemContribution instanceof ActionSideBarContribution) {
             sideBar.getToolBar().add(((ActionSideBarContribution) itemContribution).getComponent());
-            SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), actionContextRegistration);
+            SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), contextRegistration);
         } else if (itemContribution instanceof ComponentSideBarContribution) {
             SideBarComponent sideBarComponent = ((ComponentSideBarContribution) itemContribution).createComponent();
             Action buttonAction = new AbstractAction() {
@@ -101,7 +99,7 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
             }
             button.setFocusable(false);
             sideBar.getToolBar().add(button);
-            SideToolBarSequenceOutput.finishSideBarAction(buttonAction, actionContextRegistration);
+            SideToolBarSequenceOutput.finishSideBarAction(buttonAction, contextRegistration);
         }
     }
 
@@ -181,11 +179,15 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
         return newItem;
     }
 
-    protected static void finishSideBarAction(Action action, ActionContextRegistration actionContextRegistration) {
+    protected static void finishSideBarAction(Action action, ContextRegistration contextRegistration) {
         if (action == null) {
             return;
         }
 
-        actionContextRegistration.registerActionContext(action);
+        Object contextChange = action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
+
+        if (contextChange instanceof ActionContextChange) {
+            contextRegistration.registerContextChange((ActionContextChange) contextChange);
+        }
     }
 }

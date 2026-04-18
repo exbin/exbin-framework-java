@@ -45,13 +45,7 @@ public class ContextRegistrar implements ContextRegistration, ContextChangeRegis
     }
 
     @Override
-    public void registerItemContext(ContextValues contextItem) {
-        contextItems.add(contextItem);
-        ContextChange contextChange = (ContextChange) contextItem.getValue(KEY_CONTEXT_CHANGE);
-        if (contextChange == null) {
-            return;
-        }
-
+    public void registerContextChange(ContextChange contextChange) {
         contextChange.register(this);
     }
 

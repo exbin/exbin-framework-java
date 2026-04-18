@@ -21,7 +21,7 @@ import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Interface for side bar management.
@@ -34,9 +34,9 @@ public interface SideBarManagement {
      *
      * @param targetSideBar output side bar
      * @param sideBarId side bar definition id
-     * @param actionContextRegistration action context registration
+     * @param contextRegistration context registration
      */
-    void buildSideBar(SideBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration);
+    void buildSideBar(SideBar targetSideBar, String sideBarId, ContextRegistration contextRegistration);
 
     /**
      * Registers side bar.

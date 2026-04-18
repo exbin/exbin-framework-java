@@ -24,11 +24,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface ContextRegistration {
 
     /**
-     * Registers item context.
+     * Registers context change.
      *
-     * @param contextValues context values
+     * @param contextChange context change
      */
-    void registerItemContext(ContextValues contextValues);
+    void registerContextChange(ContextChange contextChange);
 
     /**
      * Finish registration process.

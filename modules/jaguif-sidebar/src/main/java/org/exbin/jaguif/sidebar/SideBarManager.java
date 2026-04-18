@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.jaguif.App;
+import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.contribution.ContributionDefinition;
 import org.exbin.jaguif.sidebar.api.ActionSideBarContribution;
 import org.exbin.jaguif.contribution.ContributionManager;
@@ -29,14 +30,12 @@ import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.contribution.ContributionSequenceBuilder;
 import org.exbin.jaguif.sidebar.api.SideBarManagement;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
-import org.exbin.jaguif.action.api.ActionManagement;
-import org.exbin.jaguif.action.api.ActionModuleApi;
+import org.exbin.jaguif.context.api.ContextModuleApi;
+import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.context.api.ContextUpdateManagement;
 import org.exbin.jaguif.docking.api.SidePanelDocking;
 import org.exbin.jaguif.frame.api.ComponentFrame;
 import org.exbin.jaguif.frame.api.FrameModuleApi;
-import org.exbin.jaguif.sidebar.api.ComponentSideBarContribution;
-import org.exbin.jaguif.sidebar.api.SideBarComponent;
 import org.exbin.jaguif.sidebar.api.SideBarModuleApi;
 import org.exbin.jaguif.sidebar.api.SideBar;
 
@@ -52,10 +51,10 @@ public class SideBarManager extends ContributionManager implements SideBarManage
     }
 
     @Override
-    public void buildSideBar(SideBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration) {
+    public void buildSideBar(SideBar targetSideBar, String sideBarId, ContextRegistration contextRegistration) {
         ContributionDefinition definition = definitions.get(sideBarId);
-        builder.buildSequence(new SideToolBarSequenceOutput(targetSideBar, actionContextRegistration), definition);
-        actionContextRegistration.finish();
+        builder.buildSequence(new SideToolBarSequenceOutput(targetSideBar, contextRegistration), definition);
+        contextRegistration.finish();
     }
 
     @Override
@@ -113,11 +112,13 @@ public class SideBarManager extends ContributionManager implements SideBarManage
     @Nonnull
     public SideBar createSideToolBar(SidePanelDocking docking) {
         SideBar sideBar = new DefaultSideBar(docking);
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
+        ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
         ComponentFrame frameHandler = frameModule.getFrameHandler();
-        ActionManagement actionManager = frameHandler.getActionManager();
-        buildSideBar(sideBar, SideBarModuleApi.MAIN_SIDE_BAR_ID, actionModule.createActionContextRegistrar(actionManager));
+        ContextUpdateManagement updateManager = frameHandler.getUpdateManager();
+        ActiveContextManagement contextManager = frameHandler.getContextManager();
+        updateManager.addRecord("mainSideBar");
+        buildSideBar(sideBar, SideBarModuleApi.MAIN_SIDE_BAR_ID, contextModule.createContextRegistrator("mainSideBar", updateManager, contextManager));
         return sideBar;
     }
 }

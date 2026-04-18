@@ -18,6 +18,7 @@ package org.exbin.jaguif.statusbar;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.context.api.ContextChange;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 import org.exbin.jaguif.context.api.ContextRegistration;
@@ -72,6 +73,10 @@ public class StatusBarSequenceOutput implements ContributionSequenceOutput {
     }
 
     protected static void finishStatusBarItem(StatusBarComponent statusBarComponent, ContextRegistration contextRegistration) {
-        contextRegistration.registerItemContext(statusBarComponent);
+        Object contextChange = statusBarComponent.getValue(StatusBarComponent.KEY_CONTEXT_CHANGE);
+
+        if (contextChange instanceof ContextChange) {
+            contextRegistration.registerContextChange((ContextChange) contextChange);
+        }
     }
 }

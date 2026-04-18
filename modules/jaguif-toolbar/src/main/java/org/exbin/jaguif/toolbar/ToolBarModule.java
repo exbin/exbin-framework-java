@@ -32,6 +32,7 @@ import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
@@ -80,8 +81,8 @@ public class ToolBarModule implements ToolBarModuleApi {
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextRegistration actionContextRegistration) {
-        ToolBarModule.this.getToolBarManager().buildToolBar(targetToolBar, toolBarId, actionContextRegistration);
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ContextRegistration contextRegistration) {
+        ToolBarModule.this.getToolBarManager().buildToolBar(targetToolBar, toolBarId, contextRegistration);
     }
 
     @Override

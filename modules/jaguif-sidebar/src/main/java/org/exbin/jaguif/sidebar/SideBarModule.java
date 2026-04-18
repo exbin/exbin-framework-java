@@ -28,7 +28,7 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.sidebar.api.SideBarModuleApi;
 import org.exbin.jaguif.sidebar.api.SideBarDefinitionManagement;
 import org.exbin.jaguif.sidebar.api.SideBarManagement;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.docking.api.SidePanelDocking;
 import org.exbin.jaguif.sidebar.api.SideBar;
 import org.exbin.jaguif.utils.UiUtils;
@@ -95,8 +95,8 @@ public class SideBarModule implements SideBarModuleApi {
     }
 
     @Override
-    public void buildSideBar(SideBar targetSideBar, String sideBarId, ActionContextRegistration actionContextRegistration) {
-        SideBarModule.this.getMainSideBarManager().buildSideBar(targetSideBar, sideBarId, actionContextRegistration);
+    public void buildSideBar(SideBar targetSideBar, String sideBarId, ContextRegistration contextRegistration) {
+        SideBarModule.this.getMainSideBarManager().buildSideBar(targetSideBar, sideBarId, contextRegistration);
     }
 
     @Override

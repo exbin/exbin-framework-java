@@ -21,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
-import org.exbin.jaguif.action.api.ActionContextRegistrationProvider;
+import org.exbin.jaguif.action.api.ContextRegistrationProvider;
 
 /**
  * Interface for framework popup module.
@@ -92,5 +92,5 @@ public interface MenuPopupModuleApi extends Module {
      * @return popup menu
      */
     @Nonnull
-    JPopupMenu createComponentPopupMenu(String popupMenuId, ActionContextRegistrationProvider actionContextRegistrar);
+    JPopupMenu createComponentPopupMenu(String popupMenuId, ContextRegistrationProvider actionContextRegistrar);
 }

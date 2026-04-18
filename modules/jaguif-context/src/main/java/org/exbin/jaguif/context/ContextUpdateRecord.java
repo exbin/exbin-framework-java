@@ -1,0 +1,68 @@
+/*
+ * Copyright (C) ExBin Project, https://exbin.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.jaguif.context;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.context.api.ContextChangeRegistration;
+import org.exbin.jaguif.context.api.ContextStateChangeListener;
+import org.exbin.jaguif.context.api.ContextStateUpdateListener;
+
+/**
+ * Context update record.
+ */
+@ParametersAreNonnullByDefault
+public class ContextUpdateRecord implements ContextChangeRegistration {
+
+    protected final Map<Class<?>, List<ContextStateChangeListener<?>>> contextChangeListeners = new HashMap<>();
+    protected final Map<Class<?>, List<ContextStateUpdateListener<?>>> contextStateUpdateListeners = new HashMap<>();
+
+    @Override
+    public <T> void registerChangeListener(Class<T> contextClass, ContextStateChangeListener<T> listener) {
+        List<ContextStateChangeListener<?>> listeners = contextChangeListeners.get(contextClass);
+        if (listeners == null) {
+            listeners = new ArrayList<>();
+            contextChangeListeners.put(contextClass, listeners);
+        }
+
+        listeners.add(listener);
+    }
+
+    @Override
+    public <T> void registerStateUpdateListener(Class<T> contextClass, ContextStateUpdateListener<T> listener) {
+        List<ContextStateUpdateListener<?>> listeners = contextStateUpdateListeners.get(contextClass);
+        if (listeners == null) {
+            listeners = new ArrayList<>();
+            contextStateUpdateListeners.put(contextClass, listeners);
+        }
+
+        listeners.add(listener);
+    }
+
+    @Nullable
+    public <T> List<ContextStateChangeListener<?>> getChangeListeners(Class<T> contextClass) {
+        return contextChangeListeners.get(contextClass);
+    }
+
+    @Nullable
+    public <T> List<ContextStateUpdateListener<?>> getUpdateListeners(Class<T> contextClass) {
+        return contextStateUpdateListeners.get(contextClass);
+    }
+}

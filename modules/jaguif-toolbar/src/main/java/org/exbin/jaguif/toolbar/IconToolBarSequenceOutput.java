@@ -20,12 +20,11 @@ import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import org.exbin.jaguif.toolbar.api.ActionToolBarContribution;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.toolbar.api.ToolBarComponent;
 
@@ -36,12 +35,12 @@ import org.exbin.jaguif.toolbar.api.ToolBarComponent;
 public class IconToolBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final JToolBar toolBar;
-    protected final ActionContextRegistration actionContextRegistration;
+    protected final ContextRegistration contextRegistration;
     protected final Map<SequenceContribution, ToolBarComponent> toolBarItems = new HashMap<>();
 
-    public IconToolBarSequenceOutput(JToolBar menuBar, ActionContextRegistration actionContextRegistration) {
+    public IconToolBarSequenceOutput(JToolBar menuBar, ContextRegistration contextRegistration) {
         this.toolBar = menuBar;
-        this.actionContextRegistration = actionContextRegistration;
+        this.contextRegistration = contextRegistration;
     }
 
     @Override
@@ -58,7 +57,7 @@ public class IconToolBarSequenceOutput implements ContributionSequenceOutput {
             ((AbstractButton) component).setText("");
         }
         toolBar.add(component.getComponent());
-        ToolBarSequenceOutput.finishToolBarAction(component.getAction(), actionContextRegistration);
+        ToolBarSequenceOutput.finishToolBarAction(component.getAction(), contextRegistration);
     }
 
     @Override

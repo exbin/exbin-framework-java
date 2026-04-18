@@ -24,13 +24,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import javax.swing.JViewport;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.action.api.ActionContextRegistrationProvider;
 import org.exbin.jaguif.menu.popup.api.ComponentPopupEventDispatcher;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.jaguif.utils.ClipboardUtils;
 import org.exbin.jaguif.utils.DesktopUtils;
+import org.exbin.jaguif.action.api.ContextRegistrationProvider;
 
 /**
  * Implementation of framework popup module.
@@ -113,7 +113,7 @@ public class MenuPopupModule implements MenuPopupModuleApi {
 
     @Nonnull
     @Override
-    public JPopupMenu createComponentPopupMenu(String popupMenuId, ActionContextRegistrationProvider actionContextRegistrar) {
+    public JPopupMenu createComponentPopupMenu(String popupMenuId, ContextRegistrationProvider ContextRegistrationProvider) {
         return new JPopupMenu() {
             @Override
             public void show(@Nullable Component invoker, int x, int y) {
@@ -130,7 +130,7 @@ public class MenuPopupModule implements MenuPopupModuleApi {
 
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
                 JPopupMenu popupMenu = menuModule.getMenuBuilder().createPopupMenu();
-                menuModule.buildMenu(popupMenu, popupMenuId, actionContextRegistrar.getRegistration());
+                menuModule.buildMenu(popupMenu, popupMenuId, ContextRegistrationProvider.getRegistration());
                 popupMenu.show(invoker, clickedX, clickedY);
             }
         };

@@ -25,7 +25,7 @@ import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.contribution.ContributionSequenceBuilder;
 import org.exbin.jaguif.toolbar.api.ToolBarManagement;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Default toolbar manager.
@@ -39,17 +39,17 @@ public class ToolBarManager extends ContributionManager implements ToolBarManage
     }
 
     @Override
-    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ActionContextRegistration actionContextRegistration) {
+    public void buildToolBar(JToolBar targetToolBar, String toolBarId, ContextRegistration contextRegistration) {
         ContributionDefinition contributionDef = definitions.get(toolBarId);
-        builder.buildSequence(new ToolBarSequenceOutput(targetToolBar, actionContextRegistration), contributionDef);
-        actionContextRegistration.finish();
+        builder.buildSequence(new ToolBarSequenceOutput(targetToolBar, contextRegistration), contributionDef);
+        contextRegistration.finish();
     }
 
     @Override
-    public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ActionContextRegistration actionContextRegistration) {
+    public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ContextRegistration contextRegistration) {
         ContributionDefinition contributionDef = definitions.get(toolBarId);
-        builder.buildSequence(new IconToolBarSequenceOutput(targetToolBar, actionContextRegistration), contributionDef);
-        actionContextRegistration.finish();
+        builder.buildSequence(new IconToolBarSequenceOutput(targetToolBar, contextRegistration), contributionDef);
+        contextRegistration.finish();
     }
 
     @Override

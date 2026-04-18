@@ -32,7 +32,7 @@ import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.jaguif.menu.api.ActionMenuCreation;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 
@@ -43,13 +43,13 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
 
     protected final JPopupMenu menu;
-    protected final ActionContextRegistration actionContextRegistration;
+    protected final ContextRegistration contextRegistration;
     protected final Map<String, ButtonGroup> buttonGroups;
     protected final Map<SequenceContribution, JMenuItem> menuItems = new HashMap<>();
 
-    public PopupMenuSequenceOutput(JPopupMenu menu, ActionContextRegistration actionContextRegistration, Map<String, ButtonGroup> buttonGroups) {
+    public PopupMenuSequenceOutput(JPopupMenu menu, ContextRegistration contextRegistration, Map<String, ButtonGroup> buttonGroups) {
         this.menu = menu;
-        this.actionContextRegistration = actionContextRegistration;
+        this.contextRegistration = contextRegistration;
         this.buttonGroups = buttonGroups;
     }
 
@@ -120,7 +120,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
         if (contribution instanceof SubMenuContribution) {
             JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
             menu.add(subMenu);
-            MenuSequenceOutput.finishMenuItem(subMenu, actionContextRegistration);
+            MenuSequenceOutput.finishMenuItem(subMenu, contextRegistration);
             return;
         }
 
@@ -131,7 +131,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
 
         JMenuItem menuItem = menuItems.get(contribution);
         menu.add(menuItem);
-        MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
+        MenuSequenceOutput.finishMenuItem(menuItem, contextRegistration);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
     @Nonnull
     @Override
     public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), actionContextRegistration, buttonGroups, true);
+        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), contextRegistration, buttonGroups, true);
     }
 
     @Override

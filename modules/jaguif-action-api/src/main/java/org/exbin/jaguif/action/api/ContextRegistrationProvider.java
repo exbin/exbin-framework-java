@@ -16,11 +16,12 @@
 package org.exbin.jaguif.action.api;
 
 import javax.annotation.Nonnull;
+import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
- * Provider for action context registration.
+ * Provider for context registration.
  */
-public interface ActionContextRegistrationProvider {
+public interface ContextRegistrationProvider {
 
     /**
      * Returns context registration.
@@ -28,5 +29,5 @@ public interface ActionContextRegistrationProvider {
      * @return context registration
      */
     @Nonnull
-    ActionContextRegistration getRegistration();
+    ContextRegistration getRegistration();
 }

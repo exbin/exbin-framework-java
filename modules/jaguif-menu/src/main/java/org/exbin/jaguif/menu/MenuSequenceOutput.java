@@ -26,13 +26,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionConsts;
+import org.exbin.jaguif.action.api.ActionContextChange;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SubSequenceContribution;
 import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.jaguif.menu.api.ActionMenuCreation;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 
@@ -43,20 +44,20 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 public class MenuSequenceOutput implements TreeContributionSequenceOutput {
 
     protected final JMenu menu;
-    protected final ActionContextRegistration actionContextRegistration;
+    protected final ContextRegistration contextRegistration;
     protected final Map<String, ButtonGroup> buttonGroups;
     protected final boolean isPopup;
     protected final Map<SequenceContribution, JMenuItem> menuItems = new HashMap<>();
 
-    public MenuSequenceOutput(JMenu menu, ActionContextRegistration actionContextRegistration, Map<String, ButtonGroup> buttonGroups, boolean isPopup) {
+    public MenuSequenceOutput(JMenu menu, ContextRegistration contextRegistration, Map<String, ButtonGroup> buttonGroups, boolean isPopup) {
         this.menu = menu;
-        this.actionContextRegistration = actionContextRegistration;
+        this.contextRegistration = contextRegistration;
         this.buttonGroups = buttonGroups;
         this.isPopup = isPopup;
     }
 
-    public MenuSequenceOutput(JMenu menu, ActionContextRegistration actionContextRegistration, Map<String, ButtonGroup> buttonGroups) {
-        this(menu, actionContextRegistration, buttonGroups, false);
+    public MenuSequenceOutput(JMenu menu, ContextRegistration contextRegistration, Map<String, ButtonGroup> buttonGroups) {
+        this(menu, contextRegistration, buttonGroups, false);
     }
 
     @Override
@@ -127,7 +128,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
         if (contribution instanceof SubSequenceContribution) {
             JMenu subMenu = ((SubMenuContribution) contribution).getSubMenu().get();
             menu.add(subMenu);
-            MenuSequenceOutput.finishMenuItem(subMenu, actionContextRegistration);
+            MenuSequenceOutput.finishMenuItem(subMenu, contextRegistration);
             return;
         }
 
@@ -139,7 +140,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
         if (contribution instanceof ActionSequenceContribution) {
             JMenuItem menuItem = menuItems.get(contribution);
             menu.add(menuItem);
-            MenuSequenceOutput.finishMenuItem(menuItem, actionContextRegistration);
+            MenuSequenceOutput.finishMenuItem(menuItem, contextRegistration);
             return;
         }
 
@@ -159,7 +160,7 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
     @Nonnull
     @Override
     public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), actionContextRegistration, buttonGroups, isPopup);
+        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), contextRegistration, buttonGroups, isPopup);
     }
 
     @Override
@@ -174,30 +175,34 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
         return menuItem;
     }
 
-    private static void finishMenuAction(@Nullable Action action, ActionContextRegistration actionContextRegistration) {
+    private static void finishMenuAction(@Nullable Action action, ContextRegistration contextRegistration) {
         if (action == null) {
             return;
         }
 
-        actionContextRegistration.registerActionContext(action);
+        Object contextChange = action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
+
+        if (contextChange instanceof ActionContextChange) {
+            contextRegistration.registerContextChange((ActionContextChange) contextChange);
+        }
     }
 
-    public static void finishMenuItem(@Nullable JMenuItem menuItem, ActionContextRegistration actionContextRegistration) {
+    public static void finishMenuItem(@Nullable JMenuItem menuItem, ContextRegistration contextRegistration) {
         if (menuItem == null) {
             return;
         }
 
         if (menuItem instanceof JMenu) {
-            finishMenu((JMenu) menuItem, actionContextRegistration);
+            finishMenu((JMenu) menuItem, contextRegistration);
         } else {
             Action action = menuItem.getAction();
             if (action != null) {
-                finishMenuAction(action, actionContextRegistration);
+                finishMenuAction(action, contextRegistration);
             }
         }
     }
 
-    private static void finishMenu(JMenu menu, ActionContextRegistration actionContextRegistration) {
+    private static void finishMenu(JMenu menu, ContextRegistration contextRegistration) {
         int i = 0;
         int itemCount = menu.getItemCount();
         while (i < itemCount) {
@@ -208,10 +213,10 @@ public class MenuSequenceOutput implements TreeContributionSequenceOutput {
             }
             Action action = menuItem.getAction();
             if (action != null) {
-                finishMenuAction(action, actionContextRegistration);
+                finishMenuAction(action, contextRegistration);
             }
             if (menuItem instanceof JMenu) {
-                finishMenu((JMenu) menuItem, actionContextRegistration);
+                finishMenu((JMenu) menuItem, contextRegistration);
             }
             itemCount = menu.getItemCount();
             if (i < itemCount && menu.getItem(i) == menuItem) {

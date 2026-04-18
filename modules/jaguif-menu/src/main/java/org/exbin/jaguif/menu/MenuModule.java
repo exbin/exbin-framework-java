@@ -40,7 +40,7 @@ import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 import org.exbin.jaguif.menu.api.MenuManagement;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 import org.exbin.jaguif.menu.api.MenuBuilder;
 
@@ -174,13 +174,13 @@ public class MenuModule implements MenuModuleApi {
     }
 
     @Override
-    public void buildMenu(JPopupMenu targetMenu, String menuId, ActionContextRegistration actionContextRegistration) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, actionContextRegistration);
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ContextRegistration contextRegistration) {
+        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, contextRegistration);
     }
 
     @Override
-    public void buildMenu(JMenuBar targetMenuBar, String menuId, ActionContextRegistration actionContextRegistration) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, actionContextRegistration);
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ContextRegistration contextRegistration) {
+        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, contextRegistration);
     }
 
     @Nonnull

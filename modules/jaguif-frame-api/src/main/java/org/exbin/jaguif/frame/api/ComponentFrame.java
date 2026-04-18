@@ -20,8 +20,8 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.action.api.ActionManagement;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
+import org.exbin.jaguif.context.api.ContextUpdateManagement;
 
 /**
  * Interface for component frame.
@@ -135,5 +135,5 @@ public interface ComponentFrame extends ContextFrame {
      * @return action manager
      */
     @Nonnull
-    ActionManagement getActionManager();
+    ContextUpdateManagement getUpdateManager();
 }

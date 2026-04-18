@@ -22,7 +22,10 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.context.api.ContextModuleApi;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
+import org.exbin.jaguif.context.api.ContextChangeListener;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.context.api.ContextUpdateManagement;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Implementation of context module.
@@ -76,10 +79,39 @@ public class ContextModule implements ContextModuleApi {
         return new ContextRegistrar(getMainContextManager());
     }
 
-    @Nonnull
     @Override
     public ContextRegistration createContextRegistrator(ActiveContextManagement contextManager) {
         return new ContextRegistrar(contextManager);
+    }
+
+    @Nonnull
+    @Override
+    public ContextRegistration createContextRegistrator(String recordId, ContextUpdateManagement contextUpdateManagement, ActiveContextManagement contextManager) {
+        return new ContextUpdateRegistrar(recordId, contextUpdateManagement, contextManager);
+    }
+
+    @Nonnull
+    @Override
+    public ContextUpdateManagement createContextUpdateManagement() {
+        return new ContextUpdateManager();
+    }
+
+    @Nonnull
+    @Override
+    public ContextUpdateManagement createContextUpdateManagement(ActiveContextManagement contextManagement) {
+        ContextUpdateManager contextUpdateManager = new ContextUpdateManager();
+        contextManagement.addChangeListener(new ContextChangeListener() {
+            @Override
+            public <T> void notifyStateChanged(Class<T> stateClass, T activeState) {
+                contextUpdateManager.notifyStateChanged(stateClass, activeState);
+            }
+
+            @Override
+            public <T> void notifyStateUpdated(Class<T> stateClass, T activeState, StateUpdateType updateType) {
+                contextUpdateManager.notifyStateUpdated(stateClass, activeState, updateType);
+            }
+        });
+        return contextUpdateManager;
     }
 
     @Nonnull

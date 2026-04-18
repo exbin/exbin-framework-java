@@ -31,10 +31,12 @@ import javax.swing.JToolBar;
 import org.exbin.auxiliary.dropdownbutton.DropDownButton;
 import org.exbin.auxiliary.dropdownbutton.DropDownButtonVariant;
 import org.exbin.jaguif.action.api.ActionConsts;
+import org.exbin.jaguif.action.api.ActionContextChange;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 import org.exbin.jaguif.action.api.ActionType;
 import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.toolbar.api.ToolBarComponent;
@@ -46,12 +48,12 @@ import org.exbin.jaguif.toolbar.api.ToolBarComponent;
 public class ToolBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final JToolBar toolBar;
-    protected final ActionContextRegistration actionContextRegistration;
+    protected final ContextRegistration contextRegistration;
     protected final Map<SequenceContribution, ToolBarComponent> toolBarItems = new HashMap<>();
 
-    public ToolBarSequenceOutput(JToolBar toolBar, ActionContextRegistration actionContextRegistration) {
+    public ToolBarSequenceOutput(JToolBar toolBar, ContextRegistration contextRegistration) {
         this.toolBar = toolBar;
-        this.actionContextRegistration = actionContextRegistration;
+        this.contextRegistration = contextRegistration;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class ToolBarSequenceOutput implements ContributionSequenceOutput {
     public void add(ItemSequenceContribution itemContribution) {
         ToolBarComponent component = toolBarItems.get(itemContribution);
         toolBar.add(component.getComponent());
-        ToolBarSequenceOutput.finishToolBarAction(component.getAction(), actionContextRegistration);
+        ToolBarSequenceOutput.finishToolBarAction(component.getAction(), contextRegistration);
     }
 
     @Override
@@ -139,11 +141,15 @@ public class ToolBarSequenceOutput implements ContributionSequenceOutput {
         return button;
     }
 
-    protected static void finishToolBarAction(Action action, ActionContextRegistration actionContextRegistration) {
+    protected static void finishToolBarAction(Action action, ContextRegistration contextRegistration) {
         if (action == null) {
             return;
         }
-
-        actionContextRegistration.registerActionContext(action);
+        
+        Object contextChange = action.getValue(ActionConsts.ACTION_CONTEXT_CHANGE);
+        
+        if (contextChange instanceof ActionContextChange) {
+            contextRegistration.registerContextChange((ActionContextChange) contextChange);
+        }
     }
 }

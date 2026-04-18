@@ -34,9 +34,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JPopupMenu;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
-import org.exbin.jaguif.action.api.ActionManagement;
-import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.docking.api.ContextDocking;
 import org.exbin.jaguif.docking.gui.DockingPanel;
@@ -49,6 +46,7 @@ import org.exbin.jaguif.document.api.DocumentManagement;
 import org.exbin.jaguif.document.api.DocumentModuleApi;
 import org.exbin.jaguif.context.api.ContextActivable;
 import org.exbin.jaguif.context.api.ContextModuleApi;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.docking.api.SidePanelDocking;
 import org.exbin.jaguif.docking.multi.api.DockingMultiModuleApi;
 import org.exbin.jaguif.document.api.DocumentSource;
@@ -96,10 +94,8 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
 //                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
                 JPopupMenu fileContextPopupMenu = menuModule.getMenuBuilder().createPopupMenu();
-                ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-                ActionManagement actionManager = actionModule.createActionManager(popupContextManager);
-                ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(actionManager);
-                menuModule.buildMenu(fileContextPopupMenu, DockingMultiModule.FILE_CONTEXT_MENU_ID, actionContextRegistrar);
+                ContextRegistration contextRegistrar = contextModule.createContextRegistrator(contextManager);
+                menuModule.buildMenu(fileContextPopupMenu, DockingMultiModule.FILE_CONTEXT_MENU_ID, contextRegistrar);
                 fileContextPopupMenu.show(component, positionX, positionY);
                 // TODO dispose?
             }

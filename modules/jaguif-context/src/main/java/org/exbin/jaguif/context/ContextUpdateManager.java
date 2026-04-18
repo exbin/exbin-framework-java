@@ -15,24 +15,105 @@
  */
 package org.exbin.jaguif.context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.context.api.ContextChange;
 import org.exbin.jaguif.context.api.ContextStateChangeListener;
 import org.exbin.jaguif.context.api.ContextStateUpdateListener;
-import org.exbin.jaguif.context.service.ContextMessagingService;
+import org.exbin.jaguif.context.api.ContextUpdateManagement;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Context update manager.
  */
 @ParametersAreNonnullByDefault
-public class ContextUpdateManager {
+public class ContextUpdateManager implements ContextUpdateManagement {
 
-    protected final ContextMessagingService messagingService = new ContextMessagingService();
-    // protected final Map<String, ActionRecord> actions = new HashMap<>();
-    protected final Map<Class<?>, List<ContextStateChangeListener<?>>> actionContextChangeListeners = new HashMap<>();
-    protected final Map<Class<?>, List<ContextStateUpdateListener<?>>> actionContextStateUpdateListeners = new HashMap<>();
+    // TODO protected final ContextMessagingService messagingService = new ContextMessagingService();
+    protected final Map<String, ContextUpdateRecord> records = new HashMap<>();
 
-    
+    @Override
+    public void addRecord(String recordId) {
+        records.put(recordId, new ContextUpdateRecord());
+    }
+
+    @Override
+    public void removeRecord(String recordId) {
+        records.remove(recordId);
+    }
+
+    @Override
+    public void addContextItem(String recordId, ContextChange contextChange) {
+        ContextUpdateRecord record = records.get(recordId);
+        contextChange.register(record);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> void notifyStateChanged(Class<T> stateClass, @Nullable T contextInstance) {
+        // TODO: Convert to use service / thread
+        for (ContextUpdateRecord record : records.values()) {
+            List<ContextStateChangeListener<?>> changeListeners = record.getChangeListeners(stateClass);
+            if (changeListeners == null) {
+                continue;
+            }
+
+            for (ContextStateChangeListener changeListener : changeListeners) {
+                changeListener.stateChanged(contextInstance);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> void notifyStateUpdated(Class<T> stateClass, T contextInstance, StateUpdateType updateType) {
+        // TODO: Convert to use service / thread
+        for (ContextUpdateRecord record : records.values()) {
+            List<ContextStateUpdateListener<?>> changeListeners = record.getUpdateListeners(stateClass);
+            if (changeListeners == null) {
+                continue;
+            }
+
+            for (ContextStateUpdateListener updateListener : changeListeners) {
+                updateListener.notifyStateUpdated(contextInstance, updateType);
+            }
+        }
+    }
+
+    @Nonnull
+    @Override
+    public <T> List<ContextStateChangeListener<?>> getChangeListeners(String recordId, Class<T> contextClass) {
+        List<ContextStateChangeListener<?>> listeners = null;
+        ContextUpdateRecord record = records.get(recordId);
+        if (record != null) {
+            listeners = record.getChangeListeners(contextClass);
+        }
+            
+        if (listeners == null) {
+            listeners = new ArrayList<>();
+        }
+        
+        return listeners;
+    }
+
+    @Nonnull
+    @Override
+    public <T> List<ContextStateUpdateListener<?>> getUpdateListeners(String recordId, Class<T> contextClass) {
+        List<ContextStateUpdateListener<?>> listeners = null;
+        ContextUpdateRecord record = records.get(recordId);
+        if (record != null) {
+            listeners = record.getUpdateListeners(contextClass);
+        }
+            
+        if (listeners == null) {
+            listeners = new ArrayList<>();
+        }
+        
+        return listeners;
+    }
 }

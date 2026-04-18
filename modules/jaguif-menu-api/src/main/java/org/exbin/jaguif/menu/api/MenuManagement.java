@@ -24,7 +24,7 @@ import javax.swing.JPopupMenu;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
+import org.exbin.jaguif.context.api.ContextRegistration;
 
 /**
  * Interface for menus management.
@@ -37,27 +37,27 @@ public interface MenuManagement {
      *
      * @param outputMenu output menu
      * @param menuId menu definition id
-     * @param actionContextRegistration action context registration
+     * @param contextRegistration context registration
      */
-    void buildMenu(JMenu outputMenu, String menuId, ActionContextRegistration actionContextRegistration);
+    void buildMenu(JMenu outputMenu, String menuId, ContextRegistration contextRegistration);
 
     /**
      * Builds menu from given definition id.
      *
      * @param outputMenu output popup menu
      * @param menuId menu definition id
-     * @param actionContextRegistration action context registration
+     * @param contextRegistration context registration
      */
-    void buildMenu(JPopupMenu outputMenu, String menuId, ActionContextRegistration actionContextRegistration);
+    void buildMenu(JPopupMenu outputMenu, String menuId, ContextRegistration contextRegistration);
 
     /**
      * Builds menu from given definition id.
      *
      * @param outputMenuBar output menu bar
      * @param menuId menu definition id
-     * @param actionContextRegistration action context registration
+     * @param contextRegistration context registration
      */
-    void buildMenu(JMenuBar outputMenuBar, String menuId, ActionContextRegistration actionContextRegistration);
+    void buildMenu(JMenuBar outputMenuBar, String menuId, ContextRegistration contextRegistration);
 
     /**
      * Checks whether menu group exists.

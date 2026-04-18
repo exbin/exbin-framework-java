@@ -33,9 +33,7 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
 import org.exbin.jaguif.window.api.gui.WindowHeaderPanel;
-import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.frame.api.FrameModuleApi;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.language.api.ApplicationInfoKeys;
@@ -43,8 +41,9 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.toolbar.api.ToolBarModuleApi;
 import org.exbin.jaguif.options.api.OptionsModuleApi;
 import org.exbin.jaguif.context.api.ContextModuleApi;
-import org.exbin.jaguif.action.api.ActionManagement;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
+import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.context.api.ContextUpdateManagement;
 import org.exbin.jaguif.frame.api.ComponentFrame;
 
 /**
@@ -59,7 +58,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
     private boolean captionsVisible = true;
     private WindowHeaderPanel.WindowHeaderDecorationProvider windowHeaderDecorationProvider;
     private ActiveContextManagement frameContextManager;
-    private ActionManagement frameActionManager;
+    private ContextUpdateManagement updateManager;
 
     public ApplicationFrame() {
         this(true);
@@ -68,8 +67,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
     public ApplicationFrame(boolean undecorated) {
         ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
         frameContextManager = contextModule.createChildContextManager(contextModule.getMainContextManager());
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        frameActionManager = actionModule.createActionManager(frameContextManager);
+        updateManager = contextModule.createContextUpdateManagement(frameContextManager);
 
         if (undecorated) {
             setUndecorated(true);
@@ -282,9 +280,10 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
     @Override
     public void loadMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameActionManager);
-        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, actionContextRegistrar);
+        ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
+        updateManager.addRecord("mainMenu");
+        ContextRegistration contextRegistrar = contextModule.createContextRegistrator("mainMenu", updateManager, frameContextManager);
+        menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, contextRegistrar);
         menuBar.revalidate();
         menuBar.repaint();
     }
@@ -292,9 +291,10 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
     @Override
     public void loadMainToolBar() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
-        ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
-        ActionContextRegistration actionContextRegistrar = actionModule.createActionContextRegistrar(frameActionManager);
-        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, actionContextRegistrar);
+        ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
+        updateManager.addRecord("mainToolbar");
+        ContextRegistration contextRegistrar = contextModule.createContextRegistrator("mainToolbar", updateManager, frameContextManager);
+        toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, contextRegistrar);
         if (!captionsVisible) {
             setToolBarCaptionsVisible(false);
         }
@@ -344,8 +344,8 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
 
     @Nonnull
     @Override
-    public ActionManagement getActionManager() {
-        return frameActionManager;
+    public ContextUpdateManagement getUpdateManager() {
+        return updateManager;
     }
 
 //    @Override
