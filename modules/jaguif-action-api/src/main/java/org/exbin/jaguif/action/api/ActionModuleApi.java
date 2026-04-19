@@ -23,7 +23,6 @@ import javax.swing.ImageIcon;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
-import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.context.api.ContextChangeListener;
 
@@ -53,24 +52,6 @@ public interface ActionModuleApi extends Module {
      * @param actionId action identifier and bundle key prefix
      */
     void initAction(Action action, ResourceBundle bundle, Class<?> resourceClass, String actionId);
-
-    /**
-     * Creates instance of action manager.
-     *
-     * @param contextManager context manager
-     * @return action manager
-     */
-    @Nonnull
-    ActionManagement createActionManager(ActiveContextManagement contextManager);
-
-    /**
-     * Creates instance of action context registrar.
-     *
-     * @param actionManagement action management
-     * @return action context registrar
-     */
-    @Nonnull
-    ActionContextRegistration createActionContextRegistrar(ActionManagement actionManagement);
 
     /**
      * Returns clipboard/editing actions.

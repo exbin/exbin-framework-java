@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.language.api.utils;
+package org.exbin.jaguif.language.api;
 
 import java.util.Collections;
 import java.util.Enumeration;

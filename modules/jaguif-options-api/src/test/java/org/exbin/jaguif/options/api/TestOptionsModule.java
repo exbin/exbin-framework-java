@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.options.api.utils;
+package org.exbin.jaguif.options.api;
 
 import java.io.InputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.options.api.OptionsStorage;
-import org.exbin.jaguif.options.api.OptionsModuleApi;
 
 /**
  * Test implementation of preferences module.

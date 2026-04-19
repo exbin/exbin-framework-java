@@ -32,11 +32,8 @@ import org.exbin.jaguif.action.api.ActionConsts;
 import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.utils.ClipboardUtils;
-import org.exbin.jaguif.action.api.ActionManagement;
-import org.exbin.jaguif.action.api.ActionContextRegistration;
 import org.exbin.jaguif.context.api.ContextComponent;
 import org.exbin.jaguif.action.api.clipboard.ClipboardController;
-import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.context.api.ContextChangeListener;
 
@@ -93,18 +90,6 @@ public class ActionModule implements ActionModuleApi {
         }
 
         return clipboardTextActions;
-    }
-
-    @Nonnull
-    @Override
-    public ActionManagement createActionManager(ActiveContextManagement contextManager) {
-        return new ActionManager(contextManager);
-    }
-
-    @Nonnull
-    @Override
-    public ActionContextRegistration createActionContextRegistrar(ActionManagement actionManagement) {
-        return new ActionContextRegistrar(actionManagement);
     }
 
     @Override

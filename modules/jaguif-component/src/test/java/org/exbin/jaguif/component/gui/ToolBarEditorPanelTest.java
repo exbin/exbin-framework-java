@@ -38,7 +38,7 @@ public class ToolBarEditorPanelTest {
     public void testPanel() {
         TestApplication testApplication = UtilsModule.createTestApplication();
         testApplication.launch(() -> {
-            testApplication.addModule(org.exbin.jaguif.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.jaguif.language.api.utils.TestLanguageModule());
+            testApplication.addModule(org.exbin.jaguif.language.api.LanguageModuleApi.MODULE_ID, new org.exbin.jaguif.language.api.TestLanguageModule());
             OperationUndoModule operationUndoModule = new OperationUndoModule();
             testApplication.addModule(OperationUndoModule.MODULE_ID, operationUndoModule);
             ActionModule actionModule = new ActionModule();
