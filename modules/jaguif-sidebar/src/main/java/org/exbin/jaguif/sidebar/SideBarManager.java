@@ -15,15 +15,11 @@
  */
 package org.exbin.jaguif.sidebar;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.contribution.ContributionDefinition;
-import org.exbin.jaguif.sidebar.api.ActionSideBarContribution;
 import org.exbin.jaguif.contribution.ContributionManager;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
@@ -62,19 +58,6 @@ public class SideBarManager extends ContributionManager implements SideBarManage
         registerDefinition(sideBarId, moduleId);
     }
 
-    @Nonnull
-    @Override
-    public ActionSideBarContribution registerSideBarAction(String sideBarId, String moduleId, Action action) {
-        ContributionDefinition definition = definitions.get(sideBarId);
-        if (definition == null) {
-            throw new IllegalStateException("Definition with Id " + sideBarId + " doesn't exist");
-        }
-
-        ActionSideBarContribution sideBarContribution = new ActionSideBarContribution(action);
-        definition.addContribution(sideBarContribution);
-        return sideBarContribution;
-    }
-
     @Override
     public void registerSideBarContribution(String sideBarId, String moduleId, SequenceContribution contribution) {
         ContributionDefinition definition = definitions.get(sideBarId);
@@ -94,19 +77,6 @@ public class SideBarManager extends ContributionManager implements SideBarManage
     @Override
     public void registerSideBarRule(SequenceContribution contribution, SequenceContributionRule rule) {
         registerContributionRule(contribution, rule);
-    }
-
-    @Nonnull
-    public List<Action> getAllManagedActions() {
-        List<Action> actions = new ArrayList<>();
-        for (ContributionDefinition definition : definitions.values()) {
-            for (SequenceContribution contribution : definition.getContributions()) {
-                if (contribution instanceof ActionSideBarContribution) {
-                    actions.add(((ActionSideBarContribution) contribution).getAction());
-                }
-            }
-        }
-        return actions;
     }
 
     @Nonnull

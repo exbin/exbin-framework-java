@@ -15,10 +15,8 @@
  */
 package org.exbin.jaguif.sidebar.api;
 
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.context.api.ContextRegistration;
@@ -76,14 +74,6 @@ public interface SideBarModuleApi extends Module {
      * @param contextRegistration context registration
      */
     void buildSideBar(SideBar targetSideBar, String sideBarId, ContextRegistration contextRegistration);
-
-    /**
-     * Returns list of action managed by sidebar managers.
-     *
-     * @return list of actions
-     */
-    @Nonnull
-    List<Action> getSideBarManagedActions();
 
     /**
      * Sets automatic showing.

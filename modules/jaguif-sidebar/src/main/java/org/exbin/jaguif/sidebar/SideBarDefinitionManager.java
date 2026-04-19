@@ -17,11 +17,9 @@ package org.exbin.jaguif.sidebar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
-import org.exbin.jaguif.sidebar.api.ActionSideBarContribution;
 import org.exbin.jaguif.sidebar.api.SideBarDefinitionManagement;
 
 /**
@@ -38,12 +36,6 @@ public class SideBarDefinitionManager implements SideBarDefinitionManagement {
         this.sideBarManager = sideBarManager;
         this.sideBarId = sideBarId;
         this.moduleId = moduleId;
-    }
-
-    @Nonnull
-    @Override
-    public ActionSideBarContribution registerSideBarAction(Action action) {
-        return sideBarManager.registerSideBarAction(sideBarId, moduleId, action);
     }
 
     @Override

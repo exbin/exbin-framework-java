@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.menu.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
@@ -97,4 +98,12 @@ public interface MenuDefinitionManagement {
      */
     @Nonnull
     MenuDefinitionManagement getSubMenu(String subMenuId);
+
+    /**
+     * Returns registered contributions.
+     *
+     * @return menu contributions
+     */
+    @Nonnull
+    List<SequenceContribution> getContributions();
 }

@@ -36,8 +36,8 @@ public class ContextRegistrar implements ContextRegistration, ContextChangeRegis
 
     public static final String KEY_CONTEXT_CHANGE = "ContextChange";
     protected final List<ContextValues> contextItems = new ArrayList<>();
-    protected final Map<Class<?>, ContextStateChangeListener<?>> contextChangeListeners = new HashMap<>();
-    protected final Map<Class<?>, ContextStateUpdateListener<?>> contextStateUpdateListeners = new HashMap<>();
+    protected final Map<Class<?>, List<ContextStateChangeListener<?>>> contextChangeListeners = new HashMap<>();
+    protected final Map<Class<?>, List<ContextStateUpdateListener<?>>> contextStateUpdateListeners = new HashMap<>();
     protected ActiveContextManagement contextManagement;
 
     public ContextRegistrar(ActiveContextManagement contextManagement) {
@@ -54,20 +54,34 @@ public class ContextRegistrar implements ContextRegistration, ContextChangeRegis
     public void finish() {
         for (Class<?> stateClass : contextManagement.getStateClasses()) {
             Object instance = contextManagement.getActiveState(stateClass);
-            ContextStateChangeListener listener = contextChangeListeners.get(stateClass);
-            if (listener != null) {
-                listener.stateChanged(instance);
+            List<ContextStateChangeListener<?>> listeners = contextChangeListeners.get(stateClass);
+            if (listeners != null) {
+                for (ContextStateChangeListener listener : listeners) {
+                    listener.stateChanged(instance);
+                }
             }
         }
     }
 
     @Override
     public <T> void registerChangeListener(Class<T> contextClass, ContextStateChangeListener<T> listener) {
-        contextChangeListeners.put(contextClass, listener);
+        List<ContextStateChangeListener<?>> listeners = contextChangeListeners.get(contextClass);
+        if (listeners == null) {
+            listeners = new ArrayList<>();
+            contextChangeListeners.put(contextClass, listeners);
+        }
+
+        listeners.add(listener);
     }
 
     @Override
     public <T> void registerStateUpdateListener(Class<T> contextClass, ContextStateUpdateListener<T> listener) {
-        contextStateUpdateListeners.put(contextClass, listener);
+        List<ContextStateUpdateListener<?>> listeners = contextStateUpdateListeners.get(contextClass);
+        if (listeners == null) {
+            listeners = new ArrayList<>();
+            contextStateUpdateListeners.put(contextClass, listeners);
+        }
+
+        listeners.add(listener);
     }
 }

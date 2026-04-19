@@ -15,10 +15,8 @@
  */
 package org.exbin.jaguif.statusbar.api;
 
-import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.context.api.ContextRegistration;
@@ -84,12 +82,4 @@ public interface StatusBarModuleApi extends Module {
      */
     @Nonnull
     StatusBar createStatusBar(String statusBarId, ContextRegistration contextRegistration);
-
-    /**
-     * Returns list of action managed by status bar managers.
-     *
-     * @return list of actions
-     */
-    @Nonnull
-    List<Action> getStatusBarManagedActions();
 }

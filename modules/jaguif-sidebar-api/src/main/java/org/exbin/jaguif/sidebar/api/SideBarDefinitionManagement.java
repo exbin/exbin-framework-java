@@ -17,7 +17,6 @@ package org.exbin.jaguif.sidebar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
@@ -27,15 +26,6 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
  */
 @ParametersAreNonnullByDefault
 public interface SideBarDefinitionManagement {
-
-    /**
-     * Registers item as a child item for given side bar.
-     *
-     * @param action action
-     * @return sidebar contribution
-     */
-    @Nonnull
-    ActionSideBarContribution registerSideBarAction(Action action);
 
     /**
      * Registers item as a child item for given side bar.

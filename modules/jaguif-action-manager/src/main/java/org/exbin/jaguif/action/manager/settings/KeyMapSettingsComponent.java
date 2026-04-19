@@ -26,9 +26,13 @@ import javax.swing.KeyStroke;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.manager.settings.gui.KeyMapSettingsPanel;
 import org.exbin.jaguif.action.manager.model.KeyMapRecord;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
+import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.options.settings.api.SettingsComponent;
 import org.exbin.jaguif.options.settings.api.SettingsComponentProvider;
+import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 import org.exbin.jaguif.toolbar.api.ToolBarModuleApi;
 
 /**
@@ -45,26 +49,38 @@ public class KeyMapSettingsComponent implements SettingsComponentProvider {
         KeyMapSettingsPanel panel = new KeyMapSettingsPanel();
         ResourceBundle resourceBundle = panel.getResourceBundle();
         List<KeyMapRecord> records = new ArrayList<>();
-        MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        List<Action> actions = menuModule.getMenuManagedActions();
-        for (Action action : actions) {
-            String name = (String) action.getValue(Action.NAME);
-            ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
+
+        {
             String type = resourceBundle.getString("actionType.menu");
-            KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-            records.add(new KeyMapRecord(name, icon, type, keyStroke));
+            MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
+            MenuDefinitionManagement menuManager = menuModule.getMainMenuManager(MenuModuleApi.MODULE_ID);
+            List<SequenceContribution> contributions = menuManager.getContributions();
+            for (SequenceContribution contribution : contributions) {
+                if (contribution instanceof ActionSequenceContribution) {
+                    Action action = ((ActionSequenceContribution) contribution).createAction();
+                    String name = (String) action.getValue(Action.NAME);
+                    ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
+                    KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
+                    records.add(new KeyMapRecord(name, icon, type, keyStroke));
+                }
+            }
         }
-/*
-        // TODO
-        ToolBarModuleApi toolbarModule = App.getModule(ToolBarModuleApi.class);
-        actions = toolbarModule.getToolBarManagedActions();
-        for (Action action : actions) {
-            String name = (String) action.getValue(Action.NAME);
-            ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
+
+        {
             String type = resourceBundle.getString("actionType.toolBar");
-            KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-            records.add(new KeyMapRecord(name, icon, type, keyStroke));
-        } */
+            ToolBarModuleApi toolbarModule = App.getModule(ToolBarModuleApi.class);
+            ToolBarDefinitionManagement toolBarManager = toolbarModule.getMainToolBarManager(ToolBarModuleApi.MODULE_ID);
+            List<SequenceContribution> contributions = toolBarManager.getContributions();
+            for (SequenceContribution contribution : contributions) {
+                if (contribution instanceof ActionSequenceContribution) {
+                    Action action = ((ActionSequenceContribution) contribution).createAction();
+                    String name = (String) action.getValue(Action.NAME);
+                    ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
+                    KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
+                    records.add(new KeyMapRecord(name, icon, type, keyStroke));
+                }
+            }
+        }
         panel.setRecords(records);
         return panel;
     }

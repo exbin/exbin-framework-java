@@ -15,44 +15,10 @@
  */
 package org.exbin.jaguif.sidebar.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import org.exbin.jaguif.action.api.ActionConsts;
-import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Action side bar item contribution.
  */
-@ParametersAreNonnullByDefault
-public class ActionSideBarContribution implements ItemSequenceContribution {
-
-    protected final Action action;
-    protected JComponent component;
-
-    public ActionSideBarContribution(Action action) {
-        this.action = action;
-    }
-
-    @Nonnull
-    @Override
-    public String getContributionId() {
-        return (String) action.getValue(ActionConsts.ACTION_ID);
-    }
-
-    @Nonnull
-    public Action getAction() {
-        return action;
-    }
-
-    @Nullable
-    public JComponent getComponent() {
-        return component;
-    }
-
-    public void setComponent(JComponent component) {
-        this.component = component;
-    }
+public interface ActionSideBarContribution extends ActionSequenceContribution {
 }

@@ -15,7 +15,6 @@
  */
 package org.exbin.jaguif.menu.api;
 
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -176,12 +175,4 @@ public interface MenuModuleApi extends Module {
      * @param separationMode separation mode
      */
     void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, @Nullable String subMenuId, String moduleId, SeparationSequenceContributionRule.SeparationMode separationMode);
-
-    /**
-     * Returns list of action managed by menu managers.
-     *
-     * @return list of actions
-     */
-    @Nonnull
-    List<Action> getMenuManagedActions();
 }

@@ -16,7 +16,9 @@
 package org.exbin.jaguif.menu;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -163,5 +165,14 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
     @Override
     public void registerMenuRule(SequenceContribution contribution, SequenceContributionRule rule) {
         registerContributionRule(contribution, rule);
+    }
+    
+    @Nonnull
+    public List<SequenceContribution> getContributions() {
+        List<SequenceContribution> contributions = new ArrayList<>();
+        for (ContributionDefinition definition : definitions.values()) {
+            contributions.addAll(definition.getContributions());
+        }
+        return contributions;
     }
 }

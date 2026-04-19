@@ -17,7 +17,6 @@ package org.exbin.jaguif.sidebar.api;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
@@ -45,17 +44,6 @@ public interface SideBarManagement {
      * @param pluginId plugin id
      */
     void registerSideBar(String sideBarId, String pluginId);
-
-    /**
-     * Registers side bar item contribution.
-     *
-     * @param sideBarId side bar id
-     * @param moduleId module id
-     * @param action item action
-     * @return item contribution
-     */
-    @Nonnull
-    ActionSideBarContribution registerSideBarAction(String sideBarId, String moduleId, Action action);
 
     /**
      * Registers side bar item contribution.

@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.toolbar.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
@@ -50,4 +51,12 @@ public interface ToolBarDefinitionManagement {
      * @param rule tool bar contribution rule
      */
     void registerToolBarRule(SequenceContribution toolBarContribution, SequenceContributionRule rule);
+
+    /**
+     * Returns registered contributions.
+     *
+     * @return tool bar contributions
+     */
+    @Nonnull
+    List<SequenceContribution> getContributions();
 }

@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.menu;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -113,5 +114,11 @@ public class MenuDefinitionManager implements MenuDefinitionManagement {
     @Override
     public MenuDefinitionManagement getSubMenu(String subMenuId) {
         return new MenuDefinitionManager(menuManager, menuId, moduleId, subMenuId);
+    }
+    
+    @Nonnull
+    @Override
+    public List<SequenceContribution> getContributions() {
+        return menuManager.getContributions();
     }
 }

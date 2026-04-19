@@ -15,11 +15,9 @@
  */
 package org.exbin.jaguif.statusbar;
 
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
@@ -90,11 +88,5 @@ public class StatusBarModule implements StatusBarModuleApi {
         StatusBar statusBar = new DefaultStatusBar();
         buildStatusBar(statusBar, statusBarId, contextRegistration);
         return statusBar;
-    }
-
-    @Nonnull
-    @Override
-    public List<Action> getStatusBarManagedActions() {
-        throw new UnsupportedOperationException();
     }
 }

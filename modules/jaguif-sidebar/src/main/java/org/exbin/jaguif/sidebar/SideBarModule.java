@@ -15,12 +15,9 @@
  */
 package org.exbin.jaguif.sidebar;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import org.exbin.jaguif.App;
@@ -62,16 +59,6 @@ public class SideBarModule implements SideBarModuleApi {
         if (resourceBundle == null) {
             getResourceBundle();
         }
-    }
-
-    @Nonnull
-    @Override
-    public List<Action> getSideBarManagedActions() {
-        List<Action> actions = new ArrayList<>();
-        SideBarModule.this.getMainSideBarManager();
-        actions.addAll(mainSideBarManager.getAllManagedActions());
-
-        return actions;
     }
 
     @Nonnull

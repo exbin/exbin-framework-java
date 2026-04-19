@@ -16,8 +16,11 @@
 package org.exbin.jaguif.sidebar;
 
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -36,6 +39,7 @@ import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
 import org.exbin.jaguif.action.api.ActionType;
 import org.exbin.jaguif.context.api.ContextChange;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.sidebar.api.ComponentSideBarContribution;
 import org.exbin.jaguif.sidebar.api.SideBar;
 import org.exbin.jaguif.sidebar.api.SideBarComponent;
@@ -48,6 +52,7 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
 
     protected final SideBar sideBar;
     protected final ContextRegistration contextRegistration;
+    protected final Map<SequenceContribution, SideToolBarComponent> sideBarItems = new HashMap<>();
 
     public SideToolBarSequenceOutput(SideBar sideBar, ContextRegistration contextRegistration) {
         this.sideBar = sideBar;
@@ -57,21 +62,22 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
     @Override
     public boolean initItem(ItemSequenceContribution itemContribution) {
         if (itemContribution instanceof ActionSideBarContribution) {
-            Action action = ((ActionSideBarContribution) itemContribution).getAction();
-            ((ActionSideBarContribution) itemContribution).setComponent(SideToolBarSequenceOutput.createSideBarComponent(action));
+            Action action = ((ActionSideBarContribution) itemContribution).createAction();
+            sideBarItems.put(itemContribution, new SideToolBarComponent(SideToolBarSequenceOutput.createSideBarComponent(action), action));
             return true;
         } else if (itemContribution instanceof ComponentSideBarContribution) {
             return true;
         }
-        
+
         throw new IllegalStateException("Unsupported contribution type");
     }
 
     @Override
     public void add(ItemSequenceContribution itemContribution) {
         if (itemContribution instanceof ActionSideBarContribution) {
-            sideBar.getToolBar().add(((ActionSideBarContribution) itemContribution).getComponent());
-            SideToolBarSequenceOutput.finishSideBarAction(((ActionSideBarContribution) itemContribution).getAction(), contextRegistration);
+            SideToolBarComponent component = sideBarItems.get(itemContribution);
+            sideBar.getToolBar().add(component.getComponent());
+            SideToolBarSequenceOutput.finishSideBarAction(component.getAction(), contextRegistration);
         } else if (itemContribution instanceof ComponentSideBarContribution) {
             SideBarComponent sideBarComponent = ((ComponentSideBarContribution) itemContribution).createComponent();
             Action buttonAction = new AbstractAction() {
@@ -188,6 +194,29 @@ public class SideToolBarSequenceOutput implements ContributionSequenceOutput {
 
         if (contextChange instanceof ActionContextChange) {
             contextRegistration.registerContextChange((ActionContextChange) contextChange);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    @Immutable
+    public static class SideToolBarComponent {
+
+        private final JComponent component;
+        private final Action action;
+
+        public SideToolBarComponent(JComponent component, Action action) {
+            this.component = component;
+            this.action = action;
+        }
+
+        @Nonnull
+        public JComponent getComponent() {
+            return component;
+        }
+
+        @Nonnull
+        public Action getAction() {
+            return action;
         }
     }
 }

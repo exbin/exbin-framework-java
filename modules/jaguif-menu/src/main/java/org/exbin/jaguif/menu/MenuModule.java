@@ -15,8 +15,6 @@
  */
 package org.exbin.jaguif.menu;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
@@ -127,16 +125,6 @@ public class MenuModule implements MenuModuleApi {
     }
 
     @Nonnull
-    @Override
-    public List<Action> getMenuManagedActions() {
-        List<Action> actions = new ArrayList<>();
-        MenuModule.this.getMenuManager();
-        // actions.addAll(menuManager.getAllManagedActions());
-
-        return actions;
-    }
-
-    @Nonnull
     private MenuManager getMenuManager() {
         if (menuManager == null) {
             menuManager = new MenuManager();
@@ -189,7 +177,7 @@ public class MenuModule implements MenuModuleApi {
         if (menuBuilder == null) {
             menuBuilder = new DefaultMenuBuilder();
         }
-        
+
         return menuBuilder;
     }
 
