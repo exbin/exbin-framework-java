@@ -15,7 +15,7 @@
  */
 package org.exbin.jaguif.action;
 
-import org.exbin.jaguif.action.clipboard.ClipboardTextActions;
+import org.exbin.jaguif.action.clipboard.TextClipboardActions;
 import org.exbin.jaguif.action.clipboard.ClipboardActions;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
@@ -44,7 +44,7 @@ import org.exbin.jaguif.context.api.ContextChangeListener;
 public class ActionModule implements ActionModuleApi {
 
     private ClipboardActions clipboardActions = null;
-    private ClipboardTextActions clipboardTextActions = null;
+    private TextClipboardActions clipboardTextActions = null;
     private ResourceBundle resourceBundle;
 
     public ActionModule() {
@@ -82,9 +82,9 @@ public class ActionModule implements ActionModuleApi {
 
     @Nonnull
     @Override
-    public ClipboardTextActions getClipboardTextActions() {
+    public TextClipboardActions getClipboardTextActions() {
         if (clipboardTextActions == null) {
-            clipboardTextActions = new ClipboardTextActions();
+            clipboardTextActions = new TextClipboardActions();
             ensureSetup();
             clipboardTextActions.init(resourceBundle);
         }

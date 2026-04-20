@@ -37,19 +37,28 @@ public class ContextUpdateManager implements ContextUpdateManagement {
     // TODO protected final ContextMessagingService messagingService = new ContextMessagingService();
     protected final Map<String, ContextUpdateRecord> records = new HashMap<>();
 
-    @Override
-    public void addRecord(String recordId) {
-        records.put(recordId, new ContextUpdateRecord());
+    public ContextUpdateManager() {
+        records.put("", new ContextUpdateRecord());
     }
 
     @Override
-    public void removeRecord(String recordId) {
-        records.remove(recordId);
+    public void addGroup(String groupId) {
+        records.put(groupId, new ContextUpdateRecord());
     }
 
     @Override
-    public void addContextItem(String recordId, ContextChange contextChange) {
-        ContextUpdateRecord record = records.get(recordId);
+    public void removeGroup(String groupId) {
+        records.remove(groupId);
+    }
+
+    @Override
+    public void addContextItem(ContextChange contextChange) {
+        addContextItem("", contextChange);
+    }
+
+    @Override
+    public void addContextItem(String groupId, ContextChange contextChange) {
+        ContextUpdateRecord record = records.get(groupId);
         contextChange.register(record);
     }
 
@@ -87,33 +96,33 @@ public class ContextUpdateManager implements ContextUpdateManagement {
 
     @Nonnull
     @Override
-    public <T> List<ContextStateChangeListener<?>> getChangeListeners(String recordId, Class<T> contextClass) {
+    public <T> List<ContextStateChangeListener<?>> getChangeListeners(String groupId, Class<T> contextClass) {
         List<ContextStateChangeListener<?>> listeners = null;
-        ContextUpdateRecord record = records.get(recordId);
+        ContextUpdateRecord record = records.get(groupId);
         if (record != null) {
             listeners = record.getChangeListeners(contextClass);
         }
-            
+
         if (listeners == null) {
             listeners = new ArrayList<>();
         }
-        
+
         return listeners;
     }
 
     @Nonnull
     @Override
-    public <T> List<ContextStateUpdateListener<?>> getUpdateListeners(String recordId, Class<T> contextClass) {
+    public <T> List<ContextStateUpdateListener<?>> getUpdateListeners(String groupId, Class<T> contextClass) {
         List<ContextStateUpdateListener<?>> listeners = null;
-        ContextUpdateRecord record = records.get(recordId);
+        ContextUpdateRecord record = records.get(groupId);
         if (record != null) {
             listeners = record.getUpdateListeners(contextClass);
         }
-            
+
         if (listeners == null) {
             listeners = new ArrayList<>();
         }
-        
+
         return listeners;
     }
 }

@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Clipboard actions.
@@ -74,5 +75,95 @@ public class ClipboardActions implements ClipboardActionsApi {
         SelectAllAction selectAllAction = new SelectAllAction();
         selectAllAction.init(resourceBundle);
         return selectAllAction;
+    }
+
+    @Nonnull
+    @Override
+    public ActionSequenceContribution createCutContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createCutAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return CutAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public ActionSequenceContribution createCopyContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createCopyAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return CopyAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public ActionSequenceContribution createPasteContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createPasteAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return PasteAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public ActionSequenceContribution createDeleteContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createDeleteAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return DeleteAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public ActionSequenceContribution createSelectAllContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createSelectAllAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return SelectAllAction.ACTION_ID;
+            }
+        };
     }
 }

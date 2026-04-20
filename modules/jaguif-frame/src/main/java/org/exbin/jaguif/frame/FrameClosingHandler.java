@@ -18,8 +18,8 @@ package org.exbin.jaguif.frame;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.frame.api.ComponentFrame;
 import org.exbin.jaguif.utils.WindowClosingListener;
+import org.exbin.jaguif.frame.api.FrameController;
 
 /**
  * Frame exit handler.
@@ -40,7 +40,7 @@ public class FrameClosingHandler {
         closingListeners.remove(closingListener);
     }
 
-    public void executeExit(ComponentFrame frameHandler) {
+    public void executeExit(FrameController frameHandler) {
         for (WindowClosingListener listener : closingListeners) {
             boolean canContinue = listener.windowClosing();
             if (!canContinue) {
@@ -51,7 +51,7 @@ public class FrameClosingHandler {
         System.exit(0);
     }
 
-    public boolean canExit(ComponentFrame frameHandler) {
+    public boolean canExit(FrameController frameHandler) {
         for (WindowClosingListener listener : closingListeners) {
             boolean canContinue = listener.windowClosing();
             if (!canContinue) {

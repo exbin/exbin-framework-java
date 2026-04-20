@@ -39,7 +39,6 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 import org.exbin.jaguif.menu.api.MenuManagement;
 import org.exbin.jaguif.context.api.ContextRegistration;
-import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 import org.exbin.jaguif.menu.api.MenuBuilder;
 
 /**
@@ -201,79 +200,19 @@ public class MenuModule implements MenuModuleApi {
         SequenceContribution contribution = mgmt.registerMenuGroup(CLIPBOARD_ACTIONS_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         mgmt.registerMenuRule(contribution, new SeparationSequenceContributionRule(separationMode));
-        contribution = new ActionSequenceContribution() {
-            @Nonnull
-            @Override
-            public Action createAction() {
-                return actions.createCutAction();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return "cut";
-            }
-        };
+        contribution = actions.createCutContribution();
         mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = new ActionSequenceContribution() {
-            @Nonnull
-            @Override
-            public Action createAction() {
-                return actions.createCopyAction();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return "copy";
-            }
-        };
+        contribution = actions.createCopyContribution();
         mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = new ActionSequenceContribution() {
-            @Nonnull
-            @Override
-            public Action createAction() {
-                return actions.createPasteAction();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return "paste";
-            }
-        };
+        contribution = actions.createPasteContribution();
         mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = new ActionSequenceContribution() {
-            @Nonnull
-            @Override
-            public Action createAction() {
-                return actions.createDeleteAction();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return "delete";
-            }
-        };
+        contribution = actions.createDeleteContribution();
         mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
-        contribution = new ActionSequenceContribution() {
-            @Nonnull
-            @Override
-            public Action createAction() {
-                return actions.createSelectAllAction();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return "selectAll";
-            }
-        };
+        contribution = actions.createSelectAllContribution();
         mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new GroupSequenceContributionRule(CLIPBOARD_ACTIONS_MENU_GROUP_ID));
     }

@@ -4,6 +4,7 @@ if (rootProject.path == ':') {
     include ':core:jaguif-core'
     include ':modules:jaguif-action-api'
     include ':modules:jaguif-context-api'
+    include ':modules:jaguif-contribution-api'
     include ':modules:jaguif-help-api'
     include ':modules:jaguif-language-api'
     include ':modules:jaguif-options-api'

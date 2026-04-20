@@ -4,6 +4,7 @@ if (rootProject.path == ':') {
     include ':core:jaguif-core'
     include ':modules:jaguif-utils'
     include ':modules:jaguif-context-api'
+    include ':modules:jaguif-contribution-api'
 }
 
 apply from: '../jaguif-modules-settings.gradle'

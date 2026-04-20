@@ -59,7 +59,6 @@ import org.exbin.jaguif.options.settings.api.SettingsPageContributionRule;
 import org.exbin.jaguif.frame.api.ContextFrame;
 import org.exbin.jaguif.options.api.PrefixOptionsStorage;
 import org.exbin.jaguif.window.settings.WindowPositionOptions;
-import org.exbin.jaguif.frame.api.ComponentFrame;
 import org.exbin.jaguif.context.api.ContextActivable;
 import org.exbin.jaguif.frame.contribution.ExitContribution;
 import org.exbin.jaguif.frame.contribution.ViewStatusBarContribution;
@@ -67,6 +66,7 @@ import org.exbin.jaguif.frame.contribution.ViewToolBarCaptionsContribution;
 import org.exbin.jaguif.frame.contribution.ViewToolBarContribution;
 import org.exbin.jaguif.utils.ComponentProvider;
 import org.exbin.jaguif.utils.WindowClosingListener;
+import org.exbin.jaguif.frame.api.FrameController;
 
 /**
  * Module for window frame support.
@@ -138,12 +138,12 @@ public class FrameModule implements FrameModuleApi {
     @Nonnull
     @Override
     public Frame getFrame() {
-        return getFrameHandler().getFrame();
+        return getFrameController().getFrame();
     }
 
     @Override
     public void loadFramePosition() {
-        getFrameHandler();
+        getFrameController();
         WindowPosition framePosition = new WindowPosition();
         OptionsModuleApi optionsModule = App.getModule(OptionsModuleApi.class);
         PrefixOptionsStorage frameOptionsStorage = new PrefixOptionsStorage(optionsModule.getAppOptions(), PREFERENCES_FRAME_PREFIX);
@@ -170,7 +170,7 @@ public class FrameModule implements FrameModuleApi {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (exitHandler != null) {
-                    exitHandler.executeExit(getFrameHandler());
+                    exitHandler.executeExit(getFrameController());
                 } else {
                     System.exit(0);
                 }
@@ -192,7 +192,7 @@ public class FrameModule implements FrameModuleApi {
         if (DesktopUtils.detectBasicOs() == DesktopUtils.OsType.MACOSX) {
             FlatDesktop.setQuitHandler(response -> {
                 if (exitHandler != null) {
-                    boolean canExit = exitHandler.canExit(getFrameHandler());
+                    boolean canExit = exitHandler.canExit(getFrameController());
                     if (canExit) {
                         response.performQuit();
                     } else {
@@ -206,7 +206,7 @@ public class FrameModule implements FrameModuleApi {
             Desktop desktop = Desktop.getDesktop();
             desktop.setQuitHandler((e, response) -> {
                 if (exitHandler != null) {
-                    boolean canExit = exitHandler.canExit(getFrameHandler());
+                    boolean canExit = exitHandler.canExit(getFrameController());
                     if (canExit) {
                         response.performQuit();
                     } else {
@@ -233,15 +233,14 @@ public class FrameModule implements FrameModuleApi {
 
     @Nonnull
     @Override
-    public ComponentFrame getFrameHandler() {
+    public FrameController getFrameController() {
         if (applicationFrame == null) {
             applicationFrame = new ApplicationFrame(undecorated);
             applicationFrame.initApplication();
             applicationFrame.setApplicationExitHandler(exitHandler);
             appIcon = applicationFrame.getIconImage();
 
-            FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-            ActiveContextManagement contextManager = frameModule.getFrameHandler().getContextManager();
+            ActiveContextManagement contextManager = applicationFrame.getContextManager();
             contextManager.changeActiveState(ContextFrame.class, applicationFrame);
             contextManager.changeActiveState(DialogParentComponent.class, new DialogParentComponent() {
                 @Nonnull
@@ -261,10 +260,10 @@ public class FrameModule implements FrameModuleApi {
     
     @Override
     public void attachFrameContentComponent(ComponentProvider componentProvider) {
-        ComponentFrame frameHandler = getFrameHandler();
-        frameHandler.setMainPanel(componentProvider.getComponent());
+        FrameController frameController = getFrameController();
+        frameController.setMainPanel(componentProvider.getComponent());
         if (componentProvider instanceof ContextActivable) {
-            ActiveContextManagement contextManager = frameHandler.getContextManager();
+            ActiveContextManagement contextManager = frameController.getContextManager();
             ((ContextActivable) componentProvider).notifyActivated(contextManager);
         }
         if (componentProvider instanceof WindowClosingListener) {
@@ -296,7 +295,7 @@ public class FrameModule implements FrameModuleApi {
 
     @Nonnull
     private StatusBarHandler getStatusBarHandler() {
-        getFrameHandler();
+        getFrameController();
         if (statusBarHandler == null) {
             statusBarHandler = new StatusBarHandler(applicationFrame);
         }

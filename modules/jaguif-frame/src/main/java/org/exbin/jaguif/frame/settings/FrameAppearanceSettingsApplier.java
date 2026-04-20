@@ -19,8 +19,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.options.settings.api.SettingsApplier;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
-import org.exbin.jaguif.frame.api.ComponentFrame;
 import org.exbin.jaguif.frame.api.ContextFrame;
+import org.exbin.jaguif.frame.api.FrameController;
 
 /**
  * Frame appearance settings applier.
@@ -33,9 +33,9 @@ public class FrameAppearanceSettingsApplier implements SettingsApplier {
     @Override
     public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
         ContextFrame instance = contextProvider.getActiveState(ContextFrame.class);
-        if (instance instanceof ComponentFrame) {
+        if (instance instanceof FrameController) {
             FrameAppearanceOptions options = settingsProvider.getSettingsOptions(FrameAppearanceOptions.class);
-            ComponentFrame frame = (ComponentFrame) instance;
+            FrameController frame = (FrameController) instance;
             frame.setToolBarVisible(options.isShowToolBar());
             frame.setToolBarCaptionsVisible(options.isShowToolBarCaptions());
             frame.setStatusBarVisible(options.isShowStatusBar());

@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
+import org.exbin.jaguif.action.api.clipboard.TextClipboardActionsApi;
 import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.context.api.ContextChangeListener;
 
@@ -67,7 +68,7 @@ public interface ActionModuleApi extends Module {
      * @return clipboard/editing text actions.
      */
     @Nonnull
-    ClipboardActionsApi getClipboardTextActions();
+    TextClipboardActionsApi getClipboardTextActions();
 
     /**
      * Returns clipboard action icon.

@@ -44,13 +44,13 @@ import org.exbin.jaguif.context.api.ContextModuleApi;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.context.api.ContextUpdateManagement;
-import org.exbin.jaguif.frame.api.ComponentFrame;
+import org.exbin.jaguif.frame.api.FrameController;
 
 /**
  * Basic appplication frame.
  */
 @ParametersAreNonnullByDefault
-public class ApplicationFrame extends javax.swing.JFrame implements ComponentFrame, WindowHeaderPanel.WindowHeaderDecorationProvider {
+public class ApplicationFrame extends javax.swing.JFrame implements FrameController, WindowHeaderPanel.WindowHeaderDecorationProvider {
 
     private FrameClosingHandler exitHandler;
     private JComponent currentStatusBarComponent = null;
@@ -281,7 +281,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
     public void loadMainMenu() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
-        updateManager.addRecord("mainMenu");
+        updateManager.addGroup("mainMenu");
         ContextRegistration contextRegistrar = contextModule.createContextRegistrator("mainMenu", updateManager, frameContextManager);
         menuModule.buildMenu(menuBar, MenuModuleApi.MAIN_MENU_ID, contextRegistrar);
         menuBar.revalidate();
@@ -292,7 +292,7 @@ public class ApplicationFrame extends javax.swing.JFrame implements ComponentFra
     public void loadMainToolBar() {
         ToolBarModuleApi toolBarModule = App.getModule(ToolBarModuleApi.class);
         ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
-        updateManager.addRecord("mainToolbar");
+        updateManager.addGroup("mainToolbar");
         ContextRegistration contextRegistrar = contextModule.createContextRegistrator("mainToolbar", updateManager, frameContextManager);
         toolBarModule.buildToolBar(toolBar, ToolBarModuleApi.MAIN_TOOL_BAR_ID, contextRegistrar);
         if (!captionsVisible) {

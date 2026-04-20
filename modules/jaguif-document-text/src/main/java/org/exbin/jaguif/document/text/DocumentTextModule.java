@@ -407,7 +407,7 @@ public class DocumentTextModule implements Module {
                 JPopupMenu popupMenu = menuBuilder.createPopupMenu();
                 FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
-                ContextRegistration contextRegistrar = contextModule.createContextRegistrator(frameModule.getFrameHandler().getContextManager());
+                ContextRegistration contextRegistrar = contextModule.createContextRegistrator(frameModule.getFrameController().getContextManager());
                 menuModule.buildMenu(popupMenu, TEXT_POPUP_MENU_ID, contextRegistrar);
                 popupMenu.show(invoker, x, y);
             }

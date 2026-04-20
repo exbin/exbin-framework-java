@@ -30,10 +30,10 @@ import org.exbin.jaguif.context.api.ContextModuleApi;
 import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.context.api.ContextUpdateManagement;
 import org.exbin.jaguif.docking.api.SidePanelDocking;
-import org.exbin.jaguif.frame.api.ComponentFrame;
 import org.exbin.jaguif.frame.api.FrameModuleApi;
 import org.exbin.jaguif.sidebar.api.SideBarModuleApi;
 import org.exbin.jaguif.sidebar.api.SideBar;
+import org.exbin.jaguif.frame.api.FrameController;
 
 /**
  * Default sidebar manager.
@@ -84,10 +84,10 @@ public class SideBarManager extends ContributionManager implements SideBarManage
         SideBar sideBar = new DefaultSideBar(docking);
         ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ComponentFrame frameHandler = frameModule.getFrameHandler();
+        FrameController frameHandler = frameModule.getFrameController();
         ContextUpdateManagement updateManager = frameHandler.getUpdateManager();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
-        updateManager.addRecord("mainSideBar");
+        updateManager.addGroup("mainSideBar");
         buildSideBar(sideBar, SideBarModuleApi.MAIN_SIDE_BAR_ID, contextModule.createContextRegistrator("mainSideBar", updateManager, contextManager));
         return sideBar;
     }

@@ -43,8 +43,8 @@ import org.exbin.jaguif.options.settings.SettingsPage;
 import org.exbin.jaguif.options.settings.api.OptionsSettingsManagement;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
-import org.exbin.jaguif.frame.api.ComponentFrame;
 import org.exbin.jaguif.options.settings.api.SettingsOptions;
+import org.exbin.jaguif.frame.api.FrameController;
 
 /**
  * Options settings action.
@@ -161,7 +161,7 @@ public class SettingsAction extends AbstractAction {
 
         // TODO Run in top context
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ComponentFrame frameHandler = frameModule.getFrameHandler();
+        FrameController frameHandler = frameModule.getFrameController();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
 
         for (SettingsPage page : pages) {
@@ -180,7 +180,7 @@ public class SettingsAction extends AbstractAction {
 
         // TODO Run in top context
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ComponentFrame frameHandler = frameModule.getFrameHandler();
+        FrameController frameHandler = frameModule.getFrameController();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
 
         for (SettingsPage page : pages) {
@@ -197,7 +197,7 @@ public class SettingsAction extends AbstractAction {
     private void applyOnlyOnce(Collection<SettingsPage> pages) {
         // TODO Run in top context
         FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
-        ComponentFrame frameHandler = frameModule.getFrameHandler();
+        FrameController frameHandler = frameModule.getFrameController();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
 
         SettingsOptionsStorage settingsOptionsStorage = new SettingsOptionsStorage();

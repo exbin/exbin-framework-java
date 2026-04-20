@@ -24,10 +24,10 @@ import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.context.api.ContextUpdateManagement;
 
 /**
- * Interface for component frame.
+ * Interface for frame controller.
  */
 @ParametersAreNonnullByDefault
-public interface ComponentFrame extends ContextFrame {
+public interface FrameController extends ContextFrame {
 
     /**
      * Gets current frame.

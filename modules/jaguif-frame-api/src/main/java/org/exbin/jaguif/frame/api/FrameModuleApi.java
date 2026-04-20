@@ -53,12 +53,12 @@ public interface FrameModuleApi extends Module {
     ResourceBundle getResourceBundle();
 
     /**
-     * Returns frame handler.
+     * Returns frame controller.
      *
-     * @return frame handler
+     * @return frame controller
      */
     @Nonnull
-    ComponentFrame getFrameHandler();
+    FrameController getFrameController();
 
     /**
      * Attaches component provider to the component frame.

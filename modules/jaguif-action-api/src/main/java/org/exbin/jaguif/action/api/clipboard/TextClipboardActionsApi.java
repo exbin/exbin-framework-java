@@ -17,12 +17,11 @@ package org.exbin.jaguif.action.api.clipboard;
 
 import javax.annotation.Nonnull;
 import javax.swing.Action;
-import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
 
 /**
  * Interface for clipboard editing actions.
  */
-public interface ClipboardActionsApi {
+public interface TextClipboardActionsApi {
 
     /**
      * Creates cut to clipboard action.
@@ -63,44 +62,4 @@ public interface ClipboardActionsApi {
      */
     @Nonnull
     Action createSelectAllAction();
-    
-    /**
-     * Creates cut to clipboard contribution.
-     *
-     * @return contribution instance
-     */
-    @Nonnull
-    ActionSequenceContribution createCutContribution();
-
-    /**
-     * Creates copy to clipboard contribution.
-     *
-     * @return contribution instance
-     */
-    @Nonnull
-    ActionSequenceContribution createCopyContribution();
-
-    /**
-     * Creates paste from clipboard contribution.
-     *
-     * @return contribution instance
-     */
-    @Nonnull
-    ActionSequenceContribution createPasteContribution();
-
-    /**
-     * Creates delete selection contribution.
-     *
-     * @return contribution instance
-     */
-    @Nonnull
-    ActionSequenceContribution createDeleteContribution();
-
-    /**
-     * Creates select all contribution.
-     *
-     * @return contribution instance
-     */
-    @Nonnull
-    ActionSequenceContribution createSelectAllContribution();
 }

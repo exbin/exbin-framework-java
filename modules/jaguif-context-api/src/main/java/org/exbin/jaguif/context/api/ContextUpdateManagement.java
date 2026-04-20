@@ -29,24 +29,31 @@ public interface ContextUpdateManagement {
     /**
      * Adds group with specific identifier.
      *
-     * @param recordId record identifier
+     * @param groupId group identifier
      */
-    void addRecord(String recordId);
+    void addGroup(String groupId);
 
     /**
      * Removes group with specific identifier.
      *
-     * @param recordId record identifier
+     * @param groupId group identifier
      */
-    void removeRecord(String recordId);
+    void removeGroup(String groupId);
 
     /**
      * Adds context change monitoring item.
      *
-     * @param recordId record identifier
      * @param contextChange context change monitor
      */
-    void addContextItem(String recordId, ContextChange contextChange);
+    void addContextItem(ContextChange contextChange);
+
+    /**
+     * Adds context change monitoring item.
+     *
+     * @param groupId group identifier
+     * @param contextChange context change monitor
+     */
+    void addContextItem(String groupId, ContextChange contextChange);
 
     /**
      * Notifies all items about context change.
@@ -71,21 +78,21 @@ public interface ContextUpdateManagement {
      * Returns context change listeners.
      *
      * @param <T> monitored class type
-     * @param recordId record identifier
+     * @param groupId group identifier
      * @param contextClass context class
      * @return context change listeners
      */
     @Nonnull
-    <T> List<ContextStateChangeListener<?>> getChangeListeners(String recordId, Class<T> contextClass);
+    <T> List<ContextStateChangeListener<?>> getChangeListeners(String groupId, Class<T> contextClass);
 
     /**
      * Returns context update listeners.
      *
      * @param <T> monitored class type
-     * @param recordId record identifier
+     * @param grouoId group identifier
      * @param contextClass context class
      * @return context update listeners
      */
     @Nonnull
-    <T> List<ContextStateUpdateListener<?>> getUpdateListeners(String recordId, Class<T> contextClass);
+    <T> List<ContextStateUpdateListener<?>> getUpdateListeners(String grouoId, Class<T> contextClass);
 }

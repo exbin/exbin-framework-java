@@ -28,8 +28,8 @@ import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.action.api.ActionType;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
 import org.exbin.jaguif.frame.ApplicationFrame;
-import org.exbin.jaguif.frame.api.ComponentFrame;
 import org.exbin.jaguif.frame.api.ContextFrame;
+import org.exbin.jaguif.frame.api.FrameController;
 
 /**
  * View status bar action.
@@ -38,7 +38,7 @@ import org.exbin.jaguif.frame.api.ContextFrame;
 public class ViewStatusBarAction extends AbstractAction {
 
     public static final String ACTION_ID = "viewStatusBar";
-    protected ComponentFrame frame;
+    protected FrameController frame;
 
     public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
@@ -67,7 +67,7 @@ public class ViewStatusBarAction extends AbstractAction {
     }
 
     public void updateByContext(ContextFrame context) {
-        this.frame = context instanceof ComponentFrame ? (ApplicationFrame) context : null;
+        this.frame = context instanceof FrameController ? (ApplicationFrame) context : null;
         setEnabled(frame != null);
         if (frame != null) {
             putValue(Action.SELECTED_KEY, frame.isStatusBarVisible());

@@ -28,14 +28,14 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.TextAction;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.action.api.ActionModuleApi;
-import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
+import org.exbin.jaguif.action.api.clipboard.TextClipboardActionsApi;
 import org.exbin.jaguif.utils.ActionUtils;
 
 /**
- * Clipboard text actions.
+ * Clipboard actions for text component.
  */
 @ParametersAreNonnullByDefault
-public class ClipboardTextActions implements ClipboardActionsApi {
+public class TextClipboardActions implements TextClipboardActionsApi {
 
     public static final String EDIT_SELECT_ALL_ACTION_ID = "editSelectAll";
     public static final String EDIT_DELETE_ACTION_ID = "editDelete";
@@ -49,7 +49,7 @@ public class ClipboardTextActions implements ClipboardActionsApi {
     protected ResourceBundle resourceBundle;
     protected ActionMap actionMap;
 
-    public ClipboardTextActions() {
+    public TextClipboardActions() {
     }
 
     public void init(ResourceBundle resourceBundle) {
