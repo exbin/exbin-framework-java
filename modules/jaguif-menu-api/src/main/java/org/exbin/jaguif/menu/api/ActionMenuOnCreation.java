@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.options.settings.api;
+package org.exbin.jaguif.menu.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.ContextStateProvider;
+import javax.swing.JMenuItem;
 
 /**
- * Interface for settings applier.
+ * Listener for action update when menu is created.
  */
 @ParametersAreNonnullByDefault
-public interface SettingsApplier {
+public interface ActionMenuOnCreation {
 
     /**
-     * Applies settings to specific context.
+     * Called when new menu item is created.
      *
-     * @param contextProvider context provider
-     * @param settingsProvider options settings provider
+     * @param menuItem new menu item instance
+     * @param menuId menu ID
+     * @param subMenuId sub menu ID or empty string
      */
-    void applySettings(ContextStateProvider contextProvider, SettingsOptionsProvider settingsProvider);
+    void onCreate(JMenuItem menuItem, String menuId, String subMenuId);
 }

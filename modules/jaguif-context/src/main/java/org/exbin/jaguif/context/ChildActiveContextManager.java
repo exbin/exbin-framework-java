@@ -103,14 +103,6 @@ public class ChildActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
-    public <T> void updateActiveState(Class<T> stateClass, StateUpdateType updateType) {
-        Object activeState = getActiveState(stateClass);
-        if (activeState != null) {
-            updateActiveState(stateClass, stateClass.cast(activeState), updateType);
-        }
-    }
-
-    @Override
     public void addChangeListener(ContextChangeListener changeListener) {
         changeListeners.add(changeListener);
     }

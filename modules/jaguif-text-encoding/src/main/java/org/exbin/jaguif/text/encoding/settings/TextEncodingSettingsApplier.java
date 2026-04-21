@@ -17,10 +17,10 @@ package org.exbin.jaguif.text.encoding.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.context.api.ContextComponent;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.options.settings.api.SettingsApplier;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 import org.exbin.jaguif.text.encoding.CharsetEncodingState;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Text encoding settings applier.
@@ -31,7 +31,7 @@ public class TextEncodingSettingsApplier implements SettingsApplier {
     public static final String APPLIER_ID = "textEncoding";
 
     @Override
-    public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
+    public void applySettings(ContextStateProvider contextProvider, SettingsOptionsProvider settingsProvider) {
         ContextComponent instance = contextProvider.getActiveState(ContextComponent.class);
         if (!(instance instanceof CharsetEncodingState)) {
             return;

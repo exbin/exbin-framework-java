@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Interface for context state management.
  */
 @ParametersAreNonnullByDefault
-public interface ActiveContextManagement extends ActiveContextProvider {
+public interface ActiveContextManagement extends ContextStateProvider {
 
     /**
      * Returns state classes.

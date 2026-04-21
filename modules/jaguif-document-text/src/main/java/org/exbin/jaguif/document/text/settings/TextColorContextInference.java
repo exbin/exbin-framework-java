@@ -17,7 +17,7 @@ package org.exbin.jaguif.document.text.settings;
 
 import java.awt.Color;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Text color context inference options.
@@ -25,9 +25,9 @@ import org.exbin.jaguif.context.api.ActiveContextProvider;
 @ParametersAreNonnullByDefault
 public class TextColorContextInference implements TextColorInference {
 
-    protected ActiveContextProvider contextProvider;
+    protected ContextStateProvider contextProvider;
 
-    public TextColorContextInference(ActiveContextProvider contextProvider) {
+    public TextColorContextInference(ContextStateProvider contextProvider) {
         this.contextProvider = contextProvider;
     }
 

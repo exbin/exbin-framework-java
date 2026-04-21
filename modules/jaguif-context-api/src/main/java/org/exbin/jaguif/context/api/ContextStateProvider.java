@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.options.settings.api;
+package org.exbin.jaguif.context.api;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
- * Interface for settings applier.
+ * Interface for context state provider.
  */
 @ParametersAreNonnullByDefault
-public interface SettingsApplier {
+public interface ContextStateProvider {
 
     /**
-     * Applies settings to specific context.
+     * Returns state instance or null if not present.
      *
-     * @param contextProvider context provider
-     * @param settingsProvider options settings provider
+     * @param <T> state type
+     * @param stateClass state class
+     * @return state instance or null
      */
-    void applySettings(ContextStateProvider contextProvider, SettingsOptionsProvider settingsProvider);
+    @Nullable
+    <T> T getActiveState(Class<T> stateClass);
 }

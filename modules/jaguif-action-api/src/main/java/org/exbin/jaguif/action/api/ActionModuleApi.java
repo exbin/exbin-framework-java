@@ -24,8 +24,8 @@ import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.action.api.clipboard.ClipboardActionsApi;
 import org.exbin.jaguif.action.api.clipboard.TextClipboardActionsApi;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.context.api.ContextChangeListener;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Interface for action support module.
@@ -85,5 +85,5 @@ public interface ActionModuleApi extends Module {
      * @param listener context change listener
      * @param provider context status provider
      */
-    void registerClipboardFlavorListener(ContextChangeListener listener, ActiveContextProvider provider);
+    void registerClipboardFlavorListener(ContextChangeListener listener, ContextStateProvider provider);
 }

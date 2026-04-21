@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 import org.exbin.jaguif.options.settings.api.SettingsComponent;
 import org.exbin.jaguif.options.settings.api.SettingsModifiedListener;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Options settings page record.
@@ -104,13 +104,13 @@ public class SettingsPage {
         }
     }
 
-    public void loadAll(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void loadAll(SettingsOptionsProvider settingsProvider, @Nullable ContextStateProvider contextProvider) {
         for (SettingsComponent component : components) {
             component.loadFromOptions(settingsProvider);
         }
     }
 
-    public void saveAll(SettingsOptionsProvider settingsProvider, @Nullable ActiveContextProvider contextProvider) {
+    public void saveAll(SettingsOptionsProvider settingsProvider, @Nullable ContextStateProvider contextProvider) {
         for (SettingsComponent component : modified) {
             component.saveToOptions(settingsProvider);
         }

@@ -16,7 +16,7 @@
 package org.exbin.jaguif.menu.api;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JMenuItem;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Listener for action update when menu is created.
@@ -29,16 +29,8 @@ public interface ActionMenuCreation {
      *
      * @param menuId menu ID
      * @param subMenuId sub menu ID or empty string
+     * @param contextState context state
      * @return true if menu item should be created
      */
-    boolean shouldCreate(String menuId, String subMenuId);
-
-    /**
-     * Called when new menu item is created.
-     *
-     * @param menuItem new menu item instance
-     * @param menuId menu ID
-     * @param subMenuId sub menu ID or empty string
-     */
-    void onCreate(JMenuItem menuItem, String menuId, String subMenuId);
+    boolean shouldCreate(String menuId, String subMenuId, ContextStateProvider contextState);
 }

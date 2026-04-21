@@ -57,17 +57,11 @@ public class ActiveContextManager implements ActiveContextManagement {
     }
 
     @Override
-    public <T> void updateActiveState(Class<T> stateClass, StateUpdateType updateType) {
-        Object activeState = getActiveState(stateClass);
-        if (activeState != null) {
-            ActiveContextManager.this.notifyStateUpdated(stateClass, stateClass.cast(activeState), updateType);
-        }
-    }
-
-    @Override
     public <T> void updateActiveState(Class<T> stateClass, T activeState, StateUpdateType updateType) {
-        activeStates.put(stateClass, activeState);
-        ActiveContextManager.this.notifyStateUpdated(stateClass, activeState, updateType);
+        Object currentState = getActiveState(stateClass);
+        if (currentState == activeState) {
+            ActiveContextManager.this.notifyStateUpdated(stateClass, activeState, updateType);
+        }
     }
 
     @Override

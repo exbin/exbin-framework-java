@@ -16,11 +16,11 @@
 package org.exbin.jaguif.frame.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.options.settings.api.SettingsApplier;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
 import org.exbin.jaguif.frame.api.ContextFrame;
 import org.exbin.jaguif.frame.api.FrameController;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Frame appearance settings applier.
@@ -31,7 +31,7 @@ public class FrameAppearanceSettingsApplier implements SettingsApplier {
     public static final String APPLIER_ID = "frameAppearance";
 
     @Override
-    public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
+    public void applySettings(ContextStateProvider contextProvider, SettingsOptionsProvider settingsProvider) {
         ContextFrame instance = contextProvider.getActiveState(ContextFrame.class);
         if (instance instanceof FrameController) {
             FrameAppearanceOptions options = settingsProvider.getSettingsOptions(FrameAppearanceOptions.class);

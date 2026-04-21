@@ -29,7 +29,7 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.options.settings.api.SettingsComponent;
 import org.exbin.jaguif.options.settings.api.SettingsModifiedListener;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Text encoding selection panel.

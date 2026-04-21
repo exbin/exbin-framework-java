@@ -19,27 +19,14 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for context state provider.
+ * Empty context state provider.
  */
 @ParametersAreNonnullByDefault
-public interface ActiveContextProvider {
+public class EmptyContextStateProvider implements ContextStateProvider {
 
-    /**
-     * Returns state instance or null if not present.
-     *
-     * @param <T> state type
-     * @param stateClass state class
-     * @return state instance or null
-     */
     @Nullable
-    <T> T getActiveState(Class<T> stateClass);
-
-    /**
-     * Notifies update for the current active state.
-     *
-     * @param <T> state type
-     * @param stateClass state class
-     * @param updateType update type
-     */
-    <T> void updateActiveState(Class<T> stateClass, StateUpdateType updateType);
+    @Override
+    public <T> T getActiveState(Class<T> stateClass) {
+        return null;
+    }
 }

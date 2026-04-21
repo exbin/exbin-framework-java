@@ -18,11 +18,11 @@ package org.exbin.jaguif.file.settings;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.context.api.ContextComponent;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.file.FileModule;
 import org.exbin.jaguif.file.api.FileModuleApi;
 import org.exbin.jaguif.options.settings.api.SettingsApplier;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * File settings applier.
@@ -33,7 +33,7 @@ public class FileSettingsApplier implements SettingsApplier {
     public static final String APPLIER_ID = "fileManager";
 
     @Override
-    public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
+    public void applySettings(ContextStateProvider contextProvider, SettingsOptionsProvider settingsProvider) {
         ContextComponent instance = contextProvider.getActiveState(ContextComponent.class);
         FileOptions fileOptions = settingsProvider.getSettingsOptions(FileOptions.class);
         String fileDialogs = fileOptions.getFileDialogs();

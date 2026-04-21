@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.text.encoding.CharsetListEncodingState;
 import org.exbin.jaguif.text.encoding.ContextEncoding;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Text editor encodings context inference.
@@ -29,9 +29,9 @@ import org.exbin.jaguif.text.encoding.ContextEncoding;
 @ParametersAreNonnullByDefault
 public class TextEncodingsContextInference implements TextEncodingsInference {
 
-    protected ActiveContextProvider contextProvider;
+    protected ContextStateProvider contextProvider;
 
-    public TextEncodingsContextInference(ActiveContextProvider contextProvider) {
+    public TextEncodingsContextInference(ContextStateProvider contextProvider) {
         this.contextProvider = contextProvider;
     }
 

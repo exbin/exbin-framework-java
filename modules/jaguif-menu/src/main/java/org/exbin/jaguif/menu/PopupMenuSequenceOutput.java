@@ -18,6 +18,7 @@ package org.exbin.jaguif.menu;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
@@ -33,7 +34,10 @@ import org.exbin.jaguif.menu.api.ActionMenuCreation;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.context.api.ContextStateProvider;
+import org.exbin.jaguif.context.api.EmptyContextStateProvider;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.menu.api.ActionMenuOnCreation;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
@@ -44,12 +48,14 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
 
     protected final JPopupMenu menu;
     protected final ContextRegistration contextRegistration;
+    protected final ContextStateProvider creationContext;
     protected final Map<String, ButtonGroup> buttonGroups;
     protected final Map<SequenceContribution, JMenuItem> menuItems = new HashMap<>();
 
-    public PopupMenuSequenceOutput(JPopupMenu menu, ContextRegistration contextRegistration, Map<String, ButtonGroup> buttonGroups) {
+    public PopupMenuSequenceOutput(JPopupMenu menu, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext, Map<String, ButtonGroup> buttonGroups) {
         this.menu = menu;
         this.contextRegistration = contextRegistration;
+        this.creationContext = creationContext == null ? new EmptyContextStateProvider() : creationContext;
         this.buttonGroups = buttonGroups;
     }
 
@@ -58,12 +64,10 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
         if (contribution instanceof SubMenuContribution) {
             Action action = ((SubMenuContribution) contribution).getAction();
 
-            if (action != null) {
-                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                if (menuCreation != null) {
-                    if (!menuCreation.shouldCreate(definitionId, subId)) {
-                        return false;
-                    }
+            ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
+            if (menuCreation != null) {
+                if (!menuCreation.shouldCreate(definitionId, subId, creationContext)) {
+                    return false;
                 }
             }
 
@@ -72,11 +76,9 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
             subMenu.setAction(action);
             ((SubMenuContribution) contribution).setSubMenu(subMenu);
 
-            if (action != null) {
-                ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-                if (menuCreation != null) {
-                    menuCreation.onCreate(subMenu, definitionId, subId);
-                }
+            ActionMenuOnCreation menuOnCreation = (ActionMenuOnCreation) action.getValue(ActionConsts.ACTION_MENU_ON_CREATION);
+            if (menuOnCreation != null) {
+                menuOnCreation.onCreate(subMenu, definitionId, subId);
             }
 
             return true;
@@ -94,7 +96,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
         if (action != null) {
             ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
             if (menuCreation != null) {
-                if (!menuCreation.shouldCreate(definitionId, subId)) {
+                if (!menuCreation.shouldCreate(definitionId, subId, creationContext)) {
                     return false;
                 }
             }
@@ -106,9 +108,9 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
         }
 
         if (action != null) {
-            ActionMenuCreation menuCreation = (ActionMenuCreation) action.getValue(ActionConsts.ACTION_MENU_CREATION);
-            if (menuCreation != null) {
-                menuCreation.onCreate(menuItem, definitionId, subId);
+            ActionMenuOnCreation menuOnCreation = (ActionMenuOnCreation) action.getValue(ActionConsts.ACTION_MENU_ON_CREATION);
+            if (menuOnCreation != null) {
+                menuOnCreation.onCreate(menuItem, definitionId, subId);
             }
         }
 
@@ -142,7 +144,7 @@ public class PopupMenuSequenceOutput implements TreeContributionSequenceOutput {
     @Nonnull
     @Override
     public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), contextRegistration, buttonGroups, true);
+        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), contextRegistration, creationContext, buttonGroups, true);
     }
 
     @Override

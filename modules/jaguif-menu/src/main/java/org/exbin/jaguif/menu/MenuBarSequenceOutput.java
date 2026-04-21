@@ -18,6 +18,7 @@ package org.exbin.jaguif.menu;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
@@ -32,6 +33,8 @@ import org.exbin.jaguif.menu.api.ActionMenuContribution;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.context.api.ContextStateProvider;
+import org.exbin.jaguif.context.api.EmptyContextStateProvider;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 
 /**
@@ -42,12 +45,14 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
 
     protected final JMenuBar menuBar;
     protected final ContextRegistration contextRegistration;
+    protected final ContextStateProvider creationContext;
     protected final Map<String, ButtonGroup> buttonGroups;
     protected final Map<SequenceContribution, JMenuItem> menuItems = new HashMap<>();
 
-    public MenuBarSequenceOutput(JMenuBar menuBar, ContextRegistration contextRegistration, Map<String, ButtonGroup> buttonGroups) {
+    public MenuBarSequenceOutput(JMenuBar menuBar, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext, Map<String, ButtonGroup> buttonGroups) {
         this.menuBar = menuBar;
         this.contextRegistration = contextRegistration;
+        this.creationContext = creationContext == null ? new EmptyContextStateProvider() : creationContext;
         this.buttonGroups = buttonGroups;
     }
 
@@ -98,7 +103,7 @@ public class MenuBarSequenceOutput implements TreeContributionSequenceOutput {
     @Nonnull
     @Override
     public TreeContributionSequenceOutput createSubOutput(SubSequenceContribution subContribution) {
-        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), contextRegistration, buttonGroups);
+        return new MenuSequenceOutput(((SubMenuContribution) subContribution).getSubMenu().get(), contextRegistration, creationContext, buttonGroups);
     }
 
     @Override

@@ -34,8 +34,8 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.utils.ClipboardUtils;
 import org.exbin.jaguif.context.api.ContextComponent;
 import org.exbin.jaguif.action.api.clipboard.ClipboardController;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.context.api.ContextChangeListener;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Implementation of action module.
@@ -146,7 +146,7 @@ public class ActionModule implements ActionModuleApi {
     }
 
     @Override
-    public void registerClipboardFlavorListener(ContextChangeListener listener, ActiveContextProvider provider) {
+    public void registerClipboardFlavorListener(ContextChangeListener listener, ContextStateProvider provider) {
         ClipboardUtils.getClipboard().addFlavorListener(new FlavorListener() {
 
             @Override

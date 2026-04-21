@@ -17,9 +17,9 @@ package org.exbin.jaguif.ui.theme.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.context.api.ContextComponent;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.options.settings.api.SettingsApplier;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * UI theme settings applier.
@@ -30,7 +30,7 @@ public class ThemeSettingsApplier implements SettingsApplier {
     public static final String APPLIER_ID = "theme";
 
     @Override
-    public void applySettings(ActiveContextProvider contextProvider, SettingsOptionsProvider settingsProvider) {
+    public void applySettings(ContextStateProvider contextProvider, SettingsOptionsProvider settingsProvider) {
         ContextComponent instance = contextProvider.getActiveState(ContextComponent.class);
         ThemeOptions options = settingsProvider.getSettingsOptions(ThemeOptions.class);
         String selectedTheme = options.getLookAndFeel();

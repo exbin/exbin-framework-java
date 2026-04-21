@@ -39,6 +39,7 @@ import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 import org.exbin.jaguif.menu.api.MenuManagement;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 import org.exbin.jaguif.menu.api.MenuBuilder;
 
 /**
@@ -162,12 +163,22 @@ public class MenuModule implements MenuModuleApi {
 
     @Override
     public void buildMenu(JPopupMenu targetMenu, String menuId, ContextRegistration contextRegistration) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, contextRegistration);
+        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, contextRegistration, null);
+    }
+
+    @Override
+    public void buildMenu(JPopupMenu targetMenu, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext) {
+        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, contextRegistration, creationContext);
     }
 
     @Override
     public void buildMenu(JMenuBar targetMenuBar, String menuId, ContextRegistration contextRegistration) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, contextRegistration);
+        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, contextRegistration, null);
+    }
+
+    @Override
+    public void buildMenu(JMenuBar targetMenuBar, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext) {
+        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, contextRegistration, creationContext);
     }
 
     @Nonnull

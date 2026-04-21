@@ -54,6 +54,12 @@ public class ActionConsts {
      */
     public static final String ACTION_MENU_CREATION = "menuCreation";
     /**
+     * Menu on creation handler.
+     * <p>
+     * Value is of type {@link org.exbin.jaguif.menu.api.ActionMenuOnCreation}.
+     */
+    public static final String ACTION_MENU_ON_CREATION = "menuOnCreation";
+    /**
      * Menu activation bus / message registration.
      * <p>
      * Value is of type ActionMenuActivation

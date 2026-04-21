@@ -19,9 +19,9 @@ import java.awt.Font;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.context.api.ActiveContextProvider;
 import org.exbin.jaguif.text.font.ContextFont;
 import org.exbin.jaguif.text.font.TextFontState;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Text editor font context inference.
@@ -29,9 +29,9 @@ import org.exbin.jaguif.text.font.TextFontState;
 @ParametersAreNonnullByDefault
 public class TextFontContextInference implements TextFontInference {
 
-    protected ActiveContextProvider contextProvider;
+    protected ContextStateProvider contextProvider;
 
-    public TextFontContextInference(ActiveContextProvider contextProvider) {
+    public TextFontContextInference(ContextStateProvider contextProvider) {
         this.contextProvider = contextProvider;
     }
 

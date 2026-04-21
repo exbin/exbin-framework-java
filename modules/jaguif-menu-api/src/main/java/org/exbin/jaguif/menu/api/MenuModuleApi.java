@@ -30,6 +30,7 @@ import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Interface for menu support module.
@@ -121,11 +122,31 @@ public interface MenuModuleApi extends Module {
     /**
      * Returns menu using given identificator.
      *
+     * @param targetMenu target menu
+     * @param menuId menu identificator
+     * @param contextRegistration context registration
+     * @param creationContext creation context
+     */
+    void buildMenu(JPopupMenu targetMenu, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext);
+
+    /**
+     * Returns menu using given identificator.
+     *
      * @param targetMenuBar target menu bar
      * @param menuId menu identificator
      * @param contextRegistration context registration
      */
     void buildMenu(JMenuBar targetMenuBar, String menuId, ContextRegistration contextRegistration);
+
+    /**
+     * Returns menu using given identificator.
+     *
+     * @param targetMenuBar target menu bar
+     * @param menuId menu identificator
+     * @param contextRegistration context registration
+     * @param creationContext creation context
+     */
+    void buildMenu(JMenuBar targetMenuBar, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext);
 
     /**
      * Returns current popup menu builder.
