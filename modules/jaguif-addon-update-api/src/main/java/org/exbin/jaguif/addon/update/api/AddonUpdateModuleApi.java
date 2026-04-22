@@ -40,6 +40,9 @@ public interface AddonUpdateModuleApi extends Module {
     @Nonnull
     Action getCheckUpdateAction();
 
+    /**
+     * Registers default menu item.
+     */
     void registerDefaultMenuItem();
 
     /**

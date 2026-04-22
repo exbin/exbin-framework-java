@@ -17,11 +17,13 @@ package org.exbin.jaguif.component.api.action;
 
 import javax.annotation.Nonnull;
 import javax.swing.Action;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
+import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 
 /**
  * Interface for item edit action set.
  */
-public interface EditItemActions extends ActionsProvider {
+public interface EditItemActions {
 
     /**
      * Returns add item action.
@@ -46,4 +48,35 @@ public interface EditItemActions extends ActionsProvider {
      */
     @Nonnull
     Action createDeleteItemAction();
+
+    /**
+     * Returns add item contribution.
+     *
+     * @return add item contribution
+     */
+    @Nonnull
+    SequenceContribution createAddItemContribution();
+
+    /**
+     * Returns edit item contribution.
+     *
+     * @return edit item contribution
+     */
+    @Nonnull
+    SequenceContribution createEditItemContribution();
+
+    /**
+     * Returns delete item contribution.
+     *
+     * @return delete item contribution
+     */
+    @Nonnull
+    SequenceContribution createDeleteItemContribution();
+
+    /**
+     * Registers contributions to tool bar.
+     *
+     * @param toolBarManager tool bar manager
+     */
+    void registerToolBarContributions(ToolBarManagement toolBarManager);
 }

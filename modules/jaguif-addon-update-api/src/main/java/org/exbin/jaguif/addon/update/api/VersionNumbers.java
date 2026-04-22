@@ -165,6 +165,7 @@ public class VersionNumbers {
     }
 
     public static enum VersionNumbersFormat {
-        MAJOR_MINOR_PATCH, MAJOR_MINOR_RELEASE_PATCH
+        MAJOR_MINOR_PATCH,
+        MAJOR_MINOR_RELEASE_PATCH
     }
 }

@@ -18,7 +18,6 @@ package org.exbin.jaguif.text.encoding.gui;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -29,7 +28,6 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.options.settings.api.SettingsComponent;
 import org.exbin.jaguif.options.settings.api.SettingsModifiedListener;
 import org.exbin.jaguif.options.settings.api.SettingsOptionsProvider;
-import org.exbin.jaguif.context.api.ContextStateProvider;
 
 /**
  * Text encoding selection panel.

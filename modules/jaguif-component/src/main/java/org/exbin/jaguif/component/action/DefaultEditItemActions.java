@@ -18,11 +18,14 @@ package org.exbin.jaguif.component.action;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.component.ComponentModule;
 import org.exbin.jaguif.component.api.action.EditItemActions;
-import org.exbin.jaguif.component.api.toolbar.SideToolBar;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
+import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 
 /**
  * Item edit default action set.
@@ -66,10 +69,64 @@ public class DefaultEditItemActions implements EditItemActions {
         return deleteItemAction;
     }
 
+    @Nonnull
     @Override
-    public void registerActions(SideToolBar sideToolBar) {
-        sideToolBar.addAction(createAddItemAction());
-        sideToolBar.addAction(createEditItemAction());
-        sideToolBar.addAction(createDeleteItemAction());
+    public SequenceContribution createAddItemContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createAddItemAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return AddItemAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public SequenceContribution createEditItemContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createEditItemAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return EditItemAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public SequenceContribution createDeleteItemContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createDeleteItemAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return DeleteItemAction.ACTION_ID;
+            }
+        };
+    }
+    
+    @Override
+    public void registerToolBarContributions(ToolBarManagement toolBarManager) {
+        toolBarManager.registerToolBarContribution("", "", createAddItemContribution());
+        toolBarManager.registerToolBarContribution("", "", createEditItemContribution());
+        toolBarManager.registerToolBarContribution("", "", createDeleteItemContribution());
     }
 }

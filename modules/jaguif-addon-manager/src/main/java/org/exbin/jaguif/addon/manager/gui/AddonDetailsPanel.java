@@ -50,6 +50,7 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     protected MouseListener providerLinkListener;
     protected final DependenciesTableModel dependenciesTableModel = new DependenciesTableModel();
     protected String providerLink = null;
+    protected boolean enablementMode = true;
 
     public AddonDetailsPanel() {
         initComponents();
@@ -145,7 +146,8 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
             boolean alreadyInstalled = controller.isInCart(itemRecord.getId(), AddonOperationVariant.INSTALL);
             removeButton.setEnabled(itemRecord.isAddon() && !alreadyRemoved);
             controlPanel.add(removeButton);
-            enablementButton.setText(resourceBundle.getString(itemRecord.isEnabled() ? "disableButton.text" : "enableButton.text"));
+            enablementMode = itemRecord.isEnabled();
+            enablementButton.setText(resourceBundle.getString(enablementMode ? "disableButton.text" : "enableButton.text"));
             controlPanel.add(enablementButton);
             updateButton.setEnabled(itemRecord.isUpdateAvailable() && !alreadyInstalled);
             controlPanel.add(updateButton);
@@ -273,7 +275,13 @@ public class AddonDetailsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void enablementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enablementButtonActionPerformed
-        // TODO controller.addToCart(AddonOperationVariant.ENABLE);
+        if (enablementMode) {
+            controller.addToCart(AddonOperationVariant.DISABLE);
+        } else {
+            controller.addToCart(AddonOperationVariant.ENABLE);
+        }
+        enablementMode = !enablementMode;
+        enablementButton.setText(resourceBundle.getString(enablementMode ? "disableButton.text" : "enableButton.text"));
     }//GEN-LAST:event_enablementButtonActionPerformed
 
     private void installButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installButtonActionPerformed

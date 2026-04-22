@@ -15,19 +15,16 @@
  */
 package org.exbin.jaguif.component.gui;
 
-import org.exbin.jaguif.component.api.action.ActionsProvider;
-import org.exbin.jaguif.component.api.toolbar.SideToolBar;
 import java.awt.BorderLayout;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import javax.swing.JToolBar;
 
 /**
  * Panel with side toolbar.
  */
 @ParametersAreNonnullByDefault
-public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar {
+public class ToolBarSidePanel extends javax.swing.JPanel {
 
     private JToolBar toolBar = null;
     private ToolBarPosition toolBarPosition = ToolBarPosition.LEFT;
@@ -54,23 +51,6 @@ public class ToolBarSidePanel extends javax.swing.JPanel implements SideToolBar 
     public JToolBar getToolBar() {
         initToolBar();
         return toolBar;
-    }
-
-    @Override
-    public void addAction(Action action) {
-        initToolBar();
-        toolBar.add(action);
-    }
-
-    @Override
-    public void addActions(ActionsProvider actionsProvider) {
-        actionsProvider.registerActions(this);
-    }
-
-    @Override
-    public void addSeparator() {
-        initToolBar();
-        toolBar.addSeparator();
     }
 
     private void initToolBar() {

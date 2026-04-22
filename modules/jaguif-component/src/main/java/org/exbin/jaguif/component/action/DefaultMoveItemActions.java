@@ -18,11 +18,14 @@ package org.exbin.jaguif.component.action;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.component.ComponentModule;
 import org.exbin.jaguif.component.api.action.MoveItemActions;
-import org.exbin.jaguif.component.api.toolbar.SideToolBar;
+import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
+import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 
 /**
  * Item movement default action set.
@@ -67,11 +70,83 @@ public class DefaultMoveItemActions implements MoveItemActions {
         return moveBottomAction;
     }
 
+    @Nonnull
     @Override
-    public void registerActions(SideToolBar sideToolBar) {
-        sideToolBar.addAction(createMoveTopAction());
-        sideToolBar.addAction(createMoveUpAction());
-        sideToolBar.addAction(createMoveDownAction());
-        sideToolBar.addAction(createMoveBottomAction());
+    public SequenceContribution createMoveUpContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createMoveUpAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return MoveUpAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public SequenceContribution createMoveDownContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createMoveDownAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return MoveDownAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public SequenceContribution createMoveTopContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createMoveTopAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return MoveTopAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public SequenceContribution createMoveBottomContribution() {
+        return new ActionSequenceContribution() {
+            @Nonnull
+            @Override
+            public Action createAction() {
+                return createMoveBottomAction();
+            }
+
+            @Nonnull
+            @Override
+            public String getContributionId() {
+                return MoveBottomAction.ACTION_ID;
+            }
+        };
+    }
+
+    @Override
+    public void registerToolBarContributions(ToolBarManagement toolBarManager) {
+        toolBarManager.registerToolBarContribution("", "", createMoveTopContribution());
+        toolBarManager.registerToolBarContribution("", "", createMoveUpContribution());
+        toolBarManager.registerToolBarContribution("", "", createMoveDownContribution());
+        toolBarManager.registerToolBarContribution("", "", createMoveBottomContribution());
     }
 }

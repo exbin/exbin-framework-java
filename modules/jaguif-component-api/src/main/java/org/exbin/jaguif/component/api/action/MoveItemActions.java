@@ -17,11 +17,13 @@ package org.exbin.jaguif.component.api.action;
 
 import javax.annotation.Nonnull;
 import javax.swing.Action;
+import org.exbin.jaguif.contribution.api.SequenceContribution;
+import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 
 /**
  * Interface for item movement action set.
  */
-public interface MoveItemActions extends ActionsProvider {
+public interface MoveItemActions {
 
     /**
      * Returns move up action.
@@ -54,4 +56,43 @@ public interface MoveItemActions extends ActionsProvider {
      */
     @Nonnull
     Action createMoveBottomAction();
+
+    /**
+     * Returns move up contribution.
+     *
+     * @return move up contribution
+     */
+    @Nonnull
+    SequenceContribution createMoveUpContribution();
+
+    /**
+     * Returns move down contribution.
+     *
+     * @return move down contribution
+     */
+    @Nonnull
+    SequenceContribution createMoveDownContribution();
+
+    /**
+     * Returns move top contribution.
+     *
+     * @return move top contribution
+     */
+    @Nonnull
+    SequenceContribution createMoveTopContribution();
+
+    /**
+     * Returns move bottom contribution.
+     *
+     * @return move bottom contribution
+     */
+    @Nonnull
+    SequenceContribution createMoveBottomContribution();
+
+    /**
+     * Registers contributions to tool bar.
+     *
+     * @param toolBarManager tool bar manager
+     */
+    void registerToolBarContributions(ToolBarManagement toolBarManager);
 }
