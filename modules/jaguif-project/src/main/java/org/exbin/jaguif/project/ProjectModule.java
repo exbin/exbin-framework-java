@@ -63,12 +63,6 @@ public class ProjectModule implements ProjectModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Override
     public void registerProjectCategory(ProjectCategory projectCategory) {
         String parentId = getParentId(projectCategory.getId());
@@ -121,27 +115,24 @@ public class ProjectModule implements ProjectModuleApi {
     @Nonnull
     @Override
     public NewProjectAction createNewProjectAction() {
-        ensureSetup();
         NewProjectAction newProjectAction = new NewProjectAction();
-        newProjectAction.init(resourceBundle);
+        newProjectAction.init(getResourceBundle());
         return newProjectAction;
     }
 
     @Nonnull
     @Override
     public OpenProjectAction createOpenProjectAction() {
-        ensureSetup();
         OpenProjectAction openProjectAction = new OpenProjectAction();
-        openProjectAction.init(resourceBundle);
+        openProjectAction.init(getResourceBundle());
         return openProjectAction;
     }
 
     @Nonnull
     @Override
     public SaveProjectAction createSaveProjectAction() {
-        ensureSetup();
         SaveProjectAction saveProjectAction = new SaveProjectAction();
-        saveProjectAction.init(resourceBundle);
+        saveProjectAction.init(getResourceBundle());
         return saveProjectAction;
     }
 

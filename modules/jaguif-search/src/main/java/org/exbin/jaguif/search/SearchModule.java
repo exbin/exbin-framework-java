@@ -45,12 +45,6 @@ public class SearchModule implements SearchModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     public FindReplaceActions getFindReplaceActions() {
         if (findReplaceActions == null) {

@@ -72,12 +72,6 @@ public class WindowModule implements WindowModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     @Override
     public JPanel addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle) {

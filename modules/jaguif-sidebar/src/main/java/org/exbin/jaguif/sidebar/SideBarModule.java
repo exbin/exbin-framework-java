@@ -55,12 +55,6 @@ public class SideBarModule implements SideBarModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     private SideBarManager getMainSideBarManager() {
         if (mainSideBarManager == null) {

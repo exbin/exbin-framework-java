@@ -79,12 +79,6 @@ public class FileModule implements FileModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Override
     public void addFileType(FileType fileType) {
         registeredFileTypes.add(fileType);
@@ -153,7 +147,6 @@ public class FileModule implements FileModuleApi {
 
     @Override
     public void registerFileProviders() {
-        ensureSetup();
         getResourceBundle();
         registerFileDialogsProvider(FileDialogsType.SWING.name(), new SwingFileDialogsProvider(resourceBundle));
         registerFileDialogsProvider(FileDialogsType.AWT.name(), new AwtFileDialogsProvider(resourceBundle));

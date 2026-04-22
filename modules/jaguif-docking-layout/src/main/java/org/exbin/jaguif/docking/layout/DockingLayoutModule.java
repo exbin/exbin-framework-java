@@ -73,12 +73,6 @@ public class DockingLayoutModule implements DockingModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Override
     public Component getDockingPanel() {
         if (control == null) {

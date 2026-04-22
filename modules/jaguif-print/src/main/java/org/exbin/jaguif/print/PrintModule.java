@@ -52,17 +52,10 @@ public class PrintModule implements PrintModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     public PrintAction createPrintAction() {
-        ensureSetup();
         PrintAction printAction = new PrintAction();
-        printAction.init(resourceBundle);
+        printAction.init(getResourceBundle());
         return printAction;
     }
 

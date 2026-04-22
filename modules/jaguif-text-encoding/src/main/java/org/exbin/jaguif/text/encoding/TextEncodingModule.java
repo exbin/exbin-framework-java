@@ -52,12 +52,6 @@ public class TextEncodingModule implements Module {
     public TextEncodingModule() {
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {

@@ -68,12 +68,6 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     @Override
     public OptionsSettingsManager getMainSettingsManager() {
@@ -87,10 +81,9 @@ public class OptionsSettingsModule implements OptionsSettingsModuleApi {
     @Nonnull
     @Override
     public SettingsAction createSettingsAction() {
-        ensureSetup();
         SettingsAction optionsAction = new SettingsAction();
         getMainSettingsManager();
-        optionsAction.init(resourceBundle, (SettingsPageReceiver optionsPageReceiver) -> {
+        optionsAction.init(getResourceBundle(), (SettingsPageReceiver optionsPageReceiver) -> {
             getMainSettingsManager().passSettingsPages(optionsPageReceiver);
         });
 

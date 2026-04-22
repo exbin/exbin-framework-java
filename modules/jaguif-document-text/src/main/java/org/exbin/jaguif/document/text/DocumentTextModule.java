@@ -109,12 +109,6 @@ public class DocumentTextModule implements Module {
     public DocumentTextModule() {
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
@@ -256,9 +250,8 @@ public class DocumentTextModule implements Module {
     @Nonnull
     private FindReplaceActions getFindReplaceActions() {
         if (findReplaceActions == null) {
-            ensureSetup();
             findReplaceActions = new FindReplaceActions();
-            findReplaceActions.init(resourceBundle);
+            findReplaceActions.init(getResourceBundle());
         }
 
         return findReplaceActions;
@@ -272,9 +265,8 @@ public class DocumentTextModule implements Module {
 
     @Nonnull
     private TextColorAction createTextColorAction() {
-        ensureSetup();
         TextColorAction textColorAction = new TextColorAction();
-        textColorAction.init(resourceBundle);
+        textColorAction.init(getResourceBundle());
         return textColorAction;
     }
 
@@ -306,41 +298,36 @@ public class DocumentTextModule implements Module {
 
     @Nonnull
     private WordWrappingAction createWordWrappingAction() {
-        ensureSetup();
         WordWrappingAction wordWrappingAction = new WordWrappingAction();
-        wordWrappingAction.init(resourceBundle);
+        wordWrappingAction.init(getResourceBundle());
         return wordWrappingAction;
     }
 
     @Nonnull
     private GoToLineAction createGoToLineAction() {
-        ensureSetup();
         GoToLineAction goToLineAction = new GoToLineAction();
-        goToLineAction.init(resourceBundle);
+        goToLineAction.init(getResourceBundle());
         return goToLineAction;
     }
 
     @Nonnull
     private EditSelectionAction createEditSelectionAction() {
-        ensureSetup();
         EditSelectionAction editSelectionAction = new EditSelectionAction();
-        editSelectionAction.init(resourceBundle);
+        editSelectionAction.init(getResourceBundle());
         return editSelectionAction;
     }
 
     @Nonnull
     private PropertiesAction createPropertiesAction() {
-        ensureSetup();
         PropertiesAction propertiesAction = new PropertiesAction();
-        propertiesAction.init(resourceBundle);
+        propertiesAction.init(getResourceBundle());
         return propertiesAction;
     }
 
     @Nonnull
     private PrintAction createPrintAction() {
-        ensureSetup();
         PrintAction printAction = new PrintAction();
-        printAction.init(resourceBundle);
+        printAction.init(getResourceBundle());
         return printAction;
     }
 

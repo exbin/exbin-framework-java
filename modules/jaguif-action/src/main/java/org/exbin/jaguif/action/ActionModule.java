@@ -62,19 +62,12 @@ public class ActionModule implements ActionModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     @Override
     public ClipboardActions getClipboardActions() {
         if (clipboardActions == null) {
             clipboardActions = new ClipboardActions();
-            ensureSetup();
-            clipboardActions.init(resourceBundle);
+            clipboardActions.init(getResourceBundle());
         }
 
         return clipboardActions;
@@ -85,8 +78,7 @@ public class ActionModule implements ActionModuleApi {
     public TextClipboardActions getClipboardTextActions() {
         if (clipboardTextActions == null) {
             clipboardTextActions = new TextClipboardActions();
-            ensureSetup();
-            clipboardTextActions.init(resourceBundle);
+            clipboardTextActions.init(getResourceBundle());
         }
 
         return clipboardTextActions;

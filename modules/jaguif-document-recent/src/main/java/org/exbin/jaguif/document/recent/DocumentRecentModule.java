@@ -54,12 +54,6 @@ public class DocumentRecentModule implements Module {
     public DocumentRecentModule() {
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
@@ -89,9 +83,8 @@ public class DocumentRecentModule implements Module {
     @Nonnull
     public RecentFilesActions getRecentFilesActions() {
         if (recentFilesActions == null) {
-            ensureSetup();
             recentFilesActions = new RecentFilesActions();
-            recentFilesActions.init(resourceBundle, new RecentFilesActions.FilesController() {
+            recentFilesActions.init(getResourceBundle(), new RecentFilesActions.FilesController() {
                 @Override
                 public void openRecentFile(URI fileUri, @Nullable FileType fileType) {
                     FileModuleApi fileModule = App.getModule(FileModuleApi.class);

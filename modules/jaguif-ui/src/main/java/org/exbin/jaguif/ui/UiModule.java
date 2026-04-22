@@ -53,12 +53,6 @@ public class UiModule implements UiModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Override
     public void initSwingUi() {
         executePreInitActions();

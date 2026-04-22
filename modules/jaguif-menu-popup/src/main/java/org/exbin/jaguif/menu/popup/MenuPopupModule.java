@@ -135,10 +135,4 @@ public class MenuPopupModule implements MenuPopupModuleApi {
             }
         };
     }
-
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
 }

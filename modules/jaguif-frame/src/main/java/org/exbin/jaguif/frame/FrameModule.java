@@ -100,15 +100,9 @@ public class FrameModule implements FrameModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Override
     public void init() {
-        ensureSetup();
+        getResourceBundle();
         initMainMenu();
         initMainToolBar();
     }
@@ -317,8 +311,7 @@ public class FrameModule implements FrameModuleApi {
     public FrameActions getFrameActions() {
         if (frameActions == null) {
             frameActions = new FrameActions();
-            ensureSetup();
-            frameActions.init(resourceBundle);
+            frameActions.init(getResourceBundle());
         }
 
         return frameActions;

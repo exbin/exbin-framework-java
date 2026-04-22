@@ -61,12 +61,6 @@ public class DockingModule implements DockingModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     @Override
     public DocumentDocking createDefaultDocking() {
@@ -122,36 +116,32 @@ public class DockingModule implements DockingModuleApi {
     @Nonnull
     @Override
     public NewFileAction createNewFileAction() {
-        ensureSetup();
         NewFileAction newFileAction = new NewFileAction();
-        newFileAction.init(resourceBundle);
+        newFileAction.init(getResourceBundle());
         return newFileAction;
     }
 
     @Nonnull
     @Override
     public OpenFileAction createOpenFileAction() {
-        ensureSetup();
         OpenFileAction openFileAction = new OpenFileAction();
-        openFileAction.init(resourceBundle);
+        openFileAction.init(getResourceBundle());
         return openFileAction;
     }
 
     @Nonnull
     @Override
     public SaveFileAction createSaveFileAction() {
-        ensureSetup();
         SaveFileAction saveFileAction = new SaveFileAction();
-        saveFileAction.init(resourceBundle);
+        saveFileAction.init(getResourceBundle());
         return saveFileAction;
     }
 
     @Nonnull
     @Override
     public SaveAsFileAction createSaveAsFileAction() {
-        ensureSetup();
         SaveAsFileAction saveAsFileAction = new SaveAsFileAction();
-        saveAsFileAction.init(resourceBundle);
+        saveAsFileAction.init(getResourceBundle());
         return saveAsFileAction;
     }
 
@@ -159,8 +149,7 @@ public class DockingModule implements DockingModuleApi {
     @Override
     public CloseFileAction createCloseFileAction() {
         CloseFileAction closeFileAction = new CloseFileAction();
-        ensureSetup();
-        closeFileAction.init(resourceBundle);
+        closeFileAction.init(getResourceBundle());
         return closeFileAction;
     }
 }

@@ -52,12 +52,6 @@ public class ContextModule implements ContextModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     @Override
     public ActiveContextManagement getMainContextManager() {

@@ -65,12 +65,6 @@ public class DockingMultiModule implements DockingMultiModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     @Override
     public DocumentDocking createDefaultDocking() {
@@ -126,8 +120,7 @@ public class DockingMultiModule implements DockingMultiModuleApi {
     @Override
     public CloseAllFilesAction createCloseAllFilesAction() {
         CloseAllFilesAction closeAllFilesAction = new CloseAllFilesAction();
-        ensureSetup();
-        closeAllFilesAction.init(resourceBundle);
+        closeAllFilesAction.init(getResourceBundle());
         return closeAllFilesAction;
     }
 
@@ -135,15 +128,13 @@ public class DockingMultiModule implements DockingMultiModuleApi {
     @Override
     public CloseOtherFilesAction createCloseOtherFilesAction() {
         CloseOtherFilesAction closeOtherFilesAction = new CloseOtherFilesAction();
-        ensureSetup();
-        closeOtherFilesAction.init(resourceBundle);
+        closeOtherFilesAction.init(getResourceBundle());
         return closeOtherFilesAction;
     }
 
     @Override
     public void registerMenuFileCloseActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        DockingModuleApi dockingModule = App.getModule(DockingModuleApi.class);
         menuModule.registerMenu(FILE_CONTEXT_MENU_ID, MODULE_ID);
         MenuDefinitionManagement mgmt = menuModule.getMenuManager(FILE_CONTEXT_MENU_ID, MODULE_ID);
         SequenceContribution contribution = new CloseFileContribution();

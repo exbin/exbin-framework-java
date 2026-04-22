@@ -44,10 +44,4 @@ public class ContributionModule implements ContributionModuleApi {
 
         return resourceBundle;
     }
-
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
 }

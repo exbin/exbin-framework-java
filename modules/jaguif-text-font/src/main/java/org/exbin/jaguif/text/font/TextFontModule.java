@@ -47,12 +47,6 @@ public class TextFontModule implements Module {
     public TextFontModule() {
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     public ResourceBundle getResourceBundle() {
         if (resourceBundle == null) {
@@ -71,7 +65,7 @@ public class TextFontModule implements Module {
         settingsManagement.registerApplySetting(TextFontOptions.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
         settingsManagement.registerApplyContextSetting(ContextFont.class, new ApplySettingsContribution(TextFontSettingsApplier.APPLIER_ID, new TextFontSettingsApplier()));
 
-        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, resourceBundle);
+        SettingsPageContribution pageContribution = new SettingsPageContribution(SETTINGS_PAGE_ID, getResourceBundle());
         settingsManagement.registerPage(pageContribution);
 
         TextFontSettingsComponent textFontSettingsComponent = new TextFontSettingsComponent();
@@ -81,9 +75,8 @@ public class TextFontModule implements Module {
 
     @Nonnull
     public TextFontAction createTextFontAction() {
-        ensureSetup();
         TextFontAction textFontAction = new TextFontAction();
-        textFontAction.init(resourceBundle);
+        textFontAction.init(getResourceBundle());
         return textFontAction;
     }
 }

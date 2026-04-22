@@ -53,12 +53,6 @@ public class DocumentModule implements DocumentModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Nonnull
     @Override
     public DocumentManagement getMainDocumentManager() {
@@ -68,7 +62,7 @@ public class DocumentModule implements DocumentModuleApi {
 
         return mainDocumentManager;
     }
-    
+
     @Nonnull
     @Override
     public MemoryDocumentSource createMemoryDocumentSource() {

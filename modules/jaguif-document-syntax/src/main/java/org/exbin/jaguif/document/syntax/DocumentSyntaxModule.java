@@ -22,9 +22,6 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  * Document syntax module.
@@ -37,12 +34,6 @@ public class DocumentSyntaxModule implements Module {
     private ResourceBundle resourceBundle;
 
     public DocumentSyntaxModule() {
-    }
-
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
     }
 
     @Nonnull

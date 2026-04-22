@@ -64,12 +64,6 @@ public class UiThemeModule implements UiThemeModuleApi {
         return resourceBundle;
     }
 
-    private void ensureSetup() {
-        if (resourceBundle == null) {
-            getResourceBundle();
-        }
-    }
-
     @Override
     public void registerLafPlugin(LafProvider lafProvider) {
         lafProviders.add(lafProvider);
