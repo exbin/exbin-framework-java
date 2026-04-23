@@ -26,7 +26,6 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.ModuleUtils;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
-import org.exbin.jaguif.docking.api.DockingModuleApi;
 import org.exbin.jaguif.docking.multi.action.CloseAllFilesAction;
 import org.exbin.jaguif.docking.multi.action.CloseOtherFilesAction;
 import org.exbin.jaguif.docking.api.DocumentDocking;
@@ -136,7 +135,7 @@ public class DockingMultiModule implements DockingMultiModuleApi {
     public void registerMenuFileCloseActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
         menuModule.registerMenu(FILE_CONTEXT_MENU_ID, MODULE_ID);
-        MenuDefinitionManagement mgmt = menuModule.getMenuManager(FILE_CONTEXT_MENU_ID, MODULE_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuDefinition(FILE_CONTEXT_MENU_ID, MODULE_ID);
         SequenceContribution contribution = new CloseFileContribution();
         mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));

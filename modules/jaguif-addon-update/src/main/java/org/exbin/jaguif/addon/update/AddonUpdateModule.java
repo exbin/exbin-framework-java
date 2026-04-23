@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.Action;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.addon.update.service.CheckForUpdateService;
 import org.exbin.jaguif.addon.update.service.impl.CheckForUpdateServiceImpl;
@@ -90,7 +89,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     @Override
     public void registerDefaultMenuItem() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuDefinitionManagement mgmt = menuModule.getMainMenuManager(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuDefinition(MODULE_ID).getSubMenu(MenuModuleApi.HELP_SUBMENU_ID);
         SequenceContribution contribution = new CheckForUpdateContribution();
         mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.MIDDLE_LAST));

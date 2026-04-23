@@ -36,25 +36,7 @@ public interface StatusBarModuleApi extends Module {
      * @return status bar management interface
      */
     @Nonnull
-    StatusBarDefinitionManagement getMainStatusBarManager();
-
-    /**
-     * Returns status bar management interface.
-     *
-     * @param statusBarId status bar id
-     * @param moduleId module id
-     * @return status bar management interface
-     */
-    @Nonnull
-    StatusBarDefinitionManagement getStatusBarManager(String statusBarId, String moduleId);
-
-    /**
-     * Registers status bar associating it with given identificator.
-     *
-     * @param statusBarId status bar id
-     * @param moduleId module id
-     */
-    void registerStatusBar(String statusBarId, String moduleId);
+    StatusBarManagement getMainStatusBarManager();
 
     /**
      * Creates status bar manager.
@@ -63,6 +45,44 @@ public interface StatusBarModuleApi extends Module {
      */
     @Nonnull
     StatusBarManagement createStatusBarManager();
+
+    /**
+     * Returns main status bar definition.
+     *
+     * @param moduleId module id
+     * @return status bar definition
+     */
+    @Nonnull
+    StatusBarDefinitionManagement getMainStatusBarDefinition(String moduleId);
+
+    /**
+     * Returns main status bar definition.
+     *
+     * @param statusBarId status bar id
+     * @param moduleId module id
+     * @return status bar definition
+     */
+    @Nonnull
+    StatusBarDefinitionManagement getMainStatusBarDefinition(String statusBarId, String moduleId);
+
+    /**
+     * Creates status bar definition.
+     *
+     * @param statusBarManagement status bar management
+     * @param statusBarId status bar id
+     * @param moduleId module id
+     * @return
+     */
+    @Nonnull
+    StatusBarDefinitionManagement createStatusBarDefinition(StatusBarManagement statusBarManagement, String statusBarId, String moduleId);
+
+    /**
+     * Registers status bar associating it with given identificator.
+     *
+     * @param statusBarId status bar id
+     * @param moduleId module id
+     */
+    void registerStatusBar(String statusBarId, String moduleId);
 
     /**
      * Returns status bar using given identificator.

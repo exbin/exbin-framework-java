@@ -3,7 +3,6 @@ rootProject.name = 'jaguif-menu'
 if (rootProject.path == ':') {
     include ':core:jaguif-core'
     include ':modules:jaguif-contribution-api'
-    include ':modules:jaguif-contribution'
     include ':modules:jaguif-context-api'
     include ':modules:jaguif-action-api'
     include ':modules:jaguif-menu-api'

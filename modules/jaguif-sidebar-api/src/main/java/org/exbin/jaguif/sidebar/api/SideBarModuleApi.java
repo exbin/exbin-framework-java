@@ -34,29 +34,10 @@ public interface SideBarModuleApi extends Module {
     /**
      * Returns main side bar management interface.
      *
-     * @param moduleId module id
      * @return side bar management interface
      */
     @Nonnull
-    SideBarDefinitionManagement getMainSideBarManager(String moduleId);
-
-    /**
-     * Returns side bar management interface.
-     *
-     * @param sideBarId side bar id
-     * @param moduleId module id
-     * @return side bar management interface
-     */
-    @Nonnull
-    SideBarDefinitionManagement getSideBarManager(String sideBarId, String moduleId);
-
-    /**
-     * Registers side bar associating it with given identificator.
-     *
-     * @param sideBarId sidebar id
-     * @param moduleId module id
-     */
-    void registerSideBar(String sideBarId, String moduleId);
+    SideBarManagement getMainSideBarManager();
 
     /**
      * Creates side bar manager.
@@ -65,6 +46,34 @@ public interface SideBarModuleApi extends Module {
      */
     @Nonnull
     SideBarManagement createSideBarManager();
+
+    /**
+     * Returns main side bar management definition.
+     *
+     * @param moduleId module id
+     * @return side bar management interface
+     */
+    @Nonnull
+    SideBarDefinitionManagement getMainSideBarDefinition(String moduleId);
+
+    /**
+     * Returns side bar management definition.
+     *
+     * @param sideBarManagement side bar management
+     * @param sideBarId side bar id
+     * @param moduleId module id
+     * @return side bar management interface
+     */
+    @Nonnull
+    SideBarDefinitionManagement createSideBarDefinition(SideBarManagement sideBarManagement, String sideBarId, String moduleId);
+
+    /**
+     * Registers side bar associating it with given identificator.
+     *
+     * @param sideBarId sidebar id
+     * @param moduleId module id
+     */
+    void registerSideBar(String sideBarId, String moduleId);
 
     /**
      * Returns side bar using given identificator.

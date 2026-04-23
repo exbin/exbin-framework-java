@@ -25,11 +25,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.context.api.ActiveContextManagement;
-import org.exbin.jaguif.contribution.ContributionDefinition;
-import org.exbin.jaguif.contribution.TreeContributionSequenceBuilder;
+import org.exbin.jaguif.contribution.api.ContributionDefinition;
+import org.exbin.jaguif.contribution.api.ContributionModuleApi;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
+import org.exbin.jaguif.contribution.api.TreeContributionSequenceBuilder;
 import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
 import org.exbin.jaguif.frame.api.FrameModuleApi;
 import org.exbin.jaguif.options.api.OptionsModuleApi;
@@ -51,7 +52,7 @@ import org.exbin.jaguif.utils.ObjectUtils;
  * Options settings manager.
  */
 @ParametersAreNonnullByDefault
-public class OptionsSettingsManager extends TreeContributionSequenceBuilder implements OptionsSettingsManagement {
+public class OptionsSettingsManager implements OptionsSettingsManagement {
 
     protected final Map<Class<? extends SettingsOptions>, SettingsOptionsBuilder> settingsOptions = new HashMap<>();
     protected final Map<Class<? extends InferenceOptions>, InferenceOptions> inferenceOptions = new HashMap<>();
@@ -62,9 +63,13 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
     protected final List<ApplySettingsListener> applySettingsListeners = new ArrayList<>();
     protected SettingsOptionsProvider settingsOptionsProvider;
 
-    protected final ContributionDefinition definition = new ContributionDefinition();
+    protected final TreeContributionSequenceBuilder builder;
+    protected final ContributionDefinition definition;
 
     public OptionsSettingsManager() {
+        ContributionModuleApi contributionModule = App.getModule(ContributionModuleApi.class);
+        definition = contributionModule.createContributionDefinition();
+        builder = contributionModule.createTreeContributionSequenceBuilder();
     }
 
     @Override
@@ -123,7 +128,7 @@ public class OptionsSettingsManager extends TreeContributionSequenceBuilder impl
         List<SettingsPathItem> path = new ArrayList<>();
         path.add(new SettingsPathItem(OptionsSettingsModule.OPTIONS_PANEL_KEY, null));
         settingsPageReceiver.addSettingsPage(settingsPage, path);
-        buildSequence(output, OptionsSettingsModule.OPTIONS_PANEL_KEY, definition);
+        builder.buildSequence(output, OptionsSettingsModule.OPTIONS_PANEL_KEY, definition);
         settingsPage.finish();
     }
 

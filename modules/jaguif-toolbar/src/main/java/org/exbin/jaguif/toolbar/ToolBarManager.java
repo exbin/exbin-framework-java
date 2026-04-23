@@ -20,48 +20,54 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JToolBar;
-import org.exbin.jaguif.contribution.ContributionDefinition;
-import org.exbin.jaguif.contribution.ContributionManager;
+import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
-import org.exbin.jaguif.contribution.ContributionSequenceBuilder;
 import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.contribution.api.ContributionDefinition;
+import org.exbin.jaguif.contribution.api.ContributionManagement;
+import org.exbin.jaguif.contribution.api.ContributionModuleApi;
+import org.exbin.jaguif.contribution.api.ContributionSequenceBuilder;
 
 /**
  * Default toolbar manager.
  */
 @ParametersAreNonnullByDefault
-public class ToolBarManager extends ContributionManager implements ToolBarManagement {
+public class ToolBarManager implements ToolBarManagement {
 
-    protected final ContributionSequenceBuilder builder = new ContributionSequenceBuilder();
+    protected final ContributionSequenceBuilder builder;
+    protected final ContributionManagement contributionManagement;
 
     public ToolBarManager() {
+        ContributionModuleApi contributionModule = App.getModule(ContributionModuleApi.class);
+        contributionManagement = contributionModule.createContributionManager();
+        builder = contributionModule.createContributionSequenceBuilder();
     }
 
     @Override
     public void buildToolBar(JToolBar targetToolBar, String toolBarId, ContextRegistration contextRegistration) {
-        ContributionDefinition contributionDef = definitions.get(toolBarId);
-        builder.buildSequence(new ToolBarSequenceOutput(targetToolBar, contextRegistration), contributionDef);
+        ContributionDefinition definition = contributionManagement.getDefinition(toolBarId);
+        builder.buildSequence(new ToolBarSequenceOutput(targetToolBar, contextRegistration), definition);
         contextRegistration.finish();
     }
 
     @Override
     public void buildIconToolBar(JToolBar targetToolBar, String toolBarId, ContextRegistration contextRegistration) {
-        ContributionDefinition contributionDef = definitions.get(toolBarId);
-        builder.buildSequence(new IconToolBarSequenceOutput(targetToolBar, contextRegistration), contributionDef);
+        ContributionDefinition definition = contributionManagement.getDefinition(toolBarId);
+        builder.buildSequence(new IconToolBarSequenceOutput(targetToolBar, contextRegistration), definition);
         contextRegistration.finish();
     }
 
     @Override
     public void registerToolBar(String toolBarId, String moduleId) {
-        registerDefinition(toolBarId, moduleId);
+        contributionManagement.registerDefinition(toolBarId, moduleId);
     }
 
     @Override
     public void registerToolBarContribution(String toolBarId, String moduleId, SequenceContribution contribution) {
-        ContributionDefinition definition = definitions.get(toolBarId);
+        ContributionDefinition definition = contributionManagement.getDefinition(toolBarId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + toolBarId + " doesn't exist");
         }
@@ -72,18 +78,20 @@ public class ToolBarManager extends ContributionManager implements ToolBarManage
     @Nonnull
     @Override
     public GroupSequenceContribution registerToolBarGroup(String toolBarId, String moduleId, String groupId) {
-        return registerContributionGroup(toolBarId, moduleId, groupId);
+        return contributionManagement.registerContributionGroup(toolBarId, moduleId, groupId);
     }
 
     @Override
     public void registerToolBarRule(SequenceContribution contribution, SequenceContributionRule rule) {
-        registerContributionRule(contribution, rule);
+        contributionManagement.registerContributionRule(contribution, rule);
     }
 
     @Nonnull
+    @Override
     public List<SequenceContribution> getContributions() {
+        List<ContributionDefinition> definitions = contributionManagement.getAllDefinitions();
         List<SequenceContribution> contributions = new ArrayList<>();
-        for (ContributionDefinition definition : definitions.values()) {
+        for (ContributionDefinition definition : definitions) {
             contributions.addAll(definition.getContributions());
         }
         return contributions;

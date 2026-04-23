@@ -26,7 +26,6 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
-import org.exbin.jaguif.frame.api.FrameModuleApi;
 import org.exbin.jaguif.project.action.NewProjectAction;
 import org.exbin.jaguif.project.action.OpenProjectAction;
 import org.exbin.jaguif.project.action.SaveProjectAction;
@@ -98,7 +97,7 @@ public class ProjectModule implements ProjectModuleApi {
     @Override
     public void registerMenuFileHandlingActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        MenuDefinitionManagement mgmt = menuModule.getMenuManager(PROJECT_SUBMENU_ID, FrameModuleApi.MODULE_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuDefinition(PROJECT_SUBMENU_ID, MODULE_ID);
         SequenceContribution contribution = mgmt.registerMenuGroup(PROJECT_MENU_GROUP_ID);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));
         contribution = new NewProjectContribution();

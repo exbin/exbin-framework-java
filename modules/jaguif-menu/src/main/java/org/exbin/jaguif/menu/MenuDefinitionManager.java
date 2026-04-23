@@ -28,6 +28,7 @@ import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.MenuItemProvider;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
+import org.exbin.jaguif.menu.api.MenuManagement;
 
 /**
  * Default menu definition manager.
@@ -35,17 +36,17 @@ import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 @ParametersAreNonnullByDefault
 public class MenuDefinitionManager implements MenuDefinitionManagement {
 
-    protected final MenuManager menuManager;
+    protected final MenuManagement menuManager;
     protected final String menuId;
     protected final String moduleId;
     @Nullable
     protected final String currentSubMenuId;
 
-    public MenuDefinitionManager(MenuManager menuManager, String menuId, String moduleId) {
+    public MenuDefinitionManager(MenuManagement menuManager, String menuId, String moduleId) {
         this(menuManager, menuId, moduleId, null);
     }
 
-    public MenuDefinitionManager(MenuManager menuManager, String menuId, String moduleId, @Nullable String currentSubMenuId) {
+    public MenuDefinitionManager(MenuManagement menuManager, String menuId, String moduleId, @Nullable String currentSubMenuId) {
         this.menuManager = menuManager;
         this.menuId = menuId;
         this.moduleId = moduleId;

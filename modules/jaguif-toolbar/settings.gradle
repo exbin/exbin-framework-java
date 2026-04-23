@@ -13,7 +13,6 @@ if (rootProject.path == ':') {
     include ':modules:jaguif-options-api'
     include ':modules:jaguif-context-api'
     include ':modules:jaguif-contribution-api'
-    include ':modules:jaguif-contribution'
     include ':modules:jaguif-utils'
     include ':modules:jaguif-window-api'
 }

@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.contribution.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
@@ -27,4 +28,43 @@ public interface ContributionModuleApi extends Module {
 
     public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(ContributionModuleApi.class);
 
+    /**
+     * Creates contribution definition.
+     *
+     * @return contribution definition
+     */
+    @Nonnull
+    ContributionDefinition createContributionDefinition();
+
+    /**
+     * Creates contribution manager.
+     *
+     * @return contribution manager
+     */
+    @Nonnull
+    ContributionManagement createContributionManager();
+
+    /**
+     * Creates contribution builder.
+     *
+     * @return contribution builder
+     */
+    @Nonnull
+    ContributionSequenceBuilder createContributionSequenceBuilder();
+
+    /**
+     * Creates tree contribution manager.
+     *
+     * @return tree contribution manager
+     */
+    @Nonnull
+    TreeContributionManagement createTreeContributionManager();
+
+    /**
+     * Creates tree contribution builder.
+     *
+     * @return tree contribution builder
+     */
+    @Nonnull
+    TreeContributionSequenceBuilder createTreeContributionSequenceBuilder();
 }

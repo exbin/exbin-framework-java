@@ -19,8 +19,13 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.App;
+import org.exbin.jaguif.contribution.api.ContributionDefinition;
+import org.exbin.jaguif.contribution.api.ContributionManagement;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.contribution.api.ContributionModuleApi;
+import org.exbin.jaguif.contribution.api.ContributionSequenceBuilder;
+import org.exbin.jaguif.contribution.api.TreeContributionManagement;
+import org.exbin.jaguif.contribution.api.TreeContributionSequenceBuilder;
 
 /**
  * Implementation of contribution module.
@@ -43,5 +48,35 @@ public class ContributionModule implements ContributionModuleApi {
         }
 
         return resourceBundle;
+    }
+
+    @Nonnull
+    @Override
+    public ContributionDefinition createContributionDefinition() {
+        return new DefaultContributionDefinition();
+    }
+
+    @Nonnull
+    @Override
+    public ContributionManagement createContributionManager() {
+        return new ContributionManager();
+    }
+
+    @Nonnull
+    @Override
+    public ContributionSequenceBuilder createContributionSequenceBuilder() {
+        return new DefaultContributionSequenceBuilder();
+    }
+
+    @Nonnull
+    @Override
+    public TreeContributionManagement createTreeContributionManager() {
+        return new TreeContributionManager();
+    }
+
+    @Nonnull
+    @Override
+    public TreeContributionSequenceBuilder createTreeContributionSequenceBuilder() {
+        return new DefaultTreeContributionSequenceBuilder();
     }
 }

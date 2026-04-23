@@ -48,8 +48,8 @@ import org.exbin.jaguif.menu.api.MenuBuilder;
 @ParametersAreNonnullByDefault
 public class MenuModule implements MenuModuleApi {
 
-    private MenuManager menuManager = null;
     private MenuBuilder menuBuilder = null;
+    private MenuManager mainMenuManager = null;
     private ResourceBundle resourceBundle;
 
     public MenuModule() {
@@ -125,12 +125,13 @@ public class MenuModule implements MenuModuleApi {
     }
 
     @Nonnull
-    private MenuManager getMenuManager() {
-        if (menuManager == null) {
-            menuManager = new MenuManager();
+    @Override
+    public MenuManager getMainMenuManager() {
+        if (mainMenuManager == null) {
+            mainMenuManager = new MenuManager();
         }
 
-        return menuManager;
+        return mainMenuManager;
     }
 
     @Nonnull
@@ -141,44 +142,50 @@ public class MenuModule implements MenuModuleApi {
 
     @Nonnull
     @Override
-    public MenuDefinitionManagement getMenuManager(String menuId, String moduleId) {
-        return new MenuDefinitionManager(MenuModule.this.getMenuManager(), menuId, moduleId);
-    }
-
-    @Override
-    public void registerMenu(String menuId, String moduleId) {
-        MenuModule.this.getMenuManager().registerMenu(menuId, moduleId);
-    }
-
-    @Override
-    public void unregisterMenu(String menuId) {
-        MenuModule.this.getMenuManager().unregisterMenu(menuId);
+    public MenuDefinitionManagement getMainMenuDefinition(String moduleId) {
+        return new MenuDefinitionManager(MenuModule.this.getMainMenuManager(), MAIN_MENU_ID, moduleId);
     }
 
     @Nonnull
     @Override
-    public MenuDefinitionManagement getMainMenuManager(String moduleId) {
-        return getMenuManager(MAIN_MENU_ID, moduleId);
+    public MenuDefinitionManagement getMainMenuDefinition(String menuId, String moduleId) {
+        return new MenuDefinitionManager(MenuModule.this.getMainMenuManager(), menuId, moduleId);
+    }
+
+    @Nonnull
+    @Override
+    public MenuDefinitionManagement createMenuDefinition(MenuManagement menuManagement, String menuId, String moduleId) {
+        return new MenuDefinitionManager(menuManagement, menuId, moduleId);
+    }
+
+    @Override
+    public void registerMenu(String menuId, String moduleId) {
+        MenuModule.this.getMainMenuManager().registerMenu(menuId, moduleId);
+    }
+
+    @Override
+    public void unregisterMenu(String menuId) {
+        MenuModule.this.getMainMenuManager().unregisterMenu(menuId);
     }
 
     @Override
     public void buildMenu(JPopupMenu targetMenu, String menuId, ContextRegistration contextRegistration) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, contextRegistration, null);
+        MenuModule.this.getMainMenuManager().buildMenu(targetMenu, menuId, contextRegistration, null);
     }
 
     @Override
     public void buildMenu(JPopupMenu targetMenu, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenu, menuId, contextRegistration, creationContext);
+        MenuModule.this.getMainMenuManager().buildMenu(targetMenu, menuId, contextRegistration, creationContext);
     }
 
     @Override
     public void buildMenu(JMenuBar targetMenuBar, String menuId, ContextRegistration contextRegistration) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, contextRegistration, null);
+        MenuModule.this.getMainMenuManager().buildMenu(targetMenuBar, menuId, contextRegistration, null);
     }
 
     @Override
     public void buildMenu(JMenuBar targetMenuBar, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext) {
-        MenuModule.this.getMenuManager().buildMenu(targetMenuBar, menuId, contextRegistration, creationContext);
+        MenuModule.this.getMainMenuManager().buildMenu(targetMenuBar, menuId, contextRegistration, creationContext);
     }
 
     @Nonnull
@@ -204,7 +211,7 @@ public class MenuModule implements MenuModuleApi {
 
     @Override
     public void registerClipboardMenuItems(ClipboardActionsApi actions, String menuId, @Nullable String subMenuId, String moduleId, SeparationSequenceContributionRule.SeparationMode separationMode) {
-        MenuDefinitionManagement mgmt = getMenuManager(menuId, moduleId);
+        MenuDefinitionManagement mgmt = MenuModule.this.getMainMenuDefinition(menuId, moduleId);
         if (subMenuId != null) {
             mgmt = mgmt.getSubMenu(subMenuId);
         }

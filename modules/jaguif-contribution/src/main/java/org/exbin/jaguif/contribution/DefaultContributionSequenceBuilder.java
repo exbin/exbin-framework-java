@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.contribution.api.ContributionDefinition;
+import org.exbin.jaguif.contribution.api.ContributionSequenceBuilder;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
@@ -41,17 +43,12 @@ import org.exbin.jaguif.contribution.api.SequenceContributionRule;
  * Contribution sequence builder.
  */
 @ParametersAreNonnullByDefault
-public class ContributionSequenceBuilder {
+public class DefaultContributionSequenceBuilder implements ContributionSequenceBuilder {
 
-    public ContributionSequenceBuilder() {
+    public DefaultContributionSequenceBuilder() {
     }
 
-    /**
-     * Builds sequence of items / events for given definition.
-     *
-     * @param targetSequence target ouput sequence
-     * @param contributionDef contribution definition
-     */
+    @Override
     public void buildSequence(ContributionSequenceOutput targetSequence, @Nullable ContributionDefinition contributionDef) {
         if (contributionDef == null) {
             return;
@@ -234,7 +231,7 @@ public class ContributionSequenceBuilder {
                         }
                         builderRecord.processedContributions.add(record.contributionId);
                     } else {
-                        Logger.getLogger(ContributionSequenceBuilder.class.getName()).log(Level.SEVERE, "Skipping items");
+                        Logger.getLogger(DefaultContributionSequenceBuilder.class.getName()).log(Level.SEVERE, "Skipping items");
                         processingRecord.contributions.clear();
                     }
                     continue;

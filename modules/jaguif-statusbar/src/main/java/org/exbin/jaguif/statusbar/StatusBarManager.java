@@ -17,13 +17,15 @@ package org.exbin.jaguif.statusbar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.contribution.ContributionDefinition;
-import org.exbin.jaguif.contribution.ContributionManager;
+import org.exbin.jaguif.App;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
-import org.exbin.jaguif.contribution.ContributionSequenceBuilder;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.contribution.api.ContributionDefinition;
+import org.exbin.jaguif.contribution.api.ContributionManagement;
+import org.exbin.jaguif.contribution.api.ContributionModuleApi;
+import org.exbin.jaguif.contribution.api.ContributionSequenceBuilder;
 import org.exbin.jaguif.statusbar.api.StatusBar;
 import org.exbin.jaguif.statusbar.api.StatusBarManagement;
 
@@ -31,28 +33,32 @@ import org.exbin.jaguif.statusbar.api.StatusBarManagement;
  * Default status bar manager.
  */
 @ParametersAreNonnullByDefault
-public class StatusBarManager extends ContributionManager implements StatusBarManagement {
+public class StatusBarManager implements StatusBarManagement {
 
-    protected final ContributionSequenceBuilder builder = new ContributionSequenceBuilder();
+    protected final ContributionSequenceBuilder builder;
+    protected final ContributionManagement contributionManagement;
 
     public StatusBarManager() {
+        ContributionModuleApi contributionModule = App.getModule(ContributionModuleApi.class);
+        contributionManagement = contributionModule.createContributionManager();
+        builder = contributionModule.createContributionSequenceBuilder();
     }
 
     @Override
     public void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ContextRegistration contextRegistration) {
-        ContributionDefinition contributionDef = definitions.get(statusBarId);
-        builder.buildSequence(new StatusBarSequenceOutput(targetStatusBar, contextRegistration), contributionDef);
+        ContributionDefinition definition = contributionManagement.getDefinition(statusBarId);
+        builder.buildSequence(new StatusBarSequenceOutput(targetStatusBar, contextRegistration), definition);
         contextRegistration.finish();
     }
 
     @Override
     public void registerStatusBar(String statusBarId, String moduleId) {
-        registerDefinition(statusBarId, moduleId);
+        contributionManagement.registerDefinition(statusBarId, moduleId);
     }
 
     @Override
     public void registerStatusBarContribution(String statusBarId, String moduleId, SequenceContribution contribution) {
-        ContributionDefinition definition = definitions.get(statusBarId);
+        ContributionDefinition definition = contributionManagement.getDefinition(statusBarId);
         if (definition == null) {
             throw new IllegalStateException("Definition with Id " + statusBarId + " doesn't exist");
         }
@@ -63,11 +69,11 @@ public class StatusBarManager extends ContributionManager implements StatusBarMa
     @Nonnull
     @Override
     public GroupSequenceContribution registerStatusBarGroup(String statusBarId, String moduleId, String groupId) {
-        return registerContributionGroup(statusBarId, moduleId, groupId);
+        return contributionManagement.registerContributionGroup(statusBarId, moduleId, groupId);
     }
 
     @Override
     public void registerStatusBarRule(SequenceContribution contribution, SequenceContributionRule rule) {
-        registerContributionRule(contribution, rule);
+        contributionManagement.registerContributionRule(contribution, rule);
     }
 }

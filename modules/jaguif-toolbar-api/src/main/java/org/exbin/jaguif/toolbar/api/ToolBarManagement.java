@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.toolbar.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JToolBar;
@@ -82,4 +83,12 @@ public interface ToolBarManagement {
      * @param rule tool bar rule
      */
     void registerToolBarRule(SequenceContribution contribution, SequenceContributionRule rule);
+
+    /**
+     * Returns registered contributions.
+     *
+     * @return tool bar contributions
+     */
+    @Nonnull
+    List<SequenceContribution> getContributions();
 }

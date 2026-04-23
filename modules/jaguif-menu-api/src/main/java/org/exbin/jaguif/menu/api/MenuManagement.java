@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.menu.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -150,4 +151,12 @@ public interface MenuManagement {
      * @param rule menu contribution rule
      */
     void registerMenuRule(SequenceContribution contribution, SequenceContributionRule rule);
+
+    /**
+     * Returns registered contributions.
+     *
+     * @return menu contributions
+     */
+    @Nonnull
+    List<SequenceContribution> getContributions();
 }

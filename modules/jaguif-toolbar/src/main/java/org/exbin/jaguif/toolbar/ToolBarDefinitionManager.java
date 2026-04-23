@@ -22,6 +22,7 @@ import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
+import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 
 /**
  * Default toolbar definition manager.
@@ -29,11 +30,11 @@ import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 @ParametersAreNonnullByDefault
 public class ToolBarDefinitionManager implements ToolBarDefinitionManagement {
 
-    protected final ToolBarManager toolBarManager;
+    protected final ToolBarManagement toolBarManager;
     protected final String toolBarId;
     protected final String moduleId;
 
-    public ToolBarDefinitionManager(ToolBarManager toolBarManager, String toolBarId, String moduleId) {
+    public ToolBarDefinitionManager(ToolBarManagement toolBarManager, String toolBarId, String moduleId) {
         this.toolBarManager = toolBarManager;
         this.toolBarId = toolBarId;
         this.moduleId = moduleId;

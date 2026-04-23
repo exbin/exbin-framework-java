@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.contribution.api.ContributionDefinition;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.ItemSequenceContribution;
@@ -37,24 +38,19 @@ import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SubSequenceContribution;
 import org.exbin.jaguif.contribution.api.SubSequenceContributionRule;
+import org.exbin.jaguif.contribution.api.TreeContributionSequenceBuilder;
 import org.exbin.jaguif.contribution.api.TreeContributionSequenceOutput;
 
 /**
  * Tree contribution sequence builder.
  */
 @ParametersAreNonnullByDefault
-public class TreeContributionSequenceBuilder {
+public class DefaultTreeContributionSequenceBuilder implements TreeContributionSequenceBuilder {
 
-    public TreeContributionSequenceBuilder() {
+    public DefaultTreeContributionSequenceBuilder() {
     }
 
-    /**
-     * Builds sequence of items / events for given definition.
-     *
-     * @param targetSequence target ouput sequence
-     * @param definitionId definition id
-     * @param contributionDef contribution definition
-     */
+    @Override
     public void buildSequence(TreeContributionSequenceOutput targetSequence, String definitionId, @Nullable ContributionDefinition contributionDef) {
         if (contributionDef == null) {
             return;
@@ -263,7 +259,7 @@ public class TreeContributionSequenceBuilder {
                         }
                         subRecord.processedContributions.add(record.contributionId);
                     } else {
-                        Logger.getLogger(TreeContributionSequenceBuilder.class.getName()).log(Level.SEVERE, "Skipping items");
+                        Logger.getLogger(DefaultTreeContributionSequenceBuilder.class.getName()).log(Level.SEVERE, "Skipping items");
                         groupRecord.contributions.clear();
                     }
                     continue;

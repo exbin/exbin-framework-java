@@ -29,33 +29,39 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
+import org.exbin.jaguif.App;
 import org.exbin.jaguif.menu.api.SubMenuContribution;
-import org.exbin.jaguif.contribution.ContributionDefinition;
-import org.exbin.jaguif.contribution.TreeContributionManager;
 import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.menu.api.DirectMenuContribution;
 import org.exbin.jaguif.menu.api.MenuItemProvider;
-import org.exbin.jaguif.contribution.TreeContributionSequenceBuilder;
 import org.exbin.jaguif.menu.api.MenuManagement;
 import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.context.api.ContextStateProvider;
+import org.exbin.jaguif.contribution.api.ContributionDefinition;
+import org.exbin.jaguif.contribution.api.ContributionModuleApi;
+import org.exbin.jaguif.contribution.api.TreeContributionManagement;
+import org.exbin.jaguif.contribution.api.TreeContributionSequenceBuilder;
 
 /**
  * Default menus manager.
  */
 @ParametersAreNonnullByDefault
-public class MenuManager extends TreeContributionManager implements MenuManagement {
+public class MenuManager implements MenuManagement {
 
-    protected final TreeContributionSequenceBuilder builder = new TreeContributionSequenceBuilder();
+    protected final TreeContributionSequenceBuilder builder;
+    protected final TreeContributionManagement contributionManagement;
 
     public MenuManager() {
+        ContributionModuleApi contributionModule = App.getModule(ContributionModuleApi.class);
+        contributionManagement = contributionModule.createTreeContributionManager();
+        builder = contributionModule.createTreeContributionSequenceBuilder();
     }
 
     @Override
     public void buildMenu(JMenu outputMenu, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext) {
-        ContributionDefinition definition = definitions.get(menuId);
+        ContributionDefinition definition = contributionManagement.getDefinition(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
         builder.buildSequence(new MenuSequenceOutput(outputMenu, contextRegistration, creationContext, buttonGroups), menuId, definition);
         contextRegistration.finish();
@@ -63,7 +69,7 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
 
     @Override
     public void buildMenu(JPopupMenu outputMenu, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext) {
-        ContributionDefinition definition = definitions.get(menuId);
+        ContributionDefinition definition = contributionManagement.getDefinition(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
         builder.buildSequence(new PopupMenuSequenceOutput(outputMenu, contextRegistration, creationContext, buttonGroups), menuId, definition);
         contextRegistration.finish();
@@ -71,7 +77,7 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
 
     @Override
     public void buildMenu(JMenuBar outputMenuBar, String menuId, ContextRegistration contextRegistration, @Nullable ContextStateProvider creationContext) {
-        ContributionDefinition definition = definitions.get(menuId);
+        ContributionDefinition definition = contributionManagement.getDefinition(menuId);
         Map<String, ButtonGroup> buttonGroups = new HashMap<>();
         builder.buildSequence(new MenuBarSequenceOutput(outputMenuBar, contextRegistration, creationContext, buttonGroups), menuId, definition);
         contextRegistration.finish();
@@ -79,7 +85,7 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
 
     @Override
     public boolean menuGroupExists(String menuId, String groupId) {
-        ContributionDefinition definition = definitions.get(menuId);
+        ContributionDefinition definition = contributionManagement.getDefinition(menuId);
         if (definition == null) {
             return false;
         }
@@ -95,25 +101,24 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
 
     @Override
     public void unregisterMenu(String menuId) {
-        unregisterDefinition(menuId);
+        contributionManagement.unregisterDefinition(menuId);
     }
 
     @Override
     public void registerMenu(String menuId, String moduleId) {
-        ContributionDefinition definition = definitions.get(menuId);
+        ContributionDefinition definition = contributionManagement.getDefinition(menuId);
         if (definition != null) {
             return;
         }
 
-        registerDefinition(menuId, moduleId);
+        contributionManagement.registerDefinition(menuId, moduleId);
     }
 
     @Override
     public void registerMenuContribution(String menuId, String moduleId, SequenceContribution contribution) {
-        ContributionDefinition definition = definitions.get(menuId);
+        ContributionDefinition definition = contributionManagement.getDefinition(menuId);
         if (definition == null) {
-            definition = new ContributionDefinition();
-            definitions.put(menuId, definition);
+            definition = contributionManagement.registerDefinition(menuId, moduleId);
         }
 
         definition.addContribution(contribution);
@@ -133,10 +138,9 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
     @Nonnull
     @Override
     public SubMenuContribution registerMenuItem(String menuId, String moduleId, String subMenuId, Action subMenuAction) {
-        ContributionDefinition definition = definitions.get(menuId);
+        ContributionDefinition definition = contributionManagement.getDefinition(menuId);
         if (definition == null) {
-            definition = new ContributionDefinition();
-            definitions.put(menuId, definition);
+            definition = contributionManagement.registerDefinition(menuId, moduleId);
         }
 
         SubMenuContribution menuContribution = new SubMenuContribution(subMenuId, subMenuAction);
@@ -147,10 +151,9 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
     @Nonnull
     @Override
     public DirectMenuContribution registerMenuItem(String menuId, String moduleId, MenuItemProvider menuItemProvider) {
-        ContributionDefinition definition = definitions.get(menuId);
+        ContributionDefinition definition = contributionManagement.getDefinition(menuId);
         if (definition == null) {
-            definition = new ContributionDefinition();
-            definitions.put(menuId, definition);
+            definition = contributionManagement.registerDefinition(menuId, moduleId);
         }
 
         DirectMenuContribution menuContribution = new DirectMenuContribution(menuItemProvider);
@@ -161,18 +164,20 @@ public class MenuManager extends TreeContributionManager implements MenuManageme
     @Nonnull
     @Override
     public GroupSequenceContribution registerMenuGroup(String menuId, String moduleId, String groupId) {
-        return registerContributionGroup(menuId, moduleId, groupId);
+        return contributionManagement.registerContributionGroup(menuId, moduleId, groupId);
     }
 
     @Override
     public void registerMenuRule(SequenceContribution contribution, SequenceContributionRule rule) {
-        registerContributionRule(contribution, rule);
+        contributionManagement.registerContributionRule(contribution, rule);
     }
-    
+
     @Nonnull
+    @Override
     public List<SequenceContribution> getContributions() {
+        List<ContributionDefinition> definitions = contributionManagement.getAllDefinitions();
         List<SequenceContribution> contributions = new ArrayList<>();
-        for (ContributionDefinition definition : definitions.values()) {
+        for (ContributionDefinition definition : definitions) {
             contributions.addAll(definition.getContributions());
         }
         return contributions;

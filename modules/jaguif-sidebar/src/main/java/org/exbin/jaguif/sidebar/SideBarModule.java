@@ -56,7 +56,8 @@ public class SideBarModule implements SideBarModuleApi {
     }
 
     @Nonnull
-    private SideBarManager getMainSideBarManager() {
+    @Override
+    public SideBarManagement getMainSideBarManager() {
         if (mainSideBarManager == null) {
             mainSideBarManager = new SideBarManager();
             mainSideBarManager.registerSideBar(MAIN_SIDE_BAR_ID, MODULE_ID);
@@ -64,15 +65,15 @@ public class SideBarModule implements SideBarModuleApi {
         return mainSideBarManager;
     }
 
-    @Override
-    public void setAutoShow(boolean autoShow) {
-        this.autoShow = autoShow;
-    }
-
     @Nonnull
     @Override
     public SideBarManagement createSideBarManager() {
         return new SideBarManager();
+    }
+
+    @Override
+    public void setAutoShow(boolean autoShow) {
+        this.autoShow = autoShow;
     }
 
     @Override
@@ -87,19 +88,19 @@ public class SideBarModule implements SideBarModuleApi {
 
     @Nonnull
     @Override
-    public SideBarDefinitionManagement getMainSideBarManager(String moduleId) {
-        return getSideBarManager(MAIN_SIDE_BAR_ID, moduleId);
+    public SideBarDefinitionManagement getMainSideBarDefinition(String moduleId) {
+        return new SideBarDefinitionManager(getMainSideBarManager(), MAIN_SIDE_BAR_ID, moduleId);
     }
 
     @Nonnull
     @Override
-    public SideBarDefinitionManagement getSideBarManager(String sideBarId, String moduleId) {
-        return new SideBarDefinitionManager(SideBarModule.this.getMainSideBarManager(), sideBarId, moduleId);
+    public SideBarDefinitionManagement createSideBarDefinition(SideBarManagement sideBarManagement, String sideBarId, String moduleId) {
+        return new SideBarDefinitionManager(sideBarManagement, sideBarId, moduleId);
     }
 
     @Override
     public void registerDockingSideBar(SidePanelDocking docking) {
-        registerDockingSideBar(getMainSideBarManager().createSideToolBar(docking), docking);
+        registerDockingSideBar(((SideBarManager) getMainSideBarManager()).createSideToolBar(docking), docking);
     }
 
     @Override

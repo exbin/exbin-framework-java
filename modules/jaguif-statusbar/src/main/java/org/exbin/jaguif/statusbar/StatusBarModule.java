@@ -33,7 +33,7 @@ import org.exbin.jaguif.statusbar.gui.DefaultStatusBar;
 @ParametersAreNonnullByDefault
 public class StatusBarModule implements StatusBarModuleApi {
 
-    private StatusBarManager statusBarManager = null;
+    private StatusBarManager mainStatusBarManager = null;
     private ResourceBundle resourceBundle;
 
     @Nonnull
@@ -46,12 +46,13 @@ public class StatusBarModule implements StatusBarModuleApi {
     }
 
     @Nonnull
-    public StatusBarManager getStatusBarManager() {
-        if (statusBarManager == null) {
-            statusBarManager = new StatusBarManager();
+    @Override
+    public StatusBarManager getMainStatusBarManager() {
+        if (mainStatusBarManager == null) {
+            mainStatusBarManager = new StatusBarManager();
         }
 
-        return statusBarManager;
+        return mainStatusBarManager;
     }
 
     @Nonnull
@@ -62,26 +63,32 @@ public class StatusBarModule implements StatusBarModuleApi {
 
     @Nonnull
     @Override
-    public StatusBarDefinitionManagement getStatusBarManager(String statusBarId, String moduleId) {
-        return new StatusBarDefinitionManager(StatusBarModule.this.getStatusBarManager(), statusBarId, moduleId);
+    public StatusBarDefinitionManagement getMainStatusBarDefinition(String moduleId) {
+        return new StatusBarDefinitionManager(StatusBarModule.this.getMainStatusBarManager(), MAIN_STATUS_BAR_ID, moduleId);
     }
 
     @Nonnull
     @Override
-    public StatusBarDefinitionManagement getMainStatusBarManager() {
-        return getStatusBarManager(MAIN_STATUS_BAR_ID, MODULE_ID);
+    public StatusBarDefinitionManagement getMainStatusBarDefinition(String statusBarId, String moduleId) {
+        return new StatusBarDefinitionManager(StatusBarModule.this.getMainStatusBarManager(), statusBarId, moduleId);
+    }
+
+    @Nonnull
+    @Override
+    public StatusBarDefinitionManagement createStatusBarDefinition(StatusBarManagement statusBarManagement, String statusBarId, String moduleId) {
+        return new StatusBarDefinitionManager(statusBarManagement, statusBarId, moduleId);
     }
 
     @Override
     public void registerStatusBar(String statusBarId, String moduleId) {
-        StatusBarModule.this.getStatusBarManager().registerStatusBar(statusBarId, moduleId);
+        StatusBarModule.this.getMainStatusBarManager().registerStatusBar(statusBarId, moduleId);
     }
 
     @Override
     public void buildStatusBar(StatusBar targetStatusBar, String statusBarId, ContextRegistration contextRegistration) {
-        StatusBarModule.this.getStatusBarManager().buildStatusBar(targetStatusBar, statusBarId, contextRegistration);
+        StatusBarModule.this.getMainStatusBarManager().buildStatusBar(targetStatusBar, statusBarId, contextRegistration);
     }
-    
+
     @Nonnull
     @Override
     public StatusBar createStatusBar(String statusBarId, ContextRegistration contextRegistration) {

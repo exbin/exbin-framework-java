@@ -21,6 +21,7 @@ import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.contribution.api.SequenceContributionRule;
 import org.exbin.jaguif.sidebar.api.SideBarDefinitionManagement;
+import org.exbin.jaguif.sidebar.api.SideBarManagement;
 
 /**
  * Default side bar definition manager.
@@ -28,11 +29,11 @@ import org.exbin.jaguif.sidebar.api.SideBarDefinitionManagement;
 @ParametersAreNonnullByDefault
 public class SideBarDefinitionManager implements SideBarDefinitionManagement {
 
-    protected final SideBarManager sideBarManager;
+    protected final SideBarManagement sideBarManager;
     protected final String sideBarId;
     protected final String moduleId;
 
-    public SideBarDefinitionManager(SideBarManager sideBarManager, String sideBarId, String moduleId) {
+    public SideBarDefinitionManager(SideBarManagement sideBarManager, String sideBarId, String moduleId) {
         this.sideBarManager = sideBarManager;
         this.sideBarId = sideBarId;
         this.moduleId = moduleId;

@@ -24,6 +24,7 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import org.exbin.jaguif.App;
+import org.exbin.jaguif.action.manager.ActionManagerModule;
 import org.exbin.jaguif.action.manager.settings.gui.KeyMapSettingsPanel;
 import org.exbin.jaguif.action.manager.model.KeyMapRecord;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
@@ -53,7 +54,7 @@ public class KeyMapSettingsComponent implements SettingsComponentProvider {
         {
             String type = resourceBundle.getString("actionType.menu");
             MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-            MenuDefinitionManagement menuManager = menuModule.getMainMenuManager(MenuModuleApi.MODULE_ID);
+            MenuDefinitionManagement menuManager = menuModule.getMainMenuDefinition(ActionManagerModule.MODULE_ID);
             List<SequenceContribution> contributions = menuManager.getContributions();
             for (SequenceContribution contribution : contributions) {
                 if (contribution instanceof ActionSequenceContribution) {
@@ -69,7 +70,7 @@ public class KeyMapSettingsComponent implements SettingsComponentProvider {
         {
             String type = resourceBundle.getString("actionType.toolBar");
             ToolBarModuleApi toolbarModule = App.getModule(ToolBarModuleApi.class);
-            ToolBarDefinitionManagement toolBarManager = toolbarModule.getMainToolBarManager(ToolBarModuleApi.MODULE_ID);
+            ToolBarDefinitionManagement toolBarManager = toolbarModule.getMainToolBarDefinition(ActionManagerModule.MODULE_ID);
             List<SequenceContribution> contributions = toolBarManager.getContributions();
             for (SequenceContribution contribution : contributions) {
                 if (contribution instanceof ActionSequenceContribution) {

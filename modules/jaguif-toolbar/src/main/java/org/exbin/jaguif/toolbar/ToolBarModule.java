@@ -38,7 +38,7 @@ import org.exbin.jaguif.context.api.ContextRegistration;
 @ParametersAreNonnullByDefault
 public class ToolBarModule implements ToolBarModuleApi {
 
-    private ToolBarManager toolBarManager = null;
+    private ToolBarManager mainToolBarManager = null;
     private ResourceBundle resourceBundle;
 
     public ToolBarModule() {
@@ -57,12 +57,13 @@ public class ToolBarModule implements ToolBarModuleApi {
     }
 
     @Nonnull
-    private ToolBarManager getToolBarManager() {
-        if (toolBarManager == null) {
-            toolBarManager = new ToolBarManager();
+    @Override
+    public ToolBarManager getMainToolBarManager() {
+        if (mainToolBarManager == null) {
+            mainToolBarManager = new ToolBarManager();
         }
 
-        return toolBarManager;
+        return mainToolBarManager;
     }
 
     @Nonnull
@@ -73,31 +74,31 @@ public class ToolBarModule implements ToolBarModuleApi {
 
     @Override
     public void buildToolBar(JToolBar targetToolBar, String toolBarId, ContextRegistration contextRegistration) {
-        ToolBarModule.this.getToolBarManager().buildToolBar(targetToolBar, toolBarId, contextRegistration);
+        ToolBarModule.this.getMainToolBarManager().buildToolBar(targetToolBar, toolBarId, contextRegistration);
     }
 
     @Override
     public void registerToolBar(String toolBarId, String moduleId) {
-        ToolBarModule.this.getToolBarManager().registerToolBar(toolBarId, moduleId);
+        ToolBarModule.this.getMainToolBarManager().registerToolBar(toolBarId, moduleId);
     }
 
     @Nonnull
     @Override
-    public ToolBarDefinitionManagement getToolBarManager(String toolBarId, String moduleId) {
-        return new ToolBarDefinitionManager(ToolBarModule.this.getToolBarManager(), toolBarId, moduleId);
+    public ToolBarDefinitionManagement getMainToolBarDefinition(String moduleId) {
+        return new ToolBarDefinitionManager(getMainToolBarManager(), MAIN_TOOL_BAR_ID, moduleId);
     }
 
     @Nonnull
     @Override
-    public ToolBarDefinitionManagement getMainToolBarManager(String moduleId) {
-        return getToolBarManager(MAIN_TOOL_BAR_ID, moduleId);
+    public ToolBarDefinitionManagement createToolBarDefinition(ToolBarManagement toolBarManagement, String toolBarId, String moduleId) {
+        return new ToolBarDefinitionManager(toolBarManagement, toolBarId, moduleId);
     }
 
     @Override
     public void registerToolBarClipboardActions() {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
         ClipboardActionsApi clipboardActions = actionModule.getClipboardActions();
-        ToolBarDefinitionManagement mgmt = getMainToolBarManager(MODULE_ID);
+        ToolBarDefinitionManagement mgmt = ToolBarModule.this.getMainToolBarDefinition(MODULE_ID);
         SequenceContribution contribution = mgmt.registerToolBarGroup(CLIPBOARD_ACTIONS_TOOL_BAR_GROUP_ID);
         mgmt.registerToolBarRule(contribution, new PositionSequenceContributionRule(PositionMode.TOP));
         contribution = clipboardActions.createCutContribution();
