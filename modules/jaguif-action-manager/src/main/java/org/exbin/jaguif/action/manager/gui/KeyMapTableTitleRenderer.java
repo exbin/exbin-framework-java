@@ -17,7 +17,7 @@ package org.exbin.jaguif.action.manager.gui;
 
 import java.awt.Component;
 import java.awt.image.BufferedImage;
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nullable;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -26,7 +26,6 @@ import org.exbin.jaguif.action.manager.model.KeyMapRecord;
 /**
  * Keymap table renderer.
  */
-@ParametersAreNonnullByDefault
 public class KeyMapTableTitleRenderer extends DefaultTableCellRenderer {
 
     private final ImageIcon emptyIcon;
@@ -36,10 +35,15 @@ public class KeyMapTableTitleRenderer extends DefaultTableCellRenderer {
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Component component = super.getTableCellRendererComponent(table, ((KeyMapRecord) value).getName(), isSelected, hasFocus, row, column);
-        ImageIcon icon = ((KeyMapRecord) value).getIcon();
-        setIcon(icon == null ? emptyIcon : icon);
+    public Component getTableCellRendererComponent(@Nullable JTable table, @Nullable Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Component component;
+        if (value instanceof KeyMapRecord) {
+            component = super.getTableCellRendererComponent(table, ((KeyMapRecord) value).getName(), isSelected, hasFocus, row, column);
+            ImageIcon icon = ((KeyMapRecord) value).getIcon();
+            setIcon(icon == null ? emptyIcon : icon);
+        } else {
+            component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
         return component;
     }
 }

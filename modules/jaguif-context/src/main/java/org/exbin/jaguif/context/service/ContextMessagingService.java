@@ -15,7 +15,14 @@
  */
 package org.exbin.jaguif.context.service;
 
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.context.api.ContextStateChangeListener;
+import org.exbin.jaguif.context.api.ContextStateUpdateListener;
+import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
  * Context messaging service.
@@ -23,5 +30,83 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class ContextMessagingService {
 
-    
+    protected MessagingThread messagingThread;
+
+    public ContextMessagingService() {
+        // TODO Do messaging in background, one at the time
+        // TODO Throw out repeated messages
+    }
+
+    public void notifyStateChanged(LinkedList<ContextStateChangeListener> changeListeners, @Nullable Object instance) {
+        messagingThread = new MessagingThread("contextMessaging");
+        messagingThread.notifyStateChanged(changeListeners, instance);
+        messagingThread.start();
+        try {
+            messagingThread.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ContextMessagingService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void notifyStateUpdated(LinkedList<ContextStateUpdateListener> updateListeners, Object contextInstance, StateUpdateType updateType) {
+        messagingThread = new MessagingThread("contextMessaging");
+        messagingThread.notifyStateUpdated(updateListeners, contextInstance, updateType);
+        messagingThread.start();
+        try {
+            messagingThread.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ContextMessagingService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @ParametersAreNonnullByDefault
+    private static class MessagingThread extends Thread {
+
+        private Object contextInstance;
+        private StateUpdateType updateType = null;
+        private LinkedList<ContextStateChangeListener> changeListeners = null;
+        private LinkedList<ContextStateUpdateListener> updateListeners = null;
+
+        private MessagingThread(String threadName) {
+            super(threadName);
+        }
+
+        private void notifyStateChanged(LinkedList<ContextStateChangeListener> changeListeners, @Nullable Object contextInstance) {
+            this.changeListeners = changeListeners;
+            this.updateListeners = null;
+            this.contextInstance = contextInstance;
+            this.updateType = null;
+        }
+
+        private void notifyStateUpdated(LinkedList<ContextStateUpdateListener> updateListeners, Object contextInstance, StateUpdateType updateType) {
+            this.changeListeners = null;
+            this.updateListeners = updateListeners;
+            this.contextInstance = contextInstance;
+            this.updateType = updateType;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void run() {
+            if (updateType == null) {
+                while (!changeListeners.isEmpty()) {
+                    if (Thread.interrupted()) {
+                        return;
+                    }
+
+                    ContextStateChangeListener listener = changeListeners.pop();
+                    listener.stateChanged(contextInstance);
+                }
+            } else {
+                while (!updateListeners.isEmpty()) {
+                    if (Thread.interrupted()) {
+                        return;
+                    }
+
+                    ContextStateUpdateListener listener = updateListeners.pop();
+                    listener.notifyStateUpdated(contextInstance, updateType);
+                }
+            }
+        }
+    }
 }

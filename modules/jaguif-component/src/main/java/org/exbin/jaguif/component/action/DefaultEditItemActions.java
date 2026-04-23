@@ -23,9 +23,11 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.component.ComponentModule;
 import org.exbin.jaguif.component.api.action.EditItemActions;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
+import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
-import org.exbin.jaguif.toolbar.api.ToolBarManagement;
+import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 
 /**
  * Item edit default action set.
@@ -122,11 +124,18 @@ public class DefaultEditItemActions implements EditItemActions {
             }
         };
     }
-    
+
     @Override
-    public void registerToolBarContributions(ToolBarManagement toolBarManager) {
-        toolBarManager.registerToolBarContribution("", "", createAddItemContribution());
-        toolBarManager.registerToolBarContribution("", "", createEditItemContribution());
-        toolBarManager.registerToolBarContribution("", "", createDeleteItemContribution());
+    public void registerToolBarContributions(ToolBarDefinitionManagement toolBarDefinition) {
+        GroupSequenceContribution toolBarGroup = toolBarDefinition.registerToolBarGroup("editItem");
+        SequenceContribution contribution = createAddItemContribution();
+        toolBarDefinition.registerToolBarContribution(contribution);
+        toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));
+        contribution = createEditItemContribution();
+        toolBarDefinition.registerToolBarContribution(contribution);
+        toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));
+        contribution = createDeleteItemContribution();
+        toolBarDefinition.registerToolBarContribution(contribution);
+        toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));
     }
 }

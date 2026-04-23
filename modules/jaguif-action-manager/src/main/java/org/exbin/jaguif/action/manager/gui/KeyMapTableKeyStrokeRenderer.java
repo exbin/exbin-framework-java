@@ -18,7 +18,7 @@ package org.exbin.jaguif.action.manager.gui;
 import java.awt.Component;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nullable;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -26,11 +26,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 /**
  * Keymap keytroke table renderer.
  */
-@ParametersAreNonnullByDefault
 public class KeyMapTableKeyStrokeRenderer extends DefaultTableCellRenderer {
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(@Nullable JTable table, @Nullable Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         String keyStrokeText;
         KeyStroke keyStroke = ((KeyStroke) value);
         if (keyStroke != null) {

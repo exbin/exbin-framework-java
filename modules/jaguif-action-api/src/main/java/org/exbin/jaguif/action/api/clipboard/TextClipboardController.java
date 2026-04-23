@@ -15,7 +15,6 @@
  */
 package org.exbin.jaguif.action.api.clipboard;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.action.api.DeletionController;
 import org.exbin.jaguif.action.api.SelectionController;
 
@@ -23,7 +22,6 @@ import org.exbin.jaguif.action.api.SelectionController;
  * Interface for clipboard handler for visual component or document usable for
  * context menu.
  */
-@ParametersAreNonnullByDefault
 public interface TextClipboardController extends ClipboardController, SelectionController, DeletionController {
 
     /**

@@ -18,6 +18,7 @@ package org.exbin.jaguif.component.api.action;
 import javax.annotation.Nonnull;
 import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
+import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 import org.exbin.jaguif.toolbar.api.ToolBarManagement;
 
 /**
@@ -92,7 +93,7 @@ public interface MoveItemActions {
     /**
      * Registers contributions to tool bar.
      *
-     * @param toolBarManager tool bar manager
+     * @param toolBarDefinition tool bar definition
      */
-    void registerToolBarContributions(ToolBarManagement toolBarManager);
+    void registerToolBarContributions(ToolBarDefinitionManagement toolBarDefinition);
 }

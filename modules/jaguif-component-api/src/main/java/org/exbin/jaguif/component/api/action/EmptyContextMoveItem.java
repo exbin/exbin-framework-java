@@ -16,12 +16,10 @@
 package org.exbin.jaguif.component.api.action;
 
 import org.exbin.jaguif.component.api.ContextMoveItem;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Empty class for clipboard handler for visual component / context menu.
  */
-@ParametersAreNonnullByDefault
 public class EmptyContextMoveItem implements ContextMoveItem {
 
     @Override

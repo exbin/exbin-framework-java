@@ -18,7 +18,7 @@ package org.exbin.jaguif.component.api.action;
 import javax.annotation.Nonnull;
 import javax.swing.Action;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
-import org.exbin.jaguif.toolbar.api.ToolBarManagement;
+import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 
 /**
  * Interface for item edit action set.
@@ -76,7 +76,7 @@ public interface EditItemActions {
     /**
      * Registers contributions to tool bar.
      *
-     * @param toolBarManager tool bar manager
+     * @param toolBarDefinition tool bar definition
      */
-    void registerToolBarContributions(ToolBarManagement toolBarManager);
+    void registerToolBarContributions(ToolBarDefinitionManagement toolBarDefinition);
 }

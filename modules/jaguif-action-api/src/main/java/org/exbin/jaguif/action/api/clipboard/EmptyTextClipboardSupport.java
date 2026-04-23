@@ -15,13 +15,10 @@
  */
 package org.exbin.jaguif.action.api.clipboard;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Empty implementation for clipboard handler for visual component / context
  * menu.
  */
-@ParametersAreNonnullByDefault
 public class EmptyTextClipboardSupport implements TextClipboardController {
 
     @Override

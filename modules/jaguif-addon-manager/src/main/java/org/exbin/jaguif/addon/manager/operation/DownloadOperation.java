@@ -62,7 +62,6 @@ public class DownloadOperation implements Runnable, CancellableOperation, Progre
                 listener.itemChanged(i);
             }
         } catch (Exception ex) {
-
             return;
         }
 

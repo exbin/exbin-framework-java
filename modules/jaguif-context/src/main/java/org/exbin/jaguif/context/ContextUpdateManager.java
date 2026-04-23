@@ -17,6 +17,7 @@ package org.exbin.jaguif.context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
@@ -27,6 +28,7 @@ import org.exbin.jaguif.context.api.ContextStateChangeListener;
 import org.exbin.jaguif.context.api.ContextStateUpdateListener;
 import org.exbin.jaguif.context.api.ContextUpdateManagement;
 import org.exbin.jaguif.context.api.StateUpdateType;
+import org.exbin.jaguif.context.service.ContextMessagingService;
 
 /**
  * Context update manager.
@@ -34,11 +36,12 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 @ParametersAreNonnullByDefault
 public class ContextUpdateManager implements ContextUpdateManagement {
 
-    // TODO protected final ContextMessagingService messagingService = new ContextMessagingService();
+    public static final String DEFAULT_GROUP = "";
+    protected final ContextMessagingService messagingService = new ContextMessagingService();
     protected final Map<String, ContextUpdateRecord> records = new HashMap<>();
 
     public ContextUpdateManager() {
-        records.put("", new ContextUpdateRecord());
+        records.put(DEFAULT_GROUP, new ContextUpdateRecord());
     }
 
     @Override
@@ -53,7 +56,7 @@ public class ContextUpdateManager implements ContextUpdateManagement {
 
     @Override
     public void addContextItem(ContextChange contextChange) {
-        addContextItem("", contextChange);
+        addContextItem(DEFAULT_GROUP, contextChange);
     }
 
     @Override
@@ -65,7 +68,7 @@ public class ContextUpdateManager implements ContextUpdateManagement {
     @SuppressWarnings("unchecked")
     @Override
     public <T> void notifyStateChanged(Class<T> stateClass, @Nullable T contextInstance) {
-        // TODO: Convert to use service / thread
+        LinkedList<ContextStateChangeListener> listeners = new LinkedList<>();
         for (ContextUpdateRecord record : records.values()) {
             List<ContextStateChangeListener<?>> changeListeners = record.getChangeListeners(stateClass);
             if (changeListeners == null) {
@@ -73,25 +76,29 @@ public class ContextUpdateManager implements ContextUpdateManagement {
             }
 
             for (ContextStateChangeListener changeListener : changeListeners) {
-                changeListener.stateChanged(contextInstance);
+                listeners.add(changeListener);
             }
         }
+
+        messagingService.notifyStateChanged(listeners, contextInstance);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> void notifyStateUpdated(Class<T> stateClass, T contextInstance, StateUpdateType updateType) {
-        // TODO: Convert to use service / thread
+        LinkedList<ContextStateUpdateListener> listeners = new LinkedList<>();
         for (ContextUpdateRecord record : records.values()) {
-            List<ContextStateUpdateListener<?>> changeListeners = record.getUpdateListeners(stateClass);
-            if (changeListeners == null) {
+            List<ContextStateUpdateListener<?>> updateListeners = record.getUpdateListeners(stateClass);
+            if (updateListeners == null) {
                 continue;
             }
 
-            for (ContextStateUpdateListener updateListener : changeListeners) {
-                updateListener.notifyStateUpdated(contextInstance, updateType);
+            for (ContextStateUpdateListener updateListener : updateListeners) {
+                listeners.add(updateListener);
             }
         }
+
+        messagingService.notifyStateUpdated(listeners, contextInstance, updateType);
     }
 
     @Nonnull

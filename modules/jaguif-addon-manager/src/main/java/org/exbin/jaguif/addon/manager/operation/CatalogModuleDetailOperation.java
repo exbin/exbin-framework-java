@@ -56,7 +56,6 @@ public class CatalogModuleDetailOperation implements Runnable, CancellableOperat
                 Logger.getLogger(CatalogModuleDetailOperation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 
     @Override

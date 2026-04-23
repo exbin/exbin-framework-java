@@ -23,9 +23,11 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.component.ComponentModule;
 import org.exbin.jaguif.component.api.action.MoveItemActions;
 import org.exbin.jaguif.contribution.api.ActionSequenceContribution;
+import org.exbin.jaguif.contribution.api.GroupSequenceContribution;
+import org.exbin.jaguif.contribution.api.GroupSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
-import org.exbin.jaguif.toolbar.api.ToolBarManagement;
+import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 
 /**
  * Item movement default action set.
@@ -143,10 +145,19 @@ public class DefaultMoveItemActions implements MoveItemActions {
     }
 
     @Override
-    public void registerToolBarContributions(ToolBarManagement toolBarManager) {
-        toolBarManager.registerToolBarContribution("", "", createMoveTopContribution());
-        toolBarManager.registerToolBarContribution("", "", createMoveUpContribution());
-        toolBarManager.registerToolBarContribution("", "", createMoveDownContribution());
-        toolBarManager.registerToolBarContribution("", "", createMoveBottomContribution());
+    public void registerToolBarContributions(ToolBarDefinitionManagement toolBarDefinition) {
+        GroupSequenceContribution toolBarGroup = toolBarDefinition.registerToolBarGroup("moveItem");
+        SequenceContribution contribution = createMoveTopContribution();
+        toolBarDefinition.registerToolBarContribution(contribution);
+        toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));
+        contribution = createMoveUpContribution();
+        toolBarDefinition.registerToolBarContribution(contribution);
+        toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));
+        contribution = createMoveDownContribution();
+        toolBarDefinition.registerToolBarContribution(contribution);
+        toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));
+        contribution = createMoveBottomContribution();
+        toolBarDefinition.registerToolBarContribution(contribution);
+        toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));
     }
 }
