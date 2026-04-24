@@ -70,6 +70,7 @@ public class EditSelectionAction extends AbstractAction {
                 });
             }
         });
+        setEnabled(false);
     }
 
     @Override

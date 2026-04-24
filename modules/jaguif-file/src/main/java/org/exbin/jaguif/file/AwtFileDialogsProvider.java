@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import org.exbin.jaguif.file.api.FileTypes;
 import org.exbin.jaguif.file.api.OpenFileResult;
@@ -76,7 +75,7 @@ public class AwtFileDialogsProvider implements FileDialogsProvider {
         fileDialog.setVisible(true);
         String file = fileDialog.getFile();
         return new OpenFileResult(
-                file != null ? JFileChooser.APPROVE_OPTION : JFileChooser.CANCEL_OPTION,
+                file != null ? OpenFileResult.ResultType.APPROVED : OpenFileResult.ResultType.CANCELLED,
                 file != null ? new File(fileDialog.getDirectory(), file) : null,
                 null
         );
@@ -107,7 +106,7 @@ public class AwtFileDialogsProvider implements FileDialogsProvider {
         fileDialog.setVisible(true);
         String file = fileDialog.getFile();
         return new OpenFileResult(
-                file != null ? JFileChooser.APPROVE_OPTION : JFileChooser.CANCEL_OPTION,
+                file != null ? OpenFileResult.ResultType.APPROVED : OpenFileResult.ResultType.CANCELLED,
                 file != null ? new File(fileDialog.getDirectory(), file) : null,
                 null
         );

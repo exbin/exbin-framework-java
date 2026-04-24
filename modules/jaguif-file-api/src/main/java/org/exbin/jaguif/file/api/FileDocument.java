@@ -18,12 +18,10 @@ package org.exbin.jaguif.file.api;
 import java.net.URI;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for file document.
  */
-@ParametersAreNonnullByDefault
 public interface FileDocument {
 
     /**

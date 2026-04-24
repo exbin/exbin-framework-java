@@ -65,7 +65,7 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
         int dialogResult = openFileChooser.showOpenDialog(parentComponent);
         FileFilter fileFilter = openFileChooser.getFileFilter();
         return new OpenFileResult(
-                dialogResult, openFileChooser.getSelectedFile(),
+                dialogResultToResultType(dialogResult), openFileChooser.getSelectedFile(),
                 fileFilter instanceof FileType ? (FileType) fileFilter : null
         );
     }
@@ -87,7 +87,7 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
         int dialogResult = saveFileChooser.showSaveDialog(parentComponent);
         FileFilter fileFilter = saveFileChooser.getFileFilter();
         return new OpenFileResult(
-                dialogResult, saveFileChooser.getSelectedFile(),
+                dialogResultToResultType(dialogResult), saveFileChooser.getSelectedFile(),
                 fileFilter instanceof FileType ? (FileType) fileFilter : null
         );
     }
@@ -101,6 +101,25 @@ public class SwingFileDialogsProvider implements FileDialogsProvider {
         if (fileTypes.allowAllFiles()) {
             fileChooser.addChoosableFileFilter(new AllFilesFilter());
         }
+    }
+
+    @Nonnull
+    private static OpenFileResult.ResultType dialogResultToResultType(int dialogResult) {
+        OpenFileResult.ResultType resultType;
+        switch (dialogResult) {
+            case JFileChooser.APPROVE_OPTION:
+                resultType = OpenFileResult.ResultType.APPROVED;
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                resultType = OpenFileResult.ResultType.CANCELLED;
+                break;
+            case JFileChooser.ERROR_OPTION:
+                resultType = OpenFileResult.ResultType.FAILED;
+                break;
+            default:
+                throw new AssertionError();
+        }
+        return resultType;
     }
 
     @ParametersAreNonnullByDefault

@@ -165,5 +165,4 @@ public interface FileModuleApi extends Module {
      * @param ex exception
      */
     void showUnableToSave(Component parentComponent, Exception ex);
-
 }

@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.JFileChooser;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.document.api.Document;
 import org.exbin.jaguif.document.api.DocumentProvider;
@@ -61,7 +60,7 @@ public class FileDocumentProvider implements DocumentProvider {
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         FileDialogsProvider fileDialogsProvider = fileModule.getFileDialogsProvider();
         OpenFileResult openFileResult = fileDialogsProvider.showOpenFileDialog(frameModule.getFrame(), new DefaultFileTypes(fileModule.getFileTypes()), null, usedDirectory, null);
-        if (openFileResult.getDialogResult() == JFileChooser.APPROVE_OPTION) {
+        if (openFileResult.getResultType() == OpenFileResult.ResultType.APPROVED) {
             return Optional.of(new FileDocumentSource(openFileResult.getSelectedFile().get()));
         }
 
@@ -85,7 +84,7 @@ public class FileDocumentProvider implements DocumentProvider {
         FileModuleApi fileModule = App.getModule(FileModuleApi.class);
         FileDialogsProvider fileDialogsProvider = fileModule.getFileDialogsProvider();
         OpenFileResult openFileResult = fileDialogsProvider.showSaveFileDialog(frameModule.getFrame(), new DefaultFileTypes(fileModule.getFileTypes()), suggestedFile, usedDirectory, null);
-        if (openFileResult.getDialogResult() == JFileChooser.APPROVE_OPTION) {
+        if (openFileResult.getResultType() == OpenFileResult.ResultType.APPROVED) {
             return Optional.of(new FileDocumentSource(openFileResult.getSelectedFile().get()));
         }
 

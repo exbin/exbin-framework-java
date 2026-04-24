@@ -29,27 +29,26 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class OpenFileResult {
 
-    protected final int dialogResult;
+    protected final ResultType resultType;
     @Nullable
     protected final File selectedFile;
     @Nullable
     protected final FileType fileType;
 
-    public OpenFileResult(int dialogResult, @Nullable File selectedFile, @Nullable FileType fileType) {
-        this.dialogResult = dialogResult;
+    public OpenFileResult(ResultType resultType, @Nullable File selectedFile, @Nullable FileType fileType) {
+        this.resultType = resultType;
         this.selectedFile = selectedFile;
         this.fileType = fileType;
     }
 
     /**
-     * Returns dialog regult.
-     * <p>
-     * Typically JFileChooser.APPROVE_OPTION or JFileChooser.CANCEL_OPTION
+     * Returns result type.
      *
-     * @return dialog result
+     * @return result type
      */
-    public int getDialogResult() {
-        return dialogResult;
+    @Nonnull
+    public ResultType getResultType() {
+        return resultType;
     }
 
     @Nonnull
@@ -60,5 +59,11 @@ public class OpenFileResult {
     @Nonnull
     public Optional<FileType> getFileType() {
         return Optional.ofNullable(fileType);
+    }
+
+    public enum ResultType {
+        APPROVED,
+        CANCELLED,
+        FAILED
     }
 }
