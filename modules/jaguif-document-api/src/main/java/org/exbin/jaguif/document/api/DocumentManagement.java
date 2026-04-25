@@ -57,12 +57,12 @@ public interface DocumentManagement {
     Document createDocumentForSource(SourceIdentifier source);
 
     /**
-     * Creates document source for document represented in memory.
+     * Creates document source for empty document.
      *
-     * @return memory document source
+     * @return empty document source
      */
     @Nonnull
-    MemoryDocumentSource createMemoryDocumentSource();
+    EmptyDocumentSource createEmptyDocumentSource();
 
     /**
      * Invokes opening of document using default method - typically opens file

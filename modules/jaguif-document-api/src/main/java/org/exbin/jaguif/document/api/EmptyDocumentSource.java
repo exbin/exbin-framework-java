@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 /**
  * Interface for document source.
  */
-public interface MemoryDocumentSource extends DocumentSource {
+public interface EmptyDocumentSource extends DocumentSource {
 
     /**
      * Returns document title.

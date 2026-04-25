@@ -45,6 +45,7 @@ import org.exbin.jaguif.file.api.FileDocument;
 import org.exbin.jaguif.file.api.FileDocumentSource;
 import org.exbin.jaguif.text.encoding.ContextEncoding;
 import org.exbin.jaguif.text.font.TextFontState;
+import org.exbin.jaguif.document.api.EmptyDocumentSource;
 
 /**
  * Text document.
@@ -113,8 +114,8 @@ public class TextDocument implements NamedDocument, ContextDocument, ComponentDo
 
     @Override
     public void loadFrom(DocumentSource documentSource) {
-        if (!(documentSource instanceof FileDocumentSource)) {
-            throw new UnsupportedOperationException();
+        if (documentSource instanceof EmptyDocumentSource) {
+            return;
         }
         
         File file = ((FileDocumentSource) documentSource).getFile();

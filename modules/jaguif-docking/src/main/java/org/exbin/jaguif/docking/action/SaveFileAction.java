@@ -34,7 +34,7 @@ import org.exbin.jaguif.document.api.Document;
 import org.exbin.jaguif.document.api.DocumentModuleApi;
 import org.exbin.jaguif.document.api.DocumentSource;
 import org.exbin.jaguif.document.api.EditableDocument;
-import org.exbin.jaguif.document.api.MemoryDocumentSource;
+import org.exbin.jaguif.document.api.EmptyDocumentSource;
 
 /**
  * Save file action.
@@ -80,7 +80,7 @@ public class SaveFileAction extends AbstractAction {
             Optional<DocumentSource> optDocumentSource = ((EditableDocument) document).getDocumentSource();
             if (optDocumentSource.isPresent()) {
                 DocumentSource documentSource = optDocumentSource.get();
-                if (!(documentSource instanceof MemoryDocumentSource)) {
+                if (!(documentSource instanceof EmptyDocumentSource)) {
                     ((EditableDocument) document).saveTo(documentSource);
                     return;
                 }

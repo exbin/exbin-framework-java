@@ -29,7 +29,7 @@ import org.exbin.jaguif.document.api.DocumentReceiver;
 import org.exbin.jaguif.document.api.DocumentType;
 import org.exbin.jaguif.document.api.SourceIdentifier;
 import org.exbin.jaguif.document.api.DocumentSource;
-import org.exbin.jaguif.document.api.MemoryDocumentSource;
+import org.exbin.jaguif.document.api.EmptyDocumentSource;
 
 /**
  * Document manager.
@@ -77,12 +77,12 @@ public class DocumentManager implements DocumentManagement {
 
     @Nonnull
     @Override
-    public MemoryDocumentSource createMemoryDocumentSource() {
+    public EmptyDocumentSource createEmptyDocumentSource() {
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         String title = documentModule.getNewDocumentNamePrefix() + " " + newDocumentIndex++;
-        DefaultMemoryDocumentSource memoryDocumentSource = new DefaultMemoryDocumentSource();
-        memoryDocumentSource.setDocumentTitle(title);
-        return memoryDocumentSource;
+        DefaultEmptyDocumentSource emptyDocumentSource = new DefaultEmptyDocumentSource();
+        emptyDocumentSource.setDocumentTitle(title);
+        return emptyDocumentSource;
     }
 
     @Nonnull

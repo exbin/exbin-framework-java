@@ -22,12 +22,12 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.document.api.DocumentManagement;
 import org.exbin.jaguif.document.api.DocumentModuleApi;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
-import org.exbin.jaguif.document.api.MemoryDocumentSource;
 import org.exbin.jaguif.document.settings.StartupOptions;
 import org.exbin.jaguif.document.settings.StartupSettingsComponent;
 import org.exbin.jaguif.options.settings.api.OptionsSettingsManagement;
 import org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi;
 import org.exbin.jaguif.options.settings.api.SettingsPageContribution;
+import org.exbin.jaguif.document.api.EmptyDocumentSource;
 
 /**
  * Implementation of the document module.
@@ -65,8 +65,8 @@ public class DocumentModule implements DocumentModuleApi {
 
     @Nonnull
     @Override
-    public MemoryDocumentSource createMemoryDocumentSource() {
-        return getMainDocumentManager().createMemoryDocumentSource();
+    public EmptyDocumentSource createEmptyDocumentSource() {
+        return getMainDocumentManager().createEmptyDocumentSource();
     }
 
     @Nonnull

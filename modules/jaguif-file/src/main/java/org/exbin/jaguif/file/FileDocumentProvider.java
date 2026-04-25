@@ -31,9 +31,9 @@ import org.exbin.jaguif.file.api.OpenFileResult;
 import org.exbin.jaguif.document.api.SourceIdentifier;
 import org.exbin.jaguif.document.api.DocumentSource;
 import org.exbin.jaguif.document.api.LoadableDocument;
-import org.exbin.jaguif.document.api.MemoryDocumentSource;
 import org.exbin.jaguif.file.api.UsedDirectoryApi;
 import org.exbin.jaguif.frame.api.FrameModuleApi;
+import org.exbin.jaguif.document.api.EmptyDocumentSource;
 
 /**
  * File document provider.
@@ -75,8 +75,8 @@ public class FileDocumentProvider implements DocumentProvider {
             Optional<DocumentSource> optDocumentSource = ((LoadableDocument) document).getDocumentSource();
             if (optDocumentSource.isPresent()) {
                 DocumentSource documentSource = optDocumentSource.get();
-                if (documentSource instanceof MemoryDocumentSource) {
-                    suggestedFile = new File(((MemoryDocumentSource) documentSource).getDocumentTitle());
+                if (documentSource instanceof EmptyDocumentSource) {
+                    suggestedFile = new File(((EmptyDocumentSource) documentSource).getDocumentTitle());
                 }
             }
         }

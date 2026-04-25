@@ -52,13 +52,13 @@ import org.exbin.jaguif.docking.multi.api.DockingMultiModuleApi;
 import org.exbin.jaguif.document.api.DocumentSource;
 import org.exbin.jaguif.document.api.EditableDocument;
 import org.exbin.jaguif.document.api.LoadableDocument;
-import org.exbin.jaguif.document.api.MemoryDocumentSource;
 import org.exbin.jaguif.file.api.FileDocument;
 import org.exbin.jaguif.file.api.FileModuleApi;
 import org.exbin.jaguif.file.api.FileSourceIdentifier;
 import org.exbin.jaguif.file.api.SaveModifiedResult;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.utils.WindowClosingListener;
+import org.exbin.jaguif.document.api.EmptyDocumentSource;
 
 /**
  * Default implementation of the document docking supporting multiple documents.
@@ -212,7 +212,7 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
                 Optional<DocumentSource> optDocumentSource = ((EditableDocument) document).getDocumentSource();
                 if (optDocumentSource.isPresent()) {
                     DocumentSource documentSource = optDocumentSource.get();
-                    if (!(documentSource instanceof MemoryDocumentSource)) {
+                    if (!(documentSource instanceof EmptyDocumentSource)) {
                         ((EditableDocument) document).saveTo(documentSource);
                     }
                 }
@@ -356,8 +356,8 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
             Optional<DocumentSource> optDocumentSource = loadableDocument.getDocumentSource();
             if (optDocumentSource.isPresent()) {
                 DocumentSource documentSource = optDocumentSource.get();
-                if (documentSource instanceof MemoryDocumentSource) {
-                    return ((MemoryDocumentSource) documentSource).getDocumentTitle();
+                if (documentSource instanceof EmptyDocumentSource) {
+                    return ((EmptyDocumentSource) documentSource).getDocumentTitle();
                 }
             }
             return "";

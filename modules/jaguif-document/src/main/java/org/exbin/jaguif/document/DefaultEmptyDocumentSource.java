@@ -17,13 +17,13 @@ package org.exbin.jaguif.document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.document.api.MemoryDocumentSource;
+import org.exbin.jaguif.document.api.EmptyDocumentSource;
 
 /**
- * Default memory document source.
+ * Default empty document source.
  */
 @ParametersAreNonnullByDefault
-public class DefaultMemoryDocumentSource implements MemoryDocumentSource {
+public class DefaultEmptyDocumentSource implements EmptyDocumentSource {
 
     protected String documentTitle = "";
 

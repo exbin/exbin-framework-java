@@ -37,12 +37,12 @@ import org.exbin.jaguif.document.api.Document;
 import org.exbin.jaguif.document.api.DocumentModuleApi;
 import org.exbin.jaguif.document.api.DocumentSource;
 import org.exbin.jaguif.document.api.EditableDocument;
-import org.exbin.jaguif.document.api.MemoryDocumentSource;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.window.api.WindowHandler;
 import org.exbin.jaguif.window.api.WindowModuleApi;
+import org.exbin.jaguif.document.api.EmptyDocumentSource;
 
 /**
  * Interface for docking module.
@@ -81,7 +81,7 @@ public class DockingMultiModule implements DockingMultiModuleApi {
             public boolean saveFile(Document document) {
                 EditableDocument editableDocument = (EditableDocument) document;
                 Optional<DocumentSource> optDocumentSource = editableDocument.getDocumentSource();
-                if (optDocumentSource.isPresent() && !(optDocumentSource.get() instanceof MemoryDocumentSource)) {
+                if (optDocumentSource.isPresent() && !(optDocumentSource.get() instanceof EmptyDocumentSource)) {
                     editableDocument.saveTo(optDocumentSource.get());
                     return true;
                 } else {
