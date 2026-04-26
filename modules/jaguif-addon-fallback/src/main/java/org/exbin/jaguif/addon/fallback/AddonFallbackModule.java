@@ -16,7 +16,10 @@
 package org.exbin.jaguif.addon.fallback;
 
 import java.util.ResourceBundle;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.App;
+import org.exbin.jaguif.ApplicationBundleKeys;
 import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 

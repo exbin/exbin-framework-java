@@ -6,6 +6,7 @@ if (rootProject.path == ':') {
     include ':modules:jaguif-contribution-api'
     include ':modules:jaguif-action-api'
     include ':modules:jaguif-menu-popup-api'
+    include ':modules:jaguif-toolbar-api'
     include ':modules:jaguif-component-api'
     include ':modules:jaguif-document-api'
     include ':modules:jaguif-file-api'

@@ -15,15 +15,14 @@
  */
 package org.exbin.jaguif.addon.fallback.service.impl;
 
+import java.net.URL;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.addon.catalog.model.AddonRecord;
-import org.exbin.jaguif.addon.catalog.model.UpdateRecord;
-import org.exbin.jaguif.addon.catalog.operation.DownloadOperation;
-import org.exbin.jaguif.addon.catalog.operation.model.DownloadItemRecord;
-import org.exbin.jaguif.addon.catalog.service.AddonCatalogService;
-import org.exbin.jaguif.addon.catalog.service.AddonCatalogServiceException;
+import org.exbin.jaguif.addon.manager.api.AddonRecord;
+import org.exbin.jaguif.addon.manager.api.UpdateRecord;
+import org.exbin.jaguif.addon.manager.api.AddonCatalogService;
+import org.exbin.jaguif.addon.manager.api.AddonCatalogServiceException;
 
 /**
  * Addon legacy service implementation using fixed files.
@@ -66,9 +65,18 @@ public class AddonFallbackServiceImpl implements AddonCatalogService {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Nonnull
     @Override
-    public DownloadOperation createDownloadsOperation(List<DownloadItemRecord> records) {
+    public URL getFileDownloadUrl(String remoteFilePath) throws AddonCatalogServiceException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public URL getLicenseDownloadUrl(String remoteFilePath) throws AddonCatalogServiceException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getCatalogPageUrl() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
