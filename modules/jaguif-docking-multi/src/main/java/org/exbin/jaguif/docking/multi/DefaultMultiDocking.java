@@ -140,14 +140,18 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
         Document document = documentManager.createDefaultDocument();
         openDocuments.add(document);
         documentPanel.addDocument((ComponentDocument) document, getDocumentTitle(document));
-        ((ContextActivable) document).notifyActivated(contextManager);
+        if (document instanceof ContextActivable) {
+            ((ContextActivable) document).notifyActivated(contextManager);
+        }
     }
 
     @Override
     public void openDocument(Document document) {
         openDocuments.add(document);
         documentPanel.addDocument((ComponentDocument) document, getDocumentTitle(document));
-        ((ContextActivable) document).notifyActivated(contextManager);
+        if (document instanceof ContextActivable) {
+            ((ContextActivable) document).notifyActivated(contextManager);
+        }
     }
 
     @Override
@@ -166,7 +170,9 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
         activeDocument = getDocument();
         if (activeDocument != null) {
             contextManager.changeActiveState(ContextDocument.class, (ContextDocument) activeDocument);
-            ((ContextActivable) activeDocument).notifyActivated(contextManager);
+            if (activeDocument instanceof ContextActivable) {
+                ((ContextActivable) activeDocument).notifyActivated(contextManager);
+            }
         }
     }
 
