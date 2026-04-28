@@ -52,8 +52,11 @@ public interface DocumentDocking extends ComponentProvider {
 
     /**
      * Opens new document of the default type.
+     *
+     * @return new document
      */
-    void openNewDocument();
+    @Nonnull
+    Optional<Document> openNewDocument();
 
     /**
      * Releases document from docking.

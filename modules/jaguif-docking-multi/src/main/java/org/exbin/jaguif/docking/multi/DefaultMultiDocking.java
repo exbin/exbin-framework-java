@@ -133,8 +133,9 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
         return Optional.ofNullable(getDocument());
     }
 
+    @Nonnull
     @Override
-    public void openNewDocument() {
+    public Optional<Document> openNewDocument() {
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         DocumentManagement documentManager = documentModule.getMainDocumentManager();
         Document document = documentManager.createDefaultDocument();
@@ -143,6 +144,7 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
         if (document instanceof ContextActivable) {
             ((ContextActivable) document).notifyActivated(contextManager);
         }
+        return Optional.of(document);
     }
 
     @Override

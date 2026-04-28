@@ -84,7 +84,7 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
             ((ContextActivable) currentDocument).notifyActivated(contextManager);
         }
     }
-    
+
     @Override
     public void notifyDeactivated(ActiveContextManagement contextManager) {
         if (currentDocument instanceof ContextActivable) {
@@ -94,14 +94,14 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         contextManager.changeActiveState(ContextDocking.class, null);
         this.contextManager = null;
     }
-    
+
     void changeToDocument(@Nullable Document document) {
         if (currentDocument != null) {
             if (currentDocument instanceof ContextActivable) {
                 ((ContextActivable) currentDocument).notifyDeactivated(contextManager);
             }
         }
-        
+
         currentDocument = document;
         if (document == null) {
             docking.setContentComponent(null);
@@ -122,11 +122,12 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         return Optional.ofNullable(currentDocument);
     }
 
+    @Nonnull
     @Override
-    public void openNewDocument() {
+    public Optional<Document> openNewDocument() {
         if (currentDocument != null) {
             if (!releaseDocument(currentDocument)) {
-                return;
+                return Optional.empty();
             }
             closeDocument(currentDocument);
         }
@@ -134,8 +135,9 @@ public class DefaultSingleDocking implements ContextDocking, SidePanelDocking, D
         DocumentModuleApi documentModule = App.getModule(DocumentModuleApi.class);
         DocumentManagement documentManager = documentModule.getMainDocumentManager();
         Document document = documentManager.createDefaultDocument();
-        
+
         changeToDocument(document);
+        return Optional.of(document);
     }
 
     @Override
