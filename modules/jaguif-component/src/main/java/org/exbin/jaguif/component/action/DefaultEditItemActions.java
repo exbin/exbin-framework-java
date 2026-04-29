@@ -35,6 +35,7 @@ import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 @ParametersAreNonnullByDefault
 public class DefaultEditItemActions implements EditItemActions {
 
+    public static final String GROUP_ID = "editItem";
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ComponentModule.class);
 
     protected final EditItemMode mode;
@@ -127,7 +128,7 @@ public class DefaultEditItemActions implements EditItemActions {
 
     @Override
     public void registerToolBarContributions(ToolBarDefinitionManagement toolBarDefinition) {
-        GroupSequenceContribution toolBarGroup = toolBarDefinition.registerToolBarGroup("editItem");
+        GroupSequenceContribution toolBarGroup = toolBarDefinition.registerToolBarGroup(GROUP_ID);
         SequenceContribution contribution = createAddItemContribution();
         toolBarDefinition.registerToolBarContribution(contribution);
         toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));

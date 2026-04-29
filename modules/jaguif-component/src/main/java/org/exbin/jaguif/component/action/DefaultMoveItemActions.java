@@ -35,7 +35,8 @@ import org.exbin.jaguif.toolbar.api.ToolBarDefinitionManagement;
 @ParametersAreNonnullByDefault
 public class DefaultMoveItemActions implements MoveItemActions {
 
-    private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ComponentModule.class);
+    public static final String GROUP_ID = "moveItem";
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ComponentModule.class);
 
     public DefaultMoveItemActions() {
     }
@@ -146,7 +147,7 @@ public class DefaultMoveItemActions implements MoveItemActions {
 
     @Override
     public void registerToolBarContributions(ToolBarDefinitionManagement toolBarDefinition) {
-        GroupSequenceContribution toolBarGroup = toolBarDefinition.registerToolBarGroup("moveItem");
+        GroupSequenceContribution toolBarGroup = toolBarDefinition.registerToolBarGroup(GROUP_ID);
         SequenceContribution contribution = createMoveTopContribution();
         toolBarDefinition.registerToolBarContribution(contribution);
         toolBarDefinition.registerToolBarRule(contribution, new GroupSequenceContributionRule(toolBarGroup));

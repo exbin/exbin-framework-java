@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.component.action;
+package org.exbin.jaguif.component;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Item edit mode.
+ * Tabbed components.
  */
-public enum EditItemMode {
-    /**
-     * Action edits item directly inplace.
-     */
-    NORMAL,
-    /**
-     * Actions opens new dialog to edit item.
-     */
-    DIALOG
+@ParametersAreNonnullByDefault
+public class TabbedComponents {
+
+    
 }
