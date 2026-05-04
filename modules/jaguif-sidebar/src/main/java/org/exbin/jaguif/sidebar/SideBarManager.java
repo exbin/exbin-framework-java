@@ -93,7 +93,7 @@ public class SideBarManager implements SideBarManagement {
         ContextUpdateManagement updateManager = frameHandler.getUpdateManager();
         ActiveContextManagement contextManager = frameHandler.getContextManager();
         updateManager.addGroup("mainSideBar");
-        buildSideBar(sideBar, SideBarModuleApi.MAIN_SIDE_BAR_ID, contextModule.createContextRegistrator("mainSideBar", updateManager, contextManager));
+        buildSideBar(sideBar, SideBarModuleApi.MAIN_SIDE_BAR_ID, contextModule.createContextRegistrator(SideBarModuleApi.MAIN_SIDE_BAR_ID, updateManager, contextManager));
         return sideBar;
     }
 }

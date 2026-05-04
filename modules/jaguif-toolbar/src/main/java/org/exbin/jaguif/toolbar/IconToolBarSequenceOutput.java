@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import org.exbin.jaguif.toolbar.api.ActionToolBarContribution;
 import org.exbin.jaguif.contribution.api.ContributionSequenceOutput;
@@ -52,12 +53,13 @@ public class IconToolBarSequenceOutput implements ContributionSequenceOutput {
 
     @Override
     public void add(ItemSequenceContribution itemContribution) {
-        ToolBarComponent component = toolBarItems.get(itemContribution);
+        ToolBarComponent toolBarComponent = toolBarItems.get(itemContribution);
+        JComponent component = toolBarComponent.getComponent();
         if (component instanceof AbstractButton) {
             ((AbstractButton) component).setText("");
         }
-        toolBar.add(component.getComponent());
-        ToolBarSequenceOutput.finishToolBarAction(component.getAction(), contextRegistration);
+        toolBar.add(component);
+        ToolBarSequenceOutput.finishToolBarAction(toolBarComponent.getAction(), contextRegistration);
     }
 
     @Override
