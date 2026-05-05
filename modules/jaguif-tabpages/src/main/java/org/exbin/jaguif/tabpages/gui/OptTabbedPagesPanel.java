@@ -13,51 +13,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.component.gui;
+package org.exbin.jaguif.tabpages.gui;
 
 import java.awt.BorderLayout;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Icon;
 import javax.swing.JComponent;
+import org.exbin.jaguif.tabpages.api.TabPages;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
- * Panel for multiple components organized by tabs.
+ * Panel for multiple pages organized by tabs.
  */
 @ParametersAreNonnullByDefault
-public class TabbedComponentsPanel extends javax.swing.JPanel {
+public class OptTabbedPagesPanel extends javax.swing.JPanel implements TabPages {
 
     protected Controller controller;
     protected int activeIndex = -1;
-    protected Page firstPage = null;
+    protected TabPagesComponent firstPage = null;
 
-    public TabbedComponentsPanel() {
+    public OptTabbedPagesPanel() {
         initComponents();
         tabbedPane.addChangeListener((e) -> {
             int selectedIndex = tabbedPane.getSelectedIndex();
-            changeActiveIndex(selectedIndex);
+            changeActivePageIndex(selectedIndex);
         });
     }
 
-    public void addPage(Page page) {
+    @Nonnull
+    @Override
+    public JComponent getComponent() {
+        return this;
+    }
+
+    @Override
+    public void addPage(TabPagesComponent page) {
         if (firstPage == null) {
             firstPage = page;
+            activeIndex = 0;
             add(page.getComponent(), BorderLayout.CENTER);
         } else {
             if (tabbedPane.getComponentCount() == 0) {
                 remove(firstPage.getComponent());
                 add(tabbedPane, BorderLayout.CENTER);
-                tabbedPane.addTab(firstPage.getTitle(), firstPage.getComponent());
+                addTab(firstPage);
             }
-
-            tabbedPane.addTab(page.getTitle(), page.getComponent());
+            addTab(page);
         }
     }
 
-    private void changeActiveIndex(int index) {
+    private void addTab(TabPagesComponent page) {
+        String tabTitle = (String) page.getValue(TabPagesComponent.KEY_NAME);
+        Icon tabIcon = (Icon) page.getValue(TabPagesComponent.KEY_ICON);
+        String tabTooltip = (String) page.getValue(TabPagesComponent.KEY_TOOLTIP);
+        tabbedPane.addTab(tabTitle, tabIcon, page.getComponent(), tabTooltip);
+    }
+
+    @Override
+    public void changeActivePageIndex(int index) {
         if (activeIndex != index) {
             activeIndex = index;
             notifyActiveIndexChanged();
         }
+    }
+
+    @Override
+    public int getPagesCount() {
+        if (tabbedPane.getComponentCount() == 0) {
+            return firstPage == null ? 0 : 1;
+        }
+
+        return tabbedPane.getComponentCount();
     }
 
     private void notifyActiveIndexChanged() {
@@ -88,14 +115,5 @@ public class TabbedComponentsPanel extends javax.swing.JPanel {
     public interface Controller {
 
         void activeIndexChanged(int index);
-    }
-
-    public interface Page {
-
-        @Nonnull
-        String getTitle();
-
-        @Nonnull
-        JComponent getComponent();
     }
 }

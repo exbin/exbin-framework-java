@@ -1,0 +1,77 @@
+/*
+ * Copyright (C) ExBin Project, https://exbin.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.exbin.jaguif.tabpages.api;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import org.exbin.jaguif.context.api.ContextValues;
+
+/**
+ * Interface for tab pages component.
+ */
+@ParametersAreNonnullByDefault
+public interface TabPagesComponent extends ContextValues {
+
+    /**
+     * Identifier value.
+     * <p>
+     * Value is of type {@link String}.
+     */
+    public static final String KEY_ID = "ID";
+    /**
+     * Name value.
+     * <p>
+     * Value is of type {@link String}.
+     */
+    public static final String KEY_NAME = "Name";
+    /**
+     * Icon value.
+     * <p>
+     * Value is of type {@link Icon}.
+     */
+    public static final String KEY_ICON = "Icon";
+    /**
+     * Tool tip value.
+     * <p>
+     * Value is of type {@link String}.
+     */
+    public static final String KEY_TOOLTIP = "ToolTip";
+    /**
+     * Context change value.
+     * <p>
+     * Value is of type {@link org.exbin.jaguif.context.api.ContextChange}.
+     */
+    public static final String KEY_CONTEXT_CHANGE = "ContextChange";
+
+    /**
+     * Creates instance of the component.
+     *
+     * @return component instance
+     */
+    @Nonnull
+    JComponent getComponent();
+
+    /**
+     * Sets one of this object's properties using the associated key.
+     *
+     * @param key identifier
+     * @param value property value
+     */
+    void putValue(String key, @Nullable Object value);
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.jaguif.tabpages.api.TabPagesModuleApi</api>
+  <name>Tab Pages Support API</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for tab pages</description>
+  <dependency>
+    <module id="org.exbin.jaguif.contribution.api.ContributionModuleApi" />
+  </dependency>
+</module>

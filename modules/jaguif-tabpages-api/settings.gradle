@@ -1,0 +1,12 @@
+rootProject.name = 'jaguif-tabpages-api'
+
+if (rootProject.path == ':') {
+    include ':core:jaguif-core'
+    include ':modules:jaguif-utils'
+    include ':modules:jaguif-contribution-api'
+    include ':modules:jaguif-context-api'
+    include ':modules:jaguif-document-api'
+    include ':modules:jaguif-action-api'
+}
+
+apply from: '../jaguif-modules-settings.gradle'
