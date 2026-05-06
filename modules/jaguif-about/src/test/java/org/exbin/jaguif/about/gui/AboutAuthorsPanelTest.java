@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.about.gui;
 
+import org.exbin.jaguif.about.page.gui.AboutAuthorsPanel;
 import org.exbin.jaguif.utils.TestApplication;
 import org.exbin.jaguif.utils.UtilsModule;
 import org.exbin.jaguif.utils.WindowUtils;

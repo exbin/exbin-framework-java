@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.about.gui;
+package org.exbin.jaguif.about.page.gui;
 
 import java.util.ResourceBundle;
 import javax.annotation.ParametersAreNonnullByDefault;

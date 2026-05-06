@@ -15,6 +15,7 @@
  */
 package org.exbin.jaguif.about.gui;
 
+import org.exbin.jaguif.about.page.gui.AboutAuthorsPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -102,6 +103,11 @@ public class AboutPanel extends javax.swing.JPanel {
 
         aboutHeaderImagePanel = new javax.swing.JPanel();
         imageLabel = new javax.swing.JLabel();
+        aboutHeaderPanel = new javax.swing.JPanel();
+        headerSeparator = new javax.swing.JSeparator();
+        aboutHeaderTitlePanel = new javax.swing.JPanel();
+        appDescLabel = new javax.swing.JLabel();
+        appTitleLabel = new javax.swing.JLabel();
         productTabbedPane = new javax.swing.JTabbedPane();
         applicationPanel = new javax.swing.JPanel();
         javax.swing.JLabel nameLabel = new javax.swing.JLabel();
@@ -120,11 +126,6 @@ public class AboutPanel extends javax.swing.JPanel {
         environmentPanel = new javax.swing.JPanel();
         environmentScrollPane = new javax.swing.JScrollPane();
         environmentTable = new javax.swing.JTable();
-        aboutHeaderPanel = new javax.swing.JPanel();
-        headerSeparator = new javax.swing.JSeparator();
-        aboutHeaderTitlePanel = new javax.swing.JPanel();
-        appDescLabel = new javax.swing.JLabel();
-        appTitleLabel = new javax.swing.JLabel();
 
         aboutHeaderImagePanel.setOpaque(false);
 
@@ -144,6 +145,48 @@ public class AboutPanel extends javax.swing.JPanel {
         );
 
         setLayout(new java.awt.BorderLayout());
+
+        aboutHeaderPanel.setBackground(new java.awt.Color(255, 255, 255));
+        aboutHeaderPanel.setLayout(new java.awt.BorderLayout());
+        aboutHeaderPanel.add(headerSeparator, java.awt.BorderLayout.SOUTH);
+
+        aboutHeaderTitlePanel.setOpaque(false);
+
+        appDescLabel.setForeground(java.awt.Color.black);
+        appDescLabel.setText(resourceBundle.getString("appDescLabel.text")); // NOI18N
+
+        appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
+        appTitleLabel.setForeground(java.awt.Color.black);
+        appTitleLabel.setText(resourceBundle.getString("appTitleLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout aboutHeaderTitlePanelLayout = new javax.swing.GroupLayout(aboutHeaderTitlePanel);
+        aboutHeaderTitlePanel.setLayout(aboutHeaderTitlePanelLayout);
+        aboutHeaderTitlePanelLayout.setHorizontalGroup(
+            aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(aboutHeaderTitlePanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(appTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addContainerGap()))
+        );
+        aboutHeaderTitlePanelLayout.setVerticalGroup(
+            aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 65, Short.MAX_VALUE)
+            .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(aboutHeaderTitlePanelLayout.createSequentialGroup()
+                    .addGap(18, 18, 18)
+                    .addComponent(appTitleLabel)
+                    .addGap(7, 7, 7)
+                    .addComponent(appDescLabel)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        aboutHeaderPanel.add(aboutHeaderTitlePanel, java.awt.BorderLayout.CENTER);
+
+        add(aboutHeaderPanel, java.awt.BorderLayout.PAGE_START);
 
         productTabbedPane.setMinimumSize(new java.awt.Dimension(38, 15));
 
@@ -244,11 +287,17 @@ public class AboutPanel extends javax.swing.JPanel {
         licensePanel.setLayout(licensePanelLayout);
         licensePanelLayout.setHorizontalGroup(
             licensePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(licenseScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+            .addGroup(licensePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(licenseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                .addContainerGap())
         );
         licensePanelLayout.setVerticalGroup(
             licensePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(licenseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, licensePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(licenseScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         productTabbedPane.addTab(resourceBundle.getString("licensePanel.TabConstraints.tabTitle"), licensePanel); // NOI18N
@@ -269,48 +318,6 @@ public class AboutPanel extends javax.swing.JPanel {
         productTabbedPane.addTab(resourceBundle.getString("environmentPanel.TabConstraints.tabTitle"), environmentPanel); // NOI18N
 
         add(productTabbedPane, java.awt.BorderLayout.CENTER);
-
-        aboutHeaderPanel.setBackground(new java.awt.Color(255, 255, 255));
-        aboutHeaderPanel.setLayout(new java.awt.BorderLayout());
-        aboutHeaderPanel.add(headerSeparator, java.awt.BorderLayout.SOUTH);
-
-        aboutHeaderTitlePanel.setOpaque(false);
-
-        appDescLabel.setForeground(java.awt.Color.black);
-        appDescLabel.setText(resourceBundle.getString("appDescLabel.text")); // NOI18N
-
-        appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
-        appTitleLabel.setForeground(java.awt.Color.black);
-        appTitleLabel.setText(resourceBundle.getString("appTitleLabel.text")); // NOI18N
-
-        javax.swing.GroupLayout aboutHeaderTitlePanelLayout = new javax.swing.GroupLayout(aboutHeaderTitlePanel);
-        aboutHeaderTitlePanel.setLayout(aboutHeaderTitlePanelLayout);
-        aboutHeaderTitlePanelLayout.setHorizontalGroup(
-            aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-            .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(aboutHeaderTitlePanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(appTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addContainerGap()))
-        );
-        aboutHeaderTitlePanelLayout.setVerticalGroup(
-            aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 65, Short.MAX_VALUE)
-            .addGroup(aboutHeaderTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(aboutHeaderTitlePanelLayout.createSequentialGroup()
-                    .addGap(18, 18, 18)
-                    .addComponent(appTitleLabel)
-                    .addGap(7, 7, 7)
-                    .addComponent(appDescLabel)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        );
-
-        aboutHeaderPanel.add(aboutHeaderTitlePanel, java.awt.BorderLayout.CENTER);
-
-        add(aboutHeaderPanel, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
     private void appHomepageLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_appHomepageLabelMouseClicked
