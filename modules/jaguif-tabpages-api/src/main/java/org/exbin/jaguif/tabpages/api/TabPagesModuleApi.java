@@ -56,6 +56,16 @@ public interface TabPagesModuleApi extends Module {
     TabPagesDefinitionManagement getMainTabPagesDefinition(String moduleId);
 
     /**
+     * Returns main tab pages management definition.
+     *
+     * @param tabPagesId tab pages id
+     * @param moduleId module id
+     * @return tab pages management interface
+     */
+    @Nonnull
+    TabPagesDefinitionManagement getMainTabPagesDefinition(String tabPagesId, String moduleId);
+
+    /**
      * Returns tab pages management definition.
      *
      * @param tabPagesManagement tab pages management

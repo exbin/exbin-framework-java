@@ -86,6 +86,12 @@ public class TabPagesModule implements TabPagesModuleApi {
 
     @Nonnull
     @Override
+    public TabPagesDefinitionManagement getMainTabPagesDefinition(String tabPagesId, String moduleId) {
+        return new TabPagesDefinitionManager(getMainTabPagesManager(), tabPagesId, moduleId);
+    }
+
+    @Nonnull
+    @Override
     public TabPagesDefinitionManagement createTabPagesDefinition(TabPagesManagement tabPagesManagement, String tabPagesId, String moduleId) {
         return new TabPagesDefinitionManager(tabPagesManagement, tabPagesId, moduleId);
     }

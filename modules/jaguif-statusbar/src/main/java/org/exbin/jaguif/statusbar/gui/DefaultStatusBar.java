@@ -38,7 +38,7 @@ public class DefaultStatusBar implements StatusBar {
     @Override
     public JComponent getComponent() {
         if (statusBarComponent == null) {
-            statusBarComponent = new JPanel();
+            statusBarComponent = createPanel();
 
             javax.swing.GroupLayout layout = new javax.swing.GroupLayout(statusBarComponent);
             statusBarComponent.setLayout(layout);
@@ -73,5 +73,10 @@ public class DefaultStatusBar implements StatusBar {
     @Override
     public int getItemsCount() {
         return statusBarComponents.size();
+    }
+    
+    @Nonnull
+    protected JPanel createPanel() {
+        return new JPanel();
     }
 }

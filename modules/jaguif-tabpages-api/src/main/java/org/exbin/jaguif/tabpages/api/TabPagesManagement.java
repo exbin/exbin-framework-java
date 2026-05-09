@@ -41,9 +41,9 @@ public interface TabPagesManagement {
      * Registers tab pages.
      *
      * @param tabPagesId tab pages id
-     * @param pluginId plugin id
+     * @param moduleId module id
      */
-    void registerTabPages(String tabPagesId, String pluginId);
+    void registerTabPages(String tabPagesId, String moduleId);
 
     /**
      * Registers tab pages item contribution.

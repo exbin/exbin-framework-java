@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.jaguif.license.api.LicenseModuleApi</api>
+  <name>License Management API</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>License(s) management</description>
+  <dependency>
+    <module id="org.exbin.jaguif.utils.UtilsModule" />
+  </dependency>
+</module>
