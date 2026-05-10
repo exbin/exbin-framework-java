@@ -30,13 +30,12 @@ import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SeparationSequenceContributionRule;
 import org.exbin.jaguif.contribution.api.SequenceContribution;
 import org.exbin.jaguif.frame.api.FrameModuleApi;
+import org.exbin.jaguif.license.api.LicenseManagement;
 import org.exbin.jaguif.license.page.ContributorsListPage;
 import org.exbin.jaguif.license.page.SingleLicensePage;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
 import org.exbin.jaguif.utils.DesktopUtils;
 import org.exbin.jaguif.menu.api.MenuDefinitionManagement;
-import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
-import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 import org.exbin.jaguif.tabpages.api.TabPagesDefinitionManagement;
 import org.exbin.jaguif.tabpages.api.TabPagesModuleApi;
 
@@ -46,12 +45,23 @@ import org.exbin.jaguif.tabpages.api.TabPagesModuleApi;
 @ParametersAreNonnullByDefault
 public class LicenseModule implements LicenseModuleApi {
 
+    private LicenseManager licenseManager;
     private AboutApplication aboutApplication;
 
     public LicenseModule() {
     }
 
     public void unregisterModule(String moduleId) {
+    }
+
+    @Nonnull
+    @Override
+    public LicenseManagement getLicenseManagement() {
+        if (licenseManager == null) {
+            licenseManager = new LicenseManager();
+        }
+
+        return licenseManager;
     }
 
     @Nonnull
@@ -105,58 +115,10 @@ public class LicenseModule implements LicenseModuleApi {
         TabPagesModuleApi tabPagesModule = App.getModule(TabPagesModuleApi.class);
         tabPagesModule.getMainTabPagesManager().registerTabPages(ABOUT_PAGES_ID, MODULE_ID);
         TabPagesDefinitionManagement tabPagesDefinition = tabPagesModule.getMainTabPagesDefinition(ABOUT_PAGES_ID, MODULE_ID);
-        tabPagesDefinition.registerTabPagesContribution(new ComponentTabPagesContribution() {
-            @Nonnull
-            @Override
-            public TabPagesComponent createComponent() {
-                return new BasicInfoPage();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return BasicInfoPage.KEY_ID;
-            }
-        });
-        tabPagesDefinition.registerTabPagesContribution(new ComponentTabPagesContribution() {
-            @Nonnull
-            @Override
-            public TabPagesComponent createComponent() {
-                return new SingleLicensePage();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return SingleLicensePage.KEY_ID;
-            }
-        });
-        tabPagesDefinition.registerTabPagesContribution(new ComponentTabPagesContribution() {
-            @Nonnull
-            @Override
-            public TabPagesComponent createComponent() {
-                return new ContributorsListPage();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return ContributorsListPage.KEY_ID;
-            }
-        });
-        tabPagesDefinition.registerTabPagesContribution(new ComponentTabPagesContribution() {
-            @Nonnull
-            @Override
-            public TabPagesComponent createComponent() {
-                return new EnvironmentVariablesPage();
-            }
-
-            @Nonnull
-            @Override
-            public String getContributionId() {
-                return EnvironmentVariablesPage.KEY_ID;
-            }
-        });
+        tabPagesDefinition.registerTabPagesContribution(new BasicInfoPage.Contribution());
+        tabPagesDefinition.registerTabPagesContribution(new SingleLicensePage.Contribution());
+        tabPagesDefinition.registerTabPagesContribution(new ContributorsListPage.Contribution());
+        tabPagesDefinition.registerTabPagesContribution(new EnvironmentVariablesPage.Contribution());
     }
 
     @Override

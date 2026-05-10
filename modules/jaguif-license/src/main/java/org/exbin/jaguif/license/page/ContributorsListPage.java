@@ -25,6 +25,8 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.language.api.ApplicationInfoKeys;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.tabpages.api.AbstractTabPagesComponent;
+import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
  * Contributors list page.
@@ -57,4 +59,19 @@ public class ContributorsListPage extends AbstractTabPagesComponent {
         }
         return scrollPane;
     }
+
+    public static class Contribution implements ComponentTabPagesContribution {
+
+        @Nonnull
+        @Override
+        public TabPagesComponent createComponent() {
+            return new ContributorsListPage();
+        }
+
+        @Nonnull
+        @Override
+        public String getContributionId() {
+            return KEY_ID;
+        }
+    };
 }

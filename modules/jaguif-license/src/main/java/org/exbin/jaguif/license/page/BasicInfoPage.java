@@ -23,6 +23,8 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.license.page.gui.BasicInfoPanel;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.tabpages.api.AbstractTabPagesComponent;
+import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
  * Basic application information page.
@@ -47,4 +49,19 @@ public class BasicInfoPage extends AbstractTabPagesComponent {
         }
         return component;
     }
+
+    public static class Contribution implements ComponentTabPagesContribution {
+
+        @Nonnull
+        @Override
+        public TabPagesComponent createComponent() {
+            return new BasicInfoPage();
+        }
+
+        @Nonnull
+        @Override
+        public String getContributionId() {
+            return KEY_ID;
+        }
+    };
 }

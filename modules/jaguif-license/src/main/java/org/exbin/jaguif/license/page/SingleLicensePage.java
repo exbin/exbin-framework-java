@@ -30,6 +30,8 @@ import org.exbin.jaguif.language.api.ApplicationInfoKeys;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.license.gui.AboutPanel;
 import org.exbin.jaguif.tabpages.api.AbstractTabPagesComponent;
+import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 import org.exbin.jaguif.utils.DesktopUtils;
 
 /**
@@ -75,4 +77,19 @@ public class SingleLicensePage extends AbstractTabPagesComponent {
         }
         return scrollPane;
     }
+
+    public static class Contribution implements ComponentTabPagesContribution {
+
+        @Nonnull
+        @Override
+        public TabPagesComponent createComponent() {
+            return new SingleLicensePage();
+        }
+
+        @Nonnull
+        @Override
+        public String getContributionId() {
+            return KEY_ID;
+        }
+    };
 }

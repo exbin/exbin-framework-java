@@ -23,7 +23,7 @@ import org.exbin.jaguif.Module;
 import org.exbin.jaguif.ModuleUtils;
 
 /**
- * Interface of the about application module.
+ * Interface of the license management module.
  */
 @ParametersAreNonnullByDefault
 public interface LicenseModuleApi extends Module {
@@ -31,6 +31,14 @@ public interface LicenseModuleApi extends Module {
     public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(LicenseModuleApi.class);
     public static final String HELP_ABOUT_MENU_GROUP_ID = MODULE_ID + ".helpAboutMenuGroup";
     public static final String ABOUT_PAGES_ID = "about";
+
+    /**
+     * Returns main license management.
+     *
+     * @return license management
+     */
+    @Nonnull
+    LicenseManagement getLicenseManagement();
 
     /**
      * Returns about application action.

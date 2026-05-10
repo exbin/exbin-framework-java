@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.jaguif.App;
+import org.exbin.jaguif.language.api.ApplicationInfoKeys;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.utils.UiUtils;
 
@@ -48,6 +49,18 @@ public class AboutPanel extends javax.swing.JPanel {
             appTitleLabel.setForeground(Color.WHITE);
             appDescLabel.setForeground(Color.WHITE);
         }
+    }
+
+    public void loadFields() {
+        LanguageModuleApi languageModule = App.getModule(LanguageModuleApi.class);
+        ResourceBundle langBundle = languageModule.getAppBundle();
+        if (langBundle.containsKey(ApplicationInfoKeys.APPLICATION_ABOUT_IMAGE)) {
+            String aboutImagePath = langBundle.getString(ApplicationInfoKeys.APPLICATION_ABOUT_IMAGE);
+            imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(aboutImagePath)));
+            aboutHeaderPanel.add(aboutHeaderImagePanel, BorderLayout.WEST);
+        }
+        appTitleLabel.setText(langBundle.getString(ApplicationInfoKeys.APPLICATION_TITLE));
+        appDescLabel.setText(langBundle.getString(ApplicationInfoKeys.APPLICATION_DESCRIPTION));
     }
 
     /**

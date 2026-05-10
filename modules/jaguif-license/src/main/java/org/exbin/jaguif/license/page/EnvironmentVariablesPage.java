@@ -27,6 +27,8 @@ import javax.swing.table.DefaultTableModel;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.tabpages.api.AbstractTabPagesComponent;
+import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
  * Environment variables page.
@@ -77,4 +79,19 @@ public class EnvironmentVariablesPage extends AbstractTabPagesComponent {
         }
         return environmentScrollPane;
     }
+
+    public static class Contribution implements ComponentTabPagesContribution {
+
+        @Nonnull
+        @Override
+        public TabPagesComponent createComponent() {
+            return new EnvironmentVariablesPage();
+        }
+
+        @Nonnull
+        @Override
+        public String getContributionId() {
+            return KEY_ID;
+        }
+    };
 }

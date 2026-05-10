@@ -28,7 +28,7 @@ import org.exbin.jaguif.tabpages.api.TabPages;
 import org.exbin.jaguif.tabpages.api.TabPagesModuleApi;
 
 /**
- * Abbout application.
+ * Manager for data about the application.
  */
 @ParametersAreNonnullByDefault
 public class AboutApplication {
@@ -56,6 +56,7 @@ public class AboutApplication {
         TabPages tabbedPagesPanel = tabPagesModule.createTabbedPagesPanel();
         ContextRegistration contextRegistration = contextModule.createContextRegistrator();
         tabPagesModule.buildTabPages(tabbedPagesPanel, LicenseModuleApi.ABOUT_PAGES_ID, contextRegistration);
+        aboutPanel.loadFields();
         aboutPanel.setSideComponent(sideComponent);
         aboutPanel.setCenterComponent(tabbedPagesPanel.getComponent());
         return aboutPanel;
