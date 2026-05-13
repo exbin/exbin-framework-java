@@ -89,6 +89,11 @@ public class AddonManagerModule implements AddonManagerModuleApi {
         settingsManagement.registerSettingsRule(settingsComponent, new SettingsPageContributionRule(pageContribution));
     }
 
+    @Override
+    public void registerAddonManager() {
+        getAddonManager().registerAddonManager();
+    }
+
     @Nonnull
     public AddonManager getAddonManager() {
         if (addonManager == null) {

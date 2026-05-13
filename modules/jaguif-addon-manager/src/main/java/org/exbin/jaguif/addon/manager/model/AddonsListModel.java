@@ -26,8 +26,8 @@ import javax.swing.AbstractListModel;
 @ParametersAreNonnullByDefault
 public class AddonsListModel extends AbstractListModel<ItemRecord> {
 
-    private RecordsProvider provider;
-    private int size = 0;
+    protected RecordsProvider provider;
+    protected int size = 0;
 
     public void setProvider(RecordsProvider provider) {
         this.provider = provider;

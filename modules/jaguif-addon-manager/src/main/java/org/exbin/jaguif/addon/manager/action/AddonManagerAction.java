@@ -43,8 +43,8 @@ public class AddonManagerAction extends AbstractAction {
     public static final String ACTION_ID = "addonManager";
     public static final String HELP_ID = "addon-manager";
 
-    private java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerAction.class);
-    private DialogParentComponent dialogParentComponent;
+    protected java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManagerAction.class);
+    protected DialogParentComponent dialogParentComponent;
 
     public AddonManagerAction() {
         init();
@@ -70,7 +70,6 @@ public class AddonManagerAction extends AbstractAction {
 
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
-        addonManager.init();
         AddonsManagerPanel addonManagerPanel = addonManager.getManagerPanel();
         addonManager.refreshCatalog();
         addonManager.setStatusListener(new AddonManager.AddonManagerStatusListener() {

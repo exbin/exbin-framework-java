@@ -32,6 +32,7 @@ import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 @ParametersAreNonnullByDefault
 public class BasicInfoPage extends AbstractTabPagesComponent {
 
+    public static final String PAGE_ID = "basicInfo";
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(BasicInfoPage.class);
     protected final BasicInfoPanel component = new BasicInfoPanel();
     protected boolean variablesLoaded = false;
@@ -61,7 +62,7 @@ public class BasicInfoPage extends AbstractTabPagesComponent {
         @Nonnull
         @Override
         public String getContributionId() {
-            return KEY_ID;
+            return PAGE_ID;
         }
     };
 }

@@ -15,31 +15,15 @@
  */
 package org.exbin.jaguif.addon.manager.api;
 
-import java.awt.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
  * Addon manager page.
  */
 @ParametersAreNonnullByDefault
-public interface AddonManagerPage {
-
-    /**
-     * Returns tab title.
-     *
-     * @return title
-     */
-    @Nonnull
-    String getTitle();
-
-    /**
-     * Returns tab component.
-     *
-     * @return component
-     */
-    @Nonnull
-    Component getComponent();
+public interface AddonManagerPage extends TabPagesComponent {
 
     /**
      * Notifies content changed.

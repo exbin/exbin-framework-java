@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager;
+package org.exbin.jaguif.addon.manager.page;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
+import org.exbin.jaguif.addon.manager.AddonManager;
+import org.exbin.jaguif.addon.manager.AddonOperation;
+import org.exbin.jaguif.addon.manager.AddonOperationVariant;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogService;
 import org.exbin.jaguif.addon.manager.gui.AddonsPanel;
 import org.exbin.jaguif.addon.manager.api.AddonRecord;
@@ -27,13 +30,17 @@ import org.exbin.jaguif.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
 import org.exbin.jaguif.addon.manager.operation.CatalogSearchOperation;
+import org.exbin.jaguif.tabpages.api.AbstractTabPagesComponent;
+import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
  * Addons manager page.
  */
 @ParametersAreNonnullByDefault
-public class AddonsCatalogPage implements AddonManagerPage {
+public class AddonsCatalogPage extends AbstractTabPagesComponent implements AddonManagerPage {
 
+    public static final String PAGE_ID = "addonsCatalog";
     protected AddonsPanel addonsPanel = new AddonsPanel();
     protected List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
     protected AddonCatalogService addonCatalogService;
@@ -75,17 +82,12 @@ public class AddonsCatalogPage implements AddonManagerPage {
             }
         });
         itemChangedListeners.add((ItemChangedListener) addonsPanel::notifyItemChanged);
+        putValue(KEY_NAME, addonsPanel.getResourceBundle().getString("addonsTab.title"));
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return addonsPanel.getResourceBundle().getString("addonsTab.title");
-    }
-
-    @Nonnull
-    @Override
-    public Component getComponent() {
+    public JComponent getComponent() {
         return addonsPanel;
     }
 
@@ -161,4 +163,19 @@ public class AddonsCatalogPage implements AddonManagerPage {
 
         void itemChanged();
     }
+
+    public static class Contribution implements ComponentTabPagesContribution {
+
+        @Nonnull
+        @Override
+        public TabPagesComponent createComponent() {
+            return new AddonsCatalogPage();
+        }
+
+        @Nonnull
+        @Override
+        public String getContributionId() {
+            return PAGE_ID;
+        }
+    };
 }

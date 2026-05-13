@@ -45,25 +45,27 @@ public class CartButton extends JToggleButton {
 
     @Override
     protected void paintComponent(Graphics graphics) {
-        if (ui != null) {
-            Graphics g = (graphics == null) ? null : graphics.create();
-            try {
-                ui.update(g, this);
-                int x = getWidth() - 34;
-                int y = getHeight() / 2 - 10;
-                g.setColor(changesCount == 0 ? noChangesBg : changesCountBg);
-                g.fillOval(x, y, 25, 20);
-                g.setColor(changesCount == 0 ? noChangesFg : changesCountFg);
-                Font font = getFont().deriveFont(Font.BOLD);
-                g.setFont(font);
-                FontMetrics fontMetrics = g.getFontMetrics(font);
-                String text = changesCount > 99 ? "+" : String.valueOf(changesCount);
-                char[] changesCharArray = text.toCharArray();
-                int textWidth = fontMetrics.charsWidth(changesCharArray, 0, changesCharArray.length);
-                g.drawString(text, x + 13 - textWidth / 2, y + 15);
-            } finally {
-                g.dispose();
-            }
+        if (ui == null || graphics == null) {
+            return;
+        }
+
+        Graphics g = graphics.create();
+        try {
+            ui.update(g, this);
+            int x = getWidth() - 34;
+            int y = getHeight() / 2 - 10;
+            g.setColor(changesCount == 0 ? noChangesBg : changesCountBg);
+            g.fillOval(x, y, 25, 20);
+            g.setColor(changesCount == 0 ? noChangesFg : changesCountFg);
+            Font font = getFont().deriveFont(Font.BOLD);
+            g.setFont(font);
+            FontMetrics fontMetrics = g.getFontMetrics(font);
+            String text = changesCount > 99 ? "+" : String.valueOf(changesCount);
+            char[] changesCharArray = text.toCharArray();
+            int textWidth = fontMetrics.charsWidth(changesCharArray, 0, changesCharArray.length);
+            g.drawString(text, x + 13 - textWidth / 2, y + 15);
+        } finally {
+            g.dispose();
         }
     }
 

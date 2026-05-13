@@ -13,31 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager;
+package org.exbin.jaguif.addon.manager.page;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.JComponent;
+import org.exbin.jaguif.addon.manager.AddonManager;
+import org.exbin.jaguif.addon.manager.AddonOperation;
+import org.exbin.jaguif.addon.manager.AddonOperationVariant;
 import org.exbin.jaguif.addon.manager.gui.AddonsPanel;
 import org.exbin.jaguif.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
+import org.exbin.jaguif.tabpages.api.AbstractTabPagesComponent;
+import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
- * Installed manager page.
+ * Installed addons manager page.
  */
 @ParametersAreNonnullByDefault
-public class AddonsInstalledPage implements AddonManagerPage {
+public class InstalledAddonsPage extends AbstractTabPagesComponent implements AddonManagerPage {
 
+    public static final String PAGE_ID = "installedAddons";
     protected AddonsPanel addonsPanel = new AddonsPanel();
     protected List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
 
     protected AddonManager addonManager;
     protected List<Integer> filterItems = null;
 
-    public AddonsInstalledPage() {
+    public InstalledAddonsPage() {
         init();
     }
 
@@ -46,13 +53,13 @@ public class AddonsInstalledPage implements AddonManagerPage {
 
             @Override
             public int getItemsCount() {
-                return AddonsInstalledPage.this.getItemsCount();
+                return InstalledAddonsPage.this.getItemsCount();
             }
 
             @Nonnull
             @Override
             public ItemRecord getItem(int index) {
-                return AddonsInstalledPage.this.getItem(index);
+                return InstalledAddonsPage.this.getItem(index);
             }
 
             @Override
@@ -71,6 +78,7 @@ public class AddonsInstalledPage implements AddonManagerPage {
             }
         });
         itemChangedListeners.add(addonsPanel::notifyItemChanged);
+        putValue(KEY_NAME, addonsPanel.getResourceBundle().getString("installedTab.title"));
     }
 
     private int getItemsCount() {
@@ -110,13 +118,7 @@ public class AddonsInstalledPage implements AddonManagerPage {
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return addonsPanel.getResourceBundle().getString("installedTab.title");
-    }
-
-    @Nonnull
-    @Override
-    public Component getComponent() {
+    public JComponent getComponent() {
         return addonsPanel;
     }
 
@@ -171,4 +173,19 @@ public class AddonsInstalledPage implements AddonManagerPage {
 
         void itemChanged();
     }
+
+    public static class Contribution implements ComponentTabPagesContribution {
+
+        @Nonnull
+        @Override
+        public TabPagesComponent createComponent() {
+            return new InstalledAddonsPage();
+        }
+
+        @Nonnull
+        @Override
+        public String getContributionId() {
+            return PAGE_ID;
+        }
+    };
 }

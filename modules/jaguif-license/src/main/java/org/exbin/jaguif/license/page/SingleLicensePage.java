@@ -40,6 +40,7 @@ import org.exbin.jaguif.utils.DesktopUtils;
 @ParametersAreNonnullByDefault
 public class SingleLicensePage extends AbstractTabPagesComponent {
 
+    public static final String PAGE_ID = "singleLicense";
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(SingleLicensePage.class);
     protected final JScrollPane scrollPane = new JScrollPane();
     protected final JEditorPane editorPane = new JEditorPane();
@@ -89,7 +90,7 @@ public class SingleLicensePage extends AbstractTabPagesComponent {
         @Nonnull
         @Override
         public String getContributionId() {
-            return KEY_ID;
+            return PAGE_ID;
         }
     };
 }

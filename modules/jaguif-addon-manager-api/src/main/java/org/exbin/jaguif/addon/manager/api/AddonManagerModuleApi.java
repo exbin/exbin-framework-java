@@ -27,7 +27,8 @@ import org.exbin.jaguif.ModuleUtils;
 @ParametersAreNonnullByDefault
 public interface AddonManagerModuleApi extends Module {
 
-    public static String MODULE_ID = ModuleUtils.getModuleIdByApi(AddonManagerModuleApi.class);
+    public static final String MODULE_ID = ModuleUtils.getModuleIdByApi(AddonManagerModuleApi.class);
+    public static final String ADDON_MANAGER_TABPAGES_ID = "addonManager";
 
     /**
      * Creates addon manager action.
@@ -60,6 +61,11 @@ public interface AddonManagerModuleApi extends Module {
      * Registers settings.
      */
     void registerSettings();
+
+    /**
+     * Registers addon manager.
+     */
+    void registerAddonManager();
 
     /**
      * Returns link URL for manual addon download page.

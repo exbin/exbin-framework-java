@@ -3,6 +3,9 @@ rootProject.name = 'jaguif-addon-manager-api'
 if (rootProject.path == ':') {
     include ':core:jaguif-core'
     include ':modules:jaguif-utils'
+    include ':modules:jaguif-contribution-api'
+    include ':modules:jaguif-context-api'
+    include ':modules:jaguif-tabpages-api'
 }
 
 apply from: '../jaguif-modules-settings.gradle'

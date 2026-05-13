@@ -26,7 +26,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.addon.manager.AddonOperation;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
@@ -59,11 +58,8 @@ public class AddonsCartPanel extends javax.swing.JPanel {
                 return component;
             }
         });
-        itemsList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent lse) {
-                updateState();
-            }
+        itemsList.addListSelectionListener((ListSelectionEvent lse) -> {
+            updateState();
         });
     }
 
@@ -95,7 +91,7 @@ public class AddonsCartPanel extends javax.swing.JPanel {
         return items;
     }
 
-    private void updateState() {
+    protected void updateState() {
         boolean hasItems = itemsList.getModel().getSize() > 0;
         selectAllButton.setEnabled(hasItems);
         removeButton.setEnabled(itemsList.getSelectedIndex() >= 0);

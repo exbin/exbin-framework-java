@@ -22,13 +22,17 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.event.ChangeEvent;
+import javax.swing.JComponent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
+import org.exbin.jaguif.tabpages.api.TabPages;
+import org.exbin.jaguif.tabpages.api.TabPagesChangeListener;
+import org.exbin.jaguif.tabpages.api.TabPagesComponent;
+import org.exbin.jaguif.tabpages.api.TabPagesModuleApi;
 
 /**
  * Addons manager panel.
@@ -38,6 +42,7 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
 
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsManagerPanel.class);
     protected final List<AddonManagerPage> managerTabs = new ArrayList<>();
+    protected TabPages tabPages;
     protected Controller controller;
     protected Component cartComponent;
 
@@ -47,12 +52,15 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        tabbedPane.addChangeListener((ChangeEvent e) -> {
+        TabPagesModuleApi tabPagesModule = App.getModule(TabPagesModuleApi.class);
+        tabPages = tabPagesModule.createTabbedPagesPanel();
+        tabPages.addPageChangeListener((int index) -> {
             if (controller == null) {
                 return;
             }
             controller.tabSwitched();
         });
+        add(tabPages.getComponent(), BorderLayout.CENTER);
         Document document = filterTextField.getDocument();
         document.addDocumentListener(new DocumentListener() {
 
@@ -138,17 +146,52 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
         }
     }
 
-    public void addManagerPage(AddonManagerPage managerPage) {
-        managerTabs.add(managerPage);
-        tabbedPane.add(managerPage.getTitle(), managerPage.getComponent());
-        tabbedPane.revalidate();
-        tabbedPane.repaint();
+    @Nonnull
+    public TabPages getTabPages() {
+        return new TabPages() {
+            @Nonnull
+            @Override
+            public JComponent getComponent() {
+                return tabPages.getComponent();
+            }
+
+            @Override
+            public void addPage(TabPagesComponent page) {
+                managerTabs.add((AddonManagerPage) page);
+                tabPages.addPage(page);
+            }
+
+            @Override
+            public void changeActivePageIndex(int index) {
+                tabPages.changeActivePageIndex(index);
+            }
+
+            @Override
+            public int getActivePageIndex() {
+                return tabPages.getActivePageIndex();
+            }
+
+            @Override
+            public int getPagesCount() {
+                return tabPages.getPagesCount();
+            }
+
+            @Override
+            public void addPageChangeListener(TabPagesChangeListener listener) {
+                tabPages.addPageChangeListener(listener);
+            }
+
+            @Override
+            public void removePageChangeListener(TabPagesChangeListener listener) {
+                tabPages.removePageChangeListener(listener);
+            }
+        };
     }
 
     @Nonnull
     public AddonManagerPage getActiveTab() {
-        int selectedIndex = tabbedPane.getSelectedIndex();
-        return managerTabs.get(selectedIndex);
+        int activeIndex = tabPages.getActivePageIndex();
+        return managerTabs.get(activeIndex);
     }
 
     /**
@@ -160,7 +203,6 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tabbedPane = new javax.swing.JTabbedPane();
         headerPanel = new javax.swing.JPanel();
         filterLabel = new javax.swing.JLabel();
         filterTextField = new javax.swing.JTextField();
@@ -169,7 +211,6 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
         cartButton = new CartButton();
 
         setLayout(new java.awt.BorderLayout());
-        add(tabbedPane, java.awt.BorderLayout.CENTER);
 
         filterLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(resourceBundle.getString("filterLabel.icon"))));
         filterLabel.setToolTipText(resourceBundle.getString("filterLabel.toolTipText")); // NOI18N
@@ -230,12 +271,12 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
 
     private void cartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cartButtonActionPerformed
         if (cartButton.isSelected()) {
-            remove(tabbedPane);
+            remove(tabPages.getComponent());
             add(cartComponent, BorderLayout.CENTER);
             controller.openCart();
         } else {
             remove(cartComponent);
-            add(tabbedPane, BorderLayout.CENTER);
+            add(tabPages.getComponent(), BorderLayout.CENTER);
             controller.openCatalog();
         }
         revalidate();
@@ -249,7 +290,6 @@ public class AddonsManagerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel headerPanel;
     private javax.swing.JLabel searchLabel;
     private javax.swing.JTextField searchTextField;
-    private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
     @ParametersAreNonnullByDefault

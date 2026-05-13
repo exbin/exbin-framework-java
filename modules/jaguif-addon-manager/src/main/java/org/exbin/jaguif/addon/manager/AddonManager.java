@@ -15,6 +15,8 @@
  */
 package org.exbin.jaguif.addon.manager;
 
+import org.exbin.jaguif.addon.manager.page.InstalledAddonsPage;
+import org.exbin.jaguif.addon.manager.page.AddonsCatalogPage;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.addon.manager.model.AvailableModuleUpdates;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogService;
+import org.exbin.jaguif.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.jaguif.addon.manager.gui.AddonsCartPanel;
 import org.exbin.jaguif.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
@@ -50,8 +53,14 @@ import org.exbin.jaguif.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.jaguif.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.jaguif.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.jaguif.addon.manager.operation.service.AddonOperationService;
+import org.exbin.jaguif.context.api.ContextModuleApi;
+import org.exbin.jaguif.context.api.ContextRegistration;
 import org.exbin.jaguif.operation.api.ProgressOperation;
 import org.exbin.jaguif.operation.api.TitledOperation;
+import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
+import org.exbin.jaguif.tabpages.api.TabPages;
+import org.exbin.jaguif.tabpages.api.TabPagesDefinitionManagement;
+import org.exbin.jaguif.tabpages.api.TabPagesModuleApi;
 import org.exbin.jaguif.window.api.WindowHandler;
 import org.exbin.jaguif.window.api.WindowModuleApi;
 import org.exbin.jaguif.window.api.controller.MultiStepControlController;
@@ -74,13 +83,66 @@ public class AddonManager {
     protected AddonManagerStatusListener statusListener;
 
     protected final ExecutorService operationsExecutor = Executors.newFixedThreadPool(1);
+    protected TabPagesDefinitionManagement pagesDefinitions;
 
     public AddonManager() {
     }
 
-    public void init() {
-        if (managerPanel != null) {
+    public void setStatusListener(AddonManagerStatusListener statusListener) {
+        this.statusListener = statusListener;
+    }
+
+    private void removeIndices(int[] indices) {
+        if (indices.length == 0) {
             return;
+        }
+
+        Arrays.sort(indices);
+        for (int i = indices.length - 1; i >= 0; i--) {
+            cartOperations.remove(i);
+        }
+        managerPanel.setCartItemsCount(cartOperations.size());
+    }
+
+    private void runOperation(Runnable operation) {
+        operationsExecutor.submit(() -> {
+            if (operation instanceof TitledOperation) {
+                if (operation instanceof ProgressOperation) {
+                    statusListener.setProgressStatus(((TitledOperation) operation).getTitle());
+                } else {
+                    statusListener.setStatusLabel(((TitledOperation) operation).getTitle());
+                }
+            }
+
+            operation.run();
+            statusListener.clear();
+        });
+    }
+
+    public void notifyChanged() {
+        AddonManagerPage managerTab = managerPanel.getActiveTab();
+        managerTab.notifyChanged();
+
+//        if (managerTab instanceof AddonsCatalogPage) {
+//            ((AddonsCatalogPage) managerTab).set
+//        } else if (managerTab instanceof AddonsInstalledPage) {
+//            ((AddonsInstalledPage) managerTab).set
+//        }
+    }
+
+    public void addManagerPage(ComponentTabPagesContribution pageContribution) {
+        pagesDefinitions.registerTabPagesContribution(pageContribution);
+    }
+
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    @Nonnull
+    public AddonsManagerPanel getManagerPanel() {
+        if (managerPanel != null) {
+            return managerPanel;
         }
 
         addonsState.init();
@@ -138,70 +200,21 @@ public class AddonManager {
             }
         });
 
-        AddonsCatalogPage catalogPage = new AddonsCatalogPage();
-        catalogPage.setAddonManager(this);
-        addManagerPage(catalogPage);
+        ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
+        TabPagesModuleApi tabPagesModule = App.getModule(TabPagesModuleApi.class);
+        TabPages tabPages = managerPanel.getTabPages();
+        ContextRegistration contextRegistrator = contextModule.createContextRegistrator();
+        tabPagesModule.buildTabPages(tabPages, AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, contextRegistrator);
 
-        AddonsInstalledPage installedPage = new AddonsInstalledPage();
-        installedPage.setAddonManager(this);
-        addManagerPage(installedPage);
-    }
-
-    public void setStatusListener(AddonManagerStatusListener statusListener) {
-        this.statusListener = statusListener;
-    }
-
-    private void removeIndices(int[] indices) {
-        if (indices.length == 0) {
-            return;
-        }
-
-        Arrays.sort(indices);
-        for (int i = indices.length - 1; i >= 0; i--) {
-            cartOperations.remove(i);
-        }
-        managerPanel.setCartItemsCount(cartOperations.size());
-    }
-
-    private void runOperation(Runnable operation) {
-        operationsExecutor.submit(() -> {
-            if (operation instanceof TitledOperation) {
-                if (operation instanceof ProgressOperation) {
-                    statusListener.setProgressStatus(((TitledOperation) operation).getTitle());
-                } else {
-                    statusListener.setStatusLabel(((TitledOperation) operation).getTitle());
-                }
-            }
-
-            operation.run();
-            statusListener.clear();
-        });
-    }
-
-    public void notifyChanged() {
-        AddonManagerPage managerTab = managerPanel.getActiveTab();
-        managerTab.notifyChanged();
-
-//        if (managerTab instanceof AddonsCatalogPage) {
-//            ((AddonsCatalogPage) managerTab).set
-//        } else if (managerTab instanceof AddonsInstalledPage) {
-//            ((AddonsInstalledPage) managerTab).set
-//        }
-    }
-
-    public void addManagerPage(AddonManagerPage page) {
-        managerPages.add(page);
-        managerPanel.addManagerPage(page);
-    }
-
-    @Nonnull
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
-    }
-
-    @Nonnull
-    public AddonsManagerPanel getManagerPanel() {
         return managerPanel;
+    }
+
+    public void registerAddonManager() {
+        TabPagesModuleApi tabPagesModule = App.getModule(TabPagesModuleApi.class);
+        tabPagesModule.getMainTabPagesManager().registerTabPages(AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, AddonManagerModuleApi.MODULE_ID);
+        pagesDefinitions = tabPagesModule.getMainTabPagesDefinition(AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, AddonManagerModuleApi.MODULE_ID);
+        pagesDefinitions.registerTabPagesContribution(new AddonsCatalogPage.Contribution());
+        pagesDefinitions.registerTabPagesContribution(new InstalledAddonsPage.Contribution());
     }
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {

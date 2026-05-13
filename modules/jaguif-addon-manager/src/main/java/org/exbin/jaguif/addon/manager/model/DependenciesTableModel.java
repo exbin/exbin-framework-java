@@ -33,7 +33,7 @@ public class DependenciesTableModel extends AbstractTableModel {
 
     private final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(DependenciesTableModel.class);
 
-    private List<DependencyRecord> dependencies;
+    protected List<DependencyRecord> dependencies;
 
     public DependenciesTableModel() {
     }

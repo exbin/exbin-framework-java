@@ -15,12 +15,15 @@
  */
 package org.exbin.jaguif.tabpages.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
 import org.exbin.jaguif.tabpages.api.TabPages;
+import org.exbin.jaguif.tabpages.api.TabPagesChangeListener;
 import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
@@ -29,7 +32,7 @@ import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 @ParametersAreNonnullByDefault
 public class TabbedPagesPanel extends JTabbedPane implements TabPages {
 
-    protected Controller controller;
+    protected final List<TabPagesChangeListener> pageChangeListeners = new ArrayList<>();
     protected int activeIndex = -1;
 
     public TabbedPagesPanel() {
@@ -54,6 +57,11 @@ public class TabbedPagesPanel extends JTabbedPane implements TabPages {
     }
 
     @Override
+    public int getActivePageIndex() {
+        return activeIndex;
+    }
+
+    @Override
     public void changeActivePageIndex(int index) {
         if (activeIndex != index) {
             activeIndex = index;
@@ -66,14 +74,19 @@ public class TabbedPagesPanel extends JTabbedPane implements TabPages {
         return getComponentCount();
     }
 
-    private void notifyActiveIndexChanged() {
-        if (controller != null) {
-            controller.activeIndexChanged(activeIndex);
-        }
+    @Override
+    public void addPageChangeListener(TabPagesChangeListener listener) {
+        pageChangeListeners.add(listener);
     }
 
-    public interface Controller {
+    @Override
+    public void removePageChangeListener(TabPagesChangeListener listener) {
+        pageChangeListeners.remove(listener);
+    }
 
-        void activeIndexChanged(int index);
+    private void notifyActiveIndexChanged() {
+        for (TabPagesChangeListener listener : pageChangeListeners) {
+            listener.activeIndexChanged(activeIndex);
+        }
     }
 }

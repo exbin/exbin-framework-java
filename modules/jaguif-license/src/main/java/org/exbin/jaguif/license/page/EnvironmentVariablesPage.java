@@ -36,6 +36,7 @@ import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 @ParametersAreNonnullByDefault
 public class EnvironmentVariablesPage extends AbstractTabPagesComponent {
 
+    public static final String PAGE_ID = "environmentalVariables";
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(EnvironmentVariablesPage.class);
     protected final JScrollPane environmentScrollPane = new JScrollPane();
     protected final JTable environmentTable = new JTable();
@@ -91,7 +92,7 @@ public class EnvironmentVariablesPage extends AbstractTabPagesComponent {
         @Nonnull
         @Override
         public String getContributionId() {
-            return KEY_ID;
+            return PAGE_ID;
         }
     };
 }

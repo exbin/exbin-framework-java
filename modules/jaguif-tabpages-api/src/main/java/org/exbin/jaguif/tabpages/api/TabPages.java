@@ -48,9 +48,30 @@ public interface TabPages {
     void changeActivePageIndex(int index);
 
     /**
+     * Returns active page index.
+     *
+     * @return page index or -1
+     */
+    int getActivePageIndex();
+
+    /**
      * Returns count of registered pages.
      *
      * @return number of pages
      */
     int getPagesCount();
+
+    /**
+     * Adds page change listener.
+     *
+     * @param listener page change listener
+     */
+    void addPageChangeListener(TabPagesChangeListener listener);
+
+    /**
+     * Removes page change listener.
+     *
+     * @param listener page change listener
+     */
+    void removePageChangeListener(TabPagesChangeListener listener);
 }

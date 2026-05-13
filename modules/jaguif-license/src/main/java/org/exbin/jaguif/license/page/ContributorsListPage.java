@@ -34,6 +34,7 @@ import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 @ParametersAreNonnullByDefault
 public class ContributorsListPage extends AbstractTabPagesComponent {
 
+    public static final String PAGE_ID = "contributorsList";
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(ContributorsListPage.class);
     protected final JScrollPane scrollPane = new JScrollPane();
     protected final JEditorPane editorPane = new JEditorPane();
@@ -71,7 +72,7 @@ public class ContributorsListPage extends AbstractTabPagesComponent {
         @Nonnull
         @Override
         public String getContributionId() {
-            return KEY_ID;
+            return PAGE_ID;
         }
     };
 }

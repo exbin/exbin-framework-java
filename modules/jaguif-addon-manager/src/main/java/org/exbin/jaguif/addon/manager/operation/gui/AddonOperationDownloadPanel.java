@@ -81,6 +81,11 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
         downloadItemsList.setModel(listModel);
     }
 
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     public void setDownloadedItemRecords(List<DownloadItemRecord> records) {
         listModel.removeAllElements();
         for (DownloadItemRecord record : records) {
@@ -93,21 +98,16 @@ public class AddonOperationDownloadPanel extends javax.swing.JPanel {
         if (recordIndex == listModel.getSize() - 1) {
             DownloadItemRecord record = listModel.get(recordIndex);
             if (record.getStatus() == DownloadItemRecord.Status.DONE) {
-                downloadProgressBar.setString("Download finished");
+                downloadProgressBar.setString(resourceBundle.getString("downloadProgressBar.finished"));
             }
         }
     }
 
     public void setProgress(String fileName, int progress, boolean indeterminate) {
-        downloadProgressBar.setString("Downloading " + fileName + " (" + (progress / 10f) + " %)");
+        downloadProgressBar.setString(String.format(resourceBundle.getString("downloadProgressBar.progress"), fileName, (progress / 10f)));
         downloadProgressBar.setValue(progress);
         downloadProgressBar.setIndeterminate(indeterminate);
         downloadProgressBar.repaint();
-    }
-
-    @Nonnull
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
     }
 
     /**

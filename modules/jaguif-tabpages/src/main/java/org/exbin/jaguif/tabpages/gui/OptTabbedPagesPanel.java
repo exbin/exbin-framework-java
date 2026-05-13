@@ -16,11 +16,14 @@
 package org.exbin.jaguif.tabpages.gui;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import org.exbin.jaguif.tabpages.api.TabPages;
+import org.exbin.jaguif.tabpages.api.TabPagesChangeListener;
 import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 
 /**
@@ -29,7 +32,7 @@ import org.exbin.jaguif.tabpages.api.TabPagesComponent;
 @ParametersAreNonnullByDefault
 public class OptTabbedPagesPanel extends javax.swing.JPanel implements TabPages {
 
-    protected Controller controller;
+    protected final List<TabPagesChangeListener> pageChangeListeners = new ArrayList<>();
     protected int activeIndex = -1;
     protected TabPagesComponent firstPage = null;
 
@@ -71,6 +74,11 @@ public class OptTabbedPagesPanel extends javax.swing.JPanel implements TabPages 
     }
 
     @Override
+    public int getActivePageIndex() {
+        return activeIndex;
+    }
+
+    @Override
     public void changeActivePageIndex(int index) {
         if (activeIndex != index) {
             activeIndex = index;
@@ -87,9 +95,19 @@ public class OptTabbedPagesPanel extends javax.swing.JPanel implements TabPages 
         return tabbedPane.getComponentCount();
     }
 
+    @Override
+    public void addPageChangeListener(TabPagesChangeListener listener) {
+        pageChangeListeners.add(listener);
+    }
+
+    @Override
+    public void removePageChangeListener(TabPagesChangeListener listener) {
+        pageChangeListeners.remove(listener);
+    }
+
     private void notifyActiveIndexChanged() {
-        if (controller != null) {
-            controller.activeIndexChanged(activeIndex);
+        for (TabPagesChangeListener listener : pageChangeListeners) {
+            listener.activeIndexChanged(activeIndex);
         }
     }
 
@@ -111,9 +129,4 @@ public class OptTabbedPagesPanel extends javax.swing.JPanel implements TabPages 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
-
-    public interface Controller {
-
-        void activeIndexChanged(int index);
-    }
 }
