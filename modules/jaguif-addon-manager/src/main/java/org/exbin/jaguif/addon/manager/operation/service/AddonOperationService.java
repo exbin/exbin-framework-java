@@ -34,6 +34,7 @@ import org.exbin.jaguif.addon.manager.AddonManager;
 import org.exbin.jaguif.addon.manager.AddonOperation;
 import org.exbin.jaguif.addon.manager.model.AddonUpdateChanges;
 import org.exbin.jaguif.addon.manager.ApplicationModulesUsage;
+import org.exbin.jaguif.addon.manager.api.CartOperation;
 
 /**
  * Addon operation service.
@@ -60,19 +61,24 @@ public class AddonOperationService {
     }
 
     @Nonnull
-    public AddonModificationsOperation performAddonOperations(List<AddonOperation> operations) {
+    public AddonModificationsOperation performAddonOperations(List<CartOperation> operations) {
         AddonModificationsOperation modifications = createOperation();
-        for (AddonOperation operation : operations) {
-            switch (operation.getVariant()) {
+        for (CartOperation operation : operations) {
+            if (operation instanceof AddonOperation) {
+                throw new IllegalStateException();
+            }
+            
+            AddonOperation addonOperation = (AddonOperation) operation;
+            switch (addonOperation.getVariant()) {
                 case INSTALL:
-                    modifications.installItem(operation.getItem());
+                    modifications.installItem(addonOperation.getItem());
                     break;
                 case UPDATE:
-                    ItemRecord item = operation.getItem();
+                    ItemRecord item = addonOperation.getItem();
                     modifications.updateItem(item, item);
                     break;
                 case REMOVE:
-                    modifications.removeItem(operation.getItem());
+                    modifications.removeItem(addonOperation.getItem());
                     break;
             }
         }

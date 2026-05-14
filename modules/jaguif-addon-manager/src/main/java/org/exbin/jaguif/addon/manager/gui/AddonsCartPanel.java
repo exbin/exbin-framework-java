@@ -28,6 +28,7 @@ import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.addon.manager.AddonOperation;
+import org.exbin.jaguif.addon.manager.api.CartOperation;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
@@ -72,11 +73,11 @@ public class AddonsCartPanel extends javax.swing.JPanel {
         this.controller = controller;
     }
 
-    public void setCartItems(List<AddonOperation> cartOperations) {
+    public void setCartItems(List<CartOperation> cartOperations) {
         DefaultListModel<AddonOperation> model = (DefaultListModel<AddonOperation>) itemsList.getModel();
         model.removeAllElements();
-        for (AddonOperation cartOperation : cartOperations) {
-            model.addElement(cartOperation);
+        for (CartOperation cartOperation : cartOperations) {
+            model.addElement((AddonOperation) cartOperation);
         }
         updateState();
     }

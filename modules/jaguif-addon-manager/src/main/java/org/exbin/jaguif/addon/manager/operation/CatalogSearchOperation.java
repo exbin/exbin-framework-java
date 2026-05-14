@@ -26,7 +26,7 @@ import org.exbin.jaguif.addon.manager.AddonManager;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogService;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.jaguif.addon.manager.api.AddonRecord;
-import org.exbin.jaguif.addon.manager.model.AvailableModuleUpdates;
+import org.exbin.jaguif.addon.manager.AvailableModuleUpdatesManager;
 import org.exbin.jaguif.basic.BasicModuleProvider;
 import org.exbin.jaguif.operation.api.CancellableOperation;
 import org.exbin.jaguif.operation.api.ProgressOperation;
@@ -61,7 +61,7 @@ public class CatalogSearchOperation implements Runnable, CancellableOperation, P
                 if (((BasicModuleProvider) moduleProvider).hasModule(record.getId()) && !addonManager.isModuleRemoved(record.getId())) {
                     searchResult.remove(i);
                 } else {
-                    AvailableModuleUpdates availableModuleUpdates = addonManager.getAvailableModuleUpdates();
+                    AvailableModuleUpdatesManager availableModuleUpdates = addonManager.getAvailableModuleUpdates();
                     if (availableModuleUpdates.getRevision() != -1) {
                         record.setUpdateAvailable(availableModuleUpdates.isUpdateAvailable(record.getId(), record.getVersion()));
                     }

@@ -13,35 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager;
+package org.exbin.jaguif.addon.manager.api;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.addon.manager.api.CartOperation;
-import org.exbin.jaguif.addon.manager.api.ItemRecord;
 
 /**
- * Addon operation record.
+ * Addons management cart controller interface.
  */
 @ParametersAreNonnullByDefault
-public class AddonOperation implements CartOperation {
+public interface AddonsManagementCartController extends AddonsManagementContext {
 
-    protected final AddonOperationVariant variant;
-    protected final ItemRecord item;
+    /**
+     * Checks whether specific module operation is present in cart.
+     *
+     * @param moduleId module identifier
+     * @param variant cart operation variant
+     * @return true if present
+     */
+    boolean isInCart(String moduleId, CartOperationVariant variant);
 
-    public AddonOperation(AddonOperationVariant variant, ItemRecord item) {
-        this.variant = variant;
-        this.item = item;
-    }
+    /**
+     * Adds operation to the cart.
+     *
+     * @param operation cart operation
+     */
+    void addCartOperation(CartOperation operation);
 
+    /**
+     * Returns list of cart operations.
+     *
+     * @return cart operations
+     */
     @Nonnull
-    @Override
-    public AddonOperationVariant getVariant() {
-        return variant;
-    }
-
-    @Nonnull
-    public ItemRecord getItem() {
-        return item;
-    }
+    List<CartOperation> getCartOperations();
 }

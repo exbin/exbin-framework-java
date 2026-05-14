@@ -13,35 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager;
+package org.exbin.jaguif.addon.manager.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.addon.manager.api.CartOperation;
-import org.exbin.jaguif.addon.manager.api.ItemRecord;
 
 /**
- * Addon operation record.
+ * Available module updates.
  */
 @ParametersAreNonnullByDefault
-public class AddonOperation implements CartOperation {
+public interface AvailableModuleUpdates {
 
-    protected final AddonOperationVariant variant;
-    protected final ItemRecord item;
+    int getRevision();
 
-    public AddonOperation(AddonOperationVariant variant, ItemRecord item) {
-        this.variant = variant;
-        this.item = item;
-    }
+    boolean isUpdateAvailable(String moduleId, String version);
 
-    @Nonnull
-    @Override
-    public AddonOperationVariant getVariant() {
-        return variant;
-    }
-
-    @Nonnull
-    public ItemRecord getItem() {
-        return item;
-    }
+    void applyTo(ItemRecord record);
 }

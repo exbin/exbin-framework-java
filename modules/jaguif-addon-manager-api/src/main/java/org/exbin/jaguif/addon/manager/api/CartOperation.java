@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager;
+package org.exbin.jaguif.addon.manager.api;
 
-import org.exbin.jaguif.addon.manager.api.CartOperationVariant;
+import javax.annotation.Nonnull;
 
 /**
- * Addon operation variant.
+ * Cart operation.
  */
-public enum AddonOperationVariant implements CartOperationVariant {
-    INSTALL,
-    UPDATE,
-    REMOVE,
-    ENABLE,
-    DISABLE
+public interface CartOperation {
+
+    /**
+     * Returns operation variant.
+     *
+     * @return operation variant
+     */
+    @Nonnull
+    CartOperationVariant getVariant();
 }

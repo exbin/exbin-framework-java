@@ -90,8 +90,8 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     }
 
     @Override
-    public void registerAddonManager() {
-        getAddonManager().registerAddonManager();
+    public void registerBasicAddonManager() {
+        getAddonManager().registerBasicAddonManager();
     }
 
     @Nonnull

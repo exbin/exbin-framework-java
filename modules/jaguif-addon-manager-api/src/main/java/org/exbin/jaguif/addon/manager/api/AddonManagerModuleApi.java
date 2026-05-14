@@ -63,9 +63,9 @@ public interface AddonManagerModuleApi extends Module {
     void registerSettings();
 
     /**
-     * Registers addon manager.
+     * Registers basic addon manager.
      */
-    void registerAddonManager();
+    void registerBasicAddonManager();
 
     /**
      * Returns link URL for manual addon download page.

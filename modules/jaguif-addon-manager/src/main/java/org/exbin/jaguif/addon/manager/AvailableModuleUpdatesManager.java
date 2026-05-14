@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager.model;
+package org.exbin.jaguif.addon.manager;
 
-import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,19 +30,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.App;
+import org.exbin.jaguif.addon.manager.api.AvailableModuleUpdates;
+import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.utils.VersionUtils;
 
 /**
  * Available module updates.
  */
 @ParametersAreNonnullByDefault
-public class AvailableModuleUpdates {
+public class AvailableModuleUpdatesManager implements AvailableModuleUpdates {
 
     protected static final String MODULE_UPDATES_FILE = "available-updates.cfg";
     protected final Map<String, String> latestVersions = new HashMap<>();
     protected int revision = -1;
     protected final List<AvailableModulesChangeListener> changeListeners = new ArrayList<>();
 
+    @Override
     public int getRevision() {
         return revision;
     }
@@ -55,6 +57,7 @@ public class AvailableModuleUpdates {
      * @param version current module version
      * @return true if never version is available
      */
+    @Override
     public boolean isUpdateAvailable(String moduleId, String version) {
         String latestVersion = latestVersions.get(moduleId);
         if (latestVersion != null) {
@@ -68,6 +71,7 @@ public class AvailableModuleUpdates {
      *
      * @param record target record
      */
+    @Override
     public void applyTo(ItemRecord record) {
         record.setUpdateAvailable(isUpdateAvailable(record.getId(), record.getVersion()));
     }
@@ -96,7 +100,7 @@ public class AvailableModuleUpdates {
                     }
                 } while (line != null);
             } catch (NumberFormatException | IOException ex) {
-                Logger.getLogger(AvailableModuleUpdates.class.getName()).log(Level.SEVERE, "Failed to read modules update cache", ex);
+                Logger.getLogger(AvailableModuleUpdatesManager.class.getName()).log(Level.SEVERE, "Failed to read modules update cache", ex);
             }
         }
     }
@@ -113,7 +117,7 @@ public class AvailableModuleUpdates {
                 writer.write(entry.getKey() + ":" + entry.getValue() + "\r\n");
             }
         } catch (IOException ex) {
-            Logger.getLogger(AvailableModuleUpdates.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AvailableModuleUpdatesManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -134,6 +138,6 @@ public class AvailableModuleUpdates {
     @ParametersAreNonnullByDefault
     public interface AvailableModulesChangeListener {
 
-        void changed(AvailableModuleUpdates availableModuleUpdates);
+        void changed(AvailableModuleUpdatesManager availableModuleUpdates);
     }
 }
