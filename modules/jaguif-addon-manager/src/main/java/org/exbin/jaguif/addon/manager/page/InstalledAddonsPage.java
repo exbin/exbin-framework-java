@@ -17,13 +17,14 @@ package org.exbin.jaguif.addon.manager.page;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
+import org.exbin.jaguif.App;
 import org.exbin.jaguif.addon.manager.AddonOperation;
 import org.exbin.jaguif.addon.manager.AddonOperationVariant;
 import org.exbin.jaguif.addon.manager.gui.AddonsPanel;
-import org.exbin.jaguif.addon.manager.AvailableModuleUpdatesManager;
 import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
 import org.exbin.jaguif.tabpages.api.AbstractTabPagesComponent;
@@ -36,6 +37,7 @@ import org.exbin.jaguif.addon.manager.api.AvailableModuleUpdates;
 import org.exbin.jaguif.addon.manager.api.UpdateAvailabilityContext;
 import org.exbin.jaguif.context.api.ContextChange;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
+import org.exbin.jaguif.language.api.LanguageModuleApi;
 
 /**
  * Installed addons manager page.
@@ -44,6 +46,7 @@ import org.exbin.jaguif.context.api.ContextChangeRegistration;
 public class InstalledAddonsPage extends AbstractTabPagesComponent implements AddonManagerPage {
 
     public static final String PAGE_ID = "installedAddons";
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(InstalledAddonsPage.class);
     protected AddonsPanel addonsPanel = new AddonsPanel();
     protected List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
 
@@ -84,7 +87,7 @@ public class InstalledAddonsPage extends AbstractTabPagesComponent implements Ad
             }
         });
         itemChangedListeners.add(addonsPanel::notifyItemChanged);
-        putValue(KEY_NAME, addonsPanel.getResourceBundle().getString("installedTab.title"));
+        putValue(KEY_NAME, resourceBundle.getString("page.name"));
         putValue(KEY_CONTEXT_CHANGE, new ContextChange() {
             @Override
             public void register(ContextChangeRegistration registrar) {

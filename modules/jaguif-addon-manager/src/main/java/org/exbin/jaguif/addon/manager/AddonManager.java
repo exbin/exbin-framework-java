@@ -38,8 +38,11 @@ import org.exbin.jaguif.addon.manager.gui.AddonsCartPanel;
 import org.exbin.jaguif.addon.manager.gui.AddonsManagerPanel;
 import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
 import org.exbin.jaguif.addon.manager.api.AddonsManagementCartController;
+import org.exbin.jaguif.addon.manager.api.AddonsManagementContext;
+import org.exbin.jaguif.addon.manager.api.AddonsManagementLocalState;
 import org.exbin.jaguif.addon.manager.api.CartOperation;
 import org.exbin.jaguif.addon.manager.api.CartOperationVariant;
+import org.exbin.jaguif.addon.manager.api.UpdateAvailabilityContext;
 import org.exbin.jaguif.addon.manager.gui.AddonsPanel;
 import org.exbin.jaguif.addon.manager.operation.AddonModificationStep;
 import org.exbin.jaguif.addon.manager.operation.AddonModificationsOperation;
@@ -55,8 +58,10 @@ import org.exbin.jaguif.addon.manager.operation.gui.AddonOperationPanel;
 import org.exbin.jaguif.addon.manager.operation.model.DownloadItemRecord;
 import org.exbin.jaguif.addon.manager.operation.model.LicenseItemRecord;
 import org.exbin.jaguif.addon.manager.operation.service.AddonOperationService;
+import org.exbin.jaguif.context.api.ActiveContextManagement;
 import org.exbin.jaguif.context.api.ContextModuleApi;
 import org.exbin.jaguif.context.api.ContextRegistration;
+import org.exbin.jaguif.context.api.ContextUpdateManagement;
 import org.exbin.jaguif.operation.api.ProgressOperation;
 import org.exbin.jaguif.operation.api.TitledOperation;
 import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
@@ -72,7 +77,7 @@ import org.exbin.jaguif.window.api.gui.MultiStepControlPanel;
  * Addon manager.
  */
 @ParametersAreNonnullByDefault
-public class AddonManager implements AddonsManagementCartController {
+public class AddonManager implements AddonsManagementCartController, AddonsManagementLocalState {
 
     protected java.util.ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonManager.class);
 
@@ -205,7 +210,11 @@ public class AddonManager implements AddonsManagementCartController {
         ContextModuleApi contextModule = App.getModule(ContextModuleApi.class);
         TabPagesModuleApi tabPagesModule = App.getModule(TabPagesModuleApi.class);
         TabPages tabPages = managerPanel.getTabPages();
-        ContextRegistration contextRegistrator = contextModule.createContextRegistrator();
+        ActiveContextManagement contextManagement = contextModule.createContextManager();
+        contextManagement.changeActiveState(AddonsManagementContext.class, this);
+        // contextManagement.changeActiveState(UpdateAvailabilityContext.class, this);
+        ContextUpdateManagement updateManagement = contextModule.createContextUpdateManagement(contextManagement);
+        ContextRegistration contextRegistrator = contextModule.createContextRegistrator("", updateManagement, contextManagement);
         tabPagesModule.buildTabPages(tabPages, AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, contextRegistrator);
 
         return managerPanel;
@@ -280,10 +289,12 @@ public class AddonManager implements AddonsManagementCartController {
         return addonsState.getApplicationModulesUsage();
     }
 
+    @Override
     public boolean isModuleInstalled(String moduleId) {
         return addonsState.isModuleInstalled(moduleId);
     }
 
+    @Override
     public boolean isModuleRemoved(String moduleId) {
         return addonsState.isModuleRemoved(moduleId);
     }
@@ -466,6 +477,7 @@ public class AddonManager implements AddonsManagementCartController {
     }
 
     @Nonnull
+    @Override
     public List<ItemRecord> getInstalledAddons() {
         return addonsState.getInstalledAddons();
     }

@@ -24,7 +24,7 @@ import org.exbin.jaguif.options.api.OptionsStorage;
 import org.exbin.jaguif.options.settings.api.SettingsOptions;
 
 /**
- * Addon manager options.
+ * Addon catalog options.
  */
 @ParametersAreNonnullByDefault
 public class AddonCatalogOptions implements SettingsOptions {

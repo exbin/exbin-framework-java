@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager.page;
+package org.exbin.jaguif.addon.packs.page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +45,10 @@ import org.exbin.jaguif.tabpages.api.TabPagesComponent;
  * Addons manager page.
  */
 @ParametersAreNonnullByDefault
-public class AddonsCatalogPage extends AbstractTabPagesComponent implements AddonManagerPage {
+public class AddonPacksPage extends AbstractTabPagesComponent implements AddonManagerPage {
 
-    public static final String PAGE_ID = "addonsCatalog";
-    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsCatalogPage.class);
+    public static final String PAGE_ID = "addonPacks";
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonPacksPage.class);
     protected AddonsPanel addonsPanel = new AddonsPanel();
     protected List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
     protected AddonCatalogService addonCatalogService;
@@ -56,7 +56,7 @@ public class AddonsCatalogPage extends AbstractTabPagesComponent implements Addo
     protected AddonsManagementContext addonsManagement;
     protected List<AddonRecord> addonItems;
 
-    public AddonsCatalogPage() {
+    public AddonPacksPage() {
         init();
     }
 
@@ -65,13 +65,13 @@ public class AddonsCatalogPage extends AbstractTabPagesComponent implements Addo
 
             @Override
             public int getItemsCount() {
-                return AddonsCatalogPage.this.getItemsCount();
+                return AddonPacksPage.this.getItemsCount();
             }
 
             @Nonnull
             @Override
             public ItemRecord getItem(int index) {
-                return AddonsCatalogPage.this.getItem(index);
+                return AddonPacksPage.this.getItem(index);
             }
 
             @Override
@@ -189,7 +189,7 @@ public class AddonsCatalogPage extends AbstractTabPagesComponent implements Addo
         @Nonnull
         @Override
         public TabPagesComponent createComponent() {
-            return new AddonsCatalogPage();
+            return new AddonPacksPage();
         }
 
         @Nonnull
