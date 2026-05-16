@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.addon.manager.AddonManager;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogService;
-import org.exbin.jaguif.addon.manager.AvailableModuleUpdatesManager;
+import org.exbin.jaguif.addon.manager.UpdateAvailabilityManager;
 import org.exbin.jaguif.operation.api.CancellableOperation;
 import org.exbin.jaguif.operation.api.TitledOperation;
 
@@ -44,7 +44,7 @@ public class CatalogAvailableUpdatesOperation implements Runnable, CancellableOp
 
     @Override
     public void run() {
-        AvailableModuleUpdatesManager availableModuleUpdates = addonManager.getAvailableModuleUpdates();
+        UpdateAvailabilityManager availableModuleUpdates = addonManager.getAvailableModuleUpdates();
         if (catalogRevision > availableModuleUpdates.getRevision()) {
             UpdateAvailabilityOperation availabilityOperation = new UpdateAvailabilityOperation(addonCatalogService);
             availabilityOperation.run();

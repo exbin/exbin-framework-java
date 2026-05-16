@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.update.service.impl;
+package org.exbin.jaguif.addon.update.service;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -26,7 +26,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.addon.update.AddonUpdateModule;
 import org.exbin.jaguif.addon.update.api.VersionNumbers;
-import org.exbin.jaguif.addon.update.service.CheckForUpdateService;
 import org.exbin.jaguif.addon.update.service.CheckForUpdateService.BackgroundCheckListener;
 import org.exbin.jaguif.addon.update.service.CheckForUpdateService.CheckForUpdateResult;
 
@@ -34,13 +33,13 @@ import org.exbin.jaguif.addon.update.service.CheckForUpdateService.CheckForUpdat
  * Check for update service implementation.
  */
 @ParametersAreNonnullByDefault
-public class CheckForUpdateServiceImpl implements CheckForUpdateService {
+public class DefaultCheckForUpdateService implements CheckForUpdateService {
 
     private final AddonUpdateModule guiUpdateModule;
 
     private Thread checkingThread = null;
 
-    public CheckForUpdateServiceImpl(AddonUpdateModule guiUpdateModule) {
+    public DefaultCheckForUpdateService(AddonUpdateModule guiUpdateModule) {
         this.guiUpdateModule = guiUpdateModule;
     }
 

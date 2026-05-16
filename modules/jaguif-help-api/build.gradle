@@ -5,8 +5,8 @@ plugins {
 }
 
 group = 'org.exbin.jaguif'
-ext.libraryName = 'ExBin Framework Help Support Library'
-ext.libraryDescription = 'Library for help support in ExBin Framework'
+ext.libraryName = 'Java GUI Framework Library'
+ext.libraryDescription = 'Library for additional GUI functionality for the ExBin project'
 
 apply from: '../jaguif-modules.gradle'
 

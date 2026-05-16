@@ -13,6 +13,7 @@ if (rootProject.path == ':') {
     include ':modules:jaguif-addon-manager-api'
     include ':modules:jaguif-addon-manager'
     include ':modules:jaguif-language-api'
+    include ':modules:jaguif-tabpages-api'
     include ':modules:jaguif-operation-api'
     include ':modules:jaguif-options-settings-api'
     include ':modules:jaguif-options-api'

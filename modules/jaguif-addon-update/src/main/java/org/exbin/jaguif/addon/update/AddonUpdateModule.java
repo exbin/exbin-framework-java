@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.addon.update.service.CheckForUpdateService;
-import org.exbin.jaguif.addon.update.service.impl.CheckForUpdateServiceImpl;
+import org.exbin.jaguif.addon.update.service.DefaultCheckForUpdateService;
 import org.exbin.jaguif.addon.update.action.CheckForUpdateAction;
 import org.exbin.jaguif.addon.update.api.AddonUpdateModuleApi;
 import org.exbin.jaguif.addon.update.settings.CheckForUpdateOptions;
@@ -133,7 +133,7 @@ public class AddonUpdateModule implements AddonUpdateModuleApi {
     @Nonnull
     public CheckForUpdateService getCheckForUpdateService() {
         if (checkForUpdateService == null) {
-            checkForUpdateService = new CheckForUpdateServiceImpl(this);
+            checkForUpdateService = new DefaultCheckForUpdateService(this);
         }
 
         return checkForUpdateService;

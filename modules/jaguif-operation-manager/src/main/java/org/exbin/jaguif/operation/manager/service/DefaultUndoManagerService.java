@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.operation.manager.service.impl;
+package org.exbin.jaguif.operation.manager.service;
 
 import java.awt.Component;
 import java.io.FileNotFoundException;
@@ -31,7 +31,7 @@ import org.exbin.jaguif.operation.manager.service.UndoManagerService;
  * Undo manager service implementation.
  */
 @ParametersAreNonnullByDefault
-public class UndoManagerServiceImpl implements UndoManagerService {
+public class DefaultUndoManagerService implements UndoManagerService {
 
     @Override
     public void exportCommand(Component parentComponent, Command command) {

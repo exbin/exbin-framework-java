@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager.operation;
+package org.exbin.jaguif.addon.catalog.operation;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.ModuleProvider;
-import org.exbin.jaguif.addon.manager.AddonManager;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogService;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogServiceException;
 import org.exbin.jaguif.addon.manager.api.AddonRecord;
-import org.exbin.jaguif.addon.manager.AvailableModuleUpdatesManager;
+import org.exbin.jaguif.addon.manager.api.AddonsManagementLocalState;
+import org.exbin.jaguif.addon.manager.api.UpdateAvailabilityModules;
 import org.exbin.jaguif.basic.BasicModuleProvider;
+import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.operation.api.CancellableOperation;
 import org.exbin.jaguif.operation.api.ProgressOperation;
 import org.exbin.jaguif.operation.api.TitledOperation;
@@ -38,15 +40,18 @@ import org.exbin.jaguif.operation.api.TitledOperation;
 @ParametersAreNonnullByDefault
 public class CatalogSearchOperation implements Runnable, CancellableOperation, ProgressOperation, TitledOperation {
 
-    protected final AddonManager addonManager;
+    protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(CatalogSearchOperation.class);
+    protected final AddonsManagementLocalState localState;
+    protected final UpdateAvailabilityModules updateAvailabilityModules;
     protected final AddonCatalogService addonCatalogService;
     protected final Output output;
     protected boolean cancelled = false;
     protected final String searchCondition;
 
-    public CatalogSearchOperation(AddonCatalogService addonCatalogService, AddonManager addonManager, String searchCondition, Output output) {
+    public CatalogSearchOperation(AddonCatalogService addonCatalogService, AddonsManagementLocalState localState, UpdateAvailabilityModules updateAvailabilityModules, String searchCondition, Output output) {
         this.addonCatalogService = addonCatalogService;
-        this.addonManager = addonManager;
+        this.localState = localState;
+        this.updateAvailabilityModules = updateAvailabilityModules;
         this.searchCondition = searchCondition;
         this.output = output;
     }
@@ -58,12 +63,11 @@ public class CatalogSearchOperation implements Runnable, CancellableOperation, P
             for (int i = searchResult.size() - 1; i >= 0; i--) {
                 AddonRecord record = searchResult.get(i);
                 ModuleProvider moduleProvider = App.getModuleProvider();
-                if (((BasicModuleProvider) moduleProvider).hasModule(record.getId()) && !addonManager.isModuleRemoved(record.getId())) {
+                if (((BasicModuleProvider) moduleProvider).hasModule(record.getId()) && !localState.isModuleRemoved(record.getId())) {
                     searchResult.remove(i);
                 } else {
-                    AvailableModuleUpdatesManager availableModuleUpdates = addonManager.getAvailableModuleUpdates();
-                    if (availableModuleUpdates.getRevision() != -1) {
-                        record.setUpdateAvailable(availableModuleUpdates.isUpdateAvailable(record.getId(), record.getVersion()));
+                    if (updateAvailabilityModules.getRevision() != -1) {
+                        record.setUpdateAvailable(updateAvailabilityModules.isUpdateAvailable(record.getId(), record.getVersion()));
                     }
                 }
             }
@@ -86,7 +90,7 @@ public class CatalogSearchOperation implements Runnable, CancellableOperation, P
     @Nonnull
     @Override
     public String getTitle() {
-        return addonManager.getResourceBundle().getString("catalogSearchOperation");
+        return resourceBundle.getString("operation.name");
     }
 
     @Override

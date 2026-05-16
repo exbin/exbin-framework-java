@@ -16,7 +16,6 @@
 package org.exbin.jaguif.addon.manager;
 
 import org.exbin.jaguif.addon.manager.page.InstalledAddonsPage;
-import org.exbin.jaguif.addon.manager.page.AddonsCatalogPage;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -42,14 +41,10 @@ import org.exbin.jaguif.addon.manager.api.AddonsManagementContext;
 import org.exbin.jaguif.addon.manager.api.AddonsManagementLocalState;
 import org.exbin.jaguif.addon.manager.api.CartOperation;
 import org.exbin.jaguif.addon.manager.api.CartOperationVariant;
-import org.exbin.jaguif.addon.manager.api.UpdateAvailabilityContext;
 import org.exbin.jaguif.addon.manager.gui.AddonsPanel;
 import org.exbin.jaguif.addon.manager.operation.AddonModificationStep;
 import org.exbin.jaguif.addon.manager.operation.AddonModificationsOperation;
-import org.exbin.jaguif.addon.manager.operation.CatalogAvailableUpdatesOperation;
-import org.exbin.jaguif.addon.manager.operation.CatalogCheckStatusOperation;
 import org.exbin.jaguif.addon.manager.operation.CatalogModuleDetailOperation;
-import org.exbin.jaguif.addon.manager.operation.CatalogSearchOperation;
 import org.exbin.jaguif.addon.manager.operation.DownloadOperation;
 import org.exbin.jaguif.addon.manager.operation.gui.AddonOperationDownloadPanel;
 import org.exbin.jaguif.addon.manager.operation.gui.AddonOperationLicensePanel;
@@ -224,7 +219,6 @@ public class AddonManager implements AddonsManagementCartController, AddonsManag
         TabPagesModuleApi tabPagesModule = App.getModule(TabPagesModuleApi.class);
         tabPagesModule.getMainTabPagesManager().registerTabPages(AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, AddonManagerModuleApi.MODULE_ID);
         pagesDefinitions = tabPagesModule.getMainTabPagesDefinition(AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, AddonManagerModuleApi.MODULE_ID);
-        pagesDefinitions.registerTabPagesContribution(new AddonsCatalogPage.Contribution());
         pagesDefinitions.registerTabPagesContribution(new InstalledAddonsPage.Contribution());
     }
 
@@ -236,7 +230,8 @@ public class AddonManager implements AddonsManagementCartController, AddonsManag
     }
 
     public void refreshCatalog() {
-        for (AddonManagerPage managerPage : managerPages) {
+        // TODO
+        /* for (AddonManagerPage managerPage : managerPages) {
             if (managerPage instanceof AddonsCatalogPage) {
                 ((AddonsCatalogPage) managerPage).setAddonCatalogService(addonCatalogService);
 
@@ -253,13 +248,13 @@ public class AddonManager implements AddonsManagementCartController, AddonsManag
                     }
                 }));
             }
-        }
+        } */
     }
 
     public void updateAll() {
         List<CartOperation> updateOperations = new ArrayList<>();
         List<ItemRecord> installedAddons = addonsState.getInstalledAddons();
-        AvailableModuleUpdatesManager availableModuleUpdates = addonsState.getAvailableModuleUpdates();
+        UpdateAvailabilityManager availableModuleUpdates = addonsState.getAvailableModuleUpdates();
         for (ItemRecord installedAddon : installedAddons) {
             if (availableModuleUpdates.isUpdateAvailable(installedAddon.getId(), installedAddon.getVersion())) {
                 updateOperations.add(new AddonOperation(AddonOperationVariant.UPDATE, installedAddon));
@@ -275,7 +270,7 @@ public class AddonManager implements AddonsManagementCartController, AddonsManag
     }
 
     @Nonnull
-    public AvailableModuleUpdatesManager getAvailableModuleUpdates() {
+    public UpdateAvailabilityManager getAvailableModuleUpdates() {
         return addonsState.getAvailableModuleUpdates();
     }
 
@@ -482,7 +477,7 @@ public class AddonManager implements AddonsManagementCartController, AddonsManag
         return addonsState.getInstalledAddons();
     }
 
-    public void addUpdateAvailabilityListener(AvailableModuleUpdatesManager.AvailableModulesChangeListener listener) {
+    public void addUpdateAvailabilityListener(UpdateAvailabilityManager.AvailableModulesChangeListener listener) {
         addonsState.addUpdateAvailabilityListener(listener);
     }
 
@@ -493,7 +488,7 @@ public class AddonManager implements AddonsManagementCartController, AddonsManag
     }
 
     private void updateLatestVersions() {
-        AvailableModuleUpdatesManager availableModuleUpdates = getAvailableModuleUpdates();
+        UpdateAvailabilityManager availableModuleUpdates = getAvailableModuleUpdates();
         List<ItemRecord> installedAddons = addonsState.getInstalledAddons();
         int availableUpdates = 0;
         for (ItemRecord installedAddon : installedAddons) {

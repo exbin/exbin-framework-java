@@ -66,7 +66,7 @@ public interface AddonUpdateModuleApi extends Module {
     void setUpdateUrl(URL updateUrl);
 
     @Nullable
-    public VersionNumbers getUpdateVersion();
+    VersionNumbers getUpdateVersion();
 
     void setUpdateVersion(VersionNumbers updateVersion);
 

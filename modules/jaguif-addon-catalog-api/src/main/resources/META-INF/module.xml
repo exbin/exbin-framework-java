@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.jaguif.addon.catalog.api.AddonCatalogModuleApi</api>
+  <name>Addon Catalog API</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Remote catalog for addons updates</description>
+  <dependency>
+  </dependency>
+</module>

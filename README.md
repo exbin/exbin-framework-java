@@ -3,7 +3,7 @@ Java GUI Framework for ExBin
 
 Framework for Java Swing applications for ExBin project.
 
-Modular framework for desktop applications providing some additional functionality to regular Swing framework:
+Modular framework for desktop applications providing some additional functionality on top of Swing framework:
 
   * Support for modules and addons
   * Set of typical dialogs

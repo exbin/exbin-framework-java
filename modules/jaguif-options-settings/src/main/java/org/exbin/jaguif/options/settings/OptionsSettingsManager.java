@@ -188,6 +188,7 @@ public class OptionsSettingsManager implements OptionsSettingsManagement {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void applyContextOptions(Class<?> contextTypeClass, Object contextInstance, SettingsOptionsProvider settingsProvider) {
         List<ApplySettingsContribution> contribution = applyContextSettingsContributions.get(contextTypeClass);
         if (contribution == null) {

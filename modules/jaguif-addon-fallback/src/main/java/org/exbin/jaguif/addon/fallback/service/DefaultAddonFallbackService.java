@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.fallback.service.impl;
+package org.exbin.jaguif.addon.fallback.service;
 
 import java.net.URL;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.exbin.jaguif.addon.manager.api.AddonCatalogServiceException;
  * Addon legacy service implementation using fixed files.
  */
 @ParametersAreNonnullByDefault
-public class AddonFallbackServiceImpl implements AddonCatalogService {
+public class DefaultAddonFallbackService implements AddonCatalogService {
 
     @Override
     public int checkStatus(String version) throws AddonCatalogServiceException {

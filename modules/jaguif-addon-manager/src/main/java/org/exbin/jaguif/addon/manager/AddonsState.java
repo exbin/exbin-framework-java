@@ -36,7 +36,7 @@ import org.exbin.jaguif.basic.ModuleRecord;
 public class AddonsState {
 
     protected final List<ItemRecord> installedAddons = new ArrayList<>();
-    protected final AvailableModuleUpdatesManager availableModuleUpdates = new AvailableModuleUpdatesManager();
+    protected final UpdateAvailabilityManager availableModuleUpdates = new UpdateAvailabilityManager();
     protected final AddonUpdateChanges addonUpdateChanges = new AddonUpdateChanges();
     protected ApplicationModulesUsage applicationModulesUsage;
 
@@ -93,7 +93,7 @@ public class AddonsState {
     }
 
     @Nonnull
-    public AvailableModuleUpdatesManager getAvailableModuleUpdates() {
+    public UpdateAvailabilityManager getAvailableModuleUpdates() {
         return availableModuleUpdates;
     }
 
@@ -115,7 +115,7 @@ public class AddonsState {
         return addonUpdateChanges.hasRemoveAddon(moduleId) && !addonUpdateChanges.hasInstallAddon(moduleId);
     }
 
-    public void addUpdateAvailabilityListener(AvailableModuleUpdatesManager.AvailableModulesChangeListener listener) {
+    public void addUpdateAvailabilityListener(UpdateAvailabilityManager.AvailableModulesChangeListener listener) {
         availableModuleUpdates.addChangeListener(listener);
     }
 }

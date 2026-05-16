@@ -41,7 +41,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.JTextComponent;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.document.text.service.impl.TextServiceImpl;
+import org.exbin.jaguif.document.text.service.DefaultTextService;
 import org.exbin.jaguif.utils.UiUtils;
 import org.exbin.jaguif.document.text.service.TextSearchService;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
@@ -133,7 +133,7 @@ public class TextPanel extends javax.swing.JPanel {
         }
 
         findTextParameters.setStartFrom(pos);
-        TextSearchService textService = new TextServiceImpl();
+        TextSearchService textService = new DefaultTextService();
         Optional<TextSearchService.FoundMatch> optFoundMatch = textService.findText(textArea, findTextParameters);
 
         if (optFoundMatch.isPresent()) {

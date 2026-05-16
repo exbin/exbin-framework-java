@@ -21,11 +21,28 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Available module updates.
  */
 @ParametersAreNonnullByDefault
-public interface AvailableModuleUpdates {
+public interface UpdateAvailabilityModules extends UpdateAvailabilityContext {
 
+    /**
+     * Returns revision of update sequence.
+     *
+     * @return revision index
+     */
     int getRevision();
 
-    boolean isUpdateAvailable(String moduleId, String version);
+    /**
+     * Checks whether update is available for specific module.
+     *
+     * @param moduleId module identifier
+     * @param currentVersion current version
+     * @return true if newer version is available for update
+     */
+    boolean isUpdateAvailable(String moduleId, String currentVersion);
 
+    /**
+     * Applies update to specific record.
+     *
+     * @param record addon item record
+     */
     void applyTo(ItemRecord record);
 }

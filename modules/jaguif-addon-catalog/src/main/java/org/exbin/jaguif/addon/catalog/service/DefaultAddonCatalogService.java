@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.catalog.service.impl;
+package org.exbin.jaguif.addon.catalog.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,20 +55,20 @@ import org.xml.sax.SAXException;
  * Addon catalog service implementation.
  */
 @ParametersAreNonnullByDefault
-public class AddonCatalogServiceImpl implements AddonCatalogService {
+public class DefaultAddonCatalogService implements AddonCatalogService {
 
     private String addonServiceUrl;
     private String catalogPageUrl = "";
     private final Map<AddonRecord, String> iconPaths = new HashMap<>();
     private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
-    public AddonCatalogServiceImpl() {
+    public DefaultAddonCatalogService() {
         AddonCatalogModule addonCatalogModule = App.getModule(AddonCatalogModule.class);
         this.addonServiceUrl = addonCatalogModule.getAddonServiceUrl();
         this.catalogPageUrl = addonCatalogModule.getCatalogPageUrl();
     }
 
-    public AddonCatalogServiceImpl(String addonServiceUrl) {
+    public DefaultAddonCatalogService(String addonServiceUrl) {
         this.addonServiceUrl = addonServiceUrl;
     }
 
@@ -101,7 +101,7 @@ public class AddonCatalogServiceImpl implements AddonCatalogService {
             try {
                 searchUrl = createApiCall("search", "query=" + URLEncoder.encode(searchCondition, "UTF-8"));
             } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(AddonCatalogServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DefaultAddonCatalogService.class.getName()).log(Level.SEVERE, null, ex);
                 return searchResult;
             }
         }

@@ -30,15 +30,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.addon.manager.api.AvailableModuleUpdates;
 import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.utils.VersionUtils;
+import org.exbin.jaguif.addon.manager.api.UpdateAvailabilityModules;
 
 /**
- * Available module updates.
+ * Manager for available module updates.
  */
 @ParametersAreNonnullByDefault
-public class AvailableModuleUpdatesManager implements AvailableModuleUpdates {
+public class UpdateAvailabilityManager implements UpdateAvailabilityModules {
 
     protected static final String MODULE_UPDATES_FILE = "available-updates.cfg";
     protected final Map<String, String> latestVersions = new HashMap<>();
@@ -100,7 +100,7 @@ public class AvailableModuleUpdatesManager implements AvailableModuleUpdates {
                     }
                 } while (line != null);
             } catch (NumberFormatException | IOException ex) {
-                Logger.getLogger(AvailableModuleUpdatesManager.class.getName()).log(Level.SEVERE, "Failed to read modules update cache", ex);
+                Logger.getLogger(UpdateAvailabilityManager.class.getName()).log(Level.SEVERE, "Failed to read modules update cache", ex);
             }
         }
     }
@@ -117,7 +117,7 @@ public class AvailableModuleUpdatesManager implements AvailableModuleUpdates {
                 writer.write(entry.getKey() + ":" + entry.getValue() + "\r\n");
             }
         } catch (IOException ex) {
-            Logger.getLogger(AvailableModuleUpdatesManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UpdateAvailabilityManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -138,6 +138,6 @@ public class AvailableModuleUpdatesManager implements AvailableModuleUpdates {
     @ParametersAreNonnullByDefault
     public interface AvailableModulesChangeListener {
 
-        void changed(AvailableModuleUpdatesManager availableModuleUpdates);
+        void changed(UpdateAvailabilityManager availableModuleUpdates);
     }
 }

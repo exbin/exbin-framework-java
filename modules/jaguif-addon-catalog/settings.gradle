@@ -10,13 +10,17 @@ if (rootProject.path == ':') {
     include ':modules:jaguif-contribution-api'
     include ':modules:jaguif-menu-api'
     include ':modules:jaguif-menu-popup-api'
+    include ':modules:jaguif-addon-catalog-api'
     include ':modules:jaguif-addon-manager-api'
     include ':modules:jaguif-language-api'
+    include ':modules:jaguif-tabpages-api'
     include ':modules:jaguif-operation-api'
     include ':modules:jaguif-options-settings-api'
     include ':modules:jaguif-options-api'
     include ':modules:jaguif-utils'
     include ':modules:jaguif-window-api'
+
+    include ':modules:jaguif-addon-manager'
 }
 
 apply from: '../jaguif-modules-settings.gradle'

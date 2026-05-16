@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.addon.manager.page;
+package org.exbin.jaguif.addon.catalog.page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.jaguif.App;
+import org.exbin.jaguif.addon.catalog.operation.CatalogSearchOperation;
 import org.exbin.jaguif.addon.manager.AddonOperation;
 import org.exbin.jaguif.addon.manager.AddonOperationVariant;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogService;
@@ -31,15 +32,14 @@ import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
 import org.exbin.jaguif.addon.manager.api.AddonsManagementCartController;
 import org.exbin.jaguif.addon.manager.api.AddonsManagementContext;
-import org.exbin.jaguif.addon.manager.api.AvailableModuleUpdates;
 import org.exbin.jaguif.addon.manager.api.UpdateAvailabilityContext;
-import org.exbin.jaguif.addon.manager.operation.CatalogSearchOperation;
 import org.exbin.jaguif.context.api.ContextChange;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
 import org.exbin.jaguif.tabpages.api.AbstractTabPagesComponent;
 import org.exbin.jaguif.tabpages.api.ComponentTabPagesContribution;
 import org.exbin.jaguif.tabpages.api.TabPagesComponent;
+import org.exbin.jaguif.addon.manager.api.UpdateAvailabilityModules;
 
 /**
  * Addons manager page.
@@ -98,7 +98,7 @@ public class AddonsCatalogPage extends AbstractTabPagesComponent implements Addo
                     setAddonManager(instance);
                 });
                 registrar.registerChangeListener(UpdateAvailabilityContext.class, (instance) -> {
-                    setAvailableModuleUpdates((AvailableModuleUpdates) instance);
+                    setAvailableModuleUpdates((UpdateAvailabilityModules) instance);
                 });
             }
         });
@@ -130,7 +130,7 @@ public class AddonsCatalogPage extends AbstractTabPagesComponent implements Addo
     @Nonnull
     @Override
     public Runnable createSearchOperation(String search) {
-        return new CatalogSearchOperation(addonCatalogService, null, search, this::setAddonItems); // addonManager
+        return new CatalogSearchOperation(addonCatalogService, null, null, search, this::setAddonItems); // addonManager
 //        addonsPanel.notifyItemsChanged();
 //        ResourceBundle resourceBundle = addonManager.getResourceBundle();
 //        JOptionPane.showMessageDialog(addonsPanel, resourceBundle.getString("addonServiceApiError.message"), resourceBundle.getString("addonServiceApiError.title"), JOptionPane.ERROR_MESSAGE);
@@ -159,7 +159,7 @@ public class AddonsCatalogPage extends AbstractTabPagesComponent implements Addo
         notifyItemsChanged();
     }
 
-    public void setAvailableModuleUpdates(AvailableModuleUpdates availableModuleUpdates) {
+    public void setAvailableModuleUpdates(UpdateAvailabilityModules availableModuleUpdates) {
         int itemsCount = getItemsCount();
         for (int i = 0; i < itemsCount; i++) {
             availableModuleUpdates.applyTo(getItem(i));

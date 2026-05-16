@@ -63,6 +63,7 @@ public class DefaultSettingsOptionsOverrides implements SettingsOptionsOverrides
 
     @Nonnull
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends InferenceOptions> Optional<T> getInferenceOptions(Class<T> inferenceClass) {
         Class<? extends InferenceOptions> override = inferenceOverrides.get(inferenceClass);
         if (override != null) {

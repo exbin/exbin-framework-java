@@ -6,7 +6,7 @@
   <homepage>https://exbin.org</homepage>
   <description>Module to manage addons</description>
   <dependency>
-    <module id="org.exbin.jaguif.action.api.ActionModuleApi" />
+    <module id="org.exbin.jaguif.addon.manager.api.AddonManagerModuleApi" />
     <module id="org.exbin.jaguif.window.api.WindowModuleApi" />
     <module id="org.exbin.jaguif.options.api.OptionsModuleApi" />
     <module id="org.exbin.jaguif.options.settings.api.OptionsSettingsModuleApi" />

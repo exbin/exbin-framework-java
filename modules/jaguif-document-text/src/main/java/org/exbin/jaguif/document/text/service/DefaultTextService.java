@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.document.text.service.impl;
+package org.exbin.jaguif.document.text.service;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JTextArea;
-import org.exbin.jaguif.document.text.service.TextSearchService;
 
 /**
  * Default implemention of text search service.
  */
 @ParametersAreNonnullByDefault
-public class TextServiceImpl implements TextSearchService {
+public class DefaultTextService implements TextSearchService {
 
     @Nonnull
     @Override
