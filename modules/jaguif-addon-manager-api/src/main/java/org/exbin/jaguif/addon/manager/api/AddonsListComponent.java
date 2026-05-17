@@ -15,48 +15,43 @@
  */
 package org.exbin.jaguif.addon.manager.api;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.jaguif.tabpages.api.TabPagesComponent;
+import javax.swing.JComponent;
 
 /**
- * Addon manager page.
+ * Addons list component.
  */
 @ParametersAreNonnullByDefault
-public interface AddonManagerPage extends TabPagesComponent {
+public interface AddonsListComponent {
 
     /**
-     * Notifies content changed.
-     */
-    void notifyChanged();
-
-    /**
-     * Sets catalog base url.
+     * Returns addons list component.
      *
-     * @param addonCatalogUrl addon catalog url
+     * @return addons list component
+     */
+    JComponent getComponent();
+
+    /**
+     * Sets component controller.
+     *
+     * @param controller component controller
+     */
+    void setController(AddonsListComponentController controller);
+
+    /**
+     * Sets remove addon catalog URL.
+     *
+     * @param addonCatalogUrl addon catalog URL
      */
     void setCatalogUrl(String addonCatalogUrl);
 
     /**
-     * Invokes refresh of the dynamic content.
+     * Notifies item changed.
      */
-    void refreshContent();
+    void notifyItemChanged();
 
     /**
-     * Creates filter condition operation.
-     *
-     * @param filter filter condition
-     * @return operation
+     * Notifies items changed.
      */
-    @Nonnull
-    Runnable createFilterOperation(Object filter);
-
-    /**
-     * Creates search condition operation.
-     *
-     * @param search search condition
-     * @return operation
-     */
-    @Nonnull
-    Runnable createSearchOperation(String search);
+    void notifyItemsChanged();
 }

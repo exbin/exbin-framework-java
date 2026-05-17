@@ -97,4 +97,9 @@ public class DefaultContributionDefinition implements ContributionDefinition {
             }
         }
     }
+
+    public void clear() {
+        rules.clear();
+        contributions.clear();
+    }
 }

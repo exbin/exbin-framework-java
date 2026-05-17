@@ -22,13 +22,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.JComponent;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.addon.manager.AddonOperation;
-import org.exbin.jaguif.addon.manager.AddonOperationVariant;
+import org.exbin.jaguif.addon.manager.api.AddonOperation;
+import org.exbin.jaguif.addon.manager.api.AddonOperationVariant;
 import org.exbin.jaguif.addon.manager.api.AddonCatalogService;
-import org.exbin.jaguif.addon.manager.gui.AddonsPanel;
+import org.exbin.jaguif.addon.manager.api.AddonManagerModuleApi;
 import org.exbin.jaguif.addon.manager.api.AddonRecord;
 import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.addon.manager.api.AddonManagerPage;
+import org.exbin.jaguif.addon.manager.api.AddonsListComponent;
+import org.exbin.jaguif.addon.manager.api.AddonsListComponentController;
 import org.exbin.jaguif.addon.manager.api.AddonsManagementCartController;
 import org.exbin.jaguif.addon.manager.api.AddonsManagementContext;
 import org.exbin.jaguif.addon.manager.api.UpdateAvailabilityContext;
@@ -48,7 +50,7 @@ public class AddonPacksPage extends AbstractTabPagesComponent implements AddonMa
 
     public static final String PAGE_ID = "addonPacks";
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonPacksPage.class);
-    protected AddonsPanel addonsPanel = new AddonsPanel();
+    protected AddonsListComponent listComponent;
     protected List<ItemChangedListener> itemChangedListeners = new ArrayList<>();
     protected AddonCatalogService addonCatalogService;
 
@@ -60,7 +62,9 @@ public class AddonPacksPage extends AbstractTabPagesComponent implements AddonMa
     }
 
     private void init() {
-        addonsPanel.setController(new AddonsPanel.Controller() {
+        AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
+        listComponent = addonManagerModule.createAddonsListComponent();
+        listComponent.setController(new AddonsListComponentController() {
 
             @Override
             public int getItemsCount() {
@@ -88,7 +92,7 @@ public class AddonPacksPage extends AbstractTabPagesComponent implements AddonMa
                 // TODO addonManager.requestModuleDetail(itemRecord, addonsPanel);
             }
         });
-        itemChangedListeners.add((ItemChangedListener) addonsPanel::notifyItemChanged);
+        itemChangedListeners.add((ItemChangedListener) listComponent::notifyItemChanged);
         putValue(KEY_NAME, resourceBundle.getString("page.name"));
         putValue(KEY_CONTEXT_CHANGE, new ContextChange() {
             @Override
@@ -106,12 +110,17 @@ public class AddonPacksPage extends AbstractTabPagesComponent implements AddonMa
     @Nonnull
     @Override
     public JComponent getComponent() {
-        return addonsPanel;
+        return listComponent.getComponent();
     }
 
     @Override
     public void setCatalogUrl(String addonCatalogUrl) {
-        addonsPanel.setCatalogUrl(addonCatalogUrl);
+        listComponent.setCatalogUrl(addonCatalogUrl);
+    }
+
+    @Override
+    public void refreshContent() {
+        // TODO
     }
 
     public void setAddonCatalogService(AddonCatalogService addonCatalogService) {
@@ -176,7 +185,7 @@ public class AddonPacksPage extends AbstractTabPagesComponent implements AddonMa
         for (ItemChangedListener itemChangedListener : itemChangedListeners) {
             itemChangedListener.itemChanged();
         }
-        addonsPanel.notifyItemsChanged();
+        listComponent.notifyItemsChanged();
     }
 
     public interface ItemChangedListener {

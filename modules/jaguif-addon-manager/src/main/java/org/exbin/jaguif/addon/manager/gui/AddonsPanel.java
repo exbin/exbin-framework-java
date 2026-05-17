@@ -21,9 +21,12 @@ import java.util.ResourceBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComponent;
 import javax.swing.JList;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.addon.manager.AddonOperationVariant;
+import org.exbin.jaguif.addon.manager.api.AddonOperationVariant;
+import org.exbin.jaguif.addon.manager.api.AddonsListComponent;
+import org.exbin.jaguif.addon.manager.api.AddonsListComponentController;
 import org.exbin.jaguif.addon.manager.model.AddonsListModel;
 import org.exbin.jaguif.addon.manager.api.ItemRecord;
 import org.exbin.jaguif.language.api.LanguageModuleApi;
@@ -32,13 +35,13 @@ import org.exbin.jaguif.language.api.LanguageModuleApi;
  * Addons list with details panel.
  */
 @ParametersAreNonnullByDefault
-public class AddonsPanel extends javax.swing.JPanel {
+public class AddonsPanel extends javax.swing.JPanel implements AddonsListComponent {
 
     protected final ResourceBundle resourceBundle = App.getModule(LanguageModuleApi.class).getBundle(AddonsPanel.class);
     protected final AddonsListModel addonsListModel = new AddonsListModel();
     protected ItemRecord activeRecord;
     protected AddonDetailsPanel addonDetailsPanel = new AddonDetailsPanel();
-    protected Controller controller;
+    protected AddonsListComponentController controller;
 
     public AddonsPanel() {
         initComponents();
@@ -64,11 +67,13 @@ public class AddonsPanel extends javax.swing.JPanel {
     }
 
     @Nonnull
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
+    @Override
+    public JComponent getComponent() {
+        return this;
     }
 
-    public void setController(Controller controller) {
+    @Override
+    public void setController(AddonsListComponentController controller) {
         this.controller = controller;
         addonsListModel.setProvider(new AddonsListModel.RecordsProvider() {
             @Override
@@ -105,6 +110,12 @@ public class AddonsPanel extends javax.swing.JPanel {
         });
     }
 
+    @Nonnull
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    @Override
     public void setCatalogUrl(String addonCatalogUrl) {
         addonDetailsPanel.setCatalogUrl(addonCatalogUrl);
     }
@@ -132,12 +143,14 @@ public class AddonsPanel extends javax.swing.JPanel {
         }
     }
 
+    @Override
     public void notifyItemChanged() {
         if (activeRecord != null) {
             addonDetailsPanel.setRecord(activeRecord);
         }
     }
 
+    @Override
     public void notifyItemsChanged() {
         addonsListModel.notifyItemsChanged();
     }
@@ -189,19 +202,4 @@ public class AddonsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel noItemSelectedLabel;
     private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables
-
-    @ParametersAreNonnullByDefault
-    public interface Controller {
-
-        int getItemsCount();
-
-        @Nonnull
-        ItemRecord getItem(int index);
-
-        void addToCart(ItemRecord itemRecord, AddonOperationVariant variant);
-
-        boolean isInCart(String moduleId, AddonOperationVariant variant);
-
-        void requestModuleDetail(ItemRecord itemRecord);
-    }
 }

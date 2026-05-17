@@ -15,6 +15,8 @@
  */
 package org.exbin.jaguif.addon.manager;
 
+import org.exbin.jaguif.addon.manager.api.AddonOperation;
+import org.exbin.jaguif.addon.manager.api.AddonOperationVariant;
 import org.exbin.jaguif.addon.manager.page.InstalledAddonsPage;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -229,26 +231,10 @@ public class AddonManager implements AddonsManagementCartController, AddonsManag
         }
     }
 
-    public void refreshCatalog() {
-        // TODO
-        /* for (AddonManagerPage managerPage : managerPages) {
-            if (managerPage instanceof AddonsCatalogPage) {
-                ((AddonsCatalogPage) managerPage).setAddonCatalogService(addonCatalogService);
-
-                runOperation(new CatalogCheckStatusOperation(this, addonCatalogService, (status) -> {
-                    if (status > 0) {
-                        runOperation(new CatalogAvailableUpdatesOperation(addonCatalogService, this, status, this::updateLatestVersions));
-                        runOperation(new CatalogSearchOperation(addonCatalogService, this, "", ((AddonsCatalogPage) managerPage)::setAddonItems));
-                    } else if (status == 0) {
-                        statusListener.setManualOnlyMode();
-                        ((AddonsCatalogPage) managerPage).setAddonItems(new ArrayList<>());
-                    } else {
-                        statusListener.setCatalogNotAvailable();
-                        ((AddonsCatalogPage) managerPage).setAddonItems(new ArrayList<>());
-                    }
-                }));
-            }
-        } */
+    public void refreshContent() {
+        for (AddonManagerPage managerPage : managerPages) {
+            managerPage.refreshContent();
+        }
     }
 
     public void updateAll() {

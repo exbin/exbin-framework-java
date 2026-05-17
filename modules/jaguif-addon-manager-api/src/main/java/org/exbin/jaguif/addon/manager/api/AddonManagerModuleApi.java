@@ -74,4 +74,12 @@ public interface AddonManagerModuleApi extends Module {
      */
     @Nonnull
     String getManualLegacyUrl();
+
+    /**
+     * Creates addons list component.
+     *
+     * @return addons list component
+     */
+    @Nonnull
+    AddonsListComponent createAddonsListComponent();
 }

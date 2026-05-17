@@ -36,7 +36,7 @@ public class AddonPacksModule implements Module {
     public AddonPacksModule() {
     }
 
-    public void registerPacksAddonManager() {
+    public void registerAddonManagerPages() {
         TabPagesModuleApi tabPagesModule = App.getModule(TabPagesModuleApi.class);
         TabPagesDefinitionManagement pagesDefinitions = tabPagesModule.getMainTabPagesDefinition(AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, AddonManagerModuleApi.MODULE_ID);
         AddonPacksPage.Contribution pageContribution = new AddonPacksPage.Contribution();

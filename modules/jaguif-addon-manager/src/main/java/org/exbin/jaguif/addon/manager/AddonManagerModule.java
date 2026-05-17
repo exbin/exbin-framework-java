@@ -23,7 +23,9 @@ import org.exbin.jaguif.App;
 import org.exbin.jaguif.ApplicationBundleKeys;
 import org.exbin.jaguif.addon.manager.action.AddonManagerAction;
 import org.exbin.jaguif.addon.manager.api.AddonManagerModuleApi;
+import org.exbin.jaguif.addon.manager.api.AddonsListComponent;
 import org.exbin.jaguif.addon.manager.contribution.AddonManagerContribution;
+import org.exbin.jaguif.addon.manager.gui.AddonsPanel;
 import org.exbin.jaguif.addon.manager.settings.AddonManagerOptions;
 import org.exbin.jaguif.addon.manager.settings.AddonManagerSettingsComponent;
 import org.exbin.jaguif.contribution.api.PositionSequenceContributionRule;
@@ -107,5 +109,10 @@ public class AddonManagerModule implements AddonManagerModuleApi {
     public String getManualLegacyUrl() {
         ResourceBundle appBundle = App.getAppBundle();
         return manualLegacyGitHubUrl + appBundle.getString(ApplicationBundleKeys.APPLICATION_RELEASE);
+    }
+
+    @Override
+    public AddonsListComponent createAddonsListComponent() {
+        return new AddonsPanel();
     }
 }

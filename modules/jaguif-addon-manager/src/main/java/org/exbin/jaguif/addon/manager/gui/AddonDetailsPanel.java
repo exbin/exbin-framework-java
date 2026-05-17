@@ -31,7 +31,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.html.HTMLDocument;
 import org.exbin.jaguif.App;
-import org.exbin.jaguif.addon.manager.AddonOperationVariant;
+import org.exbin.jaguif.addon.manager.api.AddonOperationVariant;
 import org.exbin.jaguif.menu.popup.api.MenuPopupModuleApi;
 import org.exbin.jaguif.addon.manager.api.AddonRecord;
 import org.exbin.jaguif.addon.manager.model.DependenciesTableModel;

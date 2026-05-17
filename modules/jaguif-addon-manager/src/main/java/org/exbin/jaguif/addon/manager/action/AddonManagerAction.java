@@ -71,7 +71,7 @@ public class AddonManagerAction extends AbstractAction {
         AddonManagerModuleApi addonManagerModule = App.getModule(AddonManagerModuleApi.class);
         AddonManager addonManager = ((AddonManagerModule) addonManagerModule).getAddonManager();
         AddonsManagerPanel addonManagerPanel = addonManager.getManagerPanel();
-        addonManager.refreshCatalog();
+        addonManager.refreshContent();
         addonManager.setStatusListener(new AddonManager.AddonManagerStatusListener() {
             @Override
             public void setProgressStatus(String status) {
@@ -111,7 +111,7 @@ public class AddonManagerAction extends AbstractAction {
             @Override
             public void performRefresh() {
                 controlPanel.clearStatus();
-                addonManager.refreshCatalog();
+                addonManager.refreshContent();
             }
 
             @Override

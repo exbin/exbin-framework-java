@@ -94,7 +94,6 @@ public class AddonCatalogModule implements AddonCatalogModuleApi {
 
     public void registerAddonManagerPages() {
         TabPagesModuleApi tabPagesModule = App.getModule(TabPagesModuleApi.class);
-        tabPagesModule.getMainTabPagesManager().registerTabPages(AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, AddonManagerModuleApi.MODULE_ID);
         TabPagesDefinitionManagement pagesDefinitions = tabPagesModule.getMainTabPagesDefinition(AddonManagerModuleApi.ADDON_MANAGER_TABPAGES_ID, AddonManagerModuleApi.MODULE_ID);
         pagesDefinitions.registerTabPagesContribution(new AddonsCatalogPage.Contribution());
     }

@@ -61,21 +61,9 @@ public class TreeContributionManager implements TreeContributionManagement {
 
     @Override
     public void unregisterDefinition(String definitionId) {
-        DefaultContributionDefinition definition = definitions.get(definitionId);
+        DefaultContributionDefinition definition = definitions.remove(definitionId);
         if (definition != null) {
-            // TODO clear pointers to improve garbage collection performance?
-//            List<MenuContribution> contributions = definition.getContributions();
-//            for (MenuContribution contribution : contributions) {
-//                contribution.
-//            }
-
-            /*            for (Map.Entry<String, String> usage : pluginsUsage.entrySet()) {
-                if (menuId.equals(usage.getValue())) {
-                    pluginsUsage.remove(usage.getKey());
-                    break;
-                }
-            } */
-            definitions.remove(definitionId);
+            definition.clear();
         }
     }
 

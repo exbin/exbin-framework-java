@@ -19,8 +19,6 @@ if (rootProject.path == ':') {
     include ':modules:jaguif-options-api'
     include ':modules:jaguif-utils'
     include ':modules:jaguif-window-api'
-
-    include ':modules:jaguif-addon-manager'
 }
 
 apply from: '../jaguif-modules-settings.gradle'

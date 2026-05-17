@@ -98,6 +98,7 @@ public class CatalogSearchOperation implements Runnable, CancellableOperation, P
         return -1;
     }
 
+    @ParametersAreNonnullByDefault
     public interface Output {
 
         void outputItems(List<AddonRecord> addonItems);

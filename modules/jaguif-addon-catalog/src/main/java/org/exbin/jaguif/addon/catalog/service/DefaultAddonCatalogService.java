@@ -57,10 +57,10 @@ import org.xml.sax.SAXException;
 @ParametersAreNonnullByDefault
 public class DefaultAddonCatalogService implements AddonCatalogService {
 
-    private String addonServiceUrl;
-    private String catalogPageUrl = "";
-    private final Map<AddonRecord, String> iconPaths = new HashMap<>();
-    private final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
+    protected String addonServiceUrl;
+    protected String catalogPageUrl = "";
+    protected final Map<AddonRecord, String> iconPaths = new HashMap<>();
+    protected final List<IconChangeListener> iconChangeListeners = new ArrayList<>();
 
     public DefaultAddonCatalogService() {
         AddonCatalogModule addonCatalogModule = App.getModule(AddonCatalogModule.class);
