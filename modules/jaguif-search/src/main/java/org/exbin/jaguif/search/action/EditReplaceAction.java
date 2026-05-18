@@ -27,7 +27,7 @@ import org.exbin.jaguif.utils.ActionUtils;
 import org.exbin.jaguif.action.api.ActionContextChange;
 import org.exbin.jaguif.search.api.ContextSearch;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
-import org.exbin.jaguif.search.api.ReplaceSearchState;
+import org.exbin.jaguif.search.api.ReplaceSearchController;
 
 /**
  * Search find action.
@@ -36,7 +36,7 @@ import org.exbin.jaguif.search.api.ReplaceSearchState;
 public class EditReplaceAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "searchReplace";
-    protected ReplaceSearchState replaceSearchState;
+    protected ReplaceSearchController replaceSearchController;
 
     public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
@@ -49,14 +49,14 @@ public class EditReplaceAction extends AbstractAction implements ActionContextCh
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        replaceSearchState.performReplace();
+        replaceSearchController.performReplace();
     }
 
     @Override
     public void register(ContextChangeRegistration registrar) {
         registrar.registerChangeListener(ContextSearch.class, (instance) -> {
-            replaceSearchState = instance instanceof ReplaceSearchState ? (ReplaceSearchState) instance : null;
-            setEnabled(replaceSearchState != null);
+            replaceSearchController = instance instanceof ReplaceSearchController ? (ReplaceSearchController) instance : null;
+            setEnabled(replaceSearchController != null);
         });
     }
 }

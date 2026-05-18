@@ -18,7 +18,7 @@ package org.exbin.jaguif.search.api;
 /**
  * Interface for replace search state.
  */
-public interface ReplaceSearchState {
+public interface ReplaceSearchController extends ContextSearch {
     
     /**
      * Performs replace action.

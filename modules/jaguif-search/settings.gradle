@@ -8,6 +8,7 @@ if (rootProject.path == ':') {
     include ':modules:jaguif-help-api'
     include ':modules:jaguif-menu-api'
     include ':modules:jaguif-menu-popup-api'
+    include ':modules:jaguif-toolbar-api'
     include ':modules:jaguif-frame-api'
     include ':modules:jaguif-language-api'
     include ':modules:jaguif-options-api'

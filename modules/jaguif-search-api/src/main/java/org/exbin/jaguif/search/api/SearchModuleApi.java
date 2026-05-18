@@ -27,5 +27,7 @@ public interface SearchModuleApi extends Module {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(SearchModuleApi.class);
     public static final String SEARCH_MENU_GROUP_ID = MODULE_ID + ".searchMenuGroup";
+    public static final String EDIT_FIND_MENU_GROUP_ID = MODULE_ID + ".editFindMenuGroup";
+    public static final String EDIT_FIND_TOOL_BAR_GROUP_ID = MODULE_ID + ".editFindToolBarGroup";
 
 }

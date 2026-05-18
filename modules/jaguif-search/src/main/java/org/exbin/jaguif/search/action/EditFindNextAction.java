@@ -26,7 +26,7 @@ import org.exbin.jaguif.action.api.ActionModuleApi;
 import org.exbin.jaguif.action.api.ActionContextChange;
 import org.exbin.jaguif.search.api.ContextSearch;
 import org.exbin.jaguif.context.api.ContextChangeRegistration;
-import org.exbin.jaguif.search.api.FindSearchState;
+import org.exbin.jaguif.search.api.FindSearchController;
 
 /**
  * Search find next action.
@@ -35,7 +35,7 @@ import org.exbin.jaguif.search.api.FindSearchState;
 public class EditFindNextAction extends AbstractAction implements ActionContextChange {
 
     public static final String ACTION_ID = "searchFindNext";
-    protected FindSearchState findSearchState;
+    protected FindSearchController findSearchController;
 
     public void init(ResourceBundle resourceBundle) {
         ActionModuleApi actionModule = App.getModule(ActionModuleApi.class);
@@ -47,7 +47,7 @@ public class EditFindNextAction extends AbstractAction implements ActionContextC
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        findSearchState.performFindNext();
+        findSearchController.performFindNext();
     }
 
     @Override
@@ -56,14 +56,14 @@ public class EditFindNextAction extends AbstractAction implements ActionContextC
             updateByContext(instance);
         });
         registrar.registerStateUpdateListener(ContextSearch.class, (instance, updateType) -> {
-            if (FindSearchState.UpdateType.FIND_AVAILABILITY.equals(updateType)) {
+            if (FindSearchController.UpdateType.FIND_AVAILABILITY.equals(updateType)) {
                 updateByContext(instance);
             }
         });
     }
 
     protected void updateByContext(ContextSearch context) {
-        findSearchState = context instanceof FindSearchState ? (FindSearchState) context : null;
-        setEnabled(findSearchState != null && findSearchState.isFindNextAvailable());
+        findSearchController = context instanceof FindSearchController ? (FindSearchController) context : null;
+        setEnabled(findSearchController != null && findSearchController.isFindNextAvailable());
     }
 }

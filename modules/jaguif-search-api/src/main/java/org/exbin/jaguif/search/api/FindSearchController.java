@@ -20,7 +20,7 @@ import org.exbin.jaguif.context.api.StateUpdateType;
 /**
  * Interface for find search state.
  */
-public interface FindSearchState {
+public interface FindSearchController extends ContextSearch {
 
     /**
      * Performs find action.
