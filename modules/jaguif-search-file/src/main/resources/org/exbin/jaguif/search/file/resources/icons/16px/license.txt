@@ -1,0 +1,9 @@
+edit-find-replace.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain
+
+edit-find.png
+  Tango Icon Theme
+  link: tango-project.org
+  license: public domain

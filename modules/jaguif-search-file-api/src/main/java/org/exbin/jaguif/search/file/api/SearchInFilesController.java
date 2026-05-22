@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.jaguif.search.api;
+package org.exbin.jaguif.search.file.api;
+
+import org.exbin.jaguif.search.api.ContextSearch;
 
 /**
- * Interface for replace search controller.
+ * Interface for search in files controller.
  */
-public interface ReplaceSearchController extends ContextSearch {
-    
+public interface SearchInFilesController extends ContextSearch {
+
     /**
-     * Performs replace action.
+     * Performs find in files action.
      */
-    void performReplace();
+    void performFindInFiles();
 }

@@ -82,6 +82,8 @@ include ":modules:jaguif-project-api"
 include ":modules:jaguif-project"
 include ":modules:jaguif-search-api"
 include ":modules:jaguif-search"
+include ":modules:jaguif-search-file-api"
+include ":modules:jaguif-search-file"
 include ":modules:jaguif-text-encoding"
 include ":modules:jaguif-text-font"
 

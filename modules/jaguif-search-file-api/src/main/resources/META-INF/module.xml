@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<module>
+  <api>org.exbin.jaguif.search.file.api.SearchFileModuleApi</api>
+  <name>Search File API Module</name>
+  <provider>ExBin Project</provider>
+  <homepage>https://exbin.org</homepage>
+  <description>Support for searching for files</description>
+  <dependency>
+    <module id="org.exbin.jaguif.search.api.SearchModuleApi" />
+  </dependency>
+</module>

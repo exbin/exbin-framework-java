@@ -18,7 +18,7 @@ package org.exbin.jaguif.search.api;
 import org.exbin.jaguif.context.api.StateUpdateType;
 
 /**
- * Interface for find search state.
+ * Interface for find search controller.
  */
 public interface FindSearchController extends ContextSearch {
 
