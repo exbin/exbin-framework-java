@@ -99,6 +99,12 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
                 fileContextPopupMenu.show(component, positionX, positionY);
                 // TODO dispose?
             }
+
+            @Override
+            public void documentMoved(int position, int targetPosition) {
+                Document document = openDocuments.get(position);
+                openDocuments.add(targetPosition, document);
+            }
         });
         documentPanel.setDropTarget(new DropTarget() {
             @Override

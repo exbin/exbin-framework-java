@@ -16,7 +16,12 @@
 package org.exbin.jaguif.docking.multi.gui;
 
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Icon;
 import org.exbin.jaguif.App;
 import org.exbin.jaguif.document.api.ComponentDocument;
 import org.exbin.jaguif.menu.api.MenuModuleApi;
@@ -48,6 +53,75 @@ public class MultiDocumentPanel extends javax.swing.JPanel {
                 controller.showPopupMenu(index, invoker, x, y);
             }
         }));
+
+        MouseAdapter dragAdapter = new MouseAdapter() {
+
+            private boolean isDragging = false;
+            private int dragTabIndex = -1;
+            private Cursor originalCursor;
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                dragTabIndex = tabbedPane.indexAtLocation(e.getX(), e.getY());
+                if (isDragging) {
+                    tabbedPane.setCursor(originalCursor);
+                    isDragging = false;
+                }
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (dragTabIndex == -1) {
+                    return;
+                }
+
+                if (!isDragging) {
+                    isDragging = true;
+                    originalCursor = tabbedPane.getCursor();
+                    tabbedPane.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                }
+
+                int currentTabIndex = tabbedPane.indexAtLocation(e.getX(), e.getY());
+                if (currentTabIndex != -1 && currentTabIndex != dragTabIndex) {
+                    Rectangle tabBounds = tabbedPane.getBoundsAt(dragTabIndex);
+                    if (tabBounds != null && tabbedPane.indexAtLocation(e.getX() + tabBounds.width, e.getY()) == currentTabIndex) {
+                        return;
+                    }
+
+                    moveDocument(dragTabIndex, currentTabIndex);
+                    tabbedPane.setSelectedIndex(currentTabIndex);
+                    dragTabIndex = currentTabIndex;
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                dragTabIndex = -1;
+                if (isDragging) {
+                    tabbedPane.setCursor(originalCursor);
+                    isDragging = false;
+                }
+            }
+        };
+        tabbedPane.addMouseListener(dragAdapter);
+        tabbedPane.addMouseMotionListener(dragAdapter);
+    }
+
+    public void moveDocument(int position, int targetPosition) {
+        Component comp = tabbedPane.getComponentAt(position);
+        String title = tabbedPane.getTitleAt(position);
+        Icon icon = tabbedPane.getIconAt(position);
+        String tip = tabbedPane.getToolTipTextAt(position);
+        boolean isEnabled = tabbedPane.isEnabledAt(position);
+        Component tabComponent = tabbedPane.getTabComponentAt(position);
+
+        tabbedPane.removeTabAt(position);
+        tabbedPane.insertTab(title, icon, comp, tip, targetPosition);
+        tabbedPane.setEnabledAt(targetPosition, isEnabled);
+        tabbedPane.setTabComponentAt(targetPosition, tabComponent);
+        if (controller != null) {
+            controller.documentMoved(position, targetPosition);
+        }
     }
 
     public void setController(Controller controller) {
@@ -131,5 +205,7 @@ public class MultiDocumentPanel extends javax.swing.JPanel {
         void activeIndexChanged(int index);
 
         void showPopupMenu(int index, Component component, int positionX, int positionY);
+
+        void documentMoved(int position, int targetPosition);
     }
 }
