@@ -51,7 +51,7 @@ import org.exbin.jaguif.document.api.EmptyDocumentSource;
 public class DockingMultiModule implements DockingMultiModuleApi {
 
     public static String MODULE_ID = ModuleUtils.getModuleIdByApi(DockingMultiModule.class);
-    public static final String FILE_CONTEXT_MENU_ID = "fileContextMenu";
+    public static final String DOCUMENT_CONTEXT_MENU_ID = "documentContextMenu";
 
     private ResourceBundle resourceBundle;
 
@@ -134,8 +134,8 @@ public class DockingMultiModule implements DockingMultiModuleApi {
     @Override
     public void registerMenuFileCloseActions() {
         MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-        menuModule.registerMenu(FILE_CONTEXT_MENU_ID, MODULE_ID);
-        MenuDefinitionManagement mgmt = menuModule.getMainMenuDefinition(FILE_CONTEXT_MENU_ID, MODULE_ID);
+        menuModule.registerMenu(DOCUMENT_CONTEXT_MENU_ID, MODULE_ID);
+        MenuDefinitionManagement mgmt = menuModule.getMainMenuDefinition(DOCUMENT_CONTEXT_MENU_ID, MODULE_ID);
         SequenceContribution contribution = new CloseFileContribution();
         mgmt.registerMenuContribution(contribution);
         mgmt.registerMenuRule(contribution, new PositionSequenceContributionRule(PositionSequenceContributionRule.PositionMode.TOP));

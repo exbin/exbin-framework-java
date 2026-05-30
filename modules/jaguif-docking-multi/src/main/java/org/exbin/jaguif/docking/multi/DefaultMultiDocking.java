@@ -91,18 +91,16 @@ public class DefaultMultiDocking implements MultiDocking, SidePanelDocking, Wind
                 Document refDocument = openDocuments.get(index);
                 popupContextManager.changeActiveState(ContextDocument.class, (ContextDocument) refDocument);
 
-//                FrameModuleApi frameModule = App.getModule(FrameModuleApi.class);
                 MenuModuleApi menuModule = App.getModule(MenuModuleApi.class);
-                JPopupMenu fileContextPopupMenu = menuModule.getMenuBuilder().createPopupMenu();
+                JPopupMenu documentContextPopupMenu = menuModule.getMenuBuilder().createPopupMenu();
                 ContextRegistration contextRegistrar = contextModule.createContextRegistrator(contextManager);
-                menuModule.buildMenu(fileContextPopupMenu, DockingMultiModule.FILE_CONTEXT_MENU_ID, contextRegistrar);
-                fileContextPopupMenu.show(component, positionX, positionY);
-                // TODO dispose?
+                menuModule.buildMenu(documentContextPopupMenu, DockingMultiModule.DOCUMENT_CONTEXT_MENU_ID, contextRegistrar);
+                documentContextPopupMenu.show(component, positionX, positionY);
             }
 
             @Override
             public void documentMoved(int position, int targetPosition) {
-                Document document = openDocuments.get(position);
+                Document document = openDocuments.remove(position);
                 openDocuments.add(targetPosition, document);
             }
         });
